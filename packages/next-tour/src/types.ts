@@ -38,9 +38,14 @@ export interface TourControls {
 }
 
 export interface TourState {
+  /** Whether the tour is currently open. */
   isTourOpen: boolean
+  /** The list of tours available to the user. */
   tours: Tour[]
+  /** The currently active tour. */
   activeTour: Tour | null
+  /** The index (starting from 1) of the currently active step in the tour. */
   activeStep: number
+  /** The total number of steps in the currently active tour. */
   totalSteps: number
 }
