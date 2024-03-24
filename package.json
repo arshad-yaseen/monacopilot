@@ -2,20 +2,19 @@
   "name": "next-tour-root",
   "private": true,
   "workspaces": [
-    "next-tour",
-    "website"
+    "packages/*",
+    "apps/*"
   ],
   "scripts": {
-    "build": "npm run build:next-tour && npm run build:website",
     "build:next-tour": "npm run build --workspace=next-tour",
     "build:website": "npm run build --workspace=website",
     "dev:website": "npm run dev --workspace=website",
     "lint": "npm run lint --workspace=next-tour && npm run lint --workspace=website",
     "test": "npm run test --workspace=next-tour",
-    "format": "prettier '**/*.{js,jsx,ts,tsx,json,md,mdx,css,scss,yaml,yml}' --write",
-    "prepare": "husky"
+    "format": "prettier '**/*.{js,jsx,ts,tsx,json,md,mdx,css,scss,yaml,yml}' --write"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.27.1",
     "@commitlint/cli": "^19.2.1",
     "@commitlint/config-conventional": "^19.1.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.2.1",

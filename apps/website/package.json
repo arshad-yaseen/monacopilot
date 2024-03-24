@@ -16,7 +16,8 @@
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "^2.2.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "next-tour": "*"
   },
   "devDependencies": {
     "@types/node": "^20",
