@@ -7,8 +7,8 @@
   ],
   "scripts": {
     "build": "npm run build --workspace=next-tour",
+    "dev": "npm run dev --workspace=website",
     "build:website": "npm run build --workspace=website",
-    "dev:website": "npm run dev --workspace=website",
     "lint": "npm run lint --workspace=next-tour && npm run lint --workspace=website",
     "test": "npm run test --workspace=next-tour",
     "format": "prettier '**/*.{js,jsx,ts,tsx,json,md,mdx,css,scss,yaml,yml}' --write"

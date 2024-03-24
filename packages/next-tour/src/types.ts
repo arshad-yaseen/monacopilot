@@ -1,24 +1,37 @@
 export interface TourProviderProps {
   children: React.ReactNode
+  tours: Tour[]
+}
+
+export interface Tour {
+  /** The ID of the tour */
+  id: string
+  /** The steps of the tour */
+  steps: TourStep[]
+}
+
+export interface TourStep {
+  target: string
+  content: React.ReactNode
 }
 
 export interface TourContextValue {
-  // Whether the tour is open or not
+  /** Whether the tour is currently open */
   isTourOpen: boolean
-  // The current step of the tour
+  /** The current tour */
+  currentTour: Tour | null
+  /** The current step of the tour */
   currentStep: number
-  // The total number of steps in the tour
+  /** The total number of steps in the tour */
   totalSteps: number
-  // Set the total number of steps in the tour
-  setTotalSteps: React.Dispatch<React.SetStateAction<number>>
-  // The function to start the tour
-  startTour: () => void
-  // The function to end the tour
+  /** Start a tour */
+  startTour: (id: string) => void
+  /** End the current tour */
   endTour: () => void
-  // The function to go to the next step
+  /** Go to the next step in the tour */
   nextStep: () => void
-  // The function to go to the previous step
+  /** Go to the previous step in the tour */
   prevStep: () => void
-  // The function to go to a specific step
+  /** Go to a specific step in the tour */
   goToStep: (step: number) => void
 }

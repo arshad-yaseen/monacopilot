@@ -1,60 +1,62 @@
-import { createContext, useCallback, useMemo, useState } from "react"
-import { TourContextValue, TourProviderProps } from "../types"
+import { createContext, FC, useCallback, useState } from "react"
+import { Tour, TourContextValue, TourProviderProps } from "../types"
 
 export const TourContext = createContext<TourContextValue | null>(null)
 
-const TourProvider: React.FC<TourProviderProps> = ({ children }) => {
+const TourProvider: FC<TourProviderProps> = ({ children, tours }) => {
   const [isTourOpen, setIsTourOpen] = useState<boolean>(false)
+  const [currentTour, setCurrentTour] = useState<Tour | null>(null)
   const [currentStep, setCurrentStep] = useState<number>(0)
-  const [totalSteps, setTotalSteps] = useState<number>(0)
 
-  const startTour = useCallback(() => {
-    setIsTourOpen(true)
-    setCurrentStep(0)
-  }, [])
+  const totalSteps: number = currentTour?.steps.length ?? 0
 
-  const endTour = useCallback(() => {
+  const startTour = useCallback(
+    (id: string): void => {
+      const tour = tours.find((tour) => tour.id === id)
+      if (!tour) return
+
+      setCurrentTour(tour)
+      setIsTourOpen(true)
+      setCurrentStep(1)
+    },
+    [tours]
+  )
+
+  const endTour = useCallback((): void => {
     setIsTourOpen(false)
+    setCurrentTour(null)
     setCurrentStep(0)
   }, [])
 
-  const nextStep = useCallback(() => {
-    setCurrentStep((prevStep) => Math.min(totalSteps - 1, prevStep + 1))
+  const nextStep = useCallback((): void => {
+    setCurrentStep((prevStep) => Math.min(totalSteps, prevStep + 1))
   }, [totalSteps])
 
-  const prevStep = useCallback(() => {
-    setCurrentStep((prevStep) => Math.max(0, prevStep - 1))
+  const prevStep = useCallback((): void => {
+    setCurrentStep((prevStep) => Math.max(1, prevStep - 1))
   }, [])
 
-  const goToStep = useCallback((step: number) => {
+  const goToStep = useCallback((step: number): void => {
     setCurrentStep(step)
   }, [])
 
-  const value = useMemo(
-    () => ({
-      isTourOpen,
-      currentStep,
-      totalSteps,
-      setTotalSteps,
-      startTour,
-      endTour,
-      nextStep,
-      prevStep,
-      goToStep,
-    }),
-    [
-      isTourOpen,
-      currentStep,
-      totalSteps,
-      startTour,
-      endTour,
-      nextStep,
-      prevStep,
-      goToStep,
-    ]
+  return (
+    <TourContext.Provider
+      value={{
+        isTourOpen,
+        currentTour,
+        currentStep,
+        totalSteps,
+        startTour,
+        endTour,
+        goToStep,
+        nextStep,
+        prevStep,
+      }}
+    >
+      {children}
+    </TourContext.Provider>
   )
-
-  return <TourContext.Provider value={value}>{children}</TourContext.Provider>
 }
 
 export default TourProvider
