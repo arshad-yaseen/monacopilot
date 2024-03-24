@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import "./globals.css"
-import Tour from "@/components/Tour"
+import { TourProvider } from "next-tour"
 import { Inter } from "next/font/google"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -17,9 +17,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Tour>
+      <TourProvider>
         <body className={inter.className}>{children}</body>
-      </Tour>
+      </TourProvider>
     </html>
   )
 }
