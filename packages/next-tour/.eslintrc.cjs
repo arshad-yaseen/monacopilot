@@ -27,6 +27,8 @@ module.exports = {
     "@next/next/no-img-element": "off",
     "react/no-unescaped-entities": "off",
     "no-return-await": "warn",
+    "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off",
   },
   settings: {
     react: {
