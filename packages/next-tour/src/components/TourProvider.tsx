@@ -11,7 +11,7 @@ const TourProvider: FC<TourProviderProps> = ({ children, tours }) => {
   const totalSteps: number = currentTour?.steps.length ?? 0
 
   const startTour = useCallback(
-    (id: string): void => {
+    (id: string) => {
       const tour = tours.find((tour) => tour.id === id)
       if (!tour) return
 
@@ -22,21 +22,21 @@ const TourProvider: FC<TourProviderProps> = ({ children, tours }) => {
     [tours]
   )
 
-  const endTour = useCallback((): void => {
+  const endTour = useCallback(() => {
     setIsTourOpen(false)
     setCurrentTour(null)
     setCurrentStep(0)
   }, [])
 
-  const nextStep = useCallback((): void => {
+  const nextStep = useCallback(() => {
     setCurrentStep((prevStep) => Math.min(totalSteps, prevStep + 1))
   }, [totalSteps])
 
-  const prevStep = useCallback((): void => {
+  const prevStep = useCallback(() => {
     setCurrentStep((prevStep) => Math.max(1, prevStep - 1))
   }, [])
 
-  const goToStep = useCallback((step: number): void => {
+  const goToStep = useCallback((step: number) => {
     setCurrentStep(step)
   }, [])
 
