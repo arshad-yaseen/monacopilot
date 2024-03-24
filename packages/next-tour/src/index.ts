@@ -1,2 +1,2 @@
 export { TourProvider } from "./components"
-export { useTourControls } from "./hooks"
+export { useTourControls, useTourState } from "./hooks"

@@ -1,6 +1,9 @@
 export interface TourProviderProps {
   children: React.ReactNode
-  tours: Tour[]
+}
+
+export interface TourProps extends Tour {
+  children: React.ReactNode
 }
 
 export interface Tour {
@@ -17,16 +20,12 @@ export interface TourStep {
   content: React.ReactNode
 }
 
-export interface TourContextValue {
-  /** Indicates if a tour is currently active or visible. */
-  isTourOpen: boolean
-  /** The tour object that is currently active, or null if no tour is active. */
-  currentTour: Tour | null
-  /** The index (starting from 1) of the current step within the active tour. */
-  currentStep: number
-  /** The total number of steps in the active tour. */
-  totalSteps: number
-  /** Start a tour by its ID. */
+export interface TourContextValue extends TourState, TourControls {}
+
+export interface TourControls {
+  /** Add a new tour programmatically. */
+  addTour: (tour: Tour) => void
+  /** Start a tour by its id. */
   startTour: (id: string) => void
   /** End the currently active tour. */
   endTour: () => void
@@ -36,4 +35,12 @@ export interface TourContextValue {
   prevStep: () => void
   /** Jump to a specific step in the tour, identified by a index (starting from 1). */
   goToStep: (step: number) => void
+}
+
+export interface TourState {
+  isTourOpen: boolean
+  tours: Tour[]
+  activeTour: Tour | null
+  activeStep: number
+  totalSteps: number
 }

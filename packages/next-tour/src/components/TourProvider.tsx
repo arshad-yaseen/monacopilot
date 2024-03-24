@@ -1,52 +1,60 @@
-import { createContext, FC, useCallback, useState } from "react"
+import { createContext, useCallback, useState } from "react"
 import { Tour, TourContextValue, TourProviderProps } from "../types"
 
 export const TourContext = createContext<TourContextValue | null>(null)
 
-const TourProvider: FC<TourProviderProps> = ({ children, tours }) => {
+const TourProvider = ({ children }: TourProviderProps) => {
   const [isTourOpen, setIsTourOpen] = useState<boolean>(false)
-  const [currentTour, setCurrentTour] = useState<Tour | null>(null)
-  const [currentStep, setCurrentStep] = useState<number>(0)
+  const [tours, setTours] = useState<Tour[]>([])
+  const [activeTour, setActiveTour] = useState<Tour | null>(null)
+  const [activeStep, setActiveStep] = useState<number>(0)
 
-  const totalSteps: number = currentTour?.steps.length ?? 0
+  const totalSteps: number = activeTour?.steps.length ?? 0
+
+  const addTour = useCallback((tour: Tour) => {
+    setTours((prevTours) => [...prevTours, tour])
+  }, [])
 
   const startTour = useCallback(
     (id: string) => {
       const tour = tours.find((tour) => tour.id === id)
       if (!tour) return
 
-      setCurrentTour(tour)
+      setActiveTour(tour)
       setIsTourOpen(true)
-      setCurrentStep(1)
+      setActiveStep(1)
     },
     [tours]
   )
 
   const endTour = useCallback(() => {
     setIsTourOpen(false)
-    setCurrentTour(null)
-    setCurrentStep(0)
+    setActiveTour(null)
+    setActiveStep(0)
   }, [])
 
   const nextStep = useCallback(() => {
-    setCurrentStep((prevStep) => Math.min(totalSteps, prevStep + 1))
+    setActiveStep((prevStep) => Math.min(totalSteps, prevStep + 1))
   }, [totalSteps])
 
   const prevStep = useCallback(() => {
-    setCurrentStep((prevStep) => Math.max(1, prevStep - 1))
+    setActiveStep((prevStep) => Math.max(1, prevStep - 1))
   }, [])
 
   const goToStep = useCallback((step: number) => {
-    setCurrentStep(step)
+    setActiveStep(step)
   }, [])
 
   return (
     <TourContext.Provider
       value={{
         isTourOpen,
-        currentTour,
-        currentStep,
+        activeTour,
+        activeStep,
         totalSteps,
+        tours,
+
+        addTour,
         startTour,
         endTour,
         goToStep,
