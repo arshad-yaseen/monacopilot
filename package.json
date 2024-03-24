@@ -11,7 +11,10 @@
     "build:website": "npm run build --workspace=website",
     "lint": "npm run lint --workspace=next-tour && npm run lint --workspace=website",
     "test": "npm run test --workspace=next-tour",
-    "format": "prettier '**/*.{js,jsx,ts,tsx,json,md,mdx,css,scss,yaml,yml}' --write"
+    "format": "prettier '**/*.{js,jsx,ts,tsx,json,md,mdx,css,scss,yaml,yml}' --write",
+    "prepare-release": "changeset",
+    "version-package": "changeset version",
+    "release": "changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
