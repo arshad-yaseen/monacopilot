@@ -3,7 +3,8 @@
   "description": "Guided tours and walkthroughs for Next.js",
   "version": "0.1.0",
   "type": "module",
-  "main": "dist/next-tour.umd.js",
+  "main": "dist/next-tour.cjs.js",
+  "module": "dist/next-tour.es.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist/*"

@@ -6,7 +6,7 @@
     "apps/*"
   ],
   "scripts": {
-    "build:next-tour": "npm run build --workspace=next-tour",
+    "build": "npm run build --workspace=next-tour",
     "build:website": "npm run build --workspace=website",
     "dev:website": "npm run dev --workspace=website",
     "lint": "npm run lint --workspace=next-tour && npm run lint --workspace=website",
