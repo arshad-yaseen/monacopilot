@@ -13,7 +13,7 @@
     "lint": "npm run lint --workspace=next-tour && npm run lint --workspace=website",
     "test": "npm run test --workspace=next-tour",
     "format": "prettier '**/*.{js,jsx,ts,tsx,json,md,mdx,css,scss,yaml,yml}' --write",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.2.1",
