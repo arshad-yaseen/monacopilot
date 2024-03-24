@@ -10,7 +10,7 @@
     "build:next-tour": "npm run build --workspace=next-tour",
     "build:website": "npm run build --workspace=website",
     "dev:website": "npm run dev --workspace=website",
-    "lint": "npm run lint:next-tour && npm run lint:website",
+    "lint": "npm run lint --workspace=next-tour && npm run lint --workspace=website",
     "test": "npm run test --workspace=next-tour",
     "format": "prettier '**/*.{js,jsx,ts,tsx,json,md,mdx,css,scss,yaml,yml}' --write",
     "prepare": "husky install"
@@ -20,5 +20,10 @@
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
     "prettier": "^3.2.5"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx,json,md,mdx,css,scss,yaml,yml}": [
+      "prettier --write"
+    ]
   }
 }
