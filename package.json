@@ -1,0 +1,24 @@
+{
+  "name": "next-tour-root",
+  "private": true,
+  "workspaces": [
+    "next-tour",
+    "website"
+  ],
+  "scripts": {
+    "build": "npm run build:next-tour && npm run build:website",
+    "build:next-tour": "npm run build --workspace=next-tour",
+    "build:website": "npm run build --workspace=website",
+    "dev:website": "npm run dev --workspace=website",
+    "lint": "npm run lint:next-tour && npm run lint:website",
+    "test": "npm run test --workspace=next-tour",
+    "format": "prettier '**/*.{js,jsx,ts,tsx,json,md,mdx,css,scss,yaml,yml}' --write",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "prettier": "^3.2.5"
+  }
+}
