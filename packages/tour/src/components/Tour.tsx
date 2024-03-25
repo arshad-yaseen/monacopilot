@@ -1,5 +1,5 @@
-import "../styles.css"
 import React, { useEffect } from "react"
+import Popover from "src/components/Popover"
 import { useTourControls } from "../hooks"
 import { TourProps } from "../types"
 
@@ -11,7 +11,17 @@ const Tour = ({ children, ...tour }: TourProps) => {
     addTour(tour)
   }, [addTour, tour])
 
-  return <div className="tour__container">{children}</div>
+  return (
+    <Popover preferredPosition="top-center">
+      <Popover.Trigger>
+        <button>hello</button>
+      </Popover.Trigger>
+      <Popover.Content>
+        This is the content
+        <input type="text" />
+      </Popover.Content>
+    </Popover>
+  )
 }
 
 export default Tour

@@ -6,6 +6,7 @@ module.exports = {
       "always",
       [
         "feat",
+        "wip",
         "fix",
         "docs",
         "style",

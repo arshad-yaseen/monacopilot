@@ -49,3 +49,16 @@ export interface TourState {
   /** The total number of steps in the currently active tour. */
   totalSteps: number
 }
+
+export interface Rect {
+  top: number
+  left: number
+  width: number
+  height: number
+}
+
+export type Position =
+  | "top-center"
+  | "bottom-center"
+  | "left-center"
+  | "right-center"
