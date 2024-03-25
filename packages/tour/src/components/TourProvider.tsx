@@ -1,18 +1,18 @@
-import { createContext, useCallback, useState } from "react"
+import React, { createContext, useCallback, useRef, useState } from "react"
 import { Tour, TourContextValue, TourProviderProps } from "../types"
 
 export const TourContext = createContext<TourContextValue | null>(null)
 
 const TourProvider = ({ children }: TourProviderProps) => {
   const [isTourOpen, setIsTourOpen] = useState<boolean>(false)
-  const [tours, setTours] = useState<Tour[]>([])
   const [activeTour, setActiveTour] = useState<Tour | null>(null)
   const [activeStep, setActiveStep] = useState<number>(0)
 
+  const tours = useRef<Tour[]>([]).current
   const totalSteps: number = activeTour?.steps.length ?? 0
 
   const addTour = useCallback((tour: Tour) => {
-    setTours((prevTours) => [...prevTours, tour])
+    tours.push(tour)
   }, [])
 
   const startTour = useCallback(

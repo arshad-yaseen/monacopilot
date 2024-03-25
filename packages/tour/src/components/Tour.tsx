@@ -1,4 +1,5 @@
-import { useEffect } from "react"
+import "../styles.css"
+import React, { useEffect } from "react"
 import { useTourControls } from "../hooks"
 import { TourProps } from "../types"
 
@@ -6,11 +7,11 @@ const Tour = ({ children, ...tour }: TourProps) => {
   const { addTour } = useTourControls()
 
   useEffect(() => {
-    // Add the tour to the globals tours state
+    // Add the tour to the global tours state
     addTour(tour)
   }, [addTour, tour])
 
-  return children
+  return <div className="tour__container">{children}</div>
 }
 
 export default Tour
