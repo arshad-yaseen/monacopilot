@@ -11,7 +11,7 @@
   "scripts": {
     "build": "tsup src/index.ts",
     "dev": "tsup src/index.ts --watch",
-    "lint": "eslint . --ext .ts,.tsx"
+    "lint": "eslint . --ext .ts,.tsx --fix"
   },
   "devDependencies": {
     "@types/react": "^18.2.69",

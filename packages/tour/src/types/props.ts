@@ -1,9 +1,10 @@
 import React from "react"
+
 import { Position } from "./common"
 import { TourOptions } from "./options"
 import { Tour, TourStep } from "./tour"
 
-export type TourProviderProps = React.PropsWithChildren<{}>
+export type TourProviderProps = React.PropsWithChildren<unknown>
 
 export type TourProps = Tour
 

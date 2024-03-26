@@ -1,7 +1,8 @@
 "use client"
 
-import { TourProvider as TourProviderCore } from "next-tour"
 import { PropsWithChildren } from "react"
+
+import { TourProvider as TourProviderCore } from "next-tour"
 
 const TourProvider = ({ children }: PropsWithChildren) => {
   return <TourProviderCore>{children}</TourProviderCore>

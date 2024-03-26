@@ -1,5 +1,7 @@
 import "../styles.css"
+
 import React from "react"
+
 import { useTourControls, useTourState } from "../hooks"
 import { TourProps } from "../types"
 import Step from "./Step"
