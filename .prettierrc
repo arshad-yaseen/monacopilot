@@ -1,0 +1,38 @@
+{
+  "tabWidth": 2,
+  "useTabs": false,
+  "bracketSpacing": false,
+  "bracketSameLine": true,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "arrowParens": "avoid",
+
+  "importOrder": [
+    "^styles.css$",
+    "",
+    "^(react/(.*)$)|^(react$)",
+    "^(next/(.*)$)|^(next$)",
+    "",
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "^@types/(.*)$",
+    "^types/(.*)$",
+    "",
+    "^constants/(.*)$",
+    "",
+    "^utils/(.*)$",
+    "",
+    "^hooks/(.*)$",
+    "",
+    "^components/core/(.*)$",
+    "^components/(.*)$",
+    "",
+    "^src/(.*)$",
+    "",
+    "^[./]"
+  ],
+
+  "plugins": [
+    "@ianvs/prettier-plugin-sort-imports"
+  ]
+}
