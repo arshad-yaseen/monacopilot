@@ -1,5 +1,5 @@
-export { TourProvider, Tour } from "./components"
-export { useTourControls, useTourState } from "./hooks"
+export {TourProvider, Tour} from './components';
+export {useTourControls, useTourState} from './hooks';
 
 // Types
-export type { TourProps, TourControls, TourState, TourStep } from "./types"
+export type {TourProps, TourControls, TourState, TourStep} from './types';

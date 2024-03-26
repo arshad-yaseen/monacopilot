@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react';
 
 /**
  * This hook listens for clicks outside of the specified ref element.
@@ -6,21 +6,21 @@ import React from "react"
  */
 const useClickOutside = <T extends HTMLElement>(
   ref: React.RefObject<T>,
-  callback: () => void
+  callback: () => void,
 ) => {
   React.useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
-        callback()
+        callback();
       }
-    }
+    };
 
-    document.addEventListener("pointerdown", handlePointerDown)
+    document.addEventListener('pointerdown', handlePointerDown);
 
     return () => {
-      document.removeEventListener("pointerdown", handlePointerDown)
-    }
-  }, [ref, callback])
-}
+      document.removeEventListener('pointerdown', handlePointerDown);
+    };
+  }, [ref, callback]);
+};
 
-export default useClickOutside
+export default useClickOutside;

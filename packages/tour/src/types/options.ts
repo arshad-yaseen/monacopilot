@@ -3,12 +3,12 @@ export interface TourOptions {
    * Whether to show the tour navigation buttons.
    * @default true
    */
-  showNavigation?: boolean
+  showNavigation?: boolean;
   /**
    * Whether to show the tour progress indicator.
    * @default true
    */
-  showProgress?: boolean
+  showProgress?: boolean;
   /**
    * Controls the visibility of the tour mask. The tour mask is used to highlight
    * the current step's target element while dimming the rest of the page to focus
@@ -16,7 +16,7 @@ export interface TourOptions {
    * @default true
    */
 
-  showMask?: boolean
+  showMask?: boolean;
 }
 
 export interface StepOptions {
@@ -24,15 +24,15 @@ export interface StepOptions {
    * Whether to show the close button on the tour.
    * @default true
    */
-  showCloseButton?: boolean
+  showCloseButton?: boolean;
   /**
    * Whether to show the skip button on the tour.
    * @default true
    */
-  showSkipButton?: boolean
+  showSkipButton?: boolean;
   /**
    * Whether to show the back button on the tour.
    * @default true
    */
-  showBackButton?: boolean
+  showBackButton?: boolean;
 }

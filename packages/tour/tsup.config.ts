@@ -1,12 +1,12 @@
-import { defineConfig } from "tsup"
+import {defineConfig} from 'tsup';
 
 export default defineConfig({
-  entry: ["src/index.ts"],
-  target: "es2018",
+  entry: ['src/index.ts'],
+  target: 'es2018',
   minify: true,
-  format: ["esm", "cjs"],
+  format: ['esm', 'cjs'],
   clean: true,
   dts: true,
   injectStyle: true,
-  external: ["react", "react-dom"],
-})
+  external: ['react', 'react-dom'],
+});

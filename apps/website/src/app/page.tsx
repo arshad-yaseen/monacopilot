@@ -1,9 +1,9 @@
-"use client"
+'use client';
 
-import { Tour, useTourControls } from "next-tour"
+import {Tour, useTourControls} from 'next-tour';
 
 export default function Home() {
-  const { startTour, endTour, nextStep, prevStep, goToStep } = useTourControls()
+  const {startTour, endTour, nextStep, prevStep, goToStep} = useTourControls();
 
   return (
     <main className="flex flex-col min-h-screen bg-gray-50 p-8">
@@ -14,7 +14,7 @@ export default function Home() {
         id="tour1"
         steps={[
           {
-            target: "#target1",
+            target: '#target1',
             content: (
               <div className="space-x-2">
                 <input
@@ -28,14 +28,14 @@ export default function Home() {
               </div>
             ),
           },
-          { target: "#target2", content: "Tour 1 - This is the second step." },
+          {target: '#target2', content: 'Tour 1 - This is the second step.'},
         ]}
       />
       <Tour
         id="tour2"
         steps={[
           {
-            target: "#target1",
+            target: '#target1',
             content: (
               <div className="space-x-2">
                 <input
@@ -49,7 +49,7 @@ export default function Home() {
               </div>
             ),
           },
-          { target: "#target2", content: "Tour 2 - This is the second step." },
+          {target: '#target2', content: 'Tour 2 - This is the second step.'},
         ]}
       />
       <div className="flex flex-wrap justify-center gap-4 my-8">
@@ -63,41 +63,35 @@ export default function Home() {
       <div className="flex justify-center gap-4 my-4">
         <button
           className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg"
-          onClick={() => startTour("tour1")}
-        >
+          onClick={() => startTour('tour1')}>
           Start Tour 1
         </button>
         <button
           className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg"
-          onClick={() => startTour("tour2")}
-        >
+          onClick={() => startTour('tour2')}>
           Start Tour 2
         </button>
         <button
           className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg"
-          onClick={endTour}
-        >
+          onClick={endTour}>
           End Tour
         </button>
         <button
           className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg"
-          onClick={nextStep}
-        >
+          onClick={nextStep}>
           Next Step
         </button>
         <button
           className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg"
-          onClick={prevStep}
-        >
+          onClick={prevStep}>
           Previous Step
         </button>
         <button
           className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg"
-          onClick={() => goToStep(1)}
-        >
+          onClick={() => goToStep(1)}>
           Go to First Step
         </button>
       </div>
     </main>
-  )
+  );
 }

@@ -1,53 +1,53 @@
-import { Position } from "./common"
-import { StepOptions, TourOptions } from "./options"
+import {Position} from './common';
+import {StepOptions, TourOptions} from './options';
 
 export interface Tour {
   /** A unique identifier for the tour, used for starting the tour programmatically. */
-  id: string
+  id: string;
   /** An ordered list of steps that the user will follow during the tour. */
-  steps: TourStep[]
+  steps: TourStep[];
   /** Optional configuration options for the tour. */
-  options?: TourOptions
+  options?: TourOptions;
 }
 
 export interface TourStep {
   /** The CSS selector of the target element for this step. */
-  target: string
+  target: string;
   /** The content to display for this step. */
-  content: React.ReactNode
+  content: React.ReactNode;
   /**
    * Optional position of the step
    * @default "bottom-center"
    */
-  position?: Position
+  position?: Position;
   /** Optional configuration options for the step. */
-  options?: StepOptions
+  options?: StepOptions;
 }
 
 export interface TourControls {
   /** Add a new tour programmatically. */
-  addTour: (tour: Tour) => void
+  addTour: (tour: Tour) => void;
   /** Start a tour by its id. */
-  startTour: (id: string) => void
+  startTour: (id: string) => void;
   /** End the currently active tour. */
-  endTour: () => void
+  endTour: () => void;
   /** Advance to the next step in the tour. */
-  nextStep: () => void
+  nextStep: () => void;
   /** Move back to the previous step in the tour. */
-  prevStep: () => void
+  prevStep: () => void;
   /** Jump to a specific step in the tour by the step number. */
-  goToStep: (stepNumber: number) => void
+  goToStep: (stepNumber: number) => void;
 }
 
 export interface TourState {
   /** Whether the tour is currently open. */
-  isTourOpen: boolean
+  isTourOpen: boolean;
   /** The list of tours available to the user. */
-  tours: Tour[]
+  tours: Tour[];
   /** The currently active tour. */
-  activeTour: Tour | null
+  activeTour: Tour | null;
   /** The index of the currently active step in the tour. */
-  activeStepIndex: number
+  activeStepIndex: number;
   /** The total number of steps in the currently active tour. */
-  totalSteps: number
+  totalSteps: number;
 }

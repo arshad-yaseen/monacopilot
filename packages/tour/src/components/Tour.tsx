@@ -1,23 +1,23 @@
-import "../styles.css"
+import '../styles.css';
 
-import React from "react"
+import React from 'react';
 
-import { useTourControls, useTourState } from "../hooks"
-import { TourProps } from "../types"
-import Step from "./Step"
+import {useTourControls, useTourState} from '../hooks';
+import {TourProps} from '../types';
+import Step from './Step';
 
-const Tour = ({ options, ...tour }: TourProps) => {
-  const { addTour } = useTourControls()
-  const { activeTour, activeStepIndex } = useTourState()
+const Tour = ({options, ...tour}: TourProps) => {
+  const {addTour} = useTourControls();
+  const {activeTour, activeStepIndex} = useTourState();
 
   React.useEffect(() => {
     // Add this tour to the list of available tours
-    addTour(tour)
-  }, [addTour, tour])
+    addTour(tour);
+  }, [addTour, tour]);
 
-  const activeStep = activeTour?.steps[activeStepIndex] ?? null
+  const activeStep = activeTour?.steps[activeStepIndex] ?? null;
 
-  return <Step activeStep={activeStep} tourOptions={options} />
-}
+  return <Step activeStep={activeStep} tourOptions={options} />;
+};
 
-export default Tour
+export default Tour;

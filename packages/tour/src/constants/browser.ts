@@ -13,6 +13,6 @@ const FOCUSABLE_ELEMENTS_QUERY = `
   [role="button"]:not([tabindex^="-"]),
   [role="link"]:not([tabindex^="-"]),
   object[usemap]:not([tabindex^="-"])
-  `
+  `;
 
-export { FOCUSABLE_ELEMENTS_QUERY }
+export {FOCUSABLE_ELEMENTS_QUERY};
