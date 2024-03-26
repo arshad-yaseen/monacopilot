@@ -1,5 +1,11 @@
 # next-tour
 
+## 0.2.4
+
+### Patch Changes
+
+- Update variable names in `utils/positioning.ts`
+
 ## 0.2.3
 
 ### Patch Changes
