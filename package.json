@@ -12,6 +12,7 @@
     "lint": "npm run lint --workspace=next-tour && npm run lint --workspace=website",
     "test": "npm run test --workspace=next-tour",
     "format": "prettier '**/*.{js,jsx,ts,tsx,json,md,mdx,css,scss,yaml,yml}' --write",
+    "tsc": "npm run tsc --workspace=next-tour --workspace=website",
     "prepare-release": "changeset",
     "version-package": "changeset version",
     "release": "changeset publish"
