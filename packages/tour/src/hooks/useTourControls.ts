@@ -1,18 +1,25 @@
-import { useContext } from "react"
+import React from "react"
 import { TourContext } from "../components/TourProvider"
 import { TourControls } from "../types"
 
 const useTourControls = (): TourControls => {
-  const context = useContext(TourContext)
+  const context = React.useContext(TourContext)
   if (!context) {
     throw new Error(
-      "Oops! It looks like useTourControls was called outside of a TourProvider context. Please ensure that your component is wrapped in a <TourProvider> to use the tour controls."
+      "useTourControls must be used within a <TourProvider> component"
     )
   }
 
   const { startTour, endTour, goToStep, nextStep, prevStep, addTour } = context
 
-  return { startTour, endTour, goToStep, nextStep, prevStep, addTour }
+  return {
+    startTour,
+    endTour,
+    goToStep,
+    nextStep,
+    prevStep,
+    addTour,
+  }
 }
 
 export default useTourControls

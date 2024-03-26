@@ -1,16 +1,14 @@
-import { useEffect, useRef } from "react"
+import React from "react"
 
 /**
- * This hook allows for detecting clicks outside of a specified element (the one that the returned ref is attached to).
- * It uses the 'pointerdown' event to handle all pointing device inputs uniformly, making it more accessible and inclusive.
- *
- * @param callback - A function to be called when a click outside is detected.
- * @returns A ref object that should be attached to the element you want to detect outside clicks for.
+ * This hook listens for clicks outside of the specified ref element.
+ * When a click is detected outside of the ref element, the callback is called.
  */
-const useClickOutside = <T extends HTMLElement>(callback: () => void) => {
-  const ref = useRef<T>(null)
-
-  useEffect(() => {
+const useClickOutside = <T extends HTMLElement>(
+  ref: React.RefObject<T>,
+  callback: () => void
+) => {
+  React.useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
         callback()
@@ -22,9 +20,7 @@ const useClickOutside = <T extends HTMLElement>(callback: () => void) => {
     return () => {
       document.removeEventListener("pointerdown", handlePointerDown)
     }
-  }, [callback])
-
-  return ref
+  }, [ref, callback])
 }
 
 export default useClickOutside

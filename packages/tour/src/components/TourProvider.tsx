@@ -1,59 +1,65 @@
-import React, { createContext, useCallback, useRef, useState } from "react"
-import { Tour, TourContextValue, TourProviderProps } from "../types"
+import React from "react"
+import { Tour, TourContextType, TourProviderProps } from "../types"
 
-export const TourContext = createContext<TourContextValue | null>(null)
+export const TourContext = React.createContext<TourContextType | null>(null)
 
-const TourProvider = ({ children }: TourProviderProps) => {
-  const [isTourOpen, setIsTourOpen] = useState<boolean>(false)
-  const [activeTour, setActiveTour] = useState<Tour | null>(null)
-  const [activeStep, setActiveStep] = useState<number>(0)
+const TourProvider: React.FC<TourProviderProps> = ({ children }) => {
+  const [isTourOpen, setIsTourOpen] = React.useState<boolean>(false)
+  // the currently active tour.
+  const [activeTour, setActiveTour] = React.useState<Tour | null>(null)
+  // the index of the currently active step within the active tour.
+  const [activeStepIndex, setActiveStepIndex] = React.useState<number>(0)
 
-  const tours = useRef<Tour[]>([]).current
+  // a ref to store all the available tours.
+  const toursRef = React.useRef<Tour[]>([])
+
   const totalSteps: number = activeTour?.steps.length ?? 0
 
-  const addTour = useCallback((tour: Tour) => {
-    tours.push(tour)
-  }, [])
+  // function to add a new tour to the tours list.
+  const addTour = (tour: Tour) => {
+    toursRef.current.push(tour)
+  }
 
-  const startTour = useCallback(
-    (id: string) => {
-      const tour = tours.find((tour) => tour.id === id)
-      if (!tour) return
+  const startTour = (id: string) => {
+    const tour = toursRef.current.find((t) => t.id === id)
+    if (!tour) return
 
-      setActiveTour(tour)
-      setIsTourOpen(true)
-      setActiveStep(1)
-    },
-    [tours]
-  )
+    setActiveTour(tour)
+    setIsTourOpen(true)
+    setActiveStepIndex(0)
+  }
 
-  const endTour = useCallback(() => {
+  const endTour = () => {
     setIsTourOpen(false)
     setActiveTour(null)
-    setActiveStep(0)
-  }, [])
+    setActiveStepIndex(0)
+  }
 
-  const nextStep = useCallback(() => {
-    setActiveStep((prevStep) => Math.min(totalSteps, prevStep + 1))
+  const nextStep = React.useCallback(() => {
+    setActiveStepIndex((prevStep) => Math.min(totalSteps - 1, prevStep + 1))
   }, [totalSteps])
 
-  const prevStep = useCallback(() => {
-    setActiveStep((prevStep) => Math.max(1, prevStep - 1))
-  }, [])
+  const prevStep = () => {
+    setActiveStepIndex((prevStep) => Math.max(0, prevStep - 1))
+  }
 
-  const goToStep = useCallback((step: number) => {
-    setActiveStep(step)
-  }, [])
+  const goToStep = React.useCallback(
+    (stepNumber: number) => {
+      if (stepNumber < 1 || stepNumber >= totalSteps) return
+      // decrement by 1, since the step number user provides is 1-based index.
+      setActiveStepIndex(stepNumber - 1)
+    },
+    [totalSteps]
+  )
 
   return (
     <TourContext.Provider
       value={{
         isTourOpen,
         activeTour,
-        activeStep,
+        activeStepIndex,
         totalSteps,
-        tours,
-
+        tours: toursRef.current,
         addTour,
         startTour,
         endTour,

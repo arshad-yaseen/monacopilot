@@ -1,4 +1,4 @@
-import { Position, Rect } from "src/types"
+import { Position, Rect } from "../types"
 
 /**
  * Get the floating position based on the trigger and floating element

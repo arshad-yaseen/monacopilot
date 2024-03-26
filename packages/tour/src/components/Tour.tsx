@@ -1,27 +1,21 @@
-import React, { useEffect } from "react"
-import Popover from "src/components/Popover"
-import { useTourControls } from "../hooks"
+import "../styles.css"
+import React from "react"
+import { useTourControls, useTourState } from "../hooks"
 import { TourProps } from "../types"
+import Step from "./Step"
 
-const Tour = ({ children, ...tour }: TourProps) => {
+const Tour = ({ options, ...tour }: TourProps) => {
   const { addTour } = useTourControls()
+  const { activeTour, activeStepIndex } = useTourState()
 
-  useEffect(() => {
-    // Add the tour to the global tours state
+  React.useEffect(() => {
+    // Add this tour to the list of available tours
     addTour(tour)
   }, [addTour, tour])
 
-  return (
-    <Popover preferredPosition="top-center">
-      <Popover.Trigger>
-        <button>hello</button>
-      </Popover.Trigger>
-      <Popover.Content>
-        This is the content
-        <input type="text" />
-      </Popover.Content>
-    </Popover>
-  )
+  const activeStep = activeTour?.steps[activeStepIndex] ?? null
+
+  return <Step activeStep={activeStep} tourOptions={options} />
 }
 
 export default Tour

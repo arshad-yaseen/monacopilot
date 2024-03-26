@@ -14,8 +14,7 @@
     "format": "prettier '**/*.{js,jsx,ts,tsx,json,md,mdx,css,scss,yaml,yml}' --write",
     "prepare-release": "changeset",
     "version-package": "changeset version",
-    "release": "changeset publish",
-    "postinstall": "cd apps/website && npm link ../../packages/tour"
+    "release": "changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",

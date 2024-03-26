@@ -1,0 +1,50 @@
+:root {
+  --nt-background-color: #ffffff;
+  --nt-foreground-color: #2d3748;
+  --nt-secondary-color: #4a5568;
+  --nt-border-color: #cbd5e0;
+  --nt-accent-color: #3182ce;
+  --nt-shadow-color: rgba(0, 0, 0, 0.1);
+  --nt-on-accent-color: #ffffff;
+  --nt-radius: 0.6rem;
+  --nt-spacing: 1rem;
+  --nt-transition-timing-function-step: cubic-bezier(0.2, 0, 0.2, 1);
+  --nt-transition-duration: 0.3s;
+  --nt-animation-duration: 0.3s;
+}
+
+.dark {
+  --nt-background-color: #1a202c;
+  --nt-foreground-color: #e2e8f0;
+  --nt-secondary-color: #a0aec0;
+  --nt-border-color: #4a5568;
+  --nt-accent-color: #63b3ed;
+  --nt-shadow-color: rgba(0, 0, 0, 0.2);
+  --nt-on-accent-color: #2d3748;
+}
+
+:where([data-tour-step]) {
+  background-color: var(--nt-background-color);
+  color: var(--nt-foreground-color);
+  border: 1px solid var(--nt-border-color);
+  box-shadow: 0 2px 4px var(--nt-shadow-color);
+  padding: var(--nt-spacing);
+  border-radius: var(--nt-radius);
+  transition:
+    top 0.4s var(--nt-transition-timing-function-step),
+    left 0.4s var(--nt-transition-timing-function-step),
+    opacity var(--nt-transition-duration) ease-in-out;
+}
+
+:where([data-tour-step] > *) {
+  animation: fadeIn var(--nt-animation-duration) ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
