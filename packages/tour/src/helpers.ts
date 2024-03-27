@@ -49,7 +49,7 @@ export const getFloatingPosition = (
 };
 
 // Check if the element is in the viewport
-export function isInViewport(el: HTMLElement): boolean {
+export const isInViewport = (el: HTMLElement): boolean => {
   if (!el || !window.visualViewport) return false;
 
   const rect = el.getBoundingClientRect();
@@ -61,4 +61,4 @@ export function isInViewport(el: HTMLElement): boolean {
     rect.bottom <= window.visualViewport.height - SAFARI_ADJUSTMENT &&
     rect.right <= window.visualViewport.width
   );
-}
+};
