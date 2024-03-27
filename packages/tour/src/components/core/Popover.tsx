@@ -101,9 +101,11 @@ const PopoverContent = ({
       target.style.zIndex = '10001';
       popoverContainerRef.current.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
 
+      const changedPopoverContainer = popoverContainerRef.current;
+
       return () => {
-        if (popoverContainerRef.current) {
-          popoverContainerRef.current.style.backgroundColor = '';
+        if (changedPopoverContainer) {
+          changedPopoverContainer.style.backgroundColor = '';
         }
         if (target) {
           target.style.zIndex = '';
