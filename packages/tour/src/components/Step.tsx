@@ -34,6 +34,7 @@ const Step = ({activeStep, tourOptions}: StepProps) => {
 
     // If the target element is not in the viewport, scroll it into view
     if (!isTargetInViewport) {
+      setPopoverTarget(null);
       targetElement.scrollIntoView({behavior: 'smooth', block: 'center'});
 
       // wait for the scroll to complete before setting the popover target
@@ -50,10 +51,8 @@ const Step = ({activeStep, tourOptions}: StepProps) => {
       if (popoverTarget !== targetElement) setPopoverTarget(targetElement);
     }
 
-    return () => {
-      if (popoverTarget !== null) setPopoverTarget(null);
-    };
-  }, [activeStep, setPopoverTarget]);
+    return undefined;
+  }, [activeStep, popoverTarget]);
 
   if (!activeStep) return null;
 
