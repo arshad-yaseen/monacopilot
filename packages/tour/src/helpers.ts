@@ -49,7 +49,7 @@ export const getFloatingPosition = (
 };
 
 // Check if the element is in the viewport
-export const isInViewport = (elem: HTMLElement): boolean => {
+export const isInViewport = (elem: Element | HTMLElement): boolean => {
   const rect = elem.getBoundingClientRect();
   return (
     rect.top >= 0 &&
