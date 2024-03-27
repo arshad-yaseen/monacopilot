@@ -4,6 +4,7 @@
 
 ### Patch Changes
 
+- When proceeding to the next step, ensure that the target is in the viewport. If not, first scroll it into view.
 - Improved typings, Code refactor, Improve Performance
 
 ## 0.2.5
