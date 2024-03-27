@@ -11,7 +11,7 @@ const TourProvider = ({children}: TourProviderProps) => {
   // the index of the currently active step within the active tour.
   const [activeStepIndex, setActiveStepIndex] = React.useState<number>(0);
 
-  // a ref to store all the available tours.
+  // All available tours.
   const toursRef = React.useRef<Tour[]>([]);
 
   const totalSteps: number = activeTour?.steps.length ?? 0;

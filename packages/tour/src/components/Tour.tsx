@@ -10,18 +10,18 @@ const Tour = (props: TourProps) => {
   const {addTour} = useTourControls();
   const {activeTour, activeStepIndex} = useTourState();
 
-  // Effect to register this tour in the system when it mounts or props change
+  // Add this tour to the global tours state
   React.useEffect(() => {
     addTour(props);
   }, [addTour, props]);
 
-  // Determine if this is the currently active tour
+  // Determine if this tour is the active tour
   const isActiveTour = activeTour?.id === props.id;
 
-  // Find the active step within this tour, if it is active
+  // Find the active step within the active tour
   const activeStep = isActiveTour ? activeTour.steps[activeStepIndex] : null;
 
-  // Only render the Step component if this is the active tour
+  // Only render the Step component if this tour is active
   if (!isActiveTour) return null;
 
   return <Step activeStep={activeStep} tourOptions={activeTour.options} />;

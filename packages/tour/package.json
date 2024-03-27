@@ -1,6 +1,6 @@
 {
   "name": "next-tour",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Guided tours and walkthroughs for Next.js",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

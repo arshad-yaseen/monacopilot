@@ -1,5 +1,11 @@
 # next-tour
 
+## 0.2.5
+
+### Patch Changes
+
+- Animations and Transitions
+
 ## 0.2.4
 
 ### Patch Changes

@@ -7,17 +7,20 @@ import Popover from './core/Popover';
 const Step = ({activeStep, tourOptions}: StepProps) => {
   const {endTour} = useTourControls();
   const {isTourOpen} = useTourState();
-  const [target, setTarget] = React.useState<HTMLElement | null>(null);
+  const [popoverTarget, setPopoverTarget] = React.useState<HTMLElement | null>(
+    null,
+  );
 
   const {highlightTarget, preventCloseOnClickOutside} =
     useTourOptions(tourOptions);
 
+  // Set the current step target element as the popover target
   React.useEffect(() => {
     if (!activeStep) return;
 
     const targetElement = document.querySelector(activeStep.target);
     if (targetElement) {
-      setTarget(targetElement as HTMLElement);
+      setPopoverTarget(targetElement as HTMLElement);
     }
   }, [activeStep]);
 
@@ -26,7 +29,7 @@ const Step = ({activeStep, tourOptions}: StepProps) => {
   return (
     <Popover
       open={isTourOpen}
-      target={target}
+      target={popoverTarget}
       preferredPosition={activeStep.position}
       shouldHighlightTarget={highlightTarget}
       onClickOutside={() =>
