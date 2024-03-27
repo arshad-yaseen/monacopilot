@@ -56,7 +56,16 @@
   box-shadow: 0 2px 4px var(--nt-shadow-color);
   padding: var(--nt-spacing);
   border-radius: var(--nt-radius);
-  transition:
-    top var(--nt-transition-duration) var(--nt-transition-timing-function-step),
-    left var(--nt-transition-duration) var(--nt-transition-timing-function-step);
+  animation: NtScaleUp var(--nt-animation-duration) ease-out;
+}
+
+@keyframes NtScaleUp {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }

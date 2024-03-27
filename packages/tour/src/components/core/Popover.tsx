@@ -59,71 +59,74 @@ const PopoverContent = ({
   } = usePopover();
   const popoverRef = React.useRef<HTMLDivElement>(null);
   const popoverContainerRef = React.useRef<HTMLDivElement>(null);
-  const [targetFloatingRect, setTargetFloatingRect] =
-    React.useState<FloatingRect | null>(null);
+  const [targetRect, setTargetRect] = React.useState<FloatingRect | null>(null);
 
-  // Update target FloatingRectangle on target change
+  // Get the target element's rect
   React.useEffect(() => {
-    if (!target) return;
-    const FloatingRect = target.getBoundingClientRect();
-    setTargetFloatingRect(FloatingRect);
+    if (target) {
+      const rect = target.getBoundingClientRect();
+      setTargetRect(rect);
+    }
   }, [target]);
 
-  // Recalculate position on open or targetFloatingRect change
+  // Position the popover based on the target element
   React.useEffect(() => {
-    if (!open || !targetFloatingRect || !popoverRef.current) return;
-    const floatingFloatingRect = popoverRef.current.getBoundingClientRect();
-
-    const newFloatingCoords: FloatingCoords = getFloatingPosition(
-      targetFloatingRect,
-      floatingFloatingRect,
+    if (!open || !targetRect || !popoverRef.current) return;
+    const newCoords: FloatingCoords = getFloatingPosition(
+      targetRect,
+      popoverRef.current.getBoundingClientRect(),
       preferredPosition,
     );
 
-    popoverRef.current.style.top = `${newFloatingCoords.top}px`;
-    popoverRef.current.style.left = `${newFloatingCoords.left}px`;
+    const {current: popover} = popoverRef;
 
-    const currentPopover = popoverRef.current;
+    popover.style.top = `${newCoords.top}px`;
+    popover.style.left = `${newCoords.left}px`;
+
+    // Add transition after the initial positioning
+    const animationTimeoutId = setTimeout(() => {
+      popover.style.transition =
+        'top var(--nt-transition-duration), left var(--nt-transition-duration)';
+    }, 50);
 
     return () => {
-      if (currentPopover) {
-        currentPopover.style.top = '';
-        currentPopover.style.left = '';
-      }
+      popover.style.transition = '';
+      clearTimeout(animationTimeoutId);
     };
-  }, [open, targetFloatingRect, preferredPosition, popoverRef]);
+  }, [open, targetRect, preferredPosition]);
 
-  // Add an overlay to the popover and highlight the target when `shouldHighlightTarget` is set to true.
+  // Highlight the target element and dim the background if `shouldHighlightTarget` is true
   React.useEffect(() => {
-    const popoverContainer = popoverContainerRef.current;
-    if (!popoverContainer || !target || !shouldHighlightTarget) return;
+    if (shouldHighlightTarget && target && popoverContainerRef.current) {
+      target.style.zIndex = '10001';
+      popoverContainerRef.current.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
 
-    target.style.zIndex = '10001';
-    popoverContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+      return () => {
+        if (popoverContainerRef.current) {
+          popoverContainerRef.current.style.backgroundColor = '';
+        }
+        if (target) {
+          target.style.zIndex = '';
+        }
+      };
+    }
 
-    return () => {
-      target.style.zIndex = '';
-      popoverContainer.style.backgroundColor = '';
-    };
+    return undefined;
   }, [shouldHighlightTarget, target]);
 
-  // Trap focus within the popover for accessibility
+  // Trapping focus inside the popover
   useFocusTrap(popoverRef);
 
-  // Invoke onClickOutside when clicked outside the popover
+  // Invoke the `onClickOutside` callback when clicking outside the popover.
   React.useEffect(() => {
-    const handleClickOutside = (e: PointerEvent) => {
-      if (e.target === popoverContainerRef.current) {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (popoverContainerRef.current === e.target) {
         onClickOutside?.();
       }
     };
-    if (open) {
-      document.addEventListener('pointerdown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('pointerdown', handleClickOutside);
-    };
-  }, [onClickOutside, open]);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [onClickOutside]);
 
   return ReactDOM.createPortal(
     <div ref={popoverContainerRef} data-nt-popover-container>

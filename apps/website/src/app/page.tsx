@@ -34,7 +34,7 @@ export default function Home() {
       <Tour
         id="tour2"
         options={{
-          highlightTarget: false,
+          preventCloseOnClickOutside: true,
         }}
         steps={[
           {
@@ -61,6 +61,7 @@ export default function Home() {
       </div>
       <div className="flex justify-center gap-4 my-4">
         <button
+          id="target2"
           className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg"
           onClick={() => startTour('tour1')}>
           Start Tour 1
@@ -71,7 +72,7 @@ export default function Home() {
           Start Tour 2
         </button>
         <button
-          id="target2"
+          id="target1"
           className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg"
           onClick={endTour}>
           End Tour
@@ -82,7 +83,6 @@ export default function Home() {
           Next Step
         </button>
         <button
-          id="target1"
           className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg"
           onClick={prevStep}>
           Previous Step
