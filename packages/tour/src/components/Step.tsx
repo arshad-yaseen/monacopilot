@@ -1,11 +1,12 @@
 import React from 'react';
 
+import {isInViewport} from '../helpers';
 import {useTourControls, useTourOptions, useTourState} from '../hooks';
 import {StepProps} from '../types';
 import Popover from './core/Popover';
 
 const Step = ({activeStep, tourOptions}: StepProps) => {
-  const {endTour} = useTourControls();
+  const {endTour, nextStep, prevStep} = useTourControls();
   const {isTourOpen} = useTourState();
   const [popoverTarget, setPopoverTarget] = React.useState<HTMLElement | null>(
     null,
@@ -16,13 +17,43 @@ const Step = ({activeStep, tourOptions}: StepProps) => {
 
   // Set the current step target element as the popover target
   React.useEffect(() => {
-    if (!activeStep) return;
-
-    const targetElement = document.querySelector(activeStep.target);
-    if (targetElement) {
-      setPopoverTarget(targetElement as HTMLElement);
+    if (!activeStep) {
+      return undefined;
     }
-  }, [activeStep]);
+
+    const targetElement = document.querySelector<HTMLElement>(
+      activeStep.target,
+    );
+
+    if (!targetElement) {
+      return undefined;
+    }
+
+    // Check if the target element is in the viewport
+    const isTargetInViewport = isInViewport(targetElement);
+
+    // If the target element is not in the viewport, scroll it into view
+    if (!isTargetInViewport) {
+      targetElement.scrollIntoView({behavior: 'smooth', block: 'center'});
+
+      // wait for the scroll to complete before setting the popover target
+      const scrollId = setTimeout(() => {
+        setPopoverTarget(targetElement);
+      }, 600);
+
+      return () => {
+        clearTimeout(scrollId);
+        if (popoverTarget !== null) setPopoverTarget(null);
+      };
+    } else {
+      // If the target element is in the viewport, set the popover target immediately
+      if (popoverTarget !== targetElement) setPopoverTarget(targetElement);
+    }
+
+    return () => {
+      if (popoverTarget !== null) setPopoverTarget(null);
+    };
+  }, [activeStep, setPopoverTarget]);
 
   if (!activeStep) return null;
 
@@ -35,7 +66,11 @@ const Step = ({activeStep, tourOptions}: StepProps) => {
       onClickOutside={() =>
         !preventCloseOnClickOutside ? endTour() : undefined
       }>
-      <Popover.Content data-tour-step>{activeStep.content}</Popover.Content>
+      <Popover.Content data-tour-step>
+        {activeStep.content}
+        <button onClick={prevStep}>Prev</button>
+        <button onClick={nextStep}>Next</button>
+      </Popover.Content>
     </Popover>
   );
 };

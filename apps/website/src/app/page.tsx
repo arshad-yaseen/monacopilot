@@ -6,7 +6,7 @@ export default function Home() {
   const {startTour, endTour, nextStep, prevStep, goToStep} = useTourControls();
 
   return (
-    <main className="flex flex-col min-h-screen bg-gray-50 p-8">
+    <main className="flex flex-col min-h-screen bg-gray-50 p-8 h-[200vh]">
       <h1 className="text-3xl font-bold text-center text-gray-900">
         Hello World
       </h1>
@@ -29,6 +29,7 @@ export default function Home() {
             ),
           },
           {target: '#target2', content: 'Tour 1 - This is the second step.'},
+          {target: '#target3', content: 'Tour 1 - This is the third step.'},
         ]}
       />
       <Tour
@@ -61,7 +62,6 @@ export default function Home() {
       </div>
       <div className="flex justify-center gap-4 my-4">
         <button
-          id="target2"
           className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg"
           onClick={() => startTour('tour1')}>
           Start Tour 1
@@ -88,10 +88,17 @@ export default function Home() {
           Previous Step
         </button>
         <button
+          id="target2"
           className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg"
           onClick={() => goToStep(1)}>
           Go to First Step
         </button>
+      </div>
+
+      <div className="flex flex-wrap justify-center gap-4 my-8 items-center pt-[700px]">
+        <div id="target3" className="bg-blue-500 text-white p-4 rounded-lg">
+          Target 2
+        </div>
       </div>
     </main>
   );

@@ -90,7 +90,6 @@ const PopoverContent = ({
     }, 50);
 
     return () => {
-      popover.style.transition = '';
       clearTimeout(animationTimeoutId);
     };
   }, [open, targetRect, preferredPosition]);

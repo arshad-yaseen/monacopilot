@@ -9,7 +9,7 @@
   --nt-radius: 0.6rem;
   --nt-spacing: 1rem;
   --nt-transition-timing-function-step: cubic-bezier(0.2, 0, 0.2, 1);
-  --nt-transition-duration: 0.2s;
+  --nt-transition-duration: 0.4s;
   --nt-animation-duration: 0.2s;
 }
 
@@ -37,10 +37,10 @@
   left: 0;
   width: 100%;
   height: 100%;
-  animation: NtfadeIn var(--nt-animation-duration) ease-out;
+  animation: NtFadeIn var(--nt-animation-duration) ease-out;
 }
 
-@keyframes NtfadeIn {
+@keyframes NtFadeIn {
   from {
     opacity: 0;
   }

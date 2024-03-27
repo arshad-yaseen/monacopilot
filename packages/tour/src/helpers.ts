@@ -1,6 +1,6 @@
 import {FloatingCoords, FloatingPosition, FloatingRect} from './types';
 
-/** Get the floating position based on the target and floating element */
+// Calculate the floating position based on the target element and the floating element
 export const getFloatingPosition = (
   targetRect: FloatingRect,
   floatingRect: FloatingRect,
@@ -46,4 +46,16 @@ export const getFloatingPosition = (
   );
 
   return {top, left};
+};
+
+// Check if the element is in the viewport
+export const isInViewport = (elem: HTMLElement): boolean => {
+  const rect = elem.getBoundingClientRect();
+  return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <=
+      (window.innerHeight || document.documentElement.clientHeight) &&
+    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+  );
 };
