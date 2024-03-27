@@ -2,12 +2,7 @@ import React from 'react';
 
 import {FOCUSABLE_ELEMENTS_QUERY} from '../constants';
 
-/**
- * This hook traps focus within a specified ref element, ensuring that keyboard navigation
- * does not move outside the bounds of the element.
- *
- * @param ref A React ref object pointing to the element to trap focus within.
- */
+// This hook traps focus within a specified ref element, ensuring that keyboard navigation does not move outside the bounds of the element.
 const useFocusTrap = (ref: React.RefObject<HTMLElement>) => {
   React.useEffect(() => {
     const node = ref.current;
