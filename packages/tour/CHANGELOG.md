@@ -1,5 +1,11 @@
 # next-tour
 
+## 0.2.6
+
+### Patch Changes
+
+- Improved typings, Code refactor, Improve Performance
+
 ## 0.2.5
 
 ### Patch Changes
