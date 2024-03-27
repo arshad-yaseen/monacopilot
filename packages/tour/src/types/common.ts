@@ -1,16 +1,16 @@
-/** Coords represents the left and top position of an element. */
-export interface Coords {
+/** FloatingCoords is a pair of coordinates that represent the position of a floating element */
+export interface FloatingCoords {
   left: number;
   top: number;
 }
 
-/** Rect represents the position and size of an element. */
-export interface Rect
+/** FloatingRect is a rectangle that represents the position and size of a floating element */
+export interface FloatingRect
   extends Pick<DOMRect, 'top' | 'left' | 'width' | 'height'> {}
 
-/** Position represents the preferred position of a floating element. */
-export type Position =
+export type FloatingPosition =
   | 'top-center'
   | 'bottom-center'
   | 'left-center'
-  | 'right-center';
+  | 'right-center'
+  | 'window-center';

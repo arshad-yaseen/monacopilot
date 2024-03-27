@@ -9,7 +9,7 @@
     "build": "npm run build --workspace=next-tour",
     "dev": "npm run dev --workspace=website",
     "build:website": "npm run build --workspace=website",
-    "lint": "npm run lint --workspace=next-tour && npm run lint --workspace=website",
+    "lint": "npm run lint --workspace=next-tour --workspace=website",
     "test": "npm run test --workspace=next-tour",
     "format": "prettier '**/*.{js,jsx,ts,tsx,json,md,mdx,css,scss,yaml,yml}' --write",
     "tsc": "npm run tsc --workspace=next-tour --workspace=website",

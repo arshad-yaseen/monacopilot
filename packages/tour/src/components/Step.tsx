@@ -1,20 +1,23 @@
 import React from 'react';
 
-import {useTourControls, useTourState} from '../hooks';
+import {useTourControls, useTourOptions, useTourState} from '../hooks';
 import {StepProps} from '../types';
 import Popover from './core/Popover';
 
 const Step = ({activeStep, tourOptions}: StepProps) => {
-  const {nextStep, prevStep} = useTourControls();
+  const {endTour} = useTourControls();
   const {isTourOpen} = useTourState();
   const [target, setTarget] = React.useState<HTMLElement | null>(null);
+
+  const {highlightTarget, preventCloseOnClickOutside} =
+    useTourOptions(tourOptions);
 
   React.useEffect(() => {
     if (!activeStep) return;
 
-    const target = document.querySelector(activeStep.target);
-    if (target) {
-      setTarget(target as HTMLElement);
+    const targetElement = document.querySelector(activeStep.target);
+    if (targetElement) {
+      setTarget(targetElement as HTMLElement);
     }
   }, [activeStep]);
 
@@ -25,12 +28,11 @@ const Step = ({activeStep, tourOptions}: StepProps) => {
       open={isTourOpen}
       target={target}
       preferredPosition={activeStep.position}
-      shouldMaskTarget={tourOptions?.showMask}>
-      <Popover.Content data-tour-step>
-        {activeStep.content}
-        <button onClick={nextStep}>Next</button>
-        <button onClick={prevStep}>Prev</button>
-      </Popover.Content>
+      shouldHighlightTarget={highlightTarget}
+      onClickOutside={() =>
+        !preventCloseOnClickOutside ? endTour() : undefined
+      }>
+      <Popover.Content data-tour-step>{activeStep.content}</Popover.Content>
     </Popover>
   );
 };

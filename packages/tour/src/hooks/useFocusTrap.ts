@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {FOCUSABLE_ELEMENTS_QUERY} from '../constants/browser';
+import {FOCUSABLE_ELEMENTS_QUERY} from '../constants';
 
 /**
  * This hook traps focus within a specified ref element, ensuring that keyboard navigation

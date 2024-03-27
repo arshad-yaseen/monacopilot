@@ -1,4 +1,4 @@
-import {Position} from './common';
+import {FloatingPosition} from './common';
 import {StepOptions, TourOptions} from './options';
 
 export interface Tour {
@@ -19,7 +19,7 @@ export interface TourStep {
    * Optional position of the step
    * @default "bottom-center"
    */
-  position?: Position;
+  position?: FloatingPosition;
   /** Optional configuration options for the step. */
   options?: StepOptions;
 }

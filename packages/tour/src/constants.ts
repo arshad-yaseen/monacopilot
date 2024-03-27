@@ -1,4 +1,6 @@
-const FOCUSABLE_ELEMENTS_QUERY = `
+import {FloatingPosition} from './types';
+
+export const FOCUSABLE_ELEMENTS_QUERY = `
   a[href]:not([tabindex^="-"]),
   area[href]:not([tabindex^="-"]),
   input:not([disabled]):not([tabindex^="-"]),
@@ -15,4 +17,4 @@ const FOCUSABLE_ELEMENTS_QUERY = `
   object[usemap]:not([tabindex^="-"])
   `;
 
-export {FOCUSABLE_ELEMENTS_QUERY};
+export const DEFAULT_POPOVER_POSITION: FloatingPosition = 'bottom-center';

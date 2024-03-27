@@ -4,7 +4,7 @@ import {Tour, TourContextType, TourProviderProps} from '../types';
 
 export const TourContext = React.createContext<TourContextType | null>(null);
 
-const TourProvider: React.FC<TourProviderProps> = ({children}) => {
+const TourProvider = ({children}: TourProviderProps) => {
   const [isTourOpen, setIsTourOpen] = React.useState<boolean>(false);
   // the currently active tour.
   const [activeTour, setActiveTour] = React.useState<Tour | null>(null);

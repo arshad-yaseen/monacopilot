@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Position} from './common';
+import {FloatingPosition} from './common';
 import {TourOptions} from './options';
 import {Tour, TourStep} from './tour';
 
@@ -11,10 +11,10 @@ export type TourProps = Tour;
 export interface PopoverProps
   extends React.PropsWithChildren<{
     open: boolean;
-    preferredPosition?: Position;
+    preferredPosition?: FloatingPosition;
     target: HTMLElement | null;
     onClickOutside?: () => void;
-    shouldMaskTarget?: boolean;
+    shouldHighlightTarget?: boolean;
   }> {}
 
 export interface StepProps {

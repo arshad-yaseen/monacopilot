@@ -33,6 +33,9 @@ export default function Home() {
       />
       <Tour
         id="tour2"
+        options={{
+          highlightTarget: false,
+        }}
         steps={[
           {
             target: '#target1',
@@ -53,12 +56,8 @@ export default function Home() {
         ]}
       />
       <div className="flex flex-wrap justify-center gap-4 my-8">
-        <div id="target1" className="bg-blue-500 text-white p-4 rounded-lg">
-          Target 1
-        </div>
-        <div id="target2" className="bg-blue-500 text-white p-4 rounded-lg">
-          Target 2
-        </div>
+        <div className="bg-blue-500 text-white p-4 rounded-lg">Target 1</div>
+        <div className="bg-blue-500 text-white p-4 rounded-lg">Target 2</div>
       </div>
       <div className="flex justify-center gap-4 my-4">
         <button
@@ -72,6 +71,7 @@ export default function Home() {
           Start Tour 2
         </button>
         <button
+          id="target2"
           className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg"
           onClick={endTour}>
           End Tour
@@ -82,6 +82,7 @@ export default function Home() {
           Next Step
         </button>
         <button
+          id="target1"
           className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg"
           onClick={prevStep}>
           Previous Step
