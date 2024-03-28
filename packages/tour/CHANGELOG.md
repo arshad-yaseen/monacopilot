@@ -1,5 +1,14 @@
 # next-tour
 
+## 0.3.0
+
+### Minor Changes
+
+- - Step Footer Actions
+  - Step Title
+  - Design tokens
+  - New step design
+
 ## 0.2.6
 
 ### Patch Changes
