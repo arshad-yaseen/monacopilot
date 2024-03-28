@@ -67,7 +67,7 @@ export const scrollToStepTarget = (
   let checksWithoutMovement = 0;
 
   const checkScrollCompletion = () => {
-    if (checksWithoutMovement % 10 === 0) {
+    if (checksWithoutMovement % 3 === 0) {
       const currentPosition = targetElement.getBoundingClientRect().top;
 
       if (currentPosition === lastPosition) {

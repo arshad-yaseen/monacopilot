@@ -12,48 +12,55 @@ export default function Home() {
       </h1>
       <Tour
         id="tour1"
+        options={{
+          highlightTarget: false,
+        }}
         steps={[
           {
             target: '#target1',
-            content: (
-              <div className="space-x-2">
-                <input
-                  type="text"
-                  placeholder="Enter something..."
-                  className="border border-gray-300 p-2 rounded-lg focus:border-blue-500 focus:outline-none"
-                />
-                <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold p-2 rounded-lg">
-                  Tour 1 Submit
-                </button>
-              </div>
-            ),
+            title: "Let's get started",
+            content:
+              'This is the first step of the tour. If you need help, click Next. If not, click Skip.',
           },
-          {target: '#target2', content: 'Tour 1 - This is the second step.'},
-          {target: '#target3', content: 'Tour 1 - This is the third step.'},
+          {
+            target: '#target2',
+            title: 'Next up',
+            position: 'window-center',
+            content:
+              'This is the second step of the tour. If you need help, click Next. If not, click Skip.',
+          },
+          {
+            target: '#target3',
+            title: 'Final step',
+            content:
+              'This is the final step of the tour. If you need help, click Next. If not, click Skip.',
+          },
         ]}
       />
       <Tour
         id="tour2"
         options={{
-          preventCloseOnClickOutside: true,
+          highlightTarget: false,
         }}
         steps={[
           {
-            target: '#target1',
-            content: (
-              <div className="space-x-2">
-                <input
-                  type="text"
-                  placeholder="Enter something..."
-                  className="border border-gray-300 p-2 rounded-lg focus:border-blue-500 focus:outline-none"
-                />
-                <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold p-2 rounded-lg">
-                  Tour 2 Submit
-                </button>
-              </div>
-            ),
+            target: '#target2',
+            title: "Let's get started too",
+            content:
+              'This is the first step of the tour. If you need help, click Next. If not, click Skip.',
           },
-          {target: '#target2', content: 'Tour 2 - This is the second step.'},
+          {
+            target: '#target1',
+            title: 'Next up',
+            content:
+              'This is the second step of the tour. If you need help, click Next. If not, click Skip.',
+          },
+          {
+            target: '#target3',
+            title: 'Final step',
+            content:
+              'This is the final step of the tour. If you need help, click Next. If not, click Skip.',
+          },
         ]}
       />
       <div className="flex flex-wrap justify-center gap-4 my-8">

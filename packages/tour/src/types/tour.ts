@@ -13,6 +13,8 @@ export interface Tour {
 export interface TourStep {
   /** The CSS selector of the target element for this step. */
   target: string;
+  /** The title to display for this step. */
+  title?: string;
   /** The content to display for this step. */
   content: React.ReactNode;
   /**

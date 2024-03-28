@@ -5,9 +5,11 @@ import {useTourControls, useTourOptions, useTourState} from '../hooks';
 import {StepProps} from '../types';
 import {isInViewport} from '../utils';
 import Popover from './core/Popover';
+import StepContent from './StepContent';
+import StepFooter from './StepFooter';
 
 const Step = ({activeStep, tourOptions}: StepProps) => {
-  const {endTour, nextStep, prevStep} = useTourControls();
+  const {endTour} = useTourControls();
   const {isTourOpen} = useTourState();
   const [popoverTarget, setPopoverTarget] = React.useState<HTMLElement | null>(
     null,
@@ -19,7 +21,7 @@ const Step = ({activeStep, tourOptions}: StepProps) => {
   // Set the current step target element as the popover target
   React.useEffect(() => {
     if (!activeStep) {
-      return undefined;
+      return;
     }
 
     const targetElement = document.querySelector<HTMLElement>(
@@ -27,7 +29,7 @@ const Step = ({activeStep, tourOptions}: StepProps) => {
     );
 
     if (!targetElement) {
-      return undefined;
+      return;
     }
 
     // Check if the target element is in the viewport
@@ -49,7 +51,7 @@ const Step = ({activeStep, tourOptions}: StepProps) => {
       if (popoverTarget !== targetElement) setPopoverTarget(targetElement);
     }
 
-    return undefined;
+    return;
   }, [activeStep, popoverTarget]);
 
   if (!activeStep) return null;
@@ -63,13 +65,18 @@ const Step = ({activeStep, tourOptions}: StepProps) => {
       onClickOutside={() =>
         !preventCloseOnClickOutside ? endTour() : undefined
       }>
-      <Popover.Content data-tour-step>
-        {activeStep.content}
-        <button onClick={prevStep}>Prev</button>
-        <button onClick={nextStep}>Next</button>
+      <Popover.Content
+        data-nt-step-container
+        data-target-highlight={highlightTarget}>
+        <StepContent>
+          <StepContent.Title>{activeStep.title}</StepContent.Title>
+          {activeStep.content}
+        </StepContent>
+        <StepFooter />
       </Popover.Content>
     </Popover>
   );
 };
+``;
 
 export default Step;

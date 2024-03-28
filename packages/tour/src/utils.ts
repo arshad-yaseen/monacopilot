@@ -25,7 +25,7 @@ export const setStyle = (
   style: keyof React.CSSProperties,
   value: string,
 ) => {
-  let cur = el.style[style];
+  const cur = el.style[style];
   el.style[style] = value;
   return () => {
     el.style[style] = cur;

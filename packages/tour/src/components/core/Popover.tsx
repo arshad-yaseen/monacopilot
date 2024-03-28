@@ -87,7 +87,7 @@ const PopoverContent = ({
     // Add transition after the initial positioning
     const animationTimeoutId = setTimeout(() => {
       popover.style.transition =
-        'top var(--nt-transition-duration), left var(--nt-transition-duration)';
+        'top var(--duration-long), left var(--duration-long)';
     }, 50);
 
     return () => {
