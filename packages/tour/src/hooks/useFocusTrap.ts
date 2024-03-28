@@ -2,48 +2,51 @@ import React from 'react';
 
 import {FOCUSABLE_ELEMENTS_QUERY} from '../constants';
 
-// This hook traps focus within a specified ref element, ensuring that keyboard navigation does not move outside the bounds of the element.
+/**
+ * Hook to trap focus within a given element.
+ * @param ref React.RefObject pointing to the HTMLElement to trap focus within.
+ */
 const useFocusTrap = (ref: React.RefObject<HTMLElement>) => {
   React.useEffect(() => {
     const node = ref.current;
-    if (!node) return;
+    if (!node) {
+      return;
+    }
 
     const getFocusableElements = (): HTMLElement[] =>
       Array.from(node.querySelectorAll(FOCUSABLE_ELEMENTS_QUERY)).filter(
-        el => !el.hasAttribute('disabled'),
-      ) as HTMLElement[];
+        (el: Element): el is HTMLElement => !el.hasAttribute('disabled'),
+      );
 
     let focusableElements = getFocusableElements();
 
-    // Focus on the first element initially if any are available.
-    if (focusableElements[0]) focusableElements[0].focus();
+    // Initially focus on the first element, if available.
+    focusableElements[0]?.focus();
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Tab') return;
+      if (event.key !== 'Tab' || focusableElements.length === 0) {
+        return;
+      }
 
-      // Refresh focusable elements to ensure the list is up-to-date.
-      focusableElements = getFocusableElements();
-      if (focusableElements.length === 0) return;
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+      const activeElement = document.activeElement as HTMLElement;
 
-      const {firstElement, lastElement} = {
-        firstElement: focusableElements[0],
-        lastElement: focusableElements[focusableElements.length - 1],
-      };
+      const isForwardTab = !event.shiftKey && activeElement === lastElement;
+      const isBackwardTab = event.shiftKey && activeElement === firstElement;
 
-      // Handling forward tab on the last element or backward tab on the first element.
-      if (
-        (event.shiftKey && document.activeElement === firstElement) ||
-        (!event.shiftKey && document.activeElement === lastElement)
-      ) {
-        const targetElement = event.shiftKey ? lastElement : firstElement;
+      if (isForwardTab || isBackwardTab) {
+        const targetElement = event.shiftKey ? firstElement : lastElement;
         targetElement.focus();
         event.preventDefault();
       }
+
+      // Refresh list
+      focusableElements = getFocusableElements();
     };
 
     document.addEventListener('keydown', handleKeyDown);
 
-    // Cleanup to remove the event listener on component unmount.
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [ref]);
 };

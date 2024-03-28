@@ -1,8 +1,9 @@
 import React from 'react';
 
-import {isInViewport} from '../helpers';
+import {scrollToStepTarget} from '../helpers';
 import {useTourControls, useTourOptions, useTourState} from '../hooks';
 import {StepProps} from '../types';
+import {isInViewport} from '../utils';
 import Popover from './core/Popover';
 
 const Step = ({activeStep, tourOptions}: StepProps) => {
@@ -35,15 +36,12 @@ const Step = ({activeStep, tourOptions}: StepProps) => {
     // If the target element is not in the viewport, scroll it into view
     if (!isTargetInViewport) {
       setPopoverTarget(null);
-      targetElement.scrollIntoView({behavior: 'smooth', block: 'center'});
 
-      // wait for the scroll to complete before setting the popover target
-      const scrollId = setTimeout(() => {
+      scrollToStepTarget(targetElement, () => {
         setPopoverTarget(targetElement);
-      }, 600);
+      });
 
       return () => {
-        clearTimeout(scrollId);
         if (popoverTarget !== null) setPopoverTarget(null);
       };
     } else {

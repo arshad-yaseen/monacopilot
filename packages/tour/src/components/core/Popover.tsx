@@ -3,14 +3,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {DEFAULT_POPOVER_POSITION} from '../../constants';
-import {getFloatingPosition} from '../../helpers';
-import {useFocusTrap} from '../../hooks';
+import {getPopoverFloatingPosition} from '../../helpers';
+import {useFocusTrap, usePreventScroll} from '../../hooks';
 import {
   FloatingCoords,
   FloatingRect,
   PopoverContextType,
   PopoverProps,
 } from '../../types';
+import {setStyle} from '../../utils';
 
 const PopoverContext = React.createContext<PopoverContextType | null>(null);
 
@@ -72,7 +73,7 @@ const PopoverContent = ({
   // Position the popover based on the target element
   React.useEffect(() => {
     if (!open || !targetRect || !popoverRef.current) return;
-    const newCoords: FloatingCoords = getFloatingPosition(
+    const newCoords: FloatingCoords = getPopoverFloatingPosition(
       targetRect,
       popoverRef.current.getBoundingClientRect(),
       preferredPosition,
@@ -97,26 +98,23 @@ const PopoverContent = ({
   // Highlight the target element and dim the background if `shouldHighlightTarget` is true
   React.useEffect(() => {
     if (shouldHighlightTarget && target && popoverContainerRef.current) {
-      target.style.zIndex = '10001';
+      const restoreTargetZIndex = setStyle(target, 'zIndex', '10001');
+
       popoverContainerRef.current.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
 
       const changedPopoverContainer = popoverContainerRef.current;
 
       return () => {
-        if (changedPopoverContainer) {
-          changedPopoverContainer.style.backgroundColor = '';
-        }
-        if (target) {
-          target.style.zIndex = '';
-        }
+        changedPopoverContainer.style.backgroundColor = '';
+        restoreTargetZIndex();
       };
     }
-
-    return undefined;
   }, [shouldHighlightTarget, target]);
 
   // Trapping focus inside the popover
   useFocusTrap(popoverRef);
+  // Preventing scrolling on the body when the popover is open
+  usePreventScroll(open);
 
   // Invoke the `onClickOutside` callback when clicking outside the popover.
   React.useEffect(() => {

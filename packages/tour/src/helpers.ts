@@ -1,7 +1,7 @@
 import {FloatingCoords, FloatingPosition, FloatingRect} from './types';
 
-// Calculate the floating position based on the target element and the floating element
-export const getFloatingPosition = (
+// Calculate the floating position of the popover
+export const getPopoverFloatingPosition = (
   targetRect: FloatingRect,
   floatingRect: FloatingRect,
   preferredPosition: FloatingPosition,
@@ -48,17 +48,43 @@ export const getFloatingPosition = (
   return {top, left};
 };
 
-// Check if the element is in the viewport
-export const isInViewport = (el: HTMLElement): boolean => {
-  if (!el || !window.visualViewport) return false;
+// Scroll to the step target element and call the onCompleted callback when the scroll is completed.
+export const scrollToStepTarget = (
+  targetElement: Element | null,
+  onCompleted: () => void,
+): void => {
+  if (!targetElement) {
+    onCompleted();
+    return;
+  }
 
-  const rect = el.getBoundingClientRect();
-  const SAFARI_ADJUSTMENT = 40;
+  targetElement.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center',
+  });
 
-  return (
-    rect.top >= 0 &&
-    rect.left >= 0 &&
-    rect.bottom <= window.visualViewport.height - SAFARI_ADJUSTMENT &&
-    rect.right <= window.visualViewport.width
-  );
+  let lastPosition: number | null = null;
+  let checksWithoutMovement = 0;
+
+  const checkScrollCompletion = () => {
+    if (checksWithoutMovement % 10 === 0) {
+      const currentPosition = targetElement.getBoundingClientRect().top;
+
+      if (currentPosition === lastPosition) {
+        if (++checksWithoutMovement > 6) {
+          onCompleted();
+          return;
+        }
+      } else {
+        lastPosition = currentPosition;
+        checksWithoutMovement = 0;
+      }
+    } else {
+      checksWithoutMovement++;
+    }
+
+    window.requestAnimationFrame(checkScrollCompletion);
+  };
+
+  window.requestAnimationFrame(checkScrollCompletion);
 };
