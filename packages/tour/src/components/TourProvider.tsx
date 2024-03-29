@@ -64,7 +64,6 @@ const TourProvider = ({children}: TourProviderProps) => {
       activeTour,
       activeStepIndex,
       totalSteps,
-      toursRef.current,
       addTour,
       startTour,
       endTour,
