@@ -11,24 +11,27 @@ const StepFooter = () => {
   const showFinishButton = activeStepIndex === totalSteps - 1;
 
   return (
-    <footer data-nt-tour-step-footer>
-      <div data-nt-tour-step-footer-actions>
+    <footer className="nt-step-footer">
+      <div className="nt-step-footer-actions">
         {showBackButton && (
           <button
             onClick={() => prevStep()}
-            data-nt-button
+            className="nt-button"
             data-variant="outline">
             Back
           </button>
         )}
-        <button onClick={() => endTour()} data-nt-button data-variant="outline">
+        <button
+          onClick={() => endTour()}
+          className="nt-button"
+          data-variant="outline">
           Skip
         </button>
         <div style={{flex: 1}} />
         {showNextButton && (
           <button
             onClick={() => nextStep()}
-            data-nt-button
+            className="nt-button"
             data-variant="primary">
             Next
           </button>
@@ -36,7 +39,7 @@ const StepFooter = () => {
         {showFinishButton && (
           <button
             onClick={() => endTour()}
-            data-nt-button
+            className="nt-button"
             data-variant="primary">
             Finish
           </button>

@@ -6,25 +6,28 @@ import {useTourControls, useTourState} from '../hooks';
 import {TourProps} from '../types';
 import Step from './Step';
 
-const Tour = (props: TourProps) => {
+const Tour = React.memo(({id, ...restProps}: TourProps) => {
   const {addTour} = useTourControls();
   const {activeTour, activeStepIndex} = useTourState();
 
+  const tourProps = React.useMemo(() => ({id, ...restProps}), [id, restProps]);
+
   // Add this tour to the global tours state
   React.useEffect(() => {
-    addTour(props);
-  }, [addTour, props]);
+    addTour(tourProps);
+  }, [addTour, tourProps]);
 
-  // Determine if this tour is the active tour
-  const isActiveTour = activeTour?.id === props.id;
+  // Check if this tour is the active tour
+  const isActiveTour = activeTour?.id === id;
 
-  // Find the active step within the active tour
+  // Get the active step from the active tour
   const activeStep = isActiveTour ? activeTour.steps[activeStepIndex] : null;
 
-  // Only render the Step component if this tour is active
   if (!isActiveTour) return null;
 
   return <Step activeStep={activeStep} tourOptions={activeTour.options} />;
-};
+});
+
+Tour.displayName = 'Next Tour';
 
 export default Tour;

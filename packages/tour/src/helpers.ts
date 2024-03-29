@@ -1,4 +1,5 @@
 import {FloatingCoords, FloatingPosition, FloatingRect} from './types';
+import {debounce} from './utils';
 
 // Calculate the floating position of the popover
 export const getPopoverFloatingPosition = (
@@ -64,27 +65,31 @@ export const scrollToStepTarget = (
   });
 
   let lastPosition: number | null = null;
-  let checksWithoutMovement = 0;
+  let animationFrameRequested = false;
 
   const checkScrollCompletion = () => {
-    if (checksWithoutMovement % 3 === 0) {
-      const currentPosition = targetElement.getBoundingClientRect().top;
+    animationFrameRequested = false;
 
-      if (currentPosition === lastPosition) {
-        if (++checksWithoutMovement > 6) {
-          onCompleted();
-          return;
-        }
-      } else {
-        lastPosition = currentPosition;
-        checksWithoutMovement = 0;
-      }
-    } else {
-      checksWithoutMovement++;
+    const currentPosition = targetElement.getBoundingClientRect().top;
+    if (currentPosition === lastPosition) {
+      onCompleted();
+      return;
     }
 
-    window.requestAnimationFrame(checkScrollCompletion);
+    lastPosition = currentPosition;
+    requestNextAnimationFrame();
   };
 
-  window.requestAnimationFrame(checkScrollCompletion);
+  const requestNextAnimationFrame = () => {
+    if (!animationFrameRequested) {
+      requestAnimationFrame(checkScrollCompletion);
+      animationFrameRequested = true;
+    }
+  };
+
+  const debouncedRequestNextAnimationFrame = debounce(
+    requestNextAnimationFrame,
+    100,
+  );
+  debouncedRequestNextAnimationFrame();
 };

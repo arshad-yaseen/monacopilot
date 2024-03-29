@@ -15,7 +15,7 @@ export interface TourOptions {
 
   /**
    * Whether to visually highlight the target element of each tour step.
-   * When enabled, draws attention to the element that the tour step is focused on, often by dimming the background or creating a visual border around the element.
+   * When enabled, draws attention to the element that the tour step is focused on.
    * @default true
    */
   highlightTarget?: boolean;

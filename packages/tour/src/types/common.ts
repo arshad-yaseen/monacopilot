@@ -12,3 +12,11 @@ export type FloatingPosition =
   | 'left-center'
   | 'right-center'
   | 'window-center';
+
+export type ClassValue =
+  | string
+  | undefined
+  | null
+  | false
+  | {[key: string]: boolean}
+  | ClassValue[];

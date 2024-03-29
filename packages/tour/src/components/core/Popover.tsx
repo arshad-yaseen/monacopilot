@@ -2,16 +2,11 @@ import React from 'react';
 
 import ReactDOM from 'react-dom';
 
-import {DEFAULT_POPOVER_POSITION} from '../../constants';
+import {_DEFAULT_POPOVER_POSITION} from '../../constants';
 import {getPopoverFloatingPosition} from '../../helpers';
-import {useFocusTrap, usePreventScroll} from '../../hooks';
-import {
-  FloatingCoords,
-  FloatingRect,
-  PopoverContextType,
-  PopoverProps,
-} from '../../types';
-import {setStyle} from '../../utils';
+import {useFocusTrap, useLockBodyScroll} from '../../hooks';
+import {PopoverContextType, PopoverProps} from '../../types';
+import {cn, setStyle} from '../../utils';
 
 const PopoverContext = React.createContext<PopoverContextType | null>(null);
 
@@ -26,12 +21,12 @@ const usePopover = (): PopoverContextType => {
 const Popover = ({
   children,
   open,
-  preferredPosition = DEFAULT_POPOVER_POSITION,
+  preferredPosition = _DEFAULT_POPOVER_POSITION,
   target,
   onClickOutside,
   shouldHighlightTarget = true,
 }: PopoverProps) => {
-  if (!target || !open) return null;
+  if (!open) return null;
 
   return (
     <PopoverContext.Provider
@@ -49,6 +44,7 @@ const Popover = ({
 
 const PopoverContent = ({
   children,
+  className,
   ...props
 }: React.ComponentPropsWithoutRef<'div'>) => {
   const {
@@ -59,80 +55,63 @@ const PopoverContent = ({
     shouldHighlightTarget,
   } = usePopover();
   const popoverRef = React.useRef<HTMLDivElement>(null);
-  const popoverContainerRef = React.useRef<HTMLDivElement>(null);
-  const [targetRect, setTargetRect] = React.useState<FloatingRect | null>(null);
+  const [isPositioned, setIsPositioned] = React.useState(false);
 
-  // Get the target element's rect
   React.useEffect(() => {
-    if (target) {
-      const rect = target.getBoundingClientRect();
-      setTargetRect(rect);
-    }
-  }, [target]);
-
-  // Position the popover based on the target element
-  React.useEffect(() => {
-    if (!open || !targetRect || !popoverRef.current) return;
-    const newCoords: FloatingCoords = getPopoverFloatingPosition(
-      targetRect,
-      popoverRef.current.getBoundingClientRect(),
-      preferredPosition,
-    );
-
     const {current: popover} = popoverRef;
 
-    popover.style.top = `${newCoords.top}px`;
-    popover.style.left = `${newCoords.left}px`;
+    if (!open || !target || !popover) return;
 
-    // Add transition after the initial positioning
-    const animationTimeoutId = setTimeout(() => {
-      popover.style.transition =
-        'top var(--duration-long), left var(--duration-long)';
-    }, 50);
+    const positionPopover = () => {
+      const targetRect = target.getBoundingClientRect();
+      const popoverRect = popover.getBoundingClientRect();
+
+      const coords = getPopoverFloatingPosition(
+        targetRect,
+        popoverRect,
+        preferredPosition,
+      );
+
+      setStyle(popover, 'top', `${coords.top}px`);
+      setStyle(popover, 'left', `${coords.left}px`);
+
+      setIsPositioned(true);
+    };
+
+    positionPopover();
+
+    let restore: (() => void) | undefined;
+    if (shouldHighlightTarget) {
+      restore = setStyle(target, 'zIndex', '10001');
+    }
 
     return () => {
-      clearTimeout(animationTimeoutId);
+      if (restore) restore();
     };
-  }, [open, targetRect, preferredPosition]);
+  }, [open, target, preferredPosition, shouldHighlightTarget]);
 
-  // Highlight the target element and dim the background if `shouldHighlightTarget` is true
-  React.useEffect(() => {
-    if (shouldHighlightTarget && target && popoverContainerRef.current) {
-      const restoreTargetZIndex = setStyle(target, 'zIndex', '10001');
-
-      popoverContainerRef.current.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-
-      const changedPopoverContainer = popoverContainerRef.current;
-
-      return () => {
-        changedPopoverContainer.style.backgroundColor = '';
-        restoreTargetZIndex();
-      };
-    }
-  }, [shouldHighlightTarget, target]);
-
-  // Trapping focus inside the popover
-  useFocusTrap(popoverRef);
-  // Preventing scrolling on the body when the popover is open
-  usePreventScroll(open);
-
-  // Invoke the `onClickOutside` callback when clicking outside the popover.
-  React.useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (popoverContainerRef.current === e.target) {
-        onClickOutside?.();
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [onClickOutside]);
+  useFocusTrap(popoverRef, open);
+  useLockBodyScroll(open);
 
   return ReactDOM.createPortal(
-    <div ref={popoverContainerRef} data-nt-popover-container>
-      <div {...props} ref={popoverRef} data-nt-popover>
+    <>
+      <div
+        className={cn('nt-popover-overlay', {
+          active: open && !!shouldHighlightTarget,
+        })}
+        onClick={onClickOutside}
+      />
+      <div
+        {...props}
+        ref={popoverRef}
+        className={cn(
+          'nt-popover',
+          {'enable-transition': isPositioned},
+          className,
+        )}>
         {children}
       </div>
-    </div>,
+    </>,
     document.body,
   );
 };

@@ -14,7 +14,7 @@ export const useLockBodyScroll = (preventScroll: boolean) => {
     // Call the appropriate method based on the platform
     const restoreFn = isSafari
       ? loackBodyScrollSafari()
-      : loackBodyScrollStandard();
+      : lockBodyScrollStandard();
 
     return () => {
       restoreFn();
@@ -22,7 +22,7 @@ export const useLockBodyScroll = (preventScroll: boolean) => {
   }, [preventScroll]);
 };
 
-const loackBodyScrollStandard = () => {
+const lockBodyScrollStandard = () => {
   const originalStyle = window.getComputedStyle(document.body).overflow;
   document.body.style.overflow = 'hidden';
 

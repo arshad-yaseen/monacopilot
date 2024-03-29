@@ -1,6 +1,6 @@
 import {TourOptions} from '../types/options';
 
-// This hook is to provide default values for the tour options if they are not provided
+/** This hook is to provide default values for the tour options if they are not provided */
 const useTourOptions = (tourOptions?: TourOptions): Required<TourOptions> => {
   const highlightTarget = tourOptions?.highlightTarget ?? true;
   const preventCloseOnClickOutside =

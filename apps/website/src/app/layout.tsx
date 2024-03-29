@@ -1,10 +1,10 @@
 import type {Metadata} from 'next';
 
-import TourProvider from '@/components/TourProvider';
-
 import './globals.css';
 
 import {Inter} from 'next/font/google';
+
+import {TourProvider} from 'next-tour';
 
 const inter = Inter({subsets: ['latin']});
 

@@ -1,9 +1,10 @@
 import React from 'react';
 
+import {_DEFAULT_POPOVER_POSITION} from '../constants';
 import {scrollToStepTarget} from '../helpers';
 import {useTourControls, useTourOptions, useTourState} from '../hooks';
-import {StepProps} from '../types';
-import {isInViewport} from '../utils';
+import {FloatingPosition, StepProps} from '../types';
+import {isInView} from '../utils';
 import Popover from './core/Popover';
 import StepContent from './StepContent';
 import StepFooter from './StepFooter';
@@ -11,6 +12,9 @@ import StepFooter from './StepFooter';
 const Step = ({activeStep, tourOptions}: StepProps) => {
   const {endTour} = useTourControls();
   const {isTourOpen} = useTourState();
+  const [popoverPosition, setPopoverPosition] = React.useState<
+    FloatingPosition | undefined
+  >(_DEFAULT_POPOVER_POSITION);
   const [popoverTarget, setPopoverTarget] = React.useState<HTMLElement | null>(
     null,
   );
@@ -18,55 +22,56 @@ const Step = ({activeStep, tourOptions}: StepProps) => {
   const {highlightTarget, preventCloseOnClickOutside} =
     useTourOptions(tourOptions);
 
-  // Set the current step target element as the popover target
   React.useEffect(() => {
     if (!activeStep) {
-      return;
-    }
-
-    const targetElement = document.querySelector<HTMLElement>(
-      activeStep.target,
-    );
-
-    if (!targetElement) {
-      return;
-    }
-
-    // Check if the target element is in the viewport
-    const isTargetInViewport = isInViewport(targetElement);
-
-    // If the target element is not in the viewport, scroll it into view
-    if (!isTargetInViewport) {
       setPopoverTarget(null);
-
-      scrollToStepTarget(targetElement, () => {
-        setPopoverTarget(targetElement);
-      });
-
-      return () => {
-        if (popoverTarget !== null) setPopoverTarget(null);
-      };
-    } else {
-      // If the target element is in the viewport, set the popover target immediately
-      if (popoverTarget !== targetElement) setPopoverTarget(targetElement);
+      return;
     }
 
-    return;
-  }, [activeStep, popoverTarget]);
+    const newPosition = activeStep.target
+      ? activeStep.position
+      : 'window-center';
 
-  if (!activeStep) return null;
+    setPopoverPosition(newPosition);
+
+    const targetSelector = activeStep.target;
+    if (!targetSelector) {
+      setPopoverTarget(null);
+      return;
+    }
+
+    const targetElement = document.querySelector<HTMLElement>(targetSelector);
+    if (!targetElement) {
+      console.warn(`Step target not found: ${targetSelector}`);
+      setPopoverTarget(null);
+      return;
+    }
+
+    const ensureTargetInView = () => {
+      if (isInView(targetElement)) {
+        setPopoverTarget(targetElement);
+      } else {
+        setPopoverTarget(null);
+        scrollToStepTarget(targetElement, () =>
+          setPopoverTarget(targetElement),
+        );
+      }
+    };
+
+    ensureTargetInView();
+  }, [activeStep, isTourOpen]);
+
+  if (!activeStep || !isTourOpen) return null;
 
   return (
     <Popover
       open={isTourOpen}
       target={popoverTarget}
-      preferredPosition={activeStep.position}
+      preferredPosition={popoverPosition}
       shouldHighlightTarget={highlightTarget}
-      onClickOutside={() =>
-        !preventCloseOnClickOutside ? endTour() : undefined
-      }>
+      onClickOutside={() => !preventCloseOnClickOutside && endTour()}>
       <Popover.Content
-        data-nt-step-container
+        className="nt-step-container"
         data-target-highlight={highlightTarget}>
         <StepContent>
           <StepContent.Title>{activeStep.title}</StepContent.Title>
@@ -77,6 +82,5 @@ const Step = ({activeStep, tourOptions}: StepProps) => {
     </Popover>
   );
 };
-``;
 
 export default Step;

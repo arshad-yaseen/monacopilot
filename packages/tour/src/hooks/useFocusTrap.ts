@@ -6,8 +6,9 @@ import {FOCUSABLE_ELEMENTS_QUERY} from '../constants';
  * Hook to trap focus within a given element.
  * @param ref React.RefObject pointing to the HTMLElement to trap focus within.
  */
-const useFocusTrap = (ref: React.RefObject<HTMLElement>) => {
+const useFocusTrap = (ref: React.RefObject<HTMLElement>, enabled = true) => {
   React.useEffect(() => {
+    if (!enabled) return;
     const node = ref.current;
     if (!node) {
       return;
@@ -48,7 +49,7 @@ const useFocusTrap = (ref: React.RefObject<HTMLElement>) => {
     document.addEventListener('keydown', handleKeyDown);
 
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [ref]);
+  }, [ref, enabled]);
 };
 
 export default useFocusTrap;
