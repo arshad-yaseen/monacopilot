@@ -4,18 +4,18 @@
 
 ### Patch Changes
 
-- - Performance improvements
-  - Steps without target
-  - Tech debt
+- Performance improvements
+- Steps without target
+- Tech debt
 
 ## 0.3.0
 
 ### Minor Changes
 
-- - Step Footer Actions
-  - Step Title
-  - Design tokens
-  - New step design
+- Step Footer Actions
+- Step Title
+- Design tokens
+- New step design
 
 ## 0.2.6
 

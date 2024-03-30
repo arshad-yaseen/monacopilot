@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 
 import {scrollToStepTarget} from '../helpers';
 import {useTourControls, useTourOptions, useTourState} from '../hooks';
@@ -8,14 +8,16 @@ import Popover from './core/Popover';
 import StepContent from './StepContent';
 import StepFooter from './StepFooter';
 
-const Step: React.FC<StepProps> = ({step}) => {
+const Step = ({step}: StepProps) => {
   const {endTour} = useTourControls();
   const {isTourOpen} = useTourState();
   const {highlightTarget, preventCloseOnClickOutside} = useTourOptions();
 
-  const [popoverTarget, setPopoverTarget] = useState<HTMLElement | null>(null);
+  const [popoverTarget, setPopoverTarget] = React.useState<HTMLElement | null>(
+    null,
+  );
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!step) {
       setPopoverTarget(null);
       return;
