@@ -1,5 +1,13 @@
 # next-tour
 
+## 0.4.0
+
+### Minor Changes
+
+- - Implement MutationObserver to handle non-existent step targets
+  - Introduce progress bar for tour steps
+  - Refine Provider implementation for better context management and performance
+
 ## 0.3.1
 
 ### Patch Changes
