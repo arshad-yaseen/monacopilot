@@ -57,11 +57,11 @@ export const cn = (...args: ClassValue[]): string => {
   return classes.join(' ');
 };
 
-/** Debounce a function.
- * @param func Function to debounce.
+/** Throttle a function.
+ * @param func Function to throttle.
  * @param timeout Timeout in milliseconds.
  */
-export const debounce = (
+export const throttle = (
   func: () => void,
   timeout: number = 100,
 ): (() => void) => {

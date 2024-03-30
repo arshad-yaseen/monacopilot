@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {TourContext} from '../components/TourProvider';
+import {TourContext} from '../components/TourManager';
 import {TourControls} from '../types';
 
 const useTourControls = (): TourControls => {

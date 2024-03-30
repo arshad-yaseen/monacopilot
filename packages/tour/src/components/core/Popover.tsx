@@ -57,36 +57,43 @@ const PopoverContent = ({
   const popoverRef = React.useRef<HTMLDivElement>(null);
   const [isPositioned, setIsPositioned] = React.useState(false);
 
+  // Position the popover
   React.useEffect(() => {
     const {current: popover} = popoverRef;
 
-    if (!open || !target || !popover) return;
+    if (!open || !popover) return;
+
+    let restore: (() => void) | undefined;
 
     const positionPopover = () => {
-      const targetRect = target.getBoundingClientRect();
+      const targetRect = target?.getBoundingClientRect();
       const popoverRect = popover.getBoundingClientRect();
 
       const coords = getPopoverFloatingPosition(
-        targetRect,
         popoverRect,
         preferredPosition,
+        targetRect,
       );
 
       setStyle(popover, 'top', `${coords.top}px`);
       setStyle(popover, 'left', `${coords.left}px`);
-
-      setIsPositioned(true);
     };
 
     positionPopover();
 
-    let restore: (() => void) | undefined;
-    if (shouldHighlightTarget) {
+    // Wait for the popover to be positioned before enabling transitions
+    const timeoutId = setTimeout(() => {
+      setIsPositioned(true);
+    }, 20);
+
+    // Highlight the target element
+    if (shouldHighlightTarget && target) {
       restore = setStyle(target, 'zIndex', '10001');
     }
 
     return () => {
       if (restore) restore();
+      clearTimeout(timeoutId);
     };
   }, [open, target, preferredPosition, shouldHighlightTarget]);
 

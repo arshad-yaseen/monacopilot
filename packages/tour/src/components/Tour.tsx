@@ -1,3 +1,5 @@
+'use client';
+
 import '../styles.css';
 
 import React from 'react';
@@ -7,8 +9,8 @@ import {TourProps} from '../types';
 import Step from './Step';
 
 const Tour = React.memo(({id, ...restProps}: TourProps) => {
+  const {activeTour, activeStep} = useTourState();
   const {addTour} = useTourControls();
-  const {activeTour, activeStepIndex} = useTourState();
 
   const tourProps = React.useMemo(() => ({id, ...restProps}), [id, restProps]);
 
@@ -18,14 +20,11 @@ const Tour = React.memo(({id, ...restProps}: TourProps) => {
   }, [addTour, tourProps]);
 
   // Check if this tour is the active tour
-  const isActiveTour = activeTour?.id === id;
+  const isTourActive = activeTour?.id === id;
 
-  // Get the active step from the active tour
-  const activeStep = isActiveTour ? activeTour.steps[activeStepIndex] : null;
+  if (!isTourActive) return null;
 
-  if (!isActiveTour) return null;
-
-  return <Step activeStep={activeStep} tourOptions={activeTour.options} />;
+  return <Step step={activeStep} />;
 });
 
 Tour.displayName = 'Next Tour';

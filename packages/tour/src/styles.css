@@ -28,8 +28,7 @@
 
   --transition: cubic-bezier(0.4, 0, 0.2, 1);
 
-  --duration: 0.3s;
-  --duration-long: 0.4s;
+  --duration: 0.4s;
 
   --sc-1: 0.25rem;
   --sc-2: 0.5rem;
@@ -145,7 +144,7 @@
 
 .nt-step-footer {
   width: 100%;
-  padding: var(--sc-3) var(--sc-4);
+  padding: var(--sc-4);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -153,9 +152,10 @@
   border-top: 1px solid var(--color-border-muted);
   border-bottom-left-radius: inherit;
   border-bottom-right-radius: inherit;
+  gap: var(--sc-4);
 }
 
-.nt-step-footer-actions {
+.nt-step-actions {
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -171,7 +171,7 @@
   align-items: start;
   text-align: start;
   gap: var(--sc-2);
-  max-width: 300px;
+  max-width: 340px;
   text-wrap: pretty;
 }
 
@@ -190,4 +190,21 @@
     transform: scale(1);
     opacity: 1;
   }
+}
+
+.nt-step-progress {
+  height: 4px;
+  width: 100%;
+  background-color: var(--color-muted);
+  border-radius: 999px;
+  position: relative;
+  overflow: hidden;
+}
+
+.nt-step-progress-bar {
+  height: 100%;
+  width: 0;
+  background-color: var(--color-secondary-fg);
+  transition: width 0.3s var(--transition);
+  border-radius: inherit;
 }

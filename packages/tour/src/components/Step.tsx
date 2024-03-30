@@ -1,81 +1,82 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
-import {_DEFAULT_POPOVER_POSITION} from '../constants';
 import {scrollToStepTarget} from '../helpers';
 import {useTourControls, useTourOptions, useTourState} from '../hooks';
-import {FloatingPosition, StepProps} from '../types';
+import {StepProps} from '../types';
 import {isInView} from '../utils';
 import Popover from './core/Popover';
 import StepContent from './StepContent';
 import StepFooter from './StepFooter';
 
-const Step = ({activeStep, tourOptions}: StepProps) => {
+const Step: React.FC<StepProps> = ({step}) => {
   const {endTour} = useTourControls();
   const {isTourOpen} = useTourState();
-  const [popoverPosition, setPopoverPosition] = React.useState<
-    FloatingPosition | undefined
-  >(_DEFAULT_POPOVER_POSITION);
-  const [popoverTarget, setPopoverTarget] = React.useState<HTMLElement | null>(
-    null,
-  );
+  const {highlightTarget, preventCloseOnClickOutside} = useTourOptions();
 
-  const {highlightTarget, preventCloseOnClickOutside} =
-    useTourOptions(tourOptions);
+  const [popoverTarget, setPopoverTarget] = useState<HTMLElement | null>(null);
 
-  React.useEffect(() => {
-    if (!activeStep) {
+  useEffect(() => {
+    if (!step) {
       setPopoverTarget(null);
       return;
     }
 
-    const newPosition = activeStep.target
-      ? activeStep.position
-      : 'window-center';
+    const {target: targetSelector} = step;
 
-    setPopoverPosition(newPosition);
-
-    const targetSelector = activeStep.target;
     if (!targetSelector) {
       setPopoverTarget(null);
       return;
     }
 
-    const targetElement = document.querySelector<HTMLElement>(targetSelector);
-    if (!targetElement) {
-      console.warn(`Step target not found: ${targetSelector}`);
-      setPopoverTarget(null);
-      return;
-    }
+    const trySetTarget = () => {
+      const targetElement = document.querySelector<HTMLElement>(targetSelector);
+      if (!targetElement) return false;
 
-    const ensureTargetInView = () => {
+      // Check if the target is in view, if not, scroll to it.
       if (isInView(targetElement)) {
         setPopoverTarget(targetElement);
+        return true;
       } else {
-        setPopoverTarget(null);
+        // Scroll to the target and then set it as popover target.
         scrollToStepTarget(targetElement, () =>
           setPopoverTarget(targetElement),
         );
+        return true;
       }
     };
 
-    ensureTargetInView();
-  }, [activeStep, isTourOpen]);
+    // Attempt to set the target. If unsuccessful, observe the DOM for changes.
+    if (trySetTarget()) return;
 
-  if (!activeStep || !isTourOpen) return null;
+    const observer = new MutationObserver(() => {
+      if (trySetTarget()) observer.disconnect();
+    });
+
+    observer.observe(document.body, {childList: true, subtree: true});
+
+    return () => {
+      observer.disconnect();
+      setPopoverTarget(null);
+    };
+  }, [step, isTourOpen]);
+
+  if (!step || !isTourOpen) return null;
 
   return (
     <Popover
       open={isTourOpen}
       target={popoverTarget}
-      preferredPosition={popoverPosition}
+      preferredPosition={step.position}
       shouldHighlightTarget={highlightTarget}
-      onClickOutside={() => !preventCloseOnClickOutside && endTour()}>
+      onClickOutside={() => {
+        if (!preventCloseOnClickOutside) endTour();
+      }}>
       <Popover.Content
         className="nt-step-container"
         data-target-highlight={highlightTarget}>
         <StepContent>
-          <StepContent.Title>{activeStep.title}</StepContent.Title>
-          {activeStep.content}
+          <StepContent.Title>{step.title}</StepContent.Title>
+          {step.content}
         </StepContent>
         <StepFooter />
       </Popover.Content>

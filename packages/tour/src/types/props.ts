@@ -1,7 +1,6 @@
 import React from 'react';
 
 import {FloatingPosition} from './common';
-import {TourOptions} from './options';
 import {Tour, TourStep} from './tour';
 
 export type TourProviderProps = React.PropsWithChildren<unknown>;
@@ -18,6 +17,9 @@ export interface PopoverProps
   }> {}
 
 export interface StepProps {
-  activeStep: TourStep | null;
-  tourOptions?: TourOptions;
+  step: TourStep | null;
+}
+
+export interface ProgressProps {
+  progress: number;
 }

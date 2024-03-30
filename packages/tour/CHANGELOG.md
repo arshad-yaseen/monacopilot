@@ -1,5 +1,13 @@
 # next-tour
 
+## 0.3.1
+
+### Patch Changes
+
+- - Performance improvements
+  - Steps without target
+  - Tech debt
+
 ## 0.3.0
 
 ### Minor Changes

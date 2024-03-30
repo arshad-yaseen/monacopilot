@@ -4,7 +4,7 @@ import './globals.css';
 
 import {Inter} from 'next/font/google';
 
-import {TourProvider} from 'next-tour';
+import TourProvider from '@/components/TourProvider';
 
 const inter = Inter({subsets: ['latin']});
 

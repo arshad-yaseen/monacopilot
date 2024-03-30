@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {TourContext} from '../components/TourProvider';
+import {TourContext} from '../components/TourManager';
 import {TourState} from '../types';
 
 const useTourState = (): TourState => {
@@ -11,9 +11,23 @@ const useTourState = (): TourState => {
     );
   }
 
-  const {tours, activeStepIndex, activeTour, isTourOpen, totalSteps} = context;
+  const {
+    tours,
+    activeStepIndex,
+    activeTour,
+    activeStep,
+    isTourOpen,
+    totalSteps,
+  } = context;
 
-  return {tours, activeStepIndex, activeTour, isTourOpen, totalSteps};
+  return {
+    tours,
+    activeStepIndex,
+    activeTour,
+    isTourOpen,
+    totalSteps,
+    activeStep,
+  };
 };
 
 export default useTourState;

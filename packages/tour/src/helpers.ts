@@ -1,39 +1,40 @@
 import {FloatingCoords, FloatingPosition, FloatingRect} from './types';
-import {debounce} from './utils';
+import {throttle} from './utils';
 
 // Calculate the floating position of the popover
 export const getPopoverFloatingPosition = (
-  targetRect: FloatingRect,
   floatingRect: FloatingRect,
   preferredPosition: FloatingPosition,
+  targetRect?: FloatingRect, // Make targetRect optional
 ): FloatingCoords => {
-  const spacing = 10; // Spacing from the target element
-  const viewPortMargin = 10; // Margin from the viewport edges
+  const spacing = 10;
+  const viewPortMargin = 10;
 
   let top = 0;
   let left = 0;
 
-  switch (preferredPosition) {
-    case 'top-center':
-      top = targetRect.top - floatingRect.height - spacing;
-      left = targetRect.left + targetRect.width / 2 - floatingRect.width / 2;
-      break;
-    case 'bottom-center':
-      top = targetRect.top + targetRect.height + spacing;
-      left = targetRect.left + targetRect.width / 2 - floatingRect.width / 2;
-      break;
-    case 'left-center':
-      top = targetRect.top + targetRect.height / 2 - floatingRect.height / 2;
-      left = targetRect.left - floatingRect.width - spacing;
-      break;
-    case 'right-center':
-      top = targetRect.top + targetRect.height / 2 - floatingRect.height / 2;
-      left = targetRect.left + targetRect.width + spacing;
-      break;
-    case 'window-center':
-      top = window.innerHeight / 2 - floatingRect.height / 2;
-      left = window.innerWidth / 2 - floatingRect.width / 2;
-      break;
+  if (!targetRect || preferredPosition === 'window-center') {
+    top = window.innerHeight / 2 - floatingRect.height / 2;
+    left = window.innerWidth / 2 - floatingRect.width / 2;
+  } else {
+    switch (preferredPosition) {
+      case 'top-center':
+        top = targetRect.top! - floatingRect.height - spacing;
+        left = targetRect.left! + targetRect.width / 2 - floatingRect.width / 2;
+        break;
+      case 'bottom-center':
+        top = targetRect.top! + targetRect.height + spacing;
+        left = targetRect.left! + targetRect.width / 2 - floatingRect.width / 2;
+        break;
+      case 'left-center':
+        top = targetRect.top! + targetRect.height / 2 - floatingRect.height / 2;
+        left = targetRect.left! - floatingRect.width - spacing;
+        break;
+      case 'right-center':
+        top = targetRect.top! + targetRect.height / 2 - floatingRect.height / 2;
+        left = targetRect.left! + targetRect.width + spacing;
+        break;
+    }
   }
 
   // Adjustments for viewport bounds
@@ -87,9 +88,9 @@ export const scrollToStepTarget = (
     }
   };
 
-  const debouncedRequestNextAnimationFrame = debounce(
+  const throttledRequestNextAnimationFrame = throttle(
     requestNextAnimationFrame,
     100,
   );
-  debouncedRequestNextAnimationFrame();
+  throttledRequestNextAnimationFrame();
 };
