@@ -71,6 +71,7 @@ const TourManager = ({children}: TourProviderProps) => {
     [
       isTourOpen,
       activeTour,
+      activeStep,
       activeStepIndex,
       totalSteps,
       goToStep,
