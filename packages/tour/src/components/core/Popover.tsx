@@ -91,7 +91,7 @@ const PopoverContent = ({
       if (restore) restore();
       clearTimeout(timeoutId);
     };
-  }, [open, target, preferredPosition, shouldShowOverlay]);
+  }, [open, target, preferredPosition, shouldShowOverlay, isPositioned]);
 
   useFocusTrap(popoverRef, open);
   useLockBodyScroll(open);
