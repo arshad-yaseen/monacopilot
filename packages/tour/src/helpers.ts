@@ -167,7 +167,7 @@ export const getStepOptions = (step: TourStep | null): StepOptions => {
   return {...defaultOptions, ...step};
 };
 
-// Execute the tour step option callback and return whether the should proceed.
+// Execute the tour step option callback and return whether should proceed.
 export async function executeStepOptionCallback(
   callback?: () => void | Promise<void> | boolean | Promise<boolean>,
 ): Promise<boolean> {

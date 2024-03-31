@@ -1,12 +1,23 @@
 # next-tour
 
+## 0.5.0
+
+### Minor Changes
+
+- Transform for step positioning
+- Route change support
+- Viewport edge aware step positioning
+- New step and tour options.
+  - Tour options: `showProgress`, `showBackButton`, `showCloseButton`, `showOverlay`
+  - Step options: `onBeforeNext`, `onBeforeBack`, `onNext`, `onBack`
+
 ## 0.4.0
 
 ### Minor Changes
 
-- - Implement MutationObserver to handle non-existent step targets
-  - Introduce progress bar for tour steps
-  - Refine Provider implementation for better context management and performance
+- Implement MutationObserver to handle non-existent step targets
+- Introduce progress bar for tour steps
+- Refine Provider implementation for better context management and performance
 
 ## 0.3.1
 

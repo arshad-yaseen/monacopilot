@@ -97,7 +97,6 @@ const TourManager = ({children}: TourProviderProps) => {
     ],
   );
 
-  // Provide the context to children
   return (
     <TourContext.Provider value={contextValue}>{children}</TourContext.Provider>
   );
