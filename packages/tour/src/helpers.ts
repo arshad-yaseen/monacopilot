@@ -1,53 +1,105 @@
-import {FloatingCoords, FloatingPosition, FloatingRect} from './types';
+import {_DEFAULT_POPOVER_POSITION} from './constants';
+import {
+  FloatingCoords,
+  FloatingPosition,
+  FloatingRect,
+  Tour,
+  TourStep,
+} from './types';
+import {StepOptions, TourOptions} from './types/options';
 import {throttle} from './utils';
 
 // Calculate the floating position of the popover
-export const getPopoverFloatingPosition = (
-  floatingRect: FloatingRect,
-  preferredPosition: FloatingPosition,
-  targetRect?: FloatingRect, // Make targetRect optional
-): FloatingCoords => {
-  const spacing = 10;
-  const viewPortMargin = 10;
+export const calculatePopoverPosition = ({
+  popoverRect,
+  targetRect,
+  preferredPosition,
+  padding = 10,
+}: {
+  popoverRect: FloatingRect;
+  targetRect: FloatingRect | null | undefined;
+  preferredPosition: FloatingPosition;
+  padding?: number;
+}): FloatingCoords => {
+  const {innerWidth: windowWidth, innerHeight: windowHeight} = window;
+  let translateX = 0,
+    translateY = 0;
 
-  let top = 0;
-  let left = 0;
+  // Center the popover if targetRect is null or undefined
+  if (!targetRect) {
+    translateX = (windowWidth - popoverRect.width) / 2;
+    translateY = (windowHeight - popoverRect.height) / 2;
+    return {translateX, translateY};
+  }
 
-  if (!targetRect || preferredPosition === 'window-center') {
-    top = window.innerHeight / 2 - floatingRect.height / 2;
-    left = window.innerWidth / 2 - floatingRect.width / 2;
-  } else {
-    switch (preferredPosition) {
-      case 'top-center':
-        top = targetRect.top! - floatingRect.height - spacing;
-        left = targetRect.left! + targetRect.width / 2 - floatingRect.width / 2;
-        break;
-      case 'bottom-center':
-        top = targetRect.top! + targetRect.height + spacing;
-        left = targetRect.left! + targetRect.width / 2 - floatingRect.width / 2;
-        break;
-      case 'left-center':
-        top = targetRect.top! + targetRect.height / 2 - floatingRect.height / 2;
-        left = targetRect.left! - floatingRect.width - spacing;
-        break;
-      case 'right-center':
-        top = targetRect.top! + targetRect.height / 2 - floatingRect.height / 2;
-        left = targetRect.left! + targetRect.width + spacing;
-        break;
+  // Helper functions to check if popover overflows the viewport
+  const fitsInViewportX = (x: number) =>
+    x >= 0 && x + popoverRect.width <= windowWidth;
+  const fitsInViewportY = (y: number) =>
+    y >= 0 && y + popoverRect.height <= windowHeight;
+
+  // Calculate initial position based on preferredPosition
+  switch (preferredPosition) {
+    case 'top':
+      translateX = targetRect.left + (targetRect.width - popoverRect.width) / 2;
+      translateY = targetRect.top - popoverRect.height - padding;
+      break;
+    case 'right':
+      translateX = targetRect.right + padding;
+      translateY =
+        targetRect.top + (targetRect.height - popoverRect.height) / 2;
+      break;
+    case 'bottom':
+      translateX = targetRect.left + (targetRect.width - popoverRect.width) / 2;
+      translateY = targetRect.bottom + padding;
+      break;
+    case 'left':
+      translateX = targetRect.left - popoverRect.width - padding;
+      translateY =
+        targetRect.top + (targetRect.height - popoverRect.height) / 2;
+      break;
+    case 'center': // Center is a fallback and not typically a preferred position
+      translateX = (windowWidth - popoverRect.width) / 2;
+      translateY = (windowHeight - popoverRect.height) / 2;
+      break;
+  }
+
+  // Adjust position if overflowing viewport
+  if (!fitsInViewportX(translateX)) {
+    if (preferredPosition === 'left' || preferredPosition === 'right') {
+      // Try opposite side or center as a last resort
+      translateX =
+        preferredPosition === 'left'
+          ? targetRect.right + padding
+          : targetRect.left - popoverRect.width - padding;
+      if (!fitsInViewportX(translateX)) {
+        // If still doesn't fit, center it
+        translateX = (windowWidth - popoverRect.width) / 2;
+      }
+    } else {
+      // For top and bottom, horizontally center if overflow
+      translateX = (windowWidth - popoverRect.width) / 2;
     }
   }
 
-  // Adjustments for viewport bounds
-  top = Math.max(
-    viewPortMargin,
-    Math.min(top, window.innerHeight - floatingRect.height - viewPortMargin),
-  );
-  left = Math.max(
-    viewPortMargin,
-    Math.min(left, window.innerWidth - floatingRect.width - viewPortMargin),
-  );
+  if (!fitsInViewportY(translateY)) {
+    if (preferredPosition === 'top' || preferredPosition === 'bottom') {
+      // Try opposite side or center as a last resort
+      translateY =
+        preferredPosition === 'top'
+          ? targetRect.bottom + padding
+          : targetRect.top - popoverRect.height - padding;
+      if (!fitsInViewportY(translateY)) {
+        // If still doesn't fit, center it
+        translateY = (windowHeight - popoverRect.height) / 2;
+      }
+    } else {
+      // For left and right, vertically center if overflow
+      translateY = (windowHeight - popoverRect.height) / 2;
+    }
+  }
 
-  return {top, left};
+  return {translateX, translateY};
 };
 
 // Scroll to the step target element and call the onCompleted callback when the scroll is completed.
@@ -90,7 +142,36 @@ export const scrollToStepTarget = (
 
   const throttledRequestNextAnimationFrame = throttle(
     requestNextAnimationFrame,
-    100,
+    500,
   );
   throttledRequestNextAnimationFrame();
 };
+
+export const getTourOptions = (tour: Tour | null): TourOptions => {
+  const defaultOptions: TourOptions = {
+    showOverlay: true,
+    preventCloseOnClickOutside: false,
+    showBackButton: true,
+    showCloseButton: true,
+    showProgress: true,
+  };
+
+  return {...defaultOptions, ...tour?.options};
+};
+
+export const getStepOptions = (step: TourStep | null): StepOptions => {
+  const defaultOptions: StepOptions = {
+    placement: _DEFAULT_POPOVER_POSITION,
+  };
+
+  return {...defaultOptions, ...step};
+};
+
+// Execute the tour step option callback and return whether the should proceed.
+export async function executeStepOptionCallback(
+  callback?: () => void | Promise<void> | boolean | Promise<boolean>,
+): Promise<boolean> {
+  if (!callback) return true;
+  const result = await callback();
+  return result !== false;
+}

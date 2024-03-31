@@ -1,18 +1,27 @@
-'use client';
-
 import React from 'react';
 
+import {executeStepOptionCallback, getStepOptions} from '../helpers';
 import {Tour, TourContextType, TourProviderProps} from '../types';
 
 export const TourContext = React.createContext<TourContextType | null>(null);
 
 const TourManager = ({children}: TourProviderProps) => {
   const [isTourOpen, setIsTourOpen] = React.useState<boolean>(false);
+
   const [activeTour, setActiveTour] = React.useState<Tour | null>(null);
+
+  // Index of the currently active step within the tour
   const [activeStepIndex, setActiveStepIndex] = React.useState<number>(0);
+
   const toursRef = React.useRef<Tour[]>([]);
   const totalSteps: number = activeTour?.steps.length ?? 0;
 
+  const activeStep = React.useMemo(
+    () => activeTour?.steps[activeStepIndex] ?? null,
+    [activeTour, activeStepIndex],
+  );
+
+  // Function to add a new tour
   const addTour = (tour: Tour) => {
     toursRef.current.push(tour);
   };
@@ -31,26 +40,34 @@ const TourManager = ({children}: TourProviderProps) => {
     setActiveStepIndex(0);
   };
 
-  const nextStep = React.useCallback(() => {
-    setActiveStepIndex(prevStep => Math.min(totalSteps - 1, prevStep + 1));
-  }, [totalSteps]);
+  const nextStep = React.useCallback(async () => {
+    const options = getStepOptions(activeStep);
+    const canProceed = await executeStepOptionCallback(options.onBeforeNext);
 
-  const prevStep = React.useCallback(() => {
-    setActiveStepIndex(prevStep => Math.max(0, prevStep - 1));
-  }, []);
+    if (canProceed) {
+      setActiveStepIndex(prevStep => Math.min(totalSteps - 1, prevStep + 1));
+      await executeStepOptionCallback(options.onNext);
+    }
+  }, [activeStep, totalSteps]);
+
+  const prevStep = React.useCallback(async () => {
+    const options = getStepOptions(activeStep);
+    const canGoBack = await executeStepOptionCallback(options.onBeforeBack);
+
+    if (canGoBack) {
+      setActiveStepIndex(prevStep => Math.max(0, prevStep - 1));
+      await executeStepOptionCallback(options.onBack);
+    }
+  }, [activeStep]);
 
   const goToStep = React.useCallback(
     (stepNumber: number) => {
-      if (stepNumber < 1 || stepNumber >= totalSteps) return;
+      if (stepNumber < 0 || stepNumber >= totalSteps) return;
+      // Decrement by 1 to get the correct index
+      // Since the user-facing step numbers are 1-indexed
       setActiveStepIndex(stepNumber - 1);
     },
     [totalSteps],
-  );
-
-  // Get the active step from the active tour
-  const activeStep = React.useMemo(
-    () => activeTour?.steps[activeStepIndex] ?? null,
-    [activeTour, activeStepIndex],
   );
 
   const contextValue = React.useMemo(
@@ -70,8 +87,8 @@ const TourManager = ({children}: TourProviderProps) => {
     }),
     [
       isTourOpen,
-      activeTour,
       activeStep,
+      activeTour,
       activeStepIndex,
       totalSteps,
       goToStep,
@@ -80,6 +97,7 @@ const TourManager = ({children}: TourProviderProps) => {
     ],
   );
 
+  // Provide the context to children
   return (
     <TourContext.Provider value={contextValue}>{children}</TourContext.Provider>
   );

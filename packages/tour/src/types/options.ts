@@ -1,24 +1,33 @@
+import {FloatingPosition} from './common';
+
 export interface TourOptions {
   /**
-   * Whether to show the tour navigation buttons.
-   * Enables navigating through the tour steps with next and previous buttons.
-   * @default true
-   */
-  showNavigation?: boolean;
-
-  /**
    * Whether to show the tour progress indicator.
-   * Displays the current step number over the total steps, providing users with a sense of how much of the tour remains.
+   * Displays the beautiful progress bar indicating the user's progress through the tour.
    * @default true
    */
   showProgress?: boolean;
 
   /**
-   * Whether to visually highlight the target element of each tour step.
-   * When enabled, draws attention to the element that the tour step is focused on.
+   * Indicates whether the close button should be displayed on the tour.
+   * Allows users to exit the tour before completion.
    * @default true
    */
-  highlightTarget?: boolean;
+  showCloseButton?: boolean;
+
+  /**
+   * Indicates whether the back button should be displayed on the tour.
+   * Allows users to navigate to the previous step of the tour.
+   * @default true
+   */
+  showBackButton?: boolean;
+
+  /**
+   * Whether to dim the background of the step.
+   * When enabled, the step's background will be dimmed to highlight the target element.
+   * @default true
+   */
+  showOverlay?: boolean;
 
   /**
    * Whether to prevent the tour from closing when clicking outside the tour step.
@@ -30,23 +39,30 @@ export interface TourOptions {
 
 export interface StepOptions {
   /**
-   * Whether to show the close button on the tour.
-   * Allows users to exit the tour before completion.
-   * @default true
+   * Specifies the placement of the tour step relative to the target element.
+   * This determines the position where the tour guide box will appear around the target.
+   *
+   * @default "bottom-center"
    */
-  showCloseButton?: boolean;
+  placement?: FloatingPosition;
 
   /**
-   * Whether to show the skip button on the tour.
-   * Enables users to skip the tour and proceed to the end.
-   * @default true
+   * A callback function that is executed before moving to the next step.
+   * It can return a boolean or a Promise that resolves to a boolean.
+   * If `false` is returned, the tour will not proceed to the next step.
    */
-  showSkipButton?: boolean;
+  onBeforeNext?: () => boolean | Promise<boolean> | void;
 
   /**
-   * Whether to show the back button on the tour.
-   * Allows users to navigate to the previous step of the tour.
-   * @default true
+   * A callback function that is executed before moving back to the previous step.
+   * It can return a boolean or a Promise that resolves to a boolean.
+   * If `false` is returned, the tour will not move back to the previous step.
    */
-  showBackButton?: boolean;
+  onBeforeBack?: () => boolean | Promise<boolean> | void;
+
+  /** A callback function that is executed after moving to the next step. */
+  onNext?: () => boolean | Promise<boolean> | void;
+
+  /** A callback function that is executed after moving back to the previous step. */
+  onBack?: () => boolean | Promise<boolean> | void;
 }

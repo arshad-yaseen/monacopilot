@@ -1,15 +1,20 @@
 import {useEffect, useLayoutEffect} from 'react';
 
-import {isBrowser, isSafari} from '../utils';
+import {isBrowser} from '../utils';
 
 const useIsomorphicLayoutEffect = isBrowser ? useLayoutEffect : useEffect;
 
-// Prevents scrolling on the body element
+/**
+ * Prevent body scroll when a component is mounted
+ * @param preventScroll - Whether to prevent body scroll
+ */
 export const useLockBodyScroll = (preventScroll: boolean) => {
   useIsomorphicLayoutEffect(() => {
     if (!preventScroll) {
       return;
     }
+
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
     // Call the appropriate method based on the platform
     const restoreFn = isSafari

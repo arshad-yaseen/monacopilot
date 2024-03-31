@@ -13,7 +13,7 @@ export interface PopoverProps
     preferredPosition?: FloatingPosition;
     target: HTMLElement | null;
     onClickOutside?: () => void;
-    shouldHighlightTarget?: boolean;
+    shouldShowOverlay?: boolean;
   }> {}
 
 export interface StepProps {

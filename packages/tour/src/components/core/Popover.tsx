@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {_DEFAULT_POPOVER_POSITION} from '../../constants';
-import {getPopoverFloatingPosition} from '../../helpers';
+import {calculatePopoverPosition} from '../../helpers';
 import {useFocusTrap, useLockBodyScroll} from '../../hooks';
 import {PopoverContextType, PopoverProps} from '../../types';
 import {cn, setStyle} from '../../utils';
@@ -24,7 +24,7 @@ const Popover = ({
   preferredPosition = _DEFAULT_POPOVER_POSITION,
   target,
   onClickOutside,
-  shouldHighlightTarget = true,
+  shouldShowOverlay = true,
 }: PopoverProps) => {
   if (!open) return null;
 
@@ -35,7 +35,7 @@ const Popover = ({
         preferredPosition,
         target,
         onClickOutside,
-        shouldHighlightTarget,
+        shouldShowOverlay,
       }}>
       {children}
     </PopoverContext.Provider>
@@ -47,13 +47,8 @@ const PopoverContent = ({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'div'>) => {
-  const {
-    open,
-    target,
-    preferredPosition,
-    onClickOutside,
-    shouldHighlightTarget,
-  } = usePopover();
+  const {open, target, preferredPosition, onClickOutside, shouldShowOverlay} =
+    usePopover();
   const popoverRef = React.useRef<HTMLDivElement>(null);
   const [isPositioned, setIsPositioned] = React.useState(false);
 
@@ -63,39 +58,40 @@ const PopoverContent = ({
 
     if (!open || !popover) return;
 
-    let restore: (() => void) | undefined;
-
     const positionPopover = () => {
       const targetRect = target?.getBoundingClientRect();
       const popoverRect = popover.getBoundingClientRect();
 
-      const coords = getPopoverFloatingPosition(
+      const {translateX, translateY} = calculatePopoverPosition({
         popoverRect,
-        preferredPosition,
         targetRect,
-      );
+        preferredPosition,
+      });
 
-      setStyle(popover, 'top', `${coords.top}px`);
-      setStyle(popover, 'left', `${coords.left}px`);
+      requestAnimationFrame(() => {
+        popover.style.transform = `translate(${translateX}px, ${translateY}px)`;
+      });
     };
 
     positionPopover();
 
-    // Wait for the popover to be positioned before enabling transitions
-    const timeoutId = setTimeout(() => {
-      setIsPositioned(true);
-    }, 20);
+    let restore: (() => void) | undefined;
 
     // Highlight the target element
-    if (shouldHighlightTarget && target) {
+    if (shouldShowOverlay && target) {
       restore = setStyle(target, 'zIndex', '10001');
     }
+
+    // Wait for the popover to be positioned before enabling transitions
+    const timeoutId = setTimeout(() => {
+      if (!isPositioned) setIsPositioned(true);
+    }, 20);
 
     return () => {
       if (restore) restore();
       clearTimeout(timeoutId);
     };
-  }, [open, target, preferredPosition, shouldHighlightTarget]);
+  }, [open, target, preferredPosition, shouldShowOverlay]);
 
   useFocusTrap(popoverRef, open);
   useLockBodyScroll(open);
@@ -104,7 +100,7 @@ const PopoverContent = ({
     <>
       <div
         className={cn('nt-popover-overlay', {
-          active: open && !!shouldHighlightTarget,
+          active: open && !!shouldShowOverlay,
         })}
         onClick={onClickOutside}
       />

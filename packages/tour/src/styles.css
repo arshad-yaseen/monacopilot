@@ -51,9 +51,8 @@
 }
 
 .nt-popover.enable-transition {
-  transition:
-    top var(--duration) var(--transition),
-    left var(--duration) var(--transition);
+  transition: transform var(--duration) var(--transition);
+  will-change: transform;
 }
 
 .nt-popover-overlay {
@@ -63,20 +62,11 @@
   left: 0;
   width: 100%;
   height: 100%;
-  animation: NtFadeIn var(--duration) var(--transition);
+  animation: nt-fade-in var(--duration) var(--transition);
 }
 
 .nt-popover-overlay.active {
   background-color: rgba(0, 0, 0, 0.5);
-}
-
-@keyframes NtFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
 }
 
 .nt-step-container {
@@ -92,13 +82,13 @@
     0px 16px 24px -8px rgba(0, 0, 0, 0.06);
 
   border-radius: var(--rd-3);
-  animation: ntScaleUp var(--duration) var(--transition);
+  animation: nt-fade-in var(--duration) var(--transition);
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-.nt-step-container[data-target-highlight='true'] {
+.nt-step-container[data-show-overlay='true'] {
   box-shadow: none;
 }
 
@@ -181,17 +171,6 @@
   letter-spacing: -0.02em;
 }
 
-@keyframes ntScaleUp {
-  from {
-    transform: scale(0.95);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
 .nt-step-progress {
   height: 4px;
   width: 100%;
@@ -207,4 +186,13 @@
   background-color: var(--color-secondary-fg);
   transition: width 0.3s var(--transition);
   border-radius: inherit;
+}
+
+@keyframes nt-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

@@ -65,19 +65,20 @@ export const throttle = (
   func: () => void,
   timeout: number = 100,
 ): (() => void) => {
-  let timer: number;
-  return () => {
-    if (timer) {
+  let timer: ReturnType<typeof setTimeout> | null = null;
+
+  return (): void => {
+    if (timer !== null) {
       clearTimeout(timer);
+      timer = null;
     }
-    timer = window.setTimeout(() => {
+
+    // Set a new timer
+    timer = setTimeout(() => {
       func();
+      timer = null;
     }, timeout);
   };
 };
-
-export const isSafari = /^((?!chrome|android).)*safari/i.test(
-  navigator.userAgent,
-);
 
 export const isBrowser = typeof window !== 'undefined';

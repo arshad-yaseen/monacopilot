@@ -1,57 +1,14 @@
 'use client';
 
-import {useEffect, useState} from 'react';
-
-import {Tour, useTourControls, useTourState} from 'next-tour';
+import {useTourControls} from 'next-tour';
 
 export default function Home() {
   const {startTour} = useTourControls();
-  const {activeStepIndex} = useTourState();
-  const [showTarget3, setShowTarget3] = useState(false);
-
-  useEffect(() => {
-    let timeOutId: NodeJS.Timeout | null = null;
-    if (activeStepIndex === 2) {
-      timeOutId = setTimeout(() => {
-        setShowTarget3(true);
-      }, 3000);
-    } else {
-      setShowTarget3(false);
-    }
-
-    return () => {
-      if (timeOutId) clearTimeout(timeOutId);
-    };
-  }, [activeStepIndex]);
-
   return (
     <main className="flex flex-col min-h-screen bg-gray-50 p-8 h-[200vh]">
       <h1 className="text-3xl font-bold text-center text-gray-900">
         Hello World
       </h1>
-      <Tour
-        id="tour1"
-        steps={[
-          {
-            target: '#target1',
-            title: "Let's get started",
-            content:
-              'This is the first step of the tour. If you need help, click Next. If not, click Skip.',
-          },
-          {
-            target: '#target2',
-            title: 'Next up',
-            content:
-              'This is the second step of the tour. If you need help, click Next. If not, click Skip.',
-          },
-          {
-            target: '#target3',
-            title: 'Final step',
-            content:
-              'This is the final step of the tour. If you need help, click Next. If not, click Skip.',
-          },
-        ]}
-      />
       <div className="flex flex-wrap justify-center gap-4 my-8">
         <div id="target1" className="bg-blue-500 text-white p-4 rounded-lg">
           Target 1
@@ -65,14 +22,6 @@ export default function Home() {
         onClick={() => startTour('tour1')}>
         Start Tour
       </button>
-
-      <div className="flex flex-wrap justify-center gap-4 my-8 items-center pt-[700px]">
-        {showTarget3 && (
-          <div id="target3" className="bg-blue-500 text-white p-4 rounded-lg">
-            Target 3
-          </div>
-        )}
-      </div>
     </main>
   );
 }

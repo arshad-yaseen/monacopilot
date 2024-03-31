@@ -6,7 +6,7 @@ export interface PopoverContextType {
   preferredPosition: FloatingPosition;
   target: HTMLElement | null;
   onClickOutside?: () => void;
-  shouldHighlightTarget?: boolean;
+  shouldShowOverlay?: boolean;
 }
 
 export interface TourContextType extends TourControls, TourState {}

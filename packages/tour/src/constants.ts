@@ -17,4 +17,4 @@ export const FOCUSABLE_ELEMENTS_QUERY = `
   object[usemap]:not([tabindex^="-"])
   `;
 
-export const _DEFAULT_POPOVER_POSITION: FloatingPosition = 'bottom-center';
+export const _DEFAULT_POPOVER_POSITION: FloatingPosition = 'bottom';

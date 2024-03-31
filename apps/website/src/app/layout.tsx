@@ -4,7 +4,9 @@ import './globals.css';
 
 import {Inter} from 'next/font/google';
 
+import MyTour from '@/components/MyTour';
 import TourProvider from '@/components/TourProvider';
+import {Tour} from 'next-tour';
 
 const inter = Inter({subsets: ['latin']});
 
@@ -22,6 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <TourProvider>
         <body className={inter.className}>{children}</body>
+        <MyTour />
       </TourProvider>
     </html>
   );

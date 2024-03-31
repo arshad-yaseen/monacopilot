@@ -1,4 +1,3 @@
-import {FloatingPosition} from './common';
 import {StepOptions, TourOptions} from './options';
 
 export interface Tour {
@@ -10,7 +9,7 @@ export interface Tour {
   options?: TourOptions;
 }
 
-export interface TourStep {
+export interface TourStep extends StepOptions {
   /** Optional target element to highlight during this step.
    * If not provided, the step will be displayed in center of the screen like a modal.
    */
@@ -21,11 +20,4 @@ export interface TourStep {
    * This can be a string or a React component.
    */
   content: React.ReactNode;
-  /**
-   * Optional position of the step
-   * @default "bottom-center"
-   */
-  position?: FloatingPosition;
-  /** Optional configuration options for the step. */
-  options?: StepOptions;
 }

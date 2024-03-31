@@ -5,6 +5,7 @@ import {FOCUSABLE_ELEMENTS_QUERY} from '../constants';
 /**
  * Hook to trap focus within a given element.
  * @param ref React.RefObject pointing to the HTMLElement to trap focus within.
+ * @param enabled Whether to enable the focus trap.
  */
 const useFocusTrap = (ref: React.RefObject<HTMLElement>, enabled = true) => {
   React.useEffect(() => {

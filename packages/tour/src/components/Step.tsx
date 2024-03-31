@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {scrollToStepTarget} from '../helpers';
-import {useTourControls, useTourOptions, useTourState} from '../hooks';
+import {getStepOptions, getTourOptions, scrollToStepTarget} from '../helpers';
+import {useTourControls, useTourState} from '../hooks';
 import {StepProps} from '../types';
 import {isInView} from '../utils';
 import Popover from './core/Popover';
@@ -10,8 +10,11 @@ import StepFooter from './StepFooter';
 
 const Step = ({step}: StepProps) => {
   const {endTour} = useTourControls();
-  const {isTourOpen} = useTourState();
-  const {highlightTarget, preventCloseOnClickOutside} = useTourOptions();
+  const {isTourOpen, activeTour} = useTourState();
+
+  const {showOverlay, preventCloseOnClickOutside} = getTourOptions(activeTour);
+
+  const {placement} = getStepOptions(step);
 
   const [popoverTarget, setPopoverTarget] = React.useState<HTMLElement | null>(
     null,
@@ -68,14 +71,14 @@ const Step = ({step}: StepProps) => {
     <Popover
       open={isTourOpen}
       target={popoverTarget}
-      preferredPosition={step.position}
-      shouldHighlightTarget={highlightTarget}
+      preferredPosition={placement}
+      shouldShowOverlay={showOverlay}
       onClickOutside={() => {
         if (!preventCloseOnClickOutside) endTour();
       }}>
       <Popover.Content
         className="nt-step-container"
-        data-target-highlight={highlightTarget}>
+        data-show-overlay={showOverlay}>
         <StepContent>
           <StepContent.Title>{step.title}</StepContent.Title>
           {step.content}

@@ -1,17 +1,11 @@
 export interface FloatingCoords {
-  left: number;
-  top: number;
+  translateX: number;
+  translateY: number;
 }
 
-export interface FloatingRect
-  extends Pick<DOMRect, 'top' | 'left' | 'width' | 'height'> {}
+export type FloatingRect = DOMRect;
 
-export type FloatingPosition =
-  | 'top-center'
-  | 'bottom-center'
-  | 'left-center'
-  | 'right-center'
-  | 'window-center';
+export type FloatingPosition = 'top' | 'bottom' | 'left' | 'right' | 'center';
 
 export type ClassValue =
   | string
