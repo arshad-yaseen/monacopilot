@@ -1,5 +1,13 @@
 # next-tour
 
+## 0.6.0
+
+### Minor Changes
+
+- Step target spotlight
+- Improve focus trapping
+- Focus buttons styles.
+
 ## 0.5.0
 
 ### Minor Changes

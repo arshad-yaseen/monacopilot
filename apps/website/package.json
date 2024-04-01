@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "tsc": "tsc --noEmit --incremental false",
-    "postinstall": "npm uni next-tour && npm i next-tour@latest"
+    "tsc": "tsc --noEmit --incremental false"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.5",
