@@ -23,8 +23,7 @@ export interface TourOptions {
   showBackButton?: boolean;
 
   /**
-   * Whether to dim the background of the step.
-   * When enabled, the step's background will be dimmed to highlight the target element.
+   * Whether to dim the background of the step to highlight the target element.
    * @default true
    */
   showOverlay?: boolean;

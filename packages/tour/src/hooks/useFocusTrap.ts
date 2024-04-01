@@ -1,56 +1,48 @@
-import React from 'react';
+import {useEffect} from 'react';
 
 import {FOCUSABLE_ELEMENTS_QUERY} from '../constants';
 
 /**
- * Hook to trap focus within a given element.
- * @param ref React.RefObject pointing to the HTMLElement to trap focus within.
- * @param enabled Whether to enable the focus trap.
+ * Traps focus within the element ref provided.
+ * @param ref - React ref of the element to trap focus within.
+ * @param enabled - If true, focus will be trapped within the element.
  */
-const useFocusTrap = (ref: React.RefObject<HTMLElement>, enabled = true) => {
-  React.useEffect(() => {
-    if (!enabled) return;
+const useFocusTrap = <T extends HTMLElement>(
+  ref: React.RefObject<T>,
+  enabled: boolean,
+): void => {
+  useEffect(() => {
+    if (!enabled || !ref.current) return;
+
     const node = ref.current;
-    if (!node) {
-      return;
-    }
 
-    const getFocusableElements = (): HTMLElement[] =>
-      Array.from(node.querySelectorAll(FOCUSABLE_ELEMENTS_QUERY)).filter(
-        (el: Element): el is HTMLElement => !el.hasAttribute('disabled'),
+    const trapFocus = (event: KeyboardEvent) => {
+      if (event.key !== 'Tab') return;
+
+      const focusableElements: HTMLElement[] = Array.from(
+        node.querySelectorAll<HTMLElement>(FOCUSABLE_ELEMENTS_QUERY),
       );
-
-    let focusableElements = getFocusableElements();
-
-    // Initially focus on the first element, if available.
-    focusableElements[0]?.focus();
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Tab' || focusableElements.length === 0) {
-        return;
-      }
+      if (focusableElements.length === 0) return;
 
       const firstElement = focusableElements[0];
       const lastElement = focusableElements[focusableElements.length - 1];
-      const activeElement = document.activeElement as HTMLElement;
+      const isShiftPressed = event.shiftKey;
 
-      const isForwardTab = !event.shiftKey && activeElement === lastElement;
-      const isBackwardTab = event.shiftKey && activeElement === firstElement;
-
-      if (isForwardTab || isBackwardTab) {
-        const targetElement = event.shiftKey ? firstElement : lastElement;
-        targetElement.focus();
+      if (isShiftPressed && document.activeElement === firstElement) {
+        lastElement.focus();
+        event.preventDefault();
+      } else if (!isShiftPressed && document.activeElement === lastElement) {
+        firstElement.focus();
         event.preventDefault();
       }
-
-      // Refresh list
-      focusableElements = getFocusableElements();
     };
 
-    document.addEventListener('keydown', handleKeyDown);
+    node.addEventListener('keydown', trapFocus);
 
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [ref, enabled]);
+    return () => {
+      node.removeEventListener('keydown', trapFocus);
+    };
+  }, [enabled, ref]);
 };
 
 export default useFocusTrap;

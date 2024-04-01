@@ -23,14 +23,12 @@ const MyTour = () => {
           title: 'Next up',
           content:
             'This is the second step of the tour. If you need help, click Next. If not, click Skip.',
-          onBeforeNext: () => push('/about'),
         },
         {
           target: '#target3',
           title: 'Final step',
           content:
             'This is the final step of the tour. If you need help, click Next. If not, click Skip.',
-          onBeforeBack: () => push('/'),
         },
       ]}
     />

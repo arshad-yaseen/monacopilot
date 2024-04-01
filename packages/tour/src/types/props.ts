@@ -16,6 +16,12 @@ export interface PopoverProps
     shouldShowOverlay?: boolean;
   }> {}
 
+export interface SpotlightOverlayProps {
+  target: HTMLElement | null;
+  isOpen: boolean;
+  onClickOverlay?: () => void;
+}
+
 export interface StepProps {
   step: TourStep | null;
 }

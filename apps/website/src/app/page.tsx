@@ -17,6 +17,13 @@ export default function Home() {
           Target 2
         </div>
       </div>
+      <div className="flex flex-wrap justify-center gap-4 my-8">
+        <div
+          id="target3"
+          className="bg-blue-500 text-white p-4 rounded-lg mt-[1200px] absolute">
+          Target 3
+        </div>
+      </div>
       <button
         className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg w-fit"
         onClick={() => startTour('tour1')}>

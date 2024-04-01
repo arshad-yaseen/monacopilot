@@ -8,7 +8,7 @@ import Popover from './core/Popover';
 import StepContent from './StepContent';
 import StepFooter from './StepFooter';
 
-const Step = ({step}: StepProps) => {
+const Step = React.memo(({step}: StepProps) => {
   const {endTour} = useTourControls();
   const {isTourOpen, activeTour} = useTourState();
 
@@ -21,15 +21,15 @@ const Step = ({step}: StepProps) => {
   );
 
   React.useEffect(() => {
+    setPopoverTarget(null);
+
     if (!step) {
-      setPopoverTarget(null);
       return;
     }
 
     const {target: targetSelector} = step;
 
     if (!targetSelector) {
-      setPopoverTarget(null);
       return;
     }
 
@@ -87,6 +87,8 @@ const Step = ({step}: StepProps) => {
       </Popover.Content>
     </Popover>
   );
-};
+});
+
+Step.displayName = 'Next Tour Step';
 
 export default Step;

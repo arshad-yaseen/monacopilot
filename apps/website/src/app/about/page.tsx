@@ -19,9 +19,7 @@ const AboutPage = () => {
     <div>
       <div className="flex flex-wrap justify-center gap-4 my-8 items-center pt-[700px]">
         {show && (
-          <div id="target3" className="bg-blue-500 text-white p-4 rounded-lg">
-            Target 3
-          </div>
+          <div className="bg-blue-500 text-white p-4 rounded-lg">Target 3</div>
         )}
       </div>
     </div>

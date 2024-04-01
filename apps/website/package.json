@@ -7,14 +7,17 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "tsc": "tsc --noEmit --incremental false"
+    "tsc": "tsc --noEmit --incremental false",
+    "postinstall": "npm uni next-tour && npm i next-tour@latest"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-icons": "^1.3.0",
+    "@radix-ui/react-slot": "^1.0.2",
     "class-variance-authority": "^0.7.0",
-    "next-tour": "*",
     "clsx": "^2.1.0",
     "next": "14.1.4",
+    "next-tour": "*",
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "^2.2.2",

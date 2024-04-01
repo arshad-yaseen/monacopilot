@@ -14,7 +14,7 @@ export const calculatePopoverPosition = ({
   popoverRect,
   targetRect,
   preferredPosition,
-  padding = 10,
+  padding = 15,
 }: {
   popoverRect: FloatingRect;
   targetRect: FloatingRect | null | undefined;

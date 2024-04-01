@@ -3,7 +3,7 @@ import {ClassValue} from './types';
 /** Check if an element is in the viewport.
  * @param el HTMLElement to check.
  */
-export const isInView = (el: HTMLElement): boolean => {
+export const isInView = (el: HTMLElement | null): boolean => {
   if (!el || !window.visualViewport) return false;
 
   const rect = el.getBoundingClientRect();
@@ -17,25 +17,8 @@ export const isInView = (el: HTMLElement): boolean => {
   );
 };
 
-/** Set a style on an element and return a function to restore it.
- * @param el HTMLElement to set the style on.
- * @param style Style to set.
- * @param value Value to set.
- */
-export const setStyle = (
-  el: HTMLElement,
-  style: keyof React.CSSProperties,
-  value: string,
-) => {
-  const cur = el.style[style];
-  el.style[style] = value;
-  return () => {
-    el.style[style] = cur;
-  };
-};
-
 /** Generate a class name string from a list of class names or class name maps. Allows for conditional class names. */
-export const cn = (...args: ClassValue[]): string => {
+export const cls = (...args: ClassValue[]): string => {
   const classes: string[] = [];
 
   for (const arg of args) {
@@ -44,7 +27,7 @@ export const cn = (...args: ClassValue[]): string => {
     if (typeof arg === 'string') {
       classes.push(arg);
     } else if (Array.isArray(arg)) {
-      classes.push(cn(...arg)); // Recursively process arrays
+      classes.push(cls(...arg));
     } else if (typeof arg === 'object') {
       for (const [key, value] of Object.entries(arg)) {
         if (value) {

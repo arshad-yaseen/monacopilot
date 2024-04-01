@@ -6,7 +6,8 @@ import {_DEFAULT_POPOVER_POSITION} from '../../constants';
 import {calculatePopoverPosition} from '../../helpers';
 import {useFocusTrap, useLockBodyScroll} from '../../hooks';
 import {PopoverContextType, PopoverProps} from '../../types';
-import {cn, setStyle} from '../../utils';
+import {cls} from '../../utils';
+import SpotlightOverlay from '../SpotlightOverlay';
 
 const PopoverContext = React.createContext<PopoverContextType | null>(null);
 
@@ -77,11 +78,6 @@ const PopoverContent = ({
 
     let restore: (() => void) | undefined;
 
-    // Highlight the target element
-    if (shouldShowOverlay && target) {
-      restore = setStyle(target, 'zIndex', '10001');
-    }
-
     // Wait for the popover to be positioned before enabling transitions
     const timeoutId = setTimeout(() => {
       if (!isPositioned) setIsPositioned(true);
@@ -98,16 +94,15 @@ const PopoverContent = ({
 
   return ReactDOM.createPortal(
     <>
-      <div
-        className={cn('nt-popover-overlay', {
-          active: open && !!shouldShowOverlay,
-        })}
-        onClick={onClickOutside}
+      <SpotlightOverlay
+        target={target}
+        isOpen={!!shouldShowOverlay && open}
+        onClickOverlay={onClickOutside}
       />
       <div
         {...props}
         ref={popoverRef}
-        className={cn(
+        className={cls(
           'nt-popover',
           {'enable-transition': isPositioned},
           className,
