@@ -16,12 +16,24 @@ const useFocusTrap = <T extends HTMLElement>(
 
     const node = ref.current;
 
+    const getFocusableElements = (): HTMLElement[] => {
+      return Array.from(
+        node.querySelectorAll<HTMLElement>(FOCUSABLE_ELEMENTS_QUERY),
+      );
+    };
+
+    const focusableElements = getFocusableElements();
+
+    // Focus first focusable element if available
+    if (focusableElements.length > 0) {
+      focusableElements[0].focus();
+    }
+
     const trapFocus = (event: KeyboardEvent) => {
       if (event.key !== 'Tab') return;
 
-      const focusableElements: HTMLElement[] = Array.from(
-        node.querySelectorAll<HTMLElement>(FOCUSABLE_ELEMENTS_QUERY),
-      );
+      const focusableElements = getFocusableElements();
+
       if (focusableElements.length === 0) return;
 
       const firstElement = focusableElements[0];

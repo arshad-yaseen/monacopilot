@@ -55,16 +55,6 @@
   will-change: transform;
 }
 
-.nt-popover-overlay {
-  position: fixed;
-  z-index: 10000;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  animation: nt-fade-in var(--duration) var(--transition);
-}
-
 .nt-step-container {
   min-width: 350px;
 

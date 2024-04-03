@@ -24,8 +24,9 @@ const Popover = ({
   open,
   preferredPosition = _DEFAULT_POPOVER_POSITION,
   target,
-  onClickOutside,
   shouldShowOverlay = true,
+  onClickOutside,
+  onClickTarget,
 }: PopoverProps) => {
   if (!open) return null;
 
@@ -35,8 +36,9 @@ const Popover = ({
         open,
         preferredPosition,
         target,
-        onClickOutside,
         shouldShowOverlay,
+        onClickOutside,
+        onClickTarget,
       }}>
       {children}
     </PopoverContext.Provider>
@@ -48,8 +50,14 @@ const PopoverContent = ({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'div'>) => {
-  const {open, target, preferredPosition, onClickOutside, shouldShowOverlay} =
-    usePopover();
+  const {
+    open,
+    target,
+    preferredPosition,
+    shouldShowOverlay,
+    onClickOutside,
+    onClickTarget,
+  } = usePopover();
   const popoverRef = React.useRef<HTMLDivElement>(null);
   const [isPositioned, setIsPositioned] = React.useState(false);
 
@@ -83,11 +91,34 @@ const PopoverContent = ({
       if (!isPositioned) setIsPositioned(true);
     }, 20);
 
+    window.addEventListener('resize', positionPopover);
+
     return () => {
       if (restore) restore();
       clearTimeout(timeoutId);
+      window.removeEventListener('resize', positionPopover);
     };
   }, [open, target, preferredPosition, shouldShowOverlay, isPositioned]);
+
+  // Listen for clicks on the target element
+  React.useEffect(() => {
+    if (!target) return;
+
+    const handleTargetClick = (event: MouseEvent) => {
+      if (!open || !onClickTarget) return;
+
+      const targetElement = event.target as HTMLElement;
+      if (targetElement !== target) return;
+
+      onClickTarget();
+    };
+
+    target.addEventListener('click', handleTargetClick);
+
+    return () => {
+      target.removeEventListener('click', handleTargetClick);
+    };
+  }, [open, target, onClickOutside, onClickTarget]);
 
   useFocusTrap(popoverRef, open);
   useLockBodyScroll(open);

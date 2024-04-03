@@ -147,6 +147,15 @@ export const scrollToStepTarget = (
   throttledRequestNextAnimationFrame();
 };
 
+// Execute the tour step option callback and return whether should proceed.
+export async function executeStepOptionCallback(
+  callback?: () => void | Promise<void> | boolean | Promise<boolean>,
+): Promise<boolean> {
+  if (!callback) return true;
+  const result = await callback();
+  return result !== false;
+}
+
 export const getTourOptions = (tour: Tour | null): TourOptions => {
   const defaultOptions: TourOptions = {
     showOverlay: true,
@@ -162,16 +171,10 @@ export const getTourOptions = (tour: Tour | null): TourOptions => {
 export const getStepOptions = (step: TourStep | null): StepOptions => {
   const defaultOptions: StepOptions = {
     placement: _DEFAULT_POPOVER_POSITION,
+    nextOnClickTarget: false,
+    backOnClickTarget: false,
+    closeOnClickTarget: false,
   };
 
   return {...defaultOptions, ...step};
 };
-
-// Execute the tour step option callback and return whether should proceed.
-export async function executeStepOptionCallback(
-  callback?: () => void | Promise<void> | boolean | Promise<boolean>,
-): Promise<boolean> {
-  if (!callback) return true;
-  const result = await callback();
-  return result !== false;
-}

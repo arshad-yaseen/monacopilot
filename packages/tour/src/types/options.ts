@@ -41,9 +41,27 @@ export interface StepOptions {
    * Specifies the placement of the tour step relative to the target element.
    * This determines the position where the tour guide box will appear around the target.
    *
-   * @default "bottom-center"
+   * @default "bottom"
    */
   placement?: FloatingPosition;
+
+  /**
+   * Enables advancing to the next step by clicking the target element.
+   * @default false
+   */
+  nextOnClickTarget?: boolean;
+
+  /**
+   * Enables going back to the previous step by clicking the target element.
+   * @default false
+   */
+  backOnClickTarget?: boolean;
+
+  /**
+   * Allows closing the tour by clicking the target element.
+   * @default false
+   */
+  closeOnClickTarget?: boolean;
 
   /**
    * A callback function that is executed before moving to the next step.

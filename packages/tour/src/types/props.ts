@@ -12,15 +12,22 @@ export interface PopoverProps
     open: boolean;
     preferredPosition?: FloatingPosition;
     target: HTMLElement | null;
-    onClickOutside?: () => void;
     shouldShowOverlay?: boolean;
+    onClickOutside?: () => void;
+    onClickTarget?: () => void;
   }> {}
 
 export interface SpotlightOverlayProps {
   target: HTMLElement | null;
   isOpen: boolean;
   onClickOverlay?: () => void;
+  onClickTarget?: () => void;
 }
+
+export type SpotlightOverlayPartProps = React.PropsWithChildren<{
+  style: React.CSSProperties;
+  onClickOverlay?: () => void;
+}>;
 
 export interface StepProps {
   step: TourStep | null;

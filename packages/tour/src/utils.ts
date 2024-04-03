@@ -64,4 +64,8 @@ export const throttle = (
   };
 };
 
+export const uid = (base: string): string => {
+  return `${base}-${Math.random().toString(36).slice(2, 11)}`;
+};
+
 export const isBrowser = typeof window !== 'undefined';

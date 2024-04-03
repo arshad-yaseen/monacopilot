@@ -34,11 +34,20 @@ const TourManager = ({children}: TourProviderProps) => {
     setActiveStepIndex(0);
   };
 
-  const endTour = () => {
+  const completeTour = () => {
     setIsTourOpen(false);
     setActiveTour(null);
     setActiveStepIndex(0);
   };
+
+  const closeTour = () => {
+    setIsTourOpen(false);
+  };
+
+  const continueTour = React.useCallback(() => {
+    if (!activeTour || !activeStep) return;
+    setIsTourOpen(true);
+  }, [activeTour, activeStep]);
 
   const nextStep = React.useCallback(async () => {
     const options = getStepOptions(activeStep);
@@ -63,9 +72,7 @@ const TourManager = ({children}: TourProviderProps) => {
   const goToStep = React.useCallback(
     (stepNumber: number) => {
       if (stepNumber < 0 || stepNumber >= totalSteps) return;
-      // Decrement by 1 to get the correct index
-      // Since the user-facing step numbers are 1-indexed
-      setActiveStepIndex(stepNumber - 1);
+      setActiveStepIndex(stepNumber);
     },
     [totalSteps],
   );
@@ -80,7 +87,9 @@ const TourManager = ({children}: TourProviderProps) => {
       tours: toursRef.current,
       addTour,
       startTour,
-      endTour,
+      completeTour,
+      closeTour,
+      continueTour,
       goToStep,
       nextStep,
       prevStep,
@@ -94,6 +103,7 @@ const TourManager = ({children}: TourProviderProps) => {
       goToStep,
       nextStep,
       prevStep,
+      continueTour,
     ],
   );
 

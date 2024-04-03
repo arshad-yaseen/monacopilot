@@ -9,12 +9,13 @@ import StepContent from './StepContent';
 import StepFooter from './StepFooter';
 
 const Step = React.memo(({step}: StepProps) => {
-  const {endTour} = useTourControls();
+  const {closeTour, nextStep, prevStep} = useTourControls();
   const {isTourOpen, activeTour} = useTourState();
 
   const {showOverlay, preventCloseOnClickOutside} = getTourOptions(activeTour);
 
-  const {placement} = getStepOptions(step);
+  const {placement, backOnClickTarget, closeOnClickTarget, nextOnClickTarget} =
+    getStepOptions(step);
 
   const [popoverTarget, setPopoverTarget] = React.useState<HTMLElement | null>(
     null,
@@ -63,9 +64,9 @@ const Step = React.memo(({step}: StepProps) => {
       observer.disconnect();
       setPopoverTarget(null);
     };
-  }, [step, isTourOpen]);
+  }, [step]);
 
-  if (!step || !isTourOpen) return null;
+  if (!step) return null;
 
   return (
     <Popover
@@ -74,7 +75,12 @@ const Step = React.memo(({step}: StepProps) => {
       preferredPosition={placement}
       shouldShowOverlay={showOverlay}
       onClickOutside={() => {
-        if (!preventCloseOnClickOutside) endTour();
+        if (!preventCloseOnClickOutside) closeTour();
+      }}
+      onClickTarget={() => {
+        if (nextOnClickTarget) nextStep();
+        if (backOnClickTarget) prevStep();
+        if (closeOnClickTarget) closeTour();
       }}>
       <Popover.Content
         className="nt-step-container"

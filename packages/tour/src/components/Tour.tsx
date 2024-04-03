@@ -9,7 +9,7 @@ import {TourProps} from '../types';
 import Step from './Step';
 
 const Tour = React.memo(({id, ...restProps}: TourProps) => {
-  const {activeTour, activeStep} = useTourState();
+  const {activeTour, activeStep, isTourOpen} = useTourState();
   const {addTour} = useTourControls();
 
   const tourProps = React.useMemo(() => ({id, ...restProps}), [id, restProps]);
@@ -22,7 +22,7 @@ const Tour = React.memo(({id, ...restProps}: TourProps) => {
   // Check if this tour is the active tour
   const isTourActive = activeTour?.id === id;
 
-  if (!isTourActive) return null;
+  if (!isTourActive || !isTourOpen) return null;
 
   return <Step step={activeStep} />;
 });

@@ -11,14 +11,25 @@ const useTourControls = (): TourControls => {
     );
   }
 
-  const {startTour, endTour, goToStep, nextStep, prevStep, addTour} = context;
-
-  return {
+  const {
     startTour,
-    endTour,
+    completeTour,
+    closeTour,
+    continueTour,
     goToStep,
     nextStep,
     prevStep,
+    addTour,
+  } = context;
+
+  return {
+    startTour,
+    completeTour,
+    goToStep,
+    nextStep,
+    prevStep,
+    closeTour,
+    continueTour,
     addTour,
   };
 };

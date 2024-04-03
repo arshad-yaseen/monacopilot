@@ -5,7 +5,7 @@ import {useTourControls, useTourState} from '../hooks';
 
 const StepActions = () => {
   const {totalSteps, activeStepIndex, activeTour} = useTourState();
-  const {nextStep, prevStep, endTour} = useTourControls();
+  const {nextStep, prevStep, completeTour} = useTourControls();
 
   // Get the user's options for the tour.
   const {showBackButton: showBackButtonOption, showCloseButton} =
@@ -28,7 +28,7 @@ const StepActions = () => {
       )}
       {showCloseButton && (
         <button
-          onClick={() => endTour()}
+          onClick={() => completeTour()}
           className="nt-button"
           data-variant="outline">
           Close
@@ -45,7 +45,7 @@ const StepActions = () => {
       )}
       {showFinishButton && (
         <button
-          onClick={() => endTour()}
+          onClick={() => completeTour()}
           className="nt-button"
           data-variant="primary">
           Finish

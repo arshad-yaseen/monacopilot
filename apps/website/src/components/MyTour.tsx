@@ -6,8 +6,6 @@ import {useRouter} from 'next/navigation';
 import {Tour} from 'next-tour';
 
 const MyTour = () => {
-  const {push} = useRouter();
-
   return (
     <Tour
       id="tour1"
@@ -23,6 +21,7 @@ const MyTour = () => {
           title: 'Next up',
           content:
             'This is the second step of the tour. If you need help, click Next. If not, click Skip.',
+          closeOnClickTarget: true,
         },
         {
           target: '#target3',
