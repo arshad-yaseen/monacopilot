@@ -59,6 +59,7 @@ export interface StepOptions {
 
   /**
    * Allows closing the tour by clicking the target element.
+   * Then, can continue the tour from the step where it was left off by calling `continueTour` from tour controls.
    * @default false
    */
   closeOnClickTarget?: boolean;

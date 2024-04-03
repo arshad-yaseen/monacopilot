@@ -1,5 +1,18 @@
 # next-tour
 
+## 0.7.0
+
+### Minor Changes
+
+- Now able interact with target element during highlight.
+- Introduce new controls
+  - `closeTour`: Closes the currently active tour without marking it as completed. This allows the tour to be resumed later from the step where it was left off. To continue the tour, call `continueTour`.
+  - `continueTour`: Resumes the currently active tour from the step where it was left off.
+- New step options
+  - `nextOnClickTarget`: Enables advancing to the next step by clicking the target element.
+  - `backOnClickTarget`: Enables going back to the previous step by clicking the target element.
+  - `closeOnClickTarget`: Allows closing the tour by clicking the target element.
+
 ## 0.6.0
 
 ### Minor Changes
