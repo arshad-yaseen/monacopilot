@@ -15,9 +15,12 @@ export interface TargetRect {
 }
 
 export type ClassValue =
+  | ClassArray
+  | ClassDictionary
   | string
-  | undefined
+  | number
   | null
-  | false
-  | {[key: string]: boolean}
-  | ClassValue[];
+  | boolean
+  | undefined;
+export type ClassDictionary = Record<string, unknown>;
+export type ClassArray = ClassValue[];

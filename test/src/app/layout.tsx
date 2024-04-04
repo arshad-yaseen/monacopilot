@@ -4,9 +4,6 @@ import './globals.css';
 
 import {Inter} from 'next/font/google';
 
-import MyTour from '@/components/MyTour';
-import TourProvider from '@/components/TourProvider';
-
 const inter = Inter({subsets: ['latin']});
 
 export const metadata: Metadata = {
@@ -21,10 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <TourProvider>
-        <body className={inter.className}>{children}</body>
-        <MyTour />
-      </TourProvider>
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }
