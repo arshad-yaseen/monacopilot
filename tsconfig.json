@@ -2,10 +2,8 @@
   "compilerOptions": {
     "target": "es2018",
     "module": "esnext",
-    "lib": ["es2015", "dom"],
+    "lib": ["es2018", "dom"],
     "jsx": "react",
-    "outDir": "./dist",
-    "rootDir": "./src",
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "strictBindCallApply": true,
@@ -21,7 +19,5 @@
     "skipLibCheck": true,
     "isolatedModules": true,
     "noEmit": true
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  }, "include": ["src"]
 }

@@ -1,5 +1,5 @@
 {
-  "name": "website",
+  "name": "test",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -16,7 +16,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "next": "14.1.4",
-    "next-tour": "*",
+    "next-tour": "workspace:*",
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "^2.2.2",

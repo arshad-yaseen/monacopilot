@@ -1,27 +1,47 @@
 {
-  "name": "next-tour-root",
-  "private": true,
-  "workspaces": [
-    "packages/*",
-    "apps/*"
+  "name": "next-tour",
+  "version": "0.7.0",
+  "description": "Guided tours and walkthroughs for Next.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
   ],
   "scripts": {
-    "build": "npm run build --workspace=next-tour",
-    "dev": "npm run dev --workspace=website",
-    "build:website": "npm run build --workspace=website",
-    "lint": "npm run lint --workspace=next-tour --workspace=website",
-    "test": "npm run test --workspace=next-tour",
-    "format": "prettier '**/*.{js,jsx,ts,tsx,json,md,mdx,css,scss,yaml,yml}' --write",
-    "tsc": "npm run tsc --workspace=next-tour --workspace=website",
-    "prepare-release": "changeset",
-    "version-package": "changeset version",
-    "release": "changeset publish"
+    "type-check": "tsc --noEmit",
+    "build": "pnpm type-check && tsup src/index.ts",
+    "dev": "tsup src/index.ts --watch",
+    "dev:test": "pnpm -C test dev ",
+    "lint": "eslint . --ext .ts,.tsx --fix && pnpm -C test lint",
+    "format": "prettier --write ."
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
-    "husky": "^9.0.11",
-    "lint-staged": "^15.2.2",
-    "prettier": "^3.2.5"
+    "@types/react": "^18.2.69",
+    "@types/react-dom": "^18.2.22",
+    "@typescript-eslint/eslint-plugin": "^7.3.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.1",
+    "prettier": "^3.2.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.3"
+  },
+  "keywords": [
+    "nextjs",
+    "react",
+    "tour",
+    "guide",
+    "walkthrough",
+    "onboarding"
+  ],
+  "homepage": "https://github.com/arshad-yaseen/next-tour#readme",
+  "license": "MIT",
+  "author": "Arshad Yaseen <m@arshadyaseen.com>",
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }

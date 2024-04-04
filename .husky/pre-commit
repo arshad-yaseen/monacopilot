@@ -1,1 +1,1 @@
-npm run tsc && npm run lint
+pnpm type-check && pnpm lint

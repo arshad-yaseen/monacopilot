@@ -7,7 +7,6 @@ const StepActions = () => {
   const {totalSteps, activeStepIndex, activeTour} = useTourState();
   const {nextStep, prevStep, completeTour} = useTourControls();
 
-  // Get the user's options for the tour.
   const {showBackButton: showBackButtonOption, showCloseButton} =
     getTourOptions(activeTour);
 

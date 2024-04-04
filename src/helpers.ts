@@ -9,7 +9,6 @@ import {
 import {StepOptions, TourOptions} from './types/options';
 import {throttle} from './utils';
 
-// Calculate the floating position of the popover
 export const calculatePopoverPosition = ({
   popoverRect,
   targetRect,
@@ -84,7 +83,7 @@ export const calculatePopoverPosition = ({
 
   if (!fitsInViewportY(translateY)) {
     if (preferredPosition === 'top' || preferredPosition === 'bottom') {
-      // Try opposite side or center as a last resort
+      // Try opposite side or center
       translateY =
         preferredPosition === 'top'
           ? targetRect.bottom + padding
@@ -102,7 +101,7 @@ export const calculatePopoverPosition = ({
   return {translateX, translateY};
 };
 
-// Scroll to the step target element and call the onCompleted callback when the scroll is completed.
+/** Scroll to the step target element and call the onCompleted callback when the scroll is completed. */
 export const scrollToStepTarget = (
   targetElement: Element | null,
   onCompleted: () => void,
@@ -147,7 +146,6 @@ export const scrollToStepTarget = (
   throttledRequestNextAnimationFrame();
 };
 
-// Execute the tour step option callback and return whether should proceed.
 export async function executeStepOptionCallback(
   callback?: () => void | Promise<void> | boolean | Promise<boolean>,
 ): Promise<boolean> {
