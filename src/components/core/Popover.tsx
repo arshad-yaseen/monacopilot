@@ -7,7 +7,7 @@ import {calculatePopoverPosition} from '../../helpers';
 import {useFocusTrap, useLockBodyScroll} from '../../hooks';
 import {PopoverContextType, PopoverProps} from '../../types';
 import {cls} from '../../utils';
-import SpotlightOverlay from '../SpotlightOverlay';
+import SpotlightOverlay from '../spotlight-overlay';
 
 const PopoverContext = React.createContext<PopoverContextType | null>(null);
 
@@ -124,23 +124,18 @@ const PopoverContent = ({
   useLockBodyScroll(open);
 
   return ReactDOM.createPortal(
-    <>
-      <SpotlightOverlay
-        target={target}
-        isOpen={!!shouldShowOverlay && open}
-        onClickOverlay={onClickOutside}
-      />
-      <div
-        {...props}
-        ref={popoverRef}
-        className={cls(
-          'nt-popover',
-          {'enable-transition': isPositioned},
-          className,
-        )}>
+    <div
+      data-show-overlay={shouldShowOverlay}
+      className={cls('nt-popover-root', {'enable-transition': isPositioned})}>
+      <div className={cls('nt-popover', className)} {...props} ref={popoverRef}>
         {children}
       </div>
-    </>,
+      <SpotlightOverlay
+        target={target}
+        isOpen={open}
+        onClickOverlay={onClickOutside}
+      />
+    </div>,
     document.body,
   );
 };

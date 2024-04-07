@@ -10,10 +10,10 @@ export interface Tour {
 }
 
 export interface TourStep extends StepOptions {
-  /** Optional target element to highlight during this step.
+  /** The id of the step that you specified in `data-tour-step-id` attribute of the target element.
    * If not provided, the step will be displayed in center of the screen like a modal.
    */
-  target?: string;
+  id?: string;
   /** The title to display for this step. */
   title?: string;
   /** The content to display for this step.

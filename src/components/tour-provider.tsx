@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {TourProviderProps} from '../types';
-import TourManager from './TourManager';
+import TourManager from './tour-manager';
 
 const TourProvider = (props: TourProviderProps) => {
   return <TourManager {...props} />;

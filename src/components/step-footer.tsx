@@ -1,7 +1,7 @@
 import React from 'react';
 
-import StepActions from './StepActions';
-import StepProgress from './StepProgress';
+import StepActions from './step-actions';
+import StepProgress from './step-progress';
 
 const StepFooter = () => {
   return (

@@ -23,6 +23,7 @@ const TourManager = ({children}: TourProviderProps) => {
 
   // Function to add a new tour
   const addTour = (tour: Tour) => {
+    if (toursRef.current.find(t => t.id === tour.id)) return;
     toursRef.current.push(tour);
   };
 
@@ -77,38 +78,26 @@ const TourManager = ({children}: TourProviderProps) => {
     [totalSteps],
   );
 
-  const contextValue = React.useMemo(
-    () => ({
-      isTourOpen,
-      activeStep,
-      activeTour,
-      activeStepIndex,
-      totalSteps,
-      tours: toursRef.current,
-      addTour,
-      startTour,
-      completeTour,
-      closeTour,
-      continueTour,
-      goToStep,
-      nextStep,
-      prevStep,
-    }),
-    [
-      isTourOpen,
-      activeStep,
-      activeTour,
-      activeStepIndex,
-      totalSteps,
-      goToStep,
-      nextStep,
-      prevStep,
-      continueTour,
-    ],
-  );
-
   return (
-    <TourContext.Provider value={contextValue}>{children}</TourContext.Provider>
+    <TourContext.Provider
+      value={{
+        isTourOpen,
+        activeStep,
+        activeTour,
+        activeStepIndex,
+        totalSteps,
+        tours: toursRef.current,
+        addTour,
+        startTour,
+        completeTour,
+        closeTour,
+        continueTour,
+        goToStep,
+        nextStep,
+        prevStep,
+      }}>
+      {children}
+    </TourContext.Provider>
   );
 };
 

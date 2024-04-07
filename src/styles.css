@@ -43,19 +43,16 @@
   --rd-4: 1rem;
 }
 
+.nt-popover-root.enable-transition .nt-popover {
+  transition: transform var(--duration) var(--transition);
+}
+
 .nt-popover {
   position: fixed;
   z-index: 10010;
   top: 0;
   left: 0;
-}
 
-.nt-popover.enable-transition {
-  transition: transform var(--duration) var(--transition);
-  will-change: transform;
-}
-
-.nt-step-container {
   min-width: 350px;
 
   background-color: var(--color-bg);
@@ -74,8 +71,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.nt-step-container[data-show-overlay='true'] {
+.nt-popover-root[data-show-overlay='true'] .nt-popover {
   box-shadow: none;
+}
+
+.nt-spotlight-overlay-part {
+  position: fixed;
+  z-index: 10000;
+  pointer-events: auto;
+}
+
+.nt-popover-root[data-show-overlay='true'] .nt-spotlight-overlay-part {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .nt-button {

@@ -1,12 +1,17 @@
 import React from 'react';
 
-import {getStepOptions, getTourOptions, scrollToStepTarget} from '../helpers';
+import {
+  getStepOptions,
+  getStepTargetSelector,
+  getTourOptions,
+  scrollToStepTarget,
+} from '../helpers';
 import {useTourControls, useTourState} from '../hooks';
 import {StepProps} from '../types';
 import {isInView} from '../utils';
-import Popover from './core/Popover';
-import StepContent from './StepContent';
-import StepFooter from './StepFooter';
+import Popover from './core/popover';
+import StepContent from './step-content';
+import StepFooter from './step-footer';
 
 const Step = React.memo(({step}: StepProps) => {
   const {closeTour, nextStep, prevStep} = useTourControls();
@@ -28,14 +33,16 @@ const Step = React.memo(({step}: StepProps) => {
       return;
     }
 
-    const {target: targetSelector} = step;
+    const {id: targetId} = step;
 
-    if (!targetSelector) {
+    if (!targetId) {
       return;
     }
 
     const trySetTarget = () => {
-      const targetElement = document.querySelector<HTMLElement>(targetSelector);
+      const targetElement = document.querySelector<HTMLElement>(
+        getStepTargetSelector(targetId),
+      );
       if (!targetElement) return false;
 
       // Check if the target is in view, if not, scroll to it.
@@ -82,9 +89,7 @@ const Step = React.memo(({step}: StepProps) => {
         if (backOnClickTarget) prevStep();
         if (closeOnClickTarget) closeTour();
       }}>
-      <Popover.Content
-        className="nt-step-container"
-        data-show-overlay={showOverlay}>
+      <Popover.Content>
         <StepContent>
           <StepContent.Title>{step.title}</StepContent.Title>
           {step.content}

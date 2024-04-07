@@ -14,20 +14,15 @@ const OverlayPart = ({
   <div
     style={style}
     onClick={e => e.stopPropagation()}
-    onPointerUp={onClickOverlay}>
+    onPointerUp={onClickOverlay}
+    className="nt-spotlight-overlay-part">
     {children}
   </div>
 );
 
 const createOverlayStyle = (
   position: React.CSSProperties,
-): React.CSSProperties => ({
-  position: 'fixed',
-  zIndex: 10000,
-  pointerEvents: 'auto',
-  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  ...position,
-});
+): React.CSSProperties => position;
 
 const SpotlightOverlay = React.memo(
   ({target, isOpen, onClickOverlay}: SpotlightOverlayProps) => {

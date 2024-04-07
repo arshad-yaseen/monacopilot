@@ -1,3 +1,3 @@
-export {default as TourProvider} from './TourProvider';
-export {default as Tour} from './Tour';
-export {default as Popover} from './core/Popover';
+export {default as TourProvider} from './tour-provider';
+export {default as Tour} from './tour';
+export {default as Popover} from './core/popover';

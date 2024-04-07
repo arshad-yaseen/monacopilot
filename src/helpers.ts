@@ -31,13 +31,11 @@ export const calculatePopoverPosition = ({
     return {translateX, translateY};
   }
 
-  // Helper functions to check if popover overflows the viewport
   const fitsInViewportX = (x: number) =>
     x >= 0 && x + popoverRect.width <= windowWidth;
   const fitsInViewportY = (y: number) =>
     y >= 0 && y + popoverRect.height <= windowHeight;
 
-  // Calculate initial position based on preferredPosition
   switch (preferredPosition) {
     case 'top':
       translateX = targetRect.left + (targetRect.width - popoverRect.width) / 2;
@@ -57,7 +55,7 @@ export const calculatePopoverPosition = ({
       translateY =
         targetRect.top + (targetRect.height - popoverRect.height) / 2;
       break;
-    case 'center': // Center is a fallback and not typically a preferred position
+    case 'center':
       translateX = (windowWidth - popoverRect.width) / 2;
       translateY = (windowHeight - popoverRect.height) / 2;
       break;
@@ -66,13 +64,11 @@ export const calculatePopoverPosition = ({
   // Adjust position if overflowing viewport
   if (!fitsInViewportX(translateX)) {
     if (preferredPosition === 'left' || preferredPosition === 'right') {
-      // Try opposite side or center as a last resort
       translateX =
         preferredPosition === 'left'
           ? targetRect.right + padding
           : targetRect.left - popoverRect.width - padding;
       if (!fitsInViewportX(translateX)) {
-        // If still doesn't fit, center it
         translateX = (windowWidth - popoverRect.width) / 2;
       }
     } else {
@@ -89,11 +85,9 @@ export const calculatePopoverPosition = ({
           ? targetRect.bottom + padding
           : targetRect.top - popoverRect.height - padding;
       if (!fitsInViewportY(translateY)) {
-        // If still doesn't fit, center it
         translateY = (windowHeight - popoverRect.height) / 2;
       }
     } else {
-      // For left and right, vertically center if overflow
       translateY = (windowHeight - popoverRect.height) / 2;
     }
   }
@@ -175,4 +169,9 @@ export const getStepOptions = (step: TourStep | null): StepOptions => {
   };
 
   return {...defaultOptions, ...step};
+};
+
+/** Get the selector for the target element of a tour step by its ID. */
+export const getStepTargetSelector = (targetId: string): string => {
+  return `[data-tour-step-id="${targetId}"]`;
 };
