@@ -20,6 +20,7 @@ const useTourControls = (): TourControls => {
     nextStep,
     prevStep,
     addTour,
+    removeTour,
   } = context;
 
   return {
@@ -31,6 +32,7 @@ const useTourControls = (): TourControls => {
     closeTour,
     continueTour,
     addTour,
+    removeTour,
   };
 };
 

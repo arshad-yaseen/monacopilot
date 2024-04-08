@@ -19,7 +19,6 @@ export interface PopoverProps
 
 export interface SpotlightOverlayProps {
   target: HTMLElement | null;
-  isOpen: boolean;
   onClickOverlay?: () => void;
   onClickTarget?: () => void;
 }

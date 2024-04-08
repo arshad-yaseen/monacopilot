@@ -13,12 +13,15 @@ import Popover from './core/popover';
 import StepContent from './step-content';
 import StepFooter from './step-footer';
 
+/**
+ * The Step component is responsible for rendering the current step of the tour.
+ * It manages the popover target and handles.
+ */
 const Step = React.memo(({step}: StepProps) => {
   const {closeTour, nextStep, prevStep} = useTourControls();
   const {isTourOpen, activeTour} = useTourState();
 
   const {showOverlay, preventCloseOnClickOutside} = getTourOptions(activeTour);
-
   const {placement, backOnClickTarget, closeOnClickTarget, nextOnClickTarget} =
     getStepOptions(step);
 
@@ -27,40 +30,29 @@ const Step = React.memo(({step}: StepProps) => {
   );
 
   React.useEffect(() => {
-    setPopoverTarget(null);
+    if (!step?.id) return;
 
-    if (!step) {
-      return;
-    }
+    const targetSelector = getStepTargetSelector(step.id);
+    const targetElement = document.querySelector<HTMLElement>(targetSelector);
 
-    const {id: targetId} = step;
-
-    if (!targetId) {
-      return;
-    }
-
-    const trySetTarget = () => {
-      const targetElement = document.querySelector<HTMLElement>(
-        getStepTargetSelector(targetId),
-      );
+    const trySetTarget = (): boolean => {
       if (!targetElement) return false;
 
-      // Check if the target is in view, if not, scroll to it.
+      // Only set the target or scroll if the target is not in view.
       if (isInView(targetElement)) {
         setPopoverTarget(targetElement);
-        return true;
       } else {
-        // Scroll to the target and then set it as popover target.
         scrollToStepTarget(targetElement, () =>
           setPopoverTarget(targetElement),
         );
-        return true;
       }
+      return true;
     };
 
-    // Attempt to set the target. If unsuccessful, observe the DOM for changes.
+    // Initial attempt to set the popover target.
     if (trySetTarget()) return;
 
+    // MutationObserver to detect and react to changes in the DOM if the initial attempt fails.
     const observer = new MutationObserver(() => {
       if (trySetTarget()) observer.disconnect();
     });
@@ -69,11 +61,10 @@ const Step = React.memo(({step}: StepProps) => {
 
     return () => {
       observer.disconnect();
-      setPopoverTarget(null);
     };
-  }, [step]);
+  }, [step?.id]);
 
-  if (!step) return null;
+  if (!popoverTarget || !step) return null;
 
   return (
     <Popover

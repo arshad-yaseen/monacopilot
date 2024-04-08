@@ -5,12 +5,13 @@ import {Tour, TourContextType, TourProviderProps} from '../types';
 
 export const TourContext = React.createContext<TourContextType | null>(null);
 
+/**
+ * TourManager provides a context for managing and interacting with a series of tours.
+ * It handles tour state, navigation between tour steps, and the execution of step-specific callbacks.
+ */
 const TourManager = ({children}: TourProviderProps) => {
   const [isTourOpen, setIsTourOpen] = React.useState<boolean>(false);
-
   const [activeTour, setActiveTour] = React.useState<Tour | null>(null);
-
-  // Index of the currently active step within the tour
   const [activeStepIndex, setActiveStepIndex] = React.useState<number>(0);
 
   const toursRef = React.useRef<Tour[]>([]);
@@ -21,29 +22,32 @@ const TourManager = ({children}: TourProviderProps) => {
     [activeTour, activeStepIndex],
   );
 
-  // Function to add a new tour
-  const addTour = (tour: Tour) => {
-    if (toursRef.current.find(t => t.id === tour.id)) return;
+  const addTour = React.useCallback((tour: Tour) => {
+    if (toursRef.current.some(t => t.id === tour.id)) return;
     toursRef.current.push(tour);
-  };
+  }, []);
 
-  const startTour = (id: string) => {
+  const removeTour = React.useCallback((id: string) => {
+    toursRef.current = toursRef.current.filter(t => t.id !== id);
+  }, []);
+
+  const startTour = React.useCallback((id: string) => {
     const tour = toursRef.current.find(t => t.id === id);
     if (!tour) return;
     setActiveTour(tour);
     setIsTourOpen(true);
     setActiveStepIndex(0);
-  };
+  }, []);
 
-  const completeTour = () => {
+  const completeTour = React.useCallback(() => {
     setIsTourOpen(false);
     setActiveTour(null);
     setActiveStepIndex(0);
-  };
+  }, []);
 
-  const closeTour = () => {
+  const closeTour = React.useCallback(() => {
     setIsTourOpen(false);
-  };
+  }, []);
 
   const continueTour = React.useCallback(() => {
     if (!activeTour || !activeStep) return;
@@ -51,6 +55,7 @@ const TourManager = ({children}: TourProviderProps) => {
   }, [activeTour, activeStep]);
 
   const nextStep = React.useCallback(async () => {
+    if (!activeStep) return;
     const options = getStepOptions(activeStep);
     const canProceed = await executeStepOptionCallback(options.onBeforeNext);
 
@@ -61,6 +66,7 @@ const TourManager = ({children}: TourProviderProps) => {
   }, [activeStep, totalSteps]);
 
   const prevStep = React.useCallback(async () => {
+    if (!activeStep) return;
     const options = getStepOptions(activeStep);
     const canGoBack = await executeStepOptionCallback(options.onBeforeBack);
 
@@ -88,6 +94,7 @@ const TourManager = ({children}: TourProviderProps) => {
         totalSteps,
         tours: toursRef.current,
         addTour,
+        removeTour,
         startTour,
         completeTour,
         closeTour,

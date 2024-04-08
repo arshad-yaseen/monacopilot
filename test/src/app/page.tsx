@@ -15,7 +15,7 @@ export default function Home() {
       <div className="max-w-[600px] grid grid-cols-3 gap-4">
         <Link href={'/basic'}>Basic one</Link>
         <Link href={'/'}>Dynamic one</Link>
-        <Link href={'/'}>Scroll to target</Link>
+        <Link href={'/scroll-to-target'}>Scroll to target</Link>
         <Link href={'/'}>Multi-route</Link>
         <Link href={'/'}>Delayed target</Link>
         <Link href={'/'}>Pause and continue</Link>

@@ -20,6 +20,12 @@ export interface TourControls {
   addTour: (tour: Tour) => void;
 
   /**
+   * Removes a tour by its id.
+   * @param {string} id - The id of the tour to be removed.
+   */
+  removeTour: (id: string) => void;
+
+  /**
    * Initiates a tour by its id.
    * @param {string} id - The id of the tour to be started.
    */

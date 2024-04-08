@@ -24,8 +24,12 @@ const createOverlayStyle = (
   position: React.CSSProperties,
 ): React.CSSProperties => position;
 
+/**
+ * SpotlightOverlay is a component that renders an overlay around or over a target element.
+ * It updates its position based on the target's bounding rectangle and repositions on window resize.
+ */
 const SpotlightOverlay = React.memo(
-  ({target, isOpen, onClickOverlay}: SpotlightOverlayProps) => {
+  ({target, onClickOverlay}: SpotlightOverlayProps) => {
     const [targetRect, setTargetRect] = React.useState<TargetRect | null>(null);
     const padding = 5; // Padding around the target element in pixels
 
@@ -42,25 +46,18 @@ const SpotlightOverlay = React.memo(
     }, [target]);
 
     React.useEffect(() => {
-      if (!isOpen) return;
-
       updateTargetRect();
       window.addEventListener('resize', updateTargetRect);
 
       return () => window.removeEventListener('resize', updateTargetRect);
-    }, [isOpen, target, updateTargetRect]);
+    }, [target, updateTargetRect]);
 
-    if (!isOpen || !targetRect) {
-      return null;
-    }
-
-    const {top, left, width, height} = targetRect;
-    const bottomTop = top + height;
-    const rightLeft = left + width;
-
-    if (!target) {
+    if (!targetRect || !target) {
       return (
         <div
+          className="nt-spotlight-overlay-part"
+          onClick={e => e.stopPropagation()}
+          onPointerUp={onClickOverlay}
           style={createOverlayStyle({
             top: 0,
             left: 0,
@@ -70,6 +67,10 @@ const SpotlightOverlay = React.memo(
         />
       );
     }
+
+    const {top, left, width, height} = targetRect;
+    const bottomTop = top + height;
+    const rightLeft = left + width;
 
     return (
       <>

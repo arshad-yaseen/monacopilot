@@ -1,4 +1,4 @@
-import {_DEFAULT_POPOVER_POSITION} from './constants';
+import {DEFAULT_POPOVER_POSITION} from './constants';
 import {
   FloatingCoords,
   FloatingPosition,
@@ -162,7 +162,7 @@ export const getTourOptions = (tour: Tour | null): TourOptions => {
 
 export const getStepOptions = (step: TourStep | null): StepOptions => {
   const defaultOptions: StepOptions = {
-    placement: _DEFAULT_POPOVER_POSITION,
+    placement: DEFAULT_POPOVER_POSITION,
     nextOnClickTarget: false,
     backOnClickTarget: false,
     closeOnClickTarget: false,

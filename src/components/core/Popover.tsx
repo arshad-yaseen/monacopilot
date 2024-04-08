@@ -2,7 +2,7 @@ import React from 'react';
 
 import ReactDOM from 'react-dom';
 
-import {_DEFAULT_POPOVER_POSITION} from '../../constants';
+import {DEFAULT_POPOVER_POSITION} from '../../constants';
 import {calculatePopoverPosition} from '../../helpers';
 import {useFocusTrap, useLockBodyScroll} from '../../hooks';
 import {PopoverContextType, PopoverProps} from '../../types';
@@ -22,7 +22,7 @@ const usePopover = (): PopoverContextType => {
 const Popover = ({
   children,
   open,
-  preferredPosition = _DEFAULT_POPOVER_POSITION,
+  preferredPosition = DEFAULT_POPOVER_POSITION,
   target,
   shouldShowOverlay = true,
   onClickOutside,
@@ -58,12 +58,14 @@ const PopoverContent = ({
     onClickOutside,
     onClickTarget,
   } = usePopover();
+
   const popoverRef = React.useRef<HTMLDivElement>(null);
   const [isPositioned, setIsPositioned] = React.useState(false);
 
   // Position the popover
   React.useEffect(() => {
     const {current: popover} = popoverRef;
+    console.log('positioning popover');
 
     if (!open || !popover) return;
 
@@ -130,11 +132,7 @@ const PopoverContent = ({
       <div className={cls('nt-popover', className)} {...props} ref={popoverRef}>
         {children}
       </div>
-      <SpotlightOverlay
-        target={target}
-        isOpen={open}
-        onClickOverlay={onClickOutside}
-      />
+      <SpotlightOverlay target={target} onClickOverlay={onClickOutside} />
     </div>,
     document.body,
   );
