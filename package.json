@@ -1,7 +1,7 @@
 {
-  "name": "next-tour",
-  "version": "0.7.0",
-  "description": "Guided tours and walkthroughs for Next.js",
+  "name": "ai-monaco-editor",
+  "version": "0.2.0",
+  "description": "React monaco editor with AI auto-completion.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -12,11 +12,14 @@
     "type-check": "tsc --noEmit",
     "build": "pnpm type-check && tsup src/index.ts",
     "dev": "tsup src/index.ts --watch",
-    "dev:test": "pnpm -C test dev ",
-    "lint": "eslint . --ext .ts,.tsx --fix && pnpm -C test lint",
-    "format": "prettier --write ."
+    "dev:test": "pnpm -C test dev",
+    "lint": "eslint . --ext .ts,.tsx --fix",
+    "lint:test": "pnpm -C test lint",
+    "format": "prettier --write .",
+    "release": "pnpm build && pnpm lint && pnpm type-check && changeset && changeset version && changeset publish"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.27.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
     "@types/react": "^18.2.69",
     "@types/react-dom": "^18.2.22",
@@ -30,18 +33,21 @@
     "typescript": "^5.4.3"
   },
   "keywords": [
-    "nextjs",
-    "react",
-    "tour",
-    "guide",
-    "walkthrough",
-    "onboarding"
+    "monaco",
+    "monaco-editor",
+    "react-monaco-editor",
+    "ai-monaco-editor",
+    "ai-editor"
   ],
-  "homepage": "https://github.com/arshad-yaseen/next-tour#readme",
+  "homepage": "https://github.com/arshad-yaseen/ai-monaco-editor#readme",
   "license": "MIT",
   "author": "Arshad Yaseen <m@arshadyaseen.com>",
   "peerDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
+  },
+  "dependencies": {
+    "@monaco-editor/react": "^4.6.0",
+    "monaco-editor": "^0.47.0"
   }
 }

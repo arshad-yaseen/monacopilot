@@ -1,5 +1,3 @@
-export {TourProvider, Tour} from './components';
-export {useTourControls, useTourState} from './hooks';
+import Editor from './editor';
 
-// Types
-export type {TourProps, TourControls, TourState, TourStep} from './types';
+export {Editor};

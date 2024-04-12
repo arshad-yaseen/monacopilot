@@ -1,6 +1,6 @@
 {
   "name": "test",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -12,7 +12,7 @@
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.5",
     "next": "14.1.4",
-    "next-tour": "workspace:*",
+    "ai-monaco-editor": "workspace:*",
     "react": "^18",
     "react-dom": "^18"
   },
