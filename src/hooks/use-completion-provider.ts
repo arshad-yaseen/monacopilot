@@ -2,7 +2,8 @@ import React from 'react';
 
 import {Monaco} from '@monaco-editor/react';
 
-import {getCompletionCacheKey, getCompletionItem} from '../helpers';
+import {CompletionModel} from '../classes';
+import {getCompletionCacheKey, getCompletionItem} from '../helpers/completion';
 import {useDebounceFnAsync} from './use-debounce-fn-async';
 
 export function useCompletionProvider(
@@ -25,7 +26,7 @@ export function useCompletionProvider(
     const completionDisposable =
       monacoInstance.languages.registerInlineCompletionsProvider(language, {
         provideInlineCompletions: async (editor, cursorPosition) => {
-          const textUntilCursorPosition = editor.getValueInRange({
+          const valueUntilCursorPosition = editor.getValueInRange({
             startLineNumber: 1,
             startColumn: 1,
             endLineNumber: cursorPosition.lineNumber,
@@ -34,7 +35,7 @@ export function useCompletionProvider(
 
           const completionCacheKey = getCompletionCacheKey(
             cursorPosition,
-            textUntilCursorPosition,
+            valueUntilCursorPosition,
           );
 
           const cursorRange = new monacoInstance.Range(
@@ -63,10 +64,23 @@ export function useCompletionProvider(
             };
           }
 
-          const completionItem = await getCompletionItemDebounced(
-            cursorPosition,
-            editor,
-          );
+          if (
+            !CompletionModel.apiKey ||
+            !CompletionModel.provider ||
+            !CompletionModel.model ||
+            !language ||
+            !valueUntilCursorPosition
+          ) {
+            return {items: []};
+          }
+
+          const completionItem = await getCompletionItemDebounced({
+            apiKey: CompletionModel.apiKey,
+            model: CompletionModel.model,
+            provider: CompletionModel.provider,
+            value: valueUntilCursorPosition,
+            language,
+          });
           completionProcessFinished.current = true;
 
           if (!completionItem) {

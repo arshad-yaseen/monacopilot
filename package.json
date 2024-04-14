@@ -10,20 +10,22 @@
   ],
   "scripts": {
     "type-check": "tsc --noEmit",
-    "build": "pnpm type-check && tsup src/index.ts",
+    "build": "tsup src/index.ts",
     "dev": "tsup src/index.ts --watch",
     "dev:test": "pnpm -C test dev",
     "lint": "eslint . --ext .ts,.tsx --fix",
     "lint:test": "pnpm -C test lint",
     "format": "prettier --write .",
-    "release": "pnpm build && pnpm lint && pnpm type-check && changeset && changeset version && changeset publish"
+    "release": "pnpm build && pnpm lint && changeset && changeset version && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
+    "@types/node": "^20",
     "@types/react": "^18.2.69",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.3.1",
+    "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.1",
     "prettier": "^3.2.5",

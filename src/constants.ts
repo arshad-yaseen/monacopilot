@@ -1,4 +1,4 @@
-import {EditorOptions} from './types';
+import {CompletionModelType, EditorOptions} from './types';
 
 export const DEFAULT_LANGUAGE: string = 'javascript';
 
@@ -26,3 +26,6 @@ export const EDITOR_DEFAULT_OPTIONS: EditorOptions = {
   wordWrap: 'on',
   automaticLayout: true,
 };
+
+export const DEFAULT_COMPLETION_MODEL: CompletionModelType =
+  'claude-3-haiku-20240307';
