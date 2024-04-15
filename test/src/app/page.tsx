@@ -8,9 +8,7 @@ export default function Home() {
       <Editor
         language="javascript"
         className="h-[300px] w-[300px] border"
-        provider="anthropic"
-        model="claude-3-haiku-20240307"
-        apiKey="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"
+        endpoint="/api/auto-complete"
       />
     </main>
   );

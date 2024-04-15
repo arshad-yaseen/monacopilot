@@ -1,21 +1,12 @@
-import {CompletionModelType, EditorOptions} from './types';
+import {EditorOptions} from '../types/common';
 
 export const DEFAULT_LANGUAGE: string = 'javascript';
 
 export const EDITOR_DEFAULT_OPTIONS: EditorOptions = {
   scrollBeyondLastColumn: 0,
-  scrollbar: {
-    alwaysConsumeMouseWheel: false,
-  },
   codeLens: false,
   minimap: {
     enabled: false,
-  },
-  inlineSuggest: {
-    enabled: true,
-    showToolbar: 'onHover',
-    mode: 'subword',
-    suppressSuggestions: false,
   },
   quickSuggestions: false,
   folding: false,
@@ -26,6 +17,3 @@ export const EDITOR_DEFAULT_OPTIONS: EditorOptions = {
   wordWrap: 'on',
   automaticLayout: true,
 };
-
-export const DEFAULT_COMPLETION_MODEL: CompletionModelType =
-  'claude-3-haiku-20240307';

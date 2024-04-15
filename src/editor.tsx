@@ -2,18 +2,20 @@ import React from 'react';
 
 import {Monaco, Editor as MonacoEditor} from '@monaco-editor/react';
 
-import {CompletionModel} from './classes';
-import {DEFAULT_LANGUAGE, EDITOR_DEFAULT_OPTIONS} from './constants';
-import {useCompletionProvider} from './hooks/use-completion-provider';
-import {CodeEditorType, EditorOptions, EditorProps} from './types';
-import {deepMerge} from './utils';
+import {Client} from './classes';
+import {DEFAULT_LANGUAGE, EDITOR_DEFAULT_OPTIONS} from './constants/common';
+import {useCodeCompletion} from './hooks/use-start-completion';
+import {CodeEditorType, EditorOptions, EditorProps} from './types/common';
+import {deepMerge} from './utils/common';
 
-const Editor = ({provider, model, apiKey, ...props}: EditorProps) => {
+const Editor = ({endpoint, ...props}: EditorProps) => {
   const [monacoInstance, setMonacoInstance] = React.useState<Monaco | null>(
     null,
   );
 
-  CompletionModel.init(provider, model, apiKey);
+  React.useEffect(() => {
+    Client.setEndpoint(endpoint);
+  }, [endpoint]);
 
   const onEditorDidMount = React.useCallback(
     (editor: CodeEditorType, monaco: Monaco) => {
@@ -24,7 +26,7 @@ const Editor = ({provider, model, apiKey, ...props}: EditorProps) => {
     [props],
   );
 
-  useCompletionProvider(monacoInstance, props.language || DEFAULT_LANGUAGE);
+  useCodeCompletion(monacoInstance, props.language || DEFAULT_LANGUAGE);
 
   return (
     <MonacoEditor

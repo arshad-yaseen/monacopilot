@@ -1,47 +1,55 @@
-import {DEFAULT_COMPLETION_MODEL} from './constants';
-import {CompletionModelType, CompletionProviderType} from './types';
+import {
+  COMPLETION_PROVIDER_OF_,
+  DEFAULT_COMPLETION_MODEL,
+  PROVIDER_API_ENDPOINTS,
+} from './constants/completion';
+import {getHeaders, getRequestBody} from './helpers/completion/request';
+import {
+  CompletionConstructorParams,
+  CompletionModelType,
+  CompletionRequestParams,
+} from './types/completion';
 
-/**
- * Handles the storage and retrieval of the completion model and associated key.
- */
-export class CompletionModel {
-  private static _provider: CompletionProviderType | undefined;
-  private static _model: CompletionModelType | undefined;
-  private static _apiKey: string | undefined;
+export class Client {
+  public static _endpoint: string;
 
-  private constructor() {}
-
-  public static init(
-    provider?: CompletionProviderType,
-    model?: CompletionModelType,
-    apiKey?: string,
-  ): void {
-    CompletionModel._provider = provider;
-    CompletionModel._model = model;
-    CompletionModel._apiKey = apiKey;
+  static getEndpoint() {
+    return Client._endpoint;
   }
 
-  public static get provider(): CompletionProviderType | undefined {
-    return this._provider;
+  static setEndpoint(value: string) {
+    Client._endpoint = value;
+  }
+}
+
+export class Completion {
+  protected _apiKey: string | undefined;
+  public model: CompletionModelType | undefined;
+
+  constructor(
+    apiKey: string | undefined,
+    options?: CompletionConstructorParams,
+  ) {
+    this._apiKey = apiKey;
+    this.model = options?.model || DEFAULT_COMPLETION_MODEL;
   }
 
-  public static set provider(value: CompletionProviderType | undefined) {
-    this._provider = value;
-  }
+  async run(req: Request) {
+    if (!this._apiKey || !this.model) {
+      return;
+    }
 
-  public static get model(): CompletionModelType {
-    return this._model ?? DEFAULT_COMPLETION_MODEL;
-  }
+    const data: CompletionRequestParams = await req.json();
 
-  public static set model(value: CompletionModelType | undefined) {
-    this._model = value;
-  }
+    const model = this.model;
+    const provider = COMPLETION_PROVIDER_OF_[model];
 
-  public static get apiKey(): string | undefined {
-    return this._apiKey;
-  }
+    const response = await fetch(PROVIDER_API_ENDPOINTS[provider], {
+      method: 'POST',
+      headers: getHeaders(provider, this._apiKey),
+      body: JSON.stringify(getRequestBody(data, provider, model)),
+    });
 
-  public static set apiKey(value: string | undefined) {
-    this._apiKey = value;
+    return await response.json();
   }
 }
