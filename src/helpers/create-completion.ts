@@ -1,12 +1,12 @@
-import {COMPLETION_PROMPT} from '../../constants/completion';
+import {COMPLETION_PROMPT} from '../constants/completion';
 import {
   CompletionModelType,
   CompletionProviderType,
   CompletionRequestParams,
   ProviderRequestBody,
-} from '../../types/completion';
+} from '../types/completion';
 
-export const getHeaders = (
+export const getProviderRequestHeaders = (
   provider: CompletionProviderType,
   apiKey: string,
 ): HeadersInit => {
@@ -26,10 +26,7 @@ export const getHeaders = (
   }
 };
 
-const getPrompt = (language: string | undefined) =>
-  COMPLETION_PROMPT.replace('{language}', language || '');
-
-export const getRequestBody = (
+export const getProviderRequestBody = (
   data: CompletionRequestParams,
   provider: CompletionProviderType,
   model: CompletionModelType,
@@ -77,3 +74,6 @@ export const getRequestBody = (
 
   return requestBody;
 };
+
+const getPrompt = (language: string | undefined) =>
+  COMPLETION_PROMPT.replace('{language}', language || '');

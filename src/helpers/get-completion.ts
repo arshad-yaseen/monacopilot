@@ -1,34 +1,38 @@
 import * as monaco from 'monaco-editor';
 
-import {Client} from '../../classes';
-import {COMPLETION_PROVIDER_OF_} from '../../constants/completion';
+import {Client} from '../classes';
+import {COMPLETION_PROVIDER_OF_} from '../constants/completion';
 import {
   CompletionProviderType,
   CompletionRequestParams,
   ProviderResponse,
-} from '../../types/completion';
+} from '../types/completion';
+import {POST} from '../utils/http';
 
 export const fetchCompletionItem = async ({
   code,
   language,
   token,
-}: CompletionRequestParams) => {
+}: CompletionRequestParams & {token: monaco.CancellationToken}) => {
   const endpoint = Client.getEndpoint();
   const controller = new AbortController();
 
-  const response = await fetch(endpoint, {
-    method: 'POST',
-    body: JSON.stringify({code, language}),
-    signal: controller.signal,
-  });
+  const data = await POST<ProviderResponse, CompletionRequestParams>(
+    endpoint,
+    {
+      code,
+      language,
+    },
+    {
+      signal: controller.signal,
+    },
+  );
 
   if (token.isCancellationRequested) {
     controller.abort();
 
     return null;
   }
-
-  const data = await response.json();
 
   return getCompletionResponse(data);
 };

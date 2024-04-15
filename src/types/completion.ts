@@ -1,4 +1,4 @@
-import * as monaco from 'monaco-editor';
+import {ChatCompletionResponse as MistralResponse} from '@mistralai/mistralai';
 import {
   ChatCompletionCreateParamsNonStreaming as OpenAIRequestBody,
   ChatCompletion as OpenAIResponse,
@@ -11,10 +11,9 @@ export interface CompletionConstructorParams {
 export interface CompletionRequestParams {
   code: string;
   language: string | undefined;
-  token: monaco.CancellationToken;
 }
 
-export type ProviderResponse = OpenAIResponse;
+export type ProviderResponse = OpenAIResponse | MistralResponse;
 export type ProviderRequestBody = OpenAIRequestBody;
 
 export type CompletionProviderType = 'openai' | 'mistral';

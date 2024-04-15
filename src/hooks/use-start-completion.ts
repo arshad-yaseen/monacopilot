@@ -6,10 +6,10 @@ import {
   computeCacheKeyForCompletion,
   extractCodeForCompletion,
   fetchCompletionItem,
-} from '../helpers/completion';
+} from '../helpers/get-completion';
 import {isValidCompletion} from '../utils/completion/validate-completion';
 
-export const useCodeCompletion = (
+export const useStartCompletion = (
   monacoInstance: Monaco | null,
   language: string,
 ) => {
@@ -53,11 +53,17 @@ export const useCodeCompletion = (
 
           if (!language || !code) return {items: []};
 
-          const completion = await fetchCompletionItem({
-            code: extractCodeForCompletion(code, position),
-            language,
-            token,
-          });
+          let completion: string | null;
+
+          try {
+            completion = await fetchCompletionItem({
+              code: extractCodeForCompletion(code, position),
+              language,
+              token,
+            });
+          } catch (error) {
+            return {items: []};
+          }
 
           isCompletionHandled.current = true;
 
