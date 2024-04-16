@@ -1,1 +1,1 @@
-pnpm type-check && pnpm lint
+pnpm checks

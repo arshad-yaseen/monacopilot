@@ -16,7 +16,9 @@
     "lint": "eslint . --ext .ts,.tsx --fix",
     "lint:test": "pnpm -C test lint",
     "format": "prettier --write .",
-    "release": "pnpm build && pnpm lint && changeset && changeset version && changeset publish"
+    "checks": "pnpm type-check && pnpm lint && pnpm lint:test",
+    "release": "pnpm build && pnpm checks && changeset && changeset version && changeset publish",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
