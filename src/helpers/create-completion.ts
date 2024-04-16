@@ -3,76 +3,67 @@ import {
   CompletionModelType,
   CompletionProviderType,
   CompletionRequestParams,
-  ProviderRequestBody,
 } from '../types/completion';
 
 export const getProviderRequestHeaders = (
   provider: CompletionProviderType,
   apiKey: string,
 ): HeadersInit => {
-  switch (provider) {
-    case 'openai':
-      return {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      };
-    case 'mistral':
-      return {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      };
-    default:
-      return {};
-  }
+  const headers: Record<CompletionProviderType, HeadersInit> = {
+    openai: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    mistral: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+  };
+
+  return headers[provider];
 };
 
 export const getProviderRequestBody = (
   data: CompletionRequestParams,
   provider: CompletionProviderType,
   model: CompletionModelType,
-): ProviderRequestBody => {
-  let requestBody: ProviderRequestBody;
-
-  switch (provider) {
-    case 'openai':
-      requestBody = {
-        model,
-        messages: [
-          {
-            role: 'system',
-            content: getPrompt(data.language),
-          },
-          {
-            role: 'user',
-            content: data.code,
-          },
-        ],
-        response_format: {
-          type: 'json_object',
+) => {
+  const body: Record<CompletionProviderType, object> = {
+    openai: {
+      model,
+      messages: [
+        {
+          role: 'system',
+          content: getPrompt(data.language),
         },
-      };
-      break;
-    case 'mistral':
-      requestBody = {
-        model,
-        messages: [
-          {
-            role: 'system',
-            content: getPrompt(data.language),
-          },
-          {
-            role: 'user',
-            content: data.code,
-          },
-        ],
-        response_format: {
-          type: 'json_object',
+        {
+          role: 'user',
+          content: data.code,
         },
-      };
-      break;
-  }
+      ],
+      response_format: {
+        type: 'json_object',
+      },
+    },
+    mistral: {
+      model,
+      messages: [
+        {
+          role: 'system',
+          content: getPrompt(data.language),
+        },
+        {
+          role: 'user',
+          content: data.code,
+        },
+      ],
+      response_format: {
+        type: 'json_object',
+      },
+    },
+  };
 
-  return requestBody;
+  return body[provider];
 };
 
 const getPrompt = (language: string | undefined) =>

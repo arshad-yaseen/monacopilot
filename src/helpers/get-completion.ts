@@ -1,32 +1,29 @@
 import * as monaco from 'monaco-editor';
 
-import {Client} from '../classes';
-import {COMPLETION_PROVIDER_OF_} from '../constants/completion';
+import Config from '../classes/config';
 import {
   CompletionProviderType,
   CompletionRequestParams,
-  ProviderResponse,
 } from '../types/completion';
-import {POST} from '../utils/http';
 
 export const fetchCompletionItem = async ({
   code,
   language,
   token,
 }: CompletionRequestParams & {token: monaco.CancellationToken}) => {
-  const endpoint = Client.getEndpoint();
+  const endpoint = Config.getEndpoint();
   const controller = new AbortController();
 
-  const data = await POST<ProviderResponse, CompletionRequestParams>(
-    endpoint,
-    {
-      code,
-      language,
-    },
-    {
-      signal: controller.signal,
-    },
-  );
+  const body = {
+    code,
+    language,
+  } as CompletionRequestParams;
+
+  const response = await fetch(endpoint, {
+    method: 'POST',
+    body: JSON.stringify(body),
+    signal: controller.signal,
+  });
 
   if (token.isCancellationRequested) {
     controller.abort();
@@ -34,22 +31,20 @@ export const fetchCompletionItem = async ({
     return null;
   }
 
-  return getCompletionResponse(data);
+  const data = await response.json();
+
+  return extractCompletionFromResponse(data);
 };
 
-const getCompletionResponse = (data: ProviderResponse): string => {
-  let completion: string | null = '';
+const extractCompletionFromResponse = (data: any): string => {
+  const completion: Record<CompletionProviderType, string> = {
+    openai: data.choices[0].message.content,
+    mistral: data.choices[0].message.content,
+  };
 
-  switch (COMPLETION_PROVIDER_OF_[data.model] as CompletionProviderType) {
-    case 'openai':
-      completion = data.choices[0].message.content;
-      break;
-    case 'mistral':
-      completion = data.choices[0].message.content;
-      break;
-  }
+  const provider = Config.getProvider();
 
-  return parseCompletion(completion);
+  return parseCompletion(completion[provider]);
 };
 
 const parseCompletion = (completion: string | null) => {

@@ -8,6 +8,7 @@ import {
   fetchCompletionItem,
 } from '../helpers/get-completion';
 import {isValidCompletion} from '../utils/completion/validate-completion';
+import {useDebounceAsyncFn} from './use-debounce-async-fn';
 
 export const useStartCompletion = (
   monacoInstance: Monaco | null,
@@ -15,6 +16,11 @@ export const useStartCompletion = (
 ) => {
   const completionCache = React.useRef(new Map());
   const isCompletionHandled = React.useRef(false);
+
+  const fetchCompletionItemDebounced = useDebounceAsyncFn(
+    fetchCompletionItem,
+    1000,
+  );
 
   React.useEffect(() => {
     if (!monacoInstance) return;
@@ -51,12 +57,13 @@ export const useStartCompletion = (
             };
           }
 
-          if (!language || !code) return {items: []};
+          if (!language || !code || token.isCancellationRequested)
+            return {items: []};
 
           let completion: string | null;
 
           try {
-            completion = await fetchCompletionItem({
+            completion = await fetchCompletionItemDebounced({
               code: extractCodeForCompletion(code, position),
               language,
               token,
@@ -67,7 +74,7 @@ export const useStartCompletion = (
 
           isCompletionHandled.current = true;
 
-          if (!completion || token.isCancellationRequested) return {items: []};
+          if (!completion) return {items: []};
 
           completionCache.current.set(cacheKey, completion);
 

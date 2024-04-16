@@ -1,9 +1,3 @@
-import {ChatCompletionResponse as MistralResponse} from '@mistralai/mistralai';
-import {
-  ChatCompletionCreateParamsNonStreaming as OpenAIRequestBody,
-  ChatCompletion as OpenAIResponse,
-} from 'openai/resources/chat';
-
 export interface CompletionConstructorParams {
   model: CompletionModelType | undefined;
 }
@@ -12,9 +6,6 @@ export interface CompletionRequestParams {
   code: string;
   language: string | undefined;
 }
-
-export type ProviderResponse = OpenAIResponse | MistralResponse;
-export type ProviderRequestBody = OpenAIRequestBody;
 
 export type CompletionProviderType = 'openai' | 'mistral';
 
