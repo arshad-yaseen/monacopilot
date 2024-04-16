@@ -8,14 +8,14 @@ import {useStartCompletion} from './hooks/use-start-completion';
 import {CodeEditorType, EditorOptions, EditorProps} from './types/common';
 import {deepMerge} from './utils/common';
 
-const Editor = ({endpoint, ...props}: EditorProps) => {
+const Editor = ({endpoint, framework, ...props}: EditorProps) => {
   const [monacoInstance, setMonacoInstance] = React.useState<Monaco | null>(
     null,
   );
 
   React.useEffect(() => {
     Config.setEndpoint(endpoint);
-  }, [endpoint]);
+  }, [endpoint, framework]);
 
   const onEditorDidMount = React.useCallback(
     (editor: CodeEditorType, monaco: Monaco) => {
@@ -26,7 +26,11 @@ const Editor = ({endpoint, ...props}: EditorProps) => {
     [props],
   );
 
-  useStartCompletion(monacoInstance, props.language || DEFAULT_LANGUAGE);
+  useStartCompletion(
+    monacoInstance,
+    props.language || DEFAULT_LANGUAGE,
+    framework,
+  );
 
   return (
     <MonacoEditor

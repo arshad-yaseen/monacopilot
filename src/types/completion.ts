@@ -1,3 +1,5 @@
+import {Framework} from './common';
+
 export interface CompletionConstructorParams {
   model: CompletionModelType | undefined;
 }
@@ -5,11 +7,9 @@ export interface CompletionConstructorParams {
 export interface CompletionRequestParams {
   code: string;
   language: string | undefined;
+  framework: Framework | undefined;
 }
 
-export type CompletionProviderType = 'openai' | 'mistral';
+export type CompletionProviderType = 'openai';
 
-export type CompletionModelType =
-  | 'gpt-3.5-turbo-0125'
-  | 'open-mixtral-8x7b'
-  | 'gpt-4-turbo-2024-04-09';
+export type CompletionModelType = 'gpt-3.5-turbo-0125';

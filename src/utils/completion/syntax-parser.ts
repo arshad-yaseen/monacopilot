@@ -21,7 +21,7 @@ export const isCodeAfterCursor = (
 
 /** Determines if the cursor is at the end of a line. */
 export const isLineEnd = (code: string, position: EditorPosition): boolean => {
-  const lineEndCharacters = [';', '{', '}'];
+  const lineEndCharacters = [';', '{', '}', ']', ')'];
 
   const line = code.split('\n')[position.lineNumber - 1];
 

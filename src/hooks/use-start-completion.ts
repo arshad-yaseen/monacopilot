@@ -7,12 +7,14 @@ import {
   extractCodeForCompletion,
   fetchCompletionItem,
 } from '../helpers/get-completion';
+import {Framework} from '../types/common';
 import {isValidCompletion} from '../utils/completion/validate-completion';
 import {useDebounceAsyncFn} from './use-debounce-async-fn';
 
 export const useStartCompletion = (
   monacoInstance: Monaco | null,
   language: string,
+  framework: Framework | undefined,
 ) => {
   const completionCache = React.useRef(new Map());
   const isCompletionHandled = React.useRef(false);
@@ -30,6 +32,9 @@ export const useStartCompletion = (
         provideInlineCompletions: async (editor, position, _, token) => {
           const code = editor.getValue();
 
+          // If the completion is not valid, return an empty array
+          // This checks the commong cases where completion should not be triggered
+          // e.g. when the cursor is at the end of a line or when the code after the cursor is not valid
           if (!isValidCompletion(code, position)) return {items: []};
 
           const cacheKey = computeCacheKeyForCompletion(position, code);
@@ -57,8 +62,7 @@ export const useStartCompletion = (
             };
           }
 
-          if (!language || !code || token.isCancellationRequested)
-            return {items: []};
+          if (!language || !code) return {items: []};
 
           let completion: string | null;
 
@@ -66,6 +70,7 @@ export const useStartCompletion = (
             completion = await fetchCompletionItemDebounced({
               code: extractCodeForCompletion(code, position),
               language,
+              framework,
               token,
             });
           } catch (error) {
@@ -74,7 +79,7 @@ export const useStartCompletion = (
 
           isCompletionHandled.current = true;
 
-          if (!completion) return {items: []};
+          if (!completion || token.isCancellationRequested) return {items: []};
 
           completionCache.current.set(cacheKey, completion);
 
@@ -83,8 +88,10 @@ export const useStartCompletion = (
               {
                 insertText: completion,
                 range: cursorRange,
+                completeBracketPairs: true,
               },
             ],
+            enableForwardStability: true,
           };
         },
         freeInlineCompletions: () => {},

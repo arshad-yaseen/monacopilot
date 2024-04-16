@@ -1,4 +1,5 @@
-import {COMPLETION_PROMPT} from '../constants/completion';
+import {COMPLETION_SYSTEM_PROMPT} from '../constants/completion';
+import {Framework} from '../types/common';
 import {
   CompletionModelType,
   CompletionProviderType,
@@ -11,10 +12,6 @@ export const getProviderRequestHeaders = (
 ): HeadersInit => {
   const headers: Record<CompletionProviderType, HeadersInit> = {
     openai: {
-      Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    mistral: {
       Authorization: `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
     },
@@ -34,23 +31,7 @@ export const getProviderRequestBody = (
       messages: [
         {
           role: 'system',
-          content: getPrompt(data.language),
-        },
-        {
-          role: 'user',
-          content: data.code,
-        },
-      ],
-      response_format: {
-        type: 'json_object',
-      },
-    },
-    mistral: {
-      model,
-      messages: [
-        {
-          role: 'system',
-          content: getPrompt(data.language),
+          content: getPrompt(data.language, data.framework),
         },
         {
           role: 'user',
@@ -66,5 +47,12 @@ export const getProviderRequestBody = (
   return body[provider];
 };
 
-const getPrompt = (language: string | undefined) =>
-  COMPLETION_PROMPT.replace('{language}', language || '');
+const getPrompt = (
+  language: string | undefined,
+  framework: Framework | undefined,
+) => {
+  return COMPLETION_SYSTEM_PROMPT.replaceAll(
+    '{language_or_framework}',
+    framework || language || '',
+  );
+};

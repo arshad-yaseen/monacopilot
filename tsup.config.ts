@@ -2,7 +2,7 @@ import {defineConfig} from 'tsup';
 
 export default defineConfig({
   entry: ['src/index.ts'],
-  target: 'es2018',
+  target: 'es2021',
   minify: true,
   format: ['esm', 'cjs'],
   clean: true,

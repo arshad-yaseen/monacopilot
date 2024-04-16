@@ -9,15 +9,22 @@ import {
 export const fetchCompletionItem = async ({
   code,
   language,
+  framework,
   token,
 }: CompletionRequestParams & {token: monaco.CancellationToken}) => {
   const endpoint = Config.getEndpoint();
+
   const controller = new AbortController();
+
+  if (!endpoint) {
+    return null;
+  }
 
   const body = {
     code,
     language,
-  } as CompletionRequestParams;
+    framework,
+  } satisfies CompletionRequestParams;
 
   const response = await fetch(endpoint, {
     method: 'POST',
@@ -39,7 +46,6 @@ export const fetchCompletionItem = async ({
 const extractCompletionFromResponse = (data: any): string => {
   const completion: Record<CompletionProviderType, string> = {
     openai: data.choices[0].message.content,
-    mistral: data.choices[0].message.content,
   };
 
   const provider = Config.getProvider();
@@ -57,12 +63,13 @@ const parseCompletion = (completion: string | null) => {
   }
 
   try {
-    return JSON.parse(completion).predicted_next_code;
+    return JSON.parse(completion).code_i_write;
   } catch (error) {
     return null;
   }
 };
 
+// Extract the code from the editor value and insert a placeholder at the cursor position
 export const extractCodeForCompletion = (
   editorValue: string,
   cursorPosition: monaco.Position,
@@ -74,7 +81,7 @@ export const extractCodeForCompletion = (
 
   lines[lineNumber] =
     lines[lineNumber].substring(0, column) +
-    '{predict_code_here}' +
+    '{cursor}' +
     lines[lineNumber].substring(column);
 
   return lines.join('\n');

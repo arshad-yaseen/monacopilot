@@ -47,7 +47,7 @@ class Completion {
 
       return await response.json();
     } catch (error) {
-      console.error('Error executing code completion:', error);
+      throw new Error(`Failed to run auto completion: ${error}`);
     }
   }
 }

@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es2018",
+    "target": "es2021",
     "module": "esnext",
-    "lib": ["es2018", "dom"],
+    "lib": ["es2021", "dom"],
     "jsx": "react",
     "strictNullChecks": true,
     "strictFunctionTypes": true,

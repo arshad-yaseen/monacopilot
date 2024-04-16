@@ -7,8 +7,8 @@ export default function Home() {
     <main className="flex min-h-screen w-screen flex-col items-center gap-6 py-32 px-6">
       <Editor
         language="python"
-        className="h-[300px] w-[300px] border"
         endpoint="/api/auto-complete"
+        className="h-[300px] w-[300px] border"
       />
     </main>
   );

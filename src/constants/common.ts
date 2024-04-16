@@ -9,6 +9,10 @@ export const EDITOR_DEFAULT_OPTIONS: EditorOptions = {
     enabled: false,
   },
   quickSuggestions: false,
+  inlineSuggest: {
+    enabled: true,
+    mode: 'prefix',
+  },
   folding: false,
   foldingHighlight: false,
   foldingImportsByDefault: false,

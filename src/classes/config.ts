@@ -5,11 +5,10 @@ import {
 import {CompletionModelType, CompletionProviderType} from '../types/completion';
 
 class Config {
-  private static endpoint: string =
-    process.env.API_ENDPOINT || 'default-endpoint';
+  private static endpoint: string | undefined;
   private static model: CompletionModelType = DEFAULT_COMPLETION_MODEL;
 
-  public static getEndpoint(): string {
+  public static getEndpoint(): string | undefined {
     return Config.endpoint;
   }
 
