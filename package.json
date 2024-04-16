@@ -1,6 +1,6 @@
 {
   "name": "ai-monaco-editor",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "React monaco editor with AI auto-completion.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -11,14 +11,13 @@
   "scripts": {
     "type-check": "tsc --noEmit",
     "build": "tsup src/index.ts",
-    "dev": "tsup src/index.ts --watch",
     "dev:test": "pnpm -C test dev",
+    "dev": "tsup src/index.ts --watch",
     "lint": "eslint . --ext .ts,.tsx --fix",
     "lint:test": "pnpm -C test lint",
     "format": "prettier --write .",
     "checks": "pnpm type-check && pnpm lint && pnpm lint:test",
-    "release": "pnpm build && pnpm checks && changeset && changeset version && changeset publish",
-    "prepare": "husky"
+    "release": "pnpm build && pnpm checks && changeset && changeset version && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",

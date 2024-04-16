@@ -1,5 +1,11 @@
 # ai-monaco-editor
 
+## 1.1.0
+
+### Minor Changes
+
+- Handle network traffic very cleverly using debouncing and a cancellation token. Remove unnecessary code and packages.
+
 ## 1.0.0
 
 ### Major Changes
