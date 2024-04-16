@@ -93,7 +93,7 @@ export const useStartCompletion = (
     return () => {
       completionProvider.dispose();
     };
-  }, [monacoInstance, language]);
+  }, [monacoInstance, language, fetchCompletionItemDebounced]);
 
   return null;
 };
