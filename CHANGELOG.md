@@ -1,5 +1,11 @@
 # ai-monaco-editor
 
+## 1.1.1
+
+### Patch Changes
+
+- Remove prepare script
+
 ## 1.1.0
 
 ### Minor Changes
