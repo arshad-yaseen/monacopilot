@@ -100,7 +100,7 @@ export const useStartCompletion = (
     return () => {
       completionProvider.dispose();
     };
-  }, [monacoInstance, language, fetchCompletionItemDebounced]);
+  }, [monacoInstance, language, fetchCompletionItemDebounced, framework]);
 
   return null;
 };
