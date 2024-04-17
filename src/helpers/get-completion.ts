@@ -1,10 +1,12 @@
 import * as monaco from 'monaco-editor';
 
 import Config from '../classes/config';
+import {COMPLETION_CODE_KEY} from '../constants/completion';
 import {
   CompletionProviderType,
   CompletionRequestParams,
 } from '../types/completion';
+import {parseJson} from '../utils/common';
 
 export const fetchCompletionItem = async ({
   code,
@@ -40,36 +42,22 @@ export const fetchCompletionItem = async ({
 
   const data = await response.json();
 
+  console.log(data);
+
   return extractCompletionFromResponse(data);
 };
 
 const extractCompletionFromResponse = (data: any): string => {
   const completion: Record<CompletionProviderType, string> = {
-    openai: data.choices[0].message.content,
+    openai: data.choices[0].message.function_call.arguments,
   };
 
   const provider = Config.getProvider();
 
-  return parseCompletion(completion[provider]);
+  return parseJson(completion[provider])[COMPLETION_CODE_KEY];
 };
 
-const parseCompletion = (completion: string | null) => {
-  if (!completion) {
-    return null;
-  }
-
-  if (completion.startsWith('```json') && completion.endsWith('```')) {
-    completion = completion.slice(7, -3);
-  }
-
-  try {
-    return JSON.parse(completion).code_i_write;
-  } catch (error) {
-    return null;
-  }
-};
-
-// Extract the code from the editor value and insert a placeholder at the cursor position
+// Extract the code from the editor value and insert a {cursor} placeholder at the cursor position
 export const extractCodeForCompletion = (
   editorValue: string,
   cursorPosition: monaco.Position,

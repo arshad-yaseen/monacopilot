@@ -29,3 +29,19 @@ export function deepMerge<T>(partial: Partial<T> | undefined, fallback: T): T {
 
   return merged;
 }
+
+export const parseJson = (jsonString: string | null) => {
+  if (!jsonString) {
+    return null;
+  }
+
+  if (jsonString.startsWith('```json') && jsonString.endsWith('```')) {
+    jsonString = jsonString.slice(7, -3);
+  }
+
+  try {
+    return JSON.parse(jsonString);
+  } catch (error) {
+    return null;
+  }
+};

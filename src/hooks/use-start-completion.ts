@@ -21,7 +21,7 @@ export const useStartCompletion = (
 
   const fetchCompletionItemDebounced = useDebounceAsyncFn(
     fetchCompletionItem,
-    1000,
+    500,
   );
 
   React.useEffect(() => {

@@ -1,4 +1,7 @@
-import {COMPLETION_SYSTEM_PROMPT} from '../constants/completion';
+import {
+  COMPLETION_FUNCTION_CALL,
+  COMPLETION_SYSTEM_PROMPT,
+} from '../constants/completion';
 import {Framework} from '../types/common';
 import {
   CompletionModelType,
@@ -28,26 +31,25 @@ export const getProviderRequestBody = (
   const body: Record<CompletionProviderType, object> = {
     openai: {
       model,
+      temperature: 0.1,
       messages: [
         {
           role: 'system',
-          content: getPrompt(data.language, data.framework),
+          content: getSystemPrompt(data.language, data.framework),
         },
         {
           role: 'user',
           content: data.code,
         },
       ],
-      response_format: {
-        type: 'json_object',
-      },
+      functions: [COMPLETION_FUNCTION_CALL],
     },
   };
 
   return body[provider];
 };
 
-const getPrompt = (
+const getSystemPrompt = (
   language: string | undefined,
   framework: Framework | undefined,
 ) => {
