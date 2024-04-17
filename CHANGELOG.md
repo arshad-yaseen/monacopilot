@@ -1,5 +1,11 @@
 # ai-monaco-editor
 
+## 1.2.0
+
+### Minor Changes
+
+- Function call and optimized completions
+
 ## 1.1.1
 
 ### Patch Changes

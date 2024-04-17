@@ -1,5 +1,12 @@
 # test
 
+## 0.1.5
+
+### Patch Changes
+
+- Updated dependencies
+  - ai-monaco-editor@1.2.0
+
 ## 0.1.4
 
 ### Patch Changes
