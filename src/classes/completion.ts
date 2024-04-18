@@ -1,4 +1,5 @@
 import {
+  _COMPLETION_SERVER_URL,
   DEFAULT_COMPLETION_MODEL,
   PROVIDER_API_ENDPOINTS,
 } from '../constants/completion';
@@ -39,15 +40,26 @@ class Completion {
       const body = getProviderRequestBody(data, provider, model);
       const headers = getProviderRequestHeaders(provider, apiKey);
 
-      const response = await fetch(endpoint, {
+      const response = await fetch(_COMPLETION_SERVER_URL, {
         method: 'POST',
-        body: JSON.stringify(body),
-        headers,
+        headers: {
+          'x-api-key': apiKey,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          provider_api_endpoint: endpoint,
+          provider_headers: headers,
+          provider_body: body,
+        }),
       });
+
+      if (!response.ok) {
+        return {};
+      }
 
       return await response.json();
     } catch (error) {
-      throw new Error(`Failed to run auto completion: ${error}`);
+      return {};
     }
   }
 }

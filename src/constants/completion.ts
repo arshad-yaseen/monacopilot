@@ -1,5 +1,7 @@
 import {CompletionModelType, CompletionProviderType} from '../types/completion';
 
+export const _COMPLETION_SERVER_URL = 'http://localhost:3000';
+
 export const COMPLETION_CODE_KEY = 'continued_code';
 
 export const COMPLETION_SYSTEM_PROMPT =

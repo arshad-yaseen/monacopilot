@@ -21,7 +21,7 @@ export const useStartCompletion = (
 
   const fetchCompletionItemDebounced = useDebounceAsyncFn(
     fetchCompletionItem,
-    1000,
+    200,
   );
 
   React.useEffect(() => {
@@ -29,19 +29,17 @@ export const useStartCompletion = (
 
     const completionProvider =
       monacoInstance.languages.registerInlineCompletionsProvider(language, {
-        provideInlineCompletions: async (model, position, _, token) => {
+        provideInlineCompletions: async (model, position) => {
           const code = model.getValue();
 
           // If the completion is not valid, return an empty array
           // This checks the commong cases where completion should not be triggered
           // e.g. when the cursor is at the end of a line or when the code after the cursor is not valid
-          if (
-            !isValidCompletion(position, model) ||
-            token.isCancellationRequested
-          )
-            return {items: []};
+          if (!isValidCompletion(position, model) || !language || !code)
+            return null;
 
           const cacheKey = computeCacheKeyForCompletion(position, code);
+
           const cursorRange = new monacoInstance.Range(
             position.lineNumber,
             position.column,
@@ -51,7 +49,7 @@ export const useStartCompletion = (
 
           if (isCompletionHandled.current) {
             isCompletionHandled.current = false;
-            return {items: []};
+            return null;
           }
 
           if (completionCache.current.has(cacheKey)) {
@@ -66,8 +64,6 @@ export const useStartCompletion = (
             };
           }
 
-          if (!language || !code) return {items: []};
-
           let completion: string | null;
 
           try {
@@ -75,15 +71,14 @@ export const useStartCompletion = (
               code: extractCodeForCompletion(code, position),
               language,
               framework,
-              token,
             });
           } catch (error) {
-            return {items: []};
+            return null;
           }
 
-          isCompletionHandled.current = true;
+          if (!completion) return null;
 
-          if (!completion) return {items: []};
+          isCompletionHandled.current = true;
 
           completionCache.current.set(cacheKey, completion);
 

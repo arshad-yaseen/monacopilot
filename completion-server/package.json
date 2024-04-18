@@ -1,0 +1,13 @@
+{
+  "name": "completion-server",
+  "scripts": {
+    "dev": "bun --hot src/index.ts"
+  },
+  "dependencies": {
+    "hono": "^4.2.5",
+    "hono-rate-limiter": "^0.2.3"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}

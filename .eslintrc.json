@@ -21,7 +21,13 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "ignorePatterns": ["node_modules/", "dist/", "/tsup.config.ts", "test/"],
+  "ignorePatterns": [
+    "node_modules/",
+    "dist/",
+    "/tsup.config.ts",
+    "test/",
+    "/completion-server"
+  ],
   "plugins": ["@typescript-eslint"],
   "rules": {
     "@typescript-eslint/no-unused-vars": "warn",

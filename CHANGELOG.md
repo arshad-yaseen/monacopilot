@@ -1,5 +1,17 @@
 # ai-monaco-editor
 
+## 1.2.2
+
+### Patch Changes
+
+- Update prompt
+
+## 1.2.1
+
+### Patch Changes
+
+- Update prompt
+
 ## 1.2.0
 
 ### Minor Changes

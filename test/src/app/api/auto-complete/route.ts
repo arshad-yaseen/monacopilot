@@ -1,4 +1,4 @@
-import {Completion} from 'ai-monaco-editor';
+import {Completion} from 'rich-monaco-editor';
 
 const completion = new Completion(process.env.API_KEY);
 

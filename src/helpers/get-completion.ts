@@ -12,11 +12,8 @@ export const fetchCompletionItem = async ({
   code,
   language,
   framework,
-  token,
-}: CompletionRequestParams & {token: monaco.CancellationToken}) => {
+}: CompletionRequestParams) => {
   const endpoint = Config.getEndpoint();
-
-  const controller = new AbortController();
 
   if (!endpoint) {
     return null;
@@ -31,14 +28,7 @@ export const fetchCompletionItem = async ({
   const response = await fetch(endpoint, {
     method: 'POST',
     body: JSON.stringify(body),
-    signal: controller.signal,
   });
-
-  if (token.isCancellationRequested) {
-    controller.abort();
-
-    return null;
-  }
 
   const data = await response.json();
 
@@ -75,5 +65,8 @@ export const extractCodeForCompletion = (
 
 export const computeCacheKeyForCompletion = (
   position: monaco.Position,
-  value: string,
-) => `${position.lineNumber}:${position.column}:${value}`;
+  code: string,
+) => {
+  const codeUntilCursor = code.substring(0, position.column - 1);
+  return `${position.lineNumber}:${position.column}:${codeUntilCursor}`;
+};

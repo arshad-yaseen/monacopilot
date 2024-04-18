@@ -1,6 +1,6 @@
 'use client';
 
-import {Editor} from 'ai-monaco-editor';
+import {Editor} from 'rich-monaco-editor';
 
 export default function Home() {
   return (
