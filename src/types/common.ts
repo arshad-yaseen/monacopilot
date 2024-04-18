@@ -4,13 +4,18 @@ import * as monaco from 'monaco-editor';
 import frameworks from '../constants/frameworks';
 
 export type EditorOptions = monaco.editor.IEditorOptions;
-export type CodeEditorType = monaco.editor.IStandaloneCodeEditor;
+export type EditorType = monaco.editor.IStandaloneCodeEditor;
+export type EditorModel = monaco.editor.ITextModel;
 export type EditorPosition = monaco.IPosition;
 
 export type Endpoint = string;
 export type Framework = (typeof frameworks)[number];
 
 export interface EditorProps extends MonacoEditorProps {
+  /**
+   * Language of the current model.
+   */
+  language: string;
   /**
    * The API endpoint where you started the completion server.
    * [Learn more](https://ai-monaco-editor.vercel.app/docs/getting-started#endpoint)

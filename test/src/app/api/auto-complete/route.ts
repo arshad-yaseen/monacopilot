@@ -2,5 +2,8 @@ import {Completion} from 'ai-monaco-editor';
 
 const completion = new Completion(process.env.API_KEY);
 
-export const POST = async (req: Request) =>
-  Response.json(await completion.run(req));
+export async function POST(req: Request) {
+  const data = await completion.run(req);
+
+  return Response.json(data);
+}

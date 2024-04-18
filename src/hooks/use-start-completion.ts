@@ -21,7 +21,7 @@ export const useStartCompletion = (
 
   const fetchCompletionItemDebounced = useDebounceAsyncFn(
     fetchCompletionItem,
-    500,
+    1000,
   );
 
   React.useEffect(() => {
@@ -29,13 +29,17 @@ export const useStartCompletion = (
 
     const completionProvider =
       monacoInstance.languages.registerInlineCompletionsProvider(language, {
-        provideInlineCompletions: async (editor, position, _, token) => {
-          const code = editor.getValue();
+        provideInlineCompletions: async (model, position, _, token) => {
+          const code = model.getValue();
 
           // If the completion is not valid, return an empty array
           // This checks the commong cases where completion should not be triggered
           // e.g. when the cursor is at the end of a line or when the code after the cursor is not valid
-          if (!isValidCompletion(code, position)) return {items: []};
+          if (
+            !isValidCompletion(position, model) ||
+            token.isCancellationRequested
+          )
+            return {items: []};
 
           const cacheKey = computeCacheKeyForCompletion(position, code);
           const cursorRange = new monacoInstance.Range(
@@ -79,7 +83,7 @@ export const useStartCompletion = (
 
           isCompletionHandled.current = true;
 
-          if (!completion || token.isCancellationRequested) return {items: []};
+          if (!completion) return {items: []};
 
           completionCache.current.set(cacheKey, completion);
 

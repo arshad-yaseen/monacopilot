@@ -42,8 +42,6 @@ export const fetchCompletionItem = async ({
 
   const data = await response.json();
 
-  console.log(data);
-
   return extractCompletionFromResponse(data);
 };
 

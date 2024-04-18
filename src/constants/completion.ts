@@ -6,17 +6,18 @@ export const COMPLETION_SYSTEM_PROMPT =
   'You are an intelligent {language_or_framework} coder currently writing code. Your cursor is now at {cursor}.';
 
 export const COMPLETION_FUNCTION_CALL = {
-  name: 'code_completer', // Name of the function
-  description: 'Continues the existing code based on its current state.', // Describes what the function does
+  name: 'code_completer',
+  description:
+    'Continues the existing code based on its current state and context.',
   parameters: {
-    type: 'object', // Specifies that parameters should be an object
+    type: 'object',
     properties: {
       [COMPLETION_CODE_KEY]: {
-        type: 'string', // Specifies that the completion code should be a string
-        description: 'The code snippet to insert at the cursor.', // Describes what the key holds
+        type: 'string',
+        description: 'The code you will write next.',
       },
     },
-    required: [COMPLETION_CODE_KEY], // Lists required properties in the object
+    required: [COMPLETION_CODE_KEY],
   },
 };
 

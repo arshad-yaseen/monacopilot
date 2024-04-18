@@ -1,13 +1,13 @@
-import {EditorPosition} from '../../types/common';
+import {EditorModel, EditorPosition} from '../../types/common';
 
 export const isCodeAfterCursor = (
-  code: string,
   position: EditorPosition,
+  model: EditorModel,
 ): boolean => {
   // Characters that are acceptable to be after the cursor
   const acceptableCharacters = ['"', "'", '}', ']', ')', ',', ' '];
 
-  const line = code.split('\n')[position.lineNumber - 1];
+  const line = model.getLineContent(position.lineNumber);
 
   const charAfterCursor = line.slice(position.column - 1)[0];
 
@@ -18,10 +18,13 @@ export const isCodeAfterCursor = (
   return true;
 };
 
-export const isLineEnd = (code: string, position: EditorPosition): boolean => {
+export const isLineEnd = (
+  position: EditorPosition,
+  model: EditorModel,
+): boolean => {
   const lineEndCharacters = [';', '{', '}', ']', ')'];
 
-  const line = code.split('\n')[position.lineNumber - 1];
+  const line = model.getLineContent(position.lineNumber);
 
   const charBeforeCursor = line
     .slice(0, position.column - 1)
@@ -29,24 +32,6 @@ export const isLineEnd = (code: string, position: EditorPosition): boolean => {
     .slice(-1);
 
   if (lineEndCharacters.includes(charBeforeCursor)) {
-    return true;
-  }
-
-  return false;
-};
-
-export const isLetterBeforeCursor = (
-  code: string,
-  position: EditorPosition,
-): boolean => {
-  const line = code.split('\n')[position.lineNumber - 1];
-
-  const charJustBeforeCursor = line.slice(
-    position.column - 2,
-    position.column - 1,
-  );
-
-  if (charJustBeforeCursor.match(/[a-zA-Z]/)) {
     return true;
   }
 
