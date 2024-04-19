@@ -8,6 +8,7 @@ import {
   fetchCompletionItem,
 } from '../helpers/get-completion';
 import {Framework} from '../types/common';
+import {localPredictionModel} from '../utils/completion/local-prediction-model';
 import {isValidCompletion} from '../utils/completion/validate-completion';
 import {useDebounceAsyncFn} from './use-debounce-async-fn';
 
@@ -17,7 +18,9 @@ export const useStartCompletion = (
   framework: Framework | undefined,
 ) => {
   const completionCache = React.useRef(new Map());
-  const isCompletionHandled = React.useRef(false);
+  const lastCompletion = React.useRef<string | null>(null);
+
+  let timeout: ReturnType<typeof setTimeout> | null = null;
 
   const fetchCompletionItemDebounced = useDebounceAsyncFn(
     fetchCompletionItem,
@@ -25,35 +28,41 @@ export const useStartCompletion = (
   );
 
   React.useEffect(() => {
-    if (!monacoInstance) return;
+    if (!monacoInstance || !language) return;
 
     const completionProvider =
       monacoInstance.languages.registerInlineCompletionsProvider(language, {
         provideInlineCompletions: async (model, position) => {
           const code = model.getValue();
+          const cursorRange = new monacoInstance.Range(
+            position.lineNumber,
+            position.column - 5,
+            position.lineNumber,
+            position.column - 5,
+          );
 
-          // If the completion is not valid, return an empty array
-          // This checks the commong cases where completion should not be triggered
-          // e.g. when the cursor is at the end of a line or when the code after the cursor is not valid
-          if (!isValidCompletion(position, model) || !language || !code)
-            return null;
+          if (!isValidCompletion(position, model) || !code) return null;
+
+          // Check if the user is trying to write a common code snippet
+          const localPrediction = localPredictionModel(language, code);
+
+          if (localPrediction) {
+            return {
+              items: [{insertText: localPrediction, range: cursorRange}],
+              enableForwardStability: true,
+            };
+          }
+
+          if (lastCompletion.current) {
+            return {
+              items: [{insertText: lastCompletion.current, range: cursorRange}],
+              enableForwardStability: true,
+            };
+          }
 
           const cacheKey = computeCacheKeyForCompletion(position, code);
 
-          const cursorRange = new monacoInstance.Range(
-            position.lineNumber,
-            position.column,
-            position.lineNumber,
-            position.column,
-          );
-
-          if (isCompletionHandled.current) {
-            isCompletionHandled.current = false;
-            return null;
-          }
-
           if (completionCache.current.has(cacheKey)) {
-            isCompletionHandled.current = true;
             return {
               items: [
                 {
@@ -61,45 +70,45 @@ export const useStartCompletion = (
                   range: cursorRange,
                 },
               ],
+              enableForwardStability: true,
             };
           }
 
-          let completion: string | null;
-
           try {
-            completion = await fetchCompletionItemDebounced({
+            const completion = await fetchCompletionItemDebounced({
               code: extractCodeForCompletion(code, position),
               language,
               framework,
             });
+
+            lastCompletion.current = completion;
+
+            if (!completion) return null;
+
+            completionCache.current.set(cacheKey, completion);
+
+            return {
+              items: [{insertText: completion, range: cursorRange}],
+              enableForwardStability: true,
+            };
           } catch (error) {
             return null;
+          } finally {
+            timeout = setTimeout(() => {
+              lastCompletion.current = null;
+            }, 300);
           }
-
-          if (!completion) return null;
-
-          isCompletionHandled.current = true;
-
-          completionCache.current.set(cacheKey, completion);
-
-          return {
-            items: [
-              {
-                insertText: completion,
-                range: cursorRange,
-                completeBracketPairs: true,
-              },
-            ],
-            enableForwardStability: true,
-          };
         },
         freeInlineCompletions: () => {},
       });
 
     return () => {
       completionProvider.dispose();
+      if (timeout) {
+        clearTimeout(timeout);
+      }
     };
-  }, [monacoInstance, language, fetchCompletionItemDebounced, framework]);
+  }, [monacoInstance, language, framework, fetchCompletionItemDebounced]);
 
   return null;
 };
