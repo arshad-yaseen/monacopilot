@@ -1,16 +1,16 @@
 import React from 'react';
 
-import {Monaco} from '@monaco-editor/react';
+import { Monaco } from '@monaco-editor/react';
 
 import {
   computeCacheKeyForCompletion,
   extractCodeForCompletion,
   fetchCompletionItem,
 } from '../helpers/get-completion';
-import {Framework} from '../types/common';
-import {localPredictionModel} from '../utils/completion/local-prediction-model';
-import {isValidCompletion} from '../utils/completion/validate-completion';
-import {useDebounceAsyncFn} from './use-debounce-async-fn';
+import { Framework } from '../types/common';
+import { localPredictionModel } from '../utils/completion/local-prediction-model';
+import { isValidCompletion } from '../utils/completion/validate-completion';
+import { useDebounceAsyncFn } from './use-debounce-async-fn';
 
 export const useStartCompletion = (
   monacoInstance: Monaco | null,
@@ -19,8 +19,7 @@ export const useStartCompletion = (
 ) => {
   const completionCache = React.useRef(new Map());
   const lastCompletion = React.useRef<string | null>(null);
-
-  let timeout: ReturnType<typeof setTimeout> | null = null;
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const fetchCompletionItemDebounced = useDebounceAsyncFn(
     fetchCompletionItem,
@@ -36,14 +35,14 @@ export const useStartCompletion = (
           const code = model.getValue();
           const cursorRange = new monacoInstance.Range(
             position.lineNumber,
-            position.column - 5,
+            position.column,
             position.lineNumber,
-            position.column - 5,
+            position.column,
           );
 
           if (!isValidCompletion(position, model) || !code) return null;
 
-          // Check if the user is trying to write a common code snippet
+          // Check if the code is a common code snippet, if so, return the completion
           const localPrediction = localPredictionModel(language, code);
 
           if (localPrediction) {
@@ -94,7 +93,7 @@ export const useStartCompletion = (
           } catch (error) {
             return null;
           } finally {
-            timeout = setTimeout(() => {
+            timeoutRef.current = setTimeout(() => {
               lastCompletion.current = null;
             }, 300);
           }
@@ -104,8 +103,8 @@ export const useStartCompletion = (
 
     return () => {
       completionProvider.dispose();
-      if (timeout) {
-        clearTimeout(timeout);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
       }
     };
   }, [monacoInstance, language, framework, fetchCompletionItemDebounced]);

@@ -1,11 +1,6 @@
-To install dependencies:
-```sh
-bun install
-```
+### Code Completion Server
 
-To run:
-```sh
-bun run dev
 ```
-
-open http://localhost:3000
+bun i
+bun dev
+```

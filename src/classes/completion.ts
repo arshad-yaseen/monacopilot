@@ -1,5 +1,5 @@
 import {
-  _COMPLETION_SERVER_URL,
+  _COMPLETION_SERVER_BASE_URL,
   DEFAULT_COMPLETION_MODEL,
   PROVIDER_API_ENDPOINTS,
 } from '../constants/completion';
@@ -40,7 +40,7 @@ class Completion {
       const body = getProviderRequestBody(data, provider, model);
       const headers = getProviderRequestHeaders(provider, apiKey);
 
-      const response = await fetch(_COMPLETION_SERVER_URL, {
+      const response = await fetch(_COMPLETION_SERVER_BASE_URL + '/run', {
         method: 'POST',
         headers: {
           'x-api-key': apiKey,

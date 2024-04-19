@@ -1,13 +1,17 @@
 {
   "name": "completion-server",
+  "version": "0.0.1",
+  "description": "The code auto completion server for rich-monaco-editor",
   "scripts": {
-    "dev": "bun --hot src/index.ts"
+    "dev": "wrangler dev src/index.ts",
+    "deploy": "wrangler deploy --minify src/index.ts"
   },
   "dependencies": {
     "hono": "^4.2.5",
     "hono-rate-limiter": "^0.2.3"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@cloudflare/workers-types": "^4.20240403.0",
+    "wrangler": "^3.51.2"
   }
 }

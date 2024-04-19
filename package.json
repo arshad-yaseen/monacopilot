@@ -40,6 +40,8 @@
     "monaco-editor",
     "react-monaco-editor",
     "ai-monaco-editor",
+    "rich-monaco-editor",
+    "monaco-editor-react",
     "ai-editor"
   ],
   "homepage": "https://github.com/arshad-yaseen/ai-monaco-editor#readme",
