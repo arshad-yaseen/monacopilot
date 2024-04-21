@@ -1,4 +1,4 @@
-### Code Completion Server
+# Code Completion Server
 
 ```
 bun i
