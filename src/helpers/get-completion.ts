@@ -1,14 +1,11 @@
 import Config from '../classes/config';
-import {
-  COMPLETION_CODE_KEY,
-  PROMPT_CURSOR_PLACEHOLDER,
-} from '../constants/completion';
+import {COMPLETION_CODE_KEY} from '../constants/completion';
 import {EditorModelType, EditorPositionType} from '../types/common';
 import {
   CompletionProviderType,
   CompletionRequestParams,
 } from '../types/completion';
-import {parseJson} from '../utils/common';
+import {objectToString, parseJson} from '../utils/common';
 import {isValidCompletion} from '../utils/completion/validate-completion';
 
 export const fetchCompletionItem = async ({
@@ -21,7 +18,7 @@ export const fetchCompletionItem = async ({
   model: EditorModelType;
   position: EditorPositionType;
 }): Promise<string | null | undefined> => {
-  if (!isValidCompletion(position, model) || !code) {
+  if (!isValidCompletion(position, model, language) || !code) {
     return null;
   }
 
@@ -32,7 +29,7 @@ export const fetchCompletionItem = async ({
   }
 
   const body = {
-    code,
+    code: extractCodeForCompletion(code, position),
     language,
     framework,
   } satisfies CompletionRequestParams;
@@ -52,12 +49,22 @@ const extractCompletionFromResponse = (
   data: any,
 ): string | null | undefined => {
   const completion: Record<CompletionProviderType, string> = {
-    openai: data?.choices?.[0]?.message?.function_call?.arguments,
+    openai: data?.choices?.[0]?.message?.content,
   };
 
   const provider = Config.getProvider();
 
-  return parseJson(completion[provider])[COMPLETION_CODE_KEY];
+  try {
+    const completionCode = parseJson(completion[provider])[COMPLETION_CODE_KEY];
+
+    if (typeof completionCode === 'object') {
+      return objectToString(completionCode);
+    } else {
+      return completionCode;
+    }
+  } catch (e) {
+    return null;
+  }
 };
 
 // Adjust code string with cursor position placeholder
@@ -70,12 +77,11 @@ export const extractCodeForCompletion = (
 
   lines[lineNumber - 1] =
     lines[lineNumber - 1].substring(0, column - 1) +
-    PROMPT_CURSOR_PLACEHOLDER +
+    `// Cursor is here at line ${lineNumber}, column ${column}` +
     lines[lineNumber - 1].substring(column - 1);
 
   return lines.join('\n');
 };
-
 // Compute a cache key based on the cursor's position and preceding text
 export const computeCacheKeyForCompletion = (
   {lineNumber, column}: EditorPositionType,

@@ -4,7 +4,7 @@ import {Monaco, Editor as MonacoEditor} from '@monaco-editor/react';
 
 import Config from './classes/config';
 import {EDITOR_DEFAULT_OPTIONS} from './constants/common';
-import {useStartCompletion} from './hooks/use-start-completion';
+import useStartCompletion from './hooks/use-start-completion';
 import {EditorOptionsType, EditorProps, EditorType} from './types/common';
 import {deepMerge} from './utils/common';
 

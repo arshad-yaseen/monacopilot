@@ -1,5 +1,4 @@
 import {
-  COMPLETION_FUNCTION_CALL,
   COMPLETION_SYSTEM_PROMPT,
   PROMPT_LANGUAGE_OR_FRAMEWORK_PLACEHOLDER,
 } from '../constants/completion';
@@ -48,7 +47,9 @@ export const getProviderRequestBody = (
           content: data.code,
         },
       ],
-      functions: [COMPLETION_FUNCTION_CALL],
+      response_format: {
+        type: 'json_object',
+      },
       max_tokens: 50,
     },
   };
@@ -60,7 +61,7 @@ const getSystemPrompt = (
   language: string | undefined,
   framework: FrameworkType | undefined,
 ): string => {
-  return COMPLETION_SYSTEM_PROMPT.replace(
+  return COMPLETION_SYSTEM_PROMPT.replaceAll(
     PROMPT_LANGUAGE_OR_FRAMEWORK_PLACEHOLDER,
     framework || language || 'General',
   );

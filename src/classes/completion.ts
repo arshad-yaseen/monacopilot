@@ -13,6 +13,8 @@ import {
 } from '../types/completion';
 import Config from './config';
 
+let totalTokens = 0;
+
 /**
  * Represents a completion request handler. This class initializes with configuration options
  * and an API key, and provides a method to send a completion request to a configured provider.
@@ -70,7 +72,13 @@ class Completion {
         return null;
       }
 
-      return await response.json();
+      const completion = await response.json();
+
+      totalTokens += completion?.usage.total_tokens ?? 0;
+      console.clear();
+      console.log(totalTokens);
+
+      return completion;
     } catch (error) {
       return null;
     }

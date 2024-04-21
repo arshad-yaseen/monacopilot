@@ -1,3 +1,4 @@
+import {CodeContextualFilterManager} from '../utils/completion/contextual-filter';
 import {FrameworkType} from './common';
 
 export interface CompletionConstructorParams {
@@ -15,6 +16,25 @@ export interface CompletionRequestParams {
   code: string;
   language: string | undefined;
   framework: FrameworkType | undefined;
+}
+
+export interface CodeContextualFilterProperties {
+  afterCursorWhitespace?: string;
+  languageId?: string;
+}
+
+export interface CodeContextualFilterMeasurements {
+  documentLength?: number;
+  promptEndPos?: number;
+}
+
+export interface CodeContextualFilterContext {
+  properties: CodeContextualFilterProperties;
+  measurements: CodeContextualFilterMeasurements;
+  get: (
+    manager: typeof CodeContextualFilterManager,
+  ) => CodeContextualFilterManager;
+  prefix?: string;
 }
 
 export type CompletionProviderType = 'openai';

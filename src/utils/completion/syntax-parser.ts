@@ -1,6 +1,16 @@
 import {EditorModelType, EditorPositionType} from '../../types/common';
 import {getCharAtPosition} from './common';
 
+export const isAnythingAfterCursor = (
+  position: EditorPositionType,
+  model: EditorModelType,
+): boolean => {
+  const line = model.getLineContent(position.lineNumber);
+  const charAfterCursor = getCharAtPosition(line, position.column - 1);
+
+  return charAfterCursor !== '';
+};
+
 export const isCodeAfterCursor = (
   position: EditorPositionType,
   model: EditorModelType,

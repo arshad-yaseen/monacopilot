@@ -8,20 +8,23 @@ import {
   fetchCompletionItem,
 } from '../helpers/get-completion';
 import {EditorInlineCompletionType, FrameworkType} from '../types/common';
-import useTypingDebounceFn from './use-typing-debounce-fn';
+import useDebounceAsyncFn from './use-debounce-async-fn';
 
 const localPredictionEngine = new LocalCodePredictionEngine();
 
-export const useStartCompletion = (
+const useStartCompletion = (
   monacoInstance: Monaco | null,
   language: string,
-  framework?: FrameworkType,
+  framework: FrameworkType | undefined,
 ) => {
   const completionCache = React.useRef<Map<string, EditorInlineCompletionType>>(
     new Map(),
   );
   const isCompletionHandled = React.useRef<boolean>(false);
-  const fetchCompletionItemDebounced = useTypingDebounceFn(fetchCompletionItem);
+
+  const fetchCompletionItemDebounced = useDebounceAsyncFn(fetchCompletionItem, {
+    wait: 300,
+  });
 
   React.useEffect(() => {
     if (!monacoInstance || !language) {
@@ -49,9 +52,9 @@ export const useStartCompletion = (
           );
           const cacheKey = computeCacheKeyForCompletion(position, code);
 
-          // Check cache first
           if (completionCache.current.has(cacheKey)) {
             const cachedItem = completionCache.current.get(cacheKey);
+            isCompletionHandled.current = true;
             if (cachedItem) {
               return {
                 items: [cachedItem],
@@ -60,7 +63,6 @@ export const useStartCompletion = (
             }
           }
 
-          // Local Prediction
           const localPrediction = localPredictionEngine.predictCode(
             language,
             code,
@@ -74,14 +76,12 @@ export const useStartCompletion = (
               completeBracketPairs: true,
             };
             completionCache.current.set(cacheKey, newItem);
-            isCompletionHandled.current = true;
             return {
               items: [newItem],
               enableForwardStability: true,
             };
           }
 
-          // Fetch completion from the LLM model
           try {
             const completion = await fetchCompletionItemDebounced({
               code,
@@ -91,21 +91,25 @@ export const useStartCompletion = (
               position,
             });
 
+            console.log('completion', completion);
+
             if (completion) {
               const newItem = {
                 insertText: completion,
                 range: cursorRange,
                 completeBracketPairs: true,
               };
+
               completionCache.current.set(cacheKey, newItem);
               isCompletionHandled.current = true;
+
               return {
                 items: [newItem],
                 enableForwardStability: true,
               };
             }
           } catch (error) {
-            console.error(error);
+            return {items: []};
           }
 
           return {items: []};
@@ -120,3 +124,5 @@ export const useStartCompletion = (
 
   return null;
 };
+
+export default useStartCompletion;
