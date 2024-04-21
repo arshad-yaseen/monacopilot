@@ -1,5 +1,11 @@
 # ai-monaco-editor
 
+## 0.6.0
+
+### Minor Changes
+
+- Code Contextual Filtering, New debouncing method, New robust systen prompt
+
 ## 0.5.5
 
 ### Patch Changes
