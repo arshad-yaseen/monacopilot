@@ -20,7 +20,7 @@ export const fetchCompletionItem = async ({
 }: CompletionRequestParams & {
   model: EditorModelType;
   position: EditorPositionType;
-}) => {
+}): Promise<string | null | undefined> => {
   if (!isValidCompletion(position, model) || !code) {
     return null;
   }
@@ -47,11 +47,12 @@ export const fetchCompletionItem = async ({
   return extractCompletionFromResponse(data);
 };
 
+// Extract the completion code from the response based on the provider
 const extractCompletionFromResponse = (
   data: any,
-): string | undefined | null => {
+): string | null | undefined => {
   const completion: Record<CompletionProviderType, string> = {
-    openai: data.choices[0].message.function_call.arguments,
+    openai: data?.choices?.[0]?.message?.function_call?.arguments,
   };
 
   const provider = Config.getProvider();
@@ -59,28 +60,27 @@ const extractCompletionFromResponse = (
   return parseJson(completion[provider])[COMPLETION_CODE_KEY];
 };
 
-// Extract the code from the editor value and insert a {cursor} placeholder at the cursor position
+// Adjust code string with cursor position placeholder
 export const extractCodeForCompletion = (
   code: string,
   cursorPosition: EditorPositionType,
-) => {
-  const lineNumber = cursorPosition.lineNumber - 1;
-  const column = cursorPosition.column - 1;
-
+): string => {
   const lines = code.split('\n');
+  const {lineNumber, column} = cursorPosition;
 
-  lines[lineNumber] =
-    lines[lineNumber].substring(0, column) +
+  lines[lineNumber - 1] =
+    lines[lineNumber - 1].substring(0, column - 1) +
     PROMPT_CURSOR_PLACEHOLDER +
-    lines[lineNumber].substring(column);
+    lines[lineNumber - 1].substring(column - 1);
 
   return lines.join('\n');
 };
 
+// Compute a cache key based on the cursor's position and preceding text
 export const computeCacheKeyForCompletion = (
-  cursorPosition: EditorPositionType,
+  {lineNumber, column}: EditorPositionType,
   code: string,
-) => {
-  const codeUntilCursor = code.substring(0, cursorPosition.column - 1);
-  return `${cursorPosition.lineNumber}:${cursorPosition.column}:${codeUntilCursor}`;
+): string => {
+  const codeUntilCursor = code.substring(0, column - 1);
+  return `${lineNumber}:${column}:${codeUntilCursor}`;
 };

@@ -1,5 +1,8 @@
+import {LocalPredictionSnippets} from '../types/completion';
+import predictions from '../utils/completion/local-prediction';
+
 export class LocalCodePredictionEngine {
-  private predictions: Map<string, {[prefix: string]: string}>;
+  private predictions: Map<string, LocalPredictionSnippets>;
 
   constructor() {
     this.predictions = new Map();
@@ -7,25 +10,17 @@ export class LocalCodePredictionEngine {
   }
 
   private loadPredictions() {
-    this.predictions.set('javascript', {
-      conso: 'le.log($1)',
-      'new P': 'romise((resolve, reject) => {\n\t$1\n})',
-      'new A': 'rray',
-      'new S': 'et',
-      'throw n': 'ew Error($1)',
-      setTimeout: '(() => {\n\t$1\n}, $2)',
-      setInterval: '(() => {\n\t$1\n}, $2)',
-      'async f': 'unction $1() {\n\t$2\n}$0',
-      'async (': ') => {\n\t$1\n}$0',
-      'async =>': ' {\n\t$1\n}$0',
-      ') =>': ' {',
-      'function fibonacci':
-        '(n) {\n  if (n <= 1) {\n    return n;\n  }\n  return fibonacci(n - 1) + fibonacci(n - 2);\n}',
-      'const fibonacci ':
-        '= (n) => {\n  if (n <= 1) {\n    return n;\n  }\n  return fibonacci(n - 1) + fibonacci(n - 2);\n}',
+    predictions.forEach(prediction => {
+      this.predictions.set(prediction.language, prediction.snippets);
     });
   }
 
+  /**
+   * Predict the next code snippet based on the current common code snippet.
+   * @param language The language of the code snippet.
+   * @param codeSnippet The current code snippet.
+   * @returns The predicted code snippet, if no prediction is found, return an empty string.
+   */
   predictCode(language: string, codeSnippet: string): string {
     const prediction = this.predictions.get(language);
     if (!prediction) return '';

@@ -10,11 +10,14 @@ import {
   CompletionRequestParams,
 } from '../types/completion';
 
+// Get request headers for different providers
 export const getProviderRequestHeaders = (
   provider: CompletionProviderType,
   apiKey: string,
 ): HeadersInit => {
-  const headers: Record<CompletionProviderType, HeadersInit> = {
+  const headers: {
+    [key in CompletionProviderType]: HeadersInit;
+  } = {
     openai: {
       Authorization: `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
@@ -24,12 +27,15 @@ export const getProviderRequestHeaders = (
   return headers[provider];
 };
 
+// Get request body depending on the provider
 export const getProviderRequestBody = (
   data: CompletionRequestParams,
   provider: CompletionProviderType,
   model: CompletionModelType,
-) => {
-  const body: Record<CompletionProviderType, object> = {
+): object => {
+  const body: {
+    [key in CompletionProviderType]: object;
+  } = {
     openai: {
       model,
       messages: [
@@ -53,9 +59,9 @@ export const getProviderRequestBody = (
 const getSystemPrompt = (
   language: string | undefined,
   framework: FrameworkType | undefined,
-) => {
-  return COMPLETION_SYSTEM_PROMPT.replaceAll(
+): string => {
+  return COMPLETION_SYSTEM_PROMPT.replace(
     PROMPT_LANGUAGE_OR_FRAMEWORK_PLACEHOLDER,
-    framework || language || '',
+    framework || language || 'General',
   );
 };

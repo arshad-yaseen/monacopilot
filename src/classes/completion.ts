@@ -13,53 +13,66 @@ import {
 } from '../types/completion';
 import Config from './config';
 
+/**
+ * Represents a completion request handler. This class initializes with configuration options
+ * and an API key, and provides a method to send a completion request to a configured provider.
+ *
+ * @param {string} apiKey - The API key required to authenticate requests to the completion provider.
+ * @param {CompletionConstructorParams} [options] - Optional parameters to configure the completion model,
+ * such as the model ID. Defaults to 'gpt-3.5-turbo-0125' if not specified.
+ *
+ * @example
+ * ```ts
+ * const completion = new Completion(process.env.OPENAI_API_KEY, {
+ *   model: 'gpt-3.5-turbo-0125',
+ * });
+ * ```
+ */
 class Completion {
-  private apiKey: string | undefined;
+  private apiKey: string;
 
-  constructor(
-    apiKey: string | undefined,
-    options?: CompletionConstructorParams,
-  ) {
+  constructor(apiKey: string, options?: CompletionConstructorParams) {
+    if (!apiKey) {
+      throw new Error('API key is missing in Completion constructor.');
+    }
+
     this.apiKey = apiKey;
     Config.setModel(options?.model || DEFAULT_COMPLETION_MODEL);
   }
 
-  public async run(req: Request) {
+  public async run(req: Request): Promise<unknown> {
     try {
-      const apiKey = this.apiKey;
-
-      if (!apiKey) {
-        throw new Error('API key is required to run auto completion');
-      }
-
+      const data = (await req.json()) as CompletionRequestParams;
       const provider = Config.getProvider();
       const model = Config.getModel();
 
-      const data = (await req.json()) as CompletionRequestParams;
-      const endpoint = PROVIDER_API_ENDPOINTS[provider];
+      const endpoint = PROVIDER_API_ENDPOINTS[provider] ?? '';
       const body = getProviderRequestBody(data, provider, model);
-      const headers = getProviderRequestHeaders(provider, apiKey);
+      const headers = getProviderRequestHeaders(provider, this.apiKey);
 
-      const response = await fetch(_COMPLETION_SERVER_BASE_URL + '/run', {
+      const fullUrl = `${_COMPLETION_SERVER_BASE_URL}/run`;
+
+      const response = await fetch(fullUrl, {
         method: 'POST',
         headers: {
-          'x-api-key': apiKey,
+          ...headers,
+          'x-api-key': this.apiKey,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          provider_api_endpoint: endpoint,
-          provider_headers: headers,
-          provider_body: body,
+          providerApiEndpoint: endpoint,
+          providerHeaders: headers,
+          providerBody: body,
         }),
       });
 
       if (!response.ok) {
-        return {};
+        return null;
       }
 
       return await response.json();
     } catch (error) {
-      return {};
+      return null;
     }
   }
 }

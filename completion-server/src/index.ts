@@ -1,39 +1,37 @@
 import {Hono} from 'hono';
+import {cors} from 'hono/cors';
+
+import {RUN_THROTTLE_TIME} from './constants';
+import {callLlmProvider} from './helpers';
+import throttle from './helpers/throttling';
 
 const app = new Hono();
+app.use(cors());
 
-const lastRequestTime = new Map();
-
-app.get('/', c => {
-  return c.json({
+app.get('/', context => {
+  return context.json({
     message: 'Welcome to the rich-monaco-editor completion server',
   });
 });
 
-app.post('/run', async c => {
-  const api_key = c.req.header('x-api-key');
-  const now = Date.now();
+app.post('/run', async context => {
+  try {
+    const apiKey = context.req.header('x-api-key');
+    throttle(apiKey, RUN_THROTTLE_TIME);
 
-  if (
-    lastRequestTime.has(api_key) &&
-    now - lastRequestTime.get(api_key) < 1000
-  ) {
-    return c.json({message: 'Request is cancelled'});
+    const {providerApiEndpoint, providerBody, providerHeaders} =
+      await context.req.json();
+
+    const completion = await callLlmProvider(
+      providerApiEndpoint,
+      providerBody,
+      providerHeaders,
+    );
+
+    return context.json(completion);
+  } catch (error) {
+    return context.json({error: 'Request is cancelled'});
   }
-
-  lastRequestTime.set(api_key, now);
-
-  const {provider_api_endpoint, provider_body, provider_headers} =
-    await c.req.json();
-
-  const response = await fetch(provider_api_endpoint, {
-    method: 'POST',
-    body: JSON.stringify(provider_body),
-    headers: provider_headers,
-  });
-
-  const completion = await response.json();
-  return c.json(completion);
 });
 
 export default app;
