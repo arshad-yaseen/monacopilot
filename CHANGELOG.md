@@ -1,5 +1,11 @@
 # ai-monaco-editor
 
+## 0.5.5
+
+### Patch Changes
+
+- Update changeset config
+
 ## 1.2.4
 
 ### Patch Changes
