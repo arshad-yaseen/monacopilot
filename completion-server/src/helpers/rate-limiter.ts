@@ -1,6 +1,6 @@
 const lastRequestTime = new Map<string, number>();
 
-const throttle = (key: string | undefined, throttleTime: number) => {
+const rateLimiter = (key: string | undefined, throttleTime: number) => {
   if (!key) {
     throw new Error('Throttling key is missing');
   }
@@ -14,4 +14,4 @@ const throttle = (key: string | undefined, throttleTime: number) => {
   lastRequestTime.set(key, now);
 };
 
-export default throttle;
+export default rateLimiter;

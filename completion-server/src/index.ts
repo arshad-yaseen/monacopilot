@@ -1,9 +1,9 @@
 import {Hono} from 'hono';
 import {cors} from 'hono/cors';
 
-import {RUN_THROTTLE_TIME} from './constants';
-import {callLlmProvider} from './helpers';
-import throttle from './helpers/throttling';
+import {RUN_RATE_LIMIT_TIME} from './constants';
+import {callLlmProvider} from './helpers/provider';
+import rateLimiter from './helpers/rate-limiter';
 
 const app = new Hono();
 app.use(cors());
@@ -17,7 +17,7 @@ app.get('/', context => {
 app.post('/run', async context => {
   try {
     const apiKey = context.req.header('x-api-key');
-    throttle(apiKey, RUN_THROTTLE_TIME);
+    rateLimiter(apiKey, RUN_RATE_LIMIT_TIME);
 
     const {providerApiEndpoint, providerBody, providerHeaders} =
       await context.req.json();

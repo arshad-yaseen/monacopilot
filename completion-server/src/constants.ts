@@ -1,1 +1,1 @@
-export const RUN_THROTTLE_TIME = 1000;
+export const RUN_RATE_LIMIT_TIME = 1000;
