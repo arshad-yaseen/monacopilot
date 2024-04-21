@@ -1,5 +1,11 @@
 # ai-monaco-editor
 
+## 1.2.3
+
+### Patch Changes
+
+- Clean package and completion server codes
+
 ## 1.2.2
 
 ### Patch Changes

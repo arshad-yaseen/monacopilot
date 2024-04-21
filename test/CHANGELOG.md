@@ -1,5 +1,12 @@
 # test
 
+## 0.1.7
+
+### Patch Changes
+
+- Updated dependencies
+  - rich-monaco-editor@1.2.3
+
 ## 0.1.6
 
 ### Patch Changes
