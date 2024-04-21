@@ -1,6 +1,6 @@
 {
   "name": "rich-monaco-editor",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Extended Monaco Editor with AI auto-completion, suggestions, and new themes for React.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

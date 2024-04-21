@@ -1,5 +1,11 @@
 # ai-monaco-editor
 
+## 1.2.4
+
+### Patch Changes
+
+- Custom rate limiting, better naming conventions
+
 ## 1.2.3
 
 ### Patch Changes
