@@ -5,5 +5,5 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["completion-server"]
+  "ignore": ["completion-server", "test"]
 }
