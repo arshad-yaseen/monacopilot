@@ -4,5 +4,6 @@
   "commit": false,
   "access": "public",
   "baseBranch": "main",
-  "updateInternalDependencies": "patch"
+  "updateInternalDependencies": "patch",
+  "ignore": ["completion-server"]
 }
