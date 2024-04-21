@@ -1,8 +1,9 @@
 import {
   COMPLETION_FUNCTION_CALL,
   COMPLETION_SYSTEM_PROMPT,
+  PROMPT_LANGUAGE_OR_FRAMEWORK_PLACEHOLDER,
 } from '../constants/completion';
-import {Framework} from '../types/common';
+import {FrameworkType} from '../types/common';
 import {
   CompletionModelType,
   CompletionProviderType,
@@ -31,7 +32,6 @@ export const getProviderRequestBody = (
   const body: Record<CompletionProviderType, object> = {
     openai: {
       model,
-      temperature: 0.1,
       messages: [
         {
           role: 'system',
@@ -43,6 +43,7 @@ export const getProviderRequestBody = (
         },
       ],
       functions: [COMPLETION_FUNCTION_CALL],
+      max_tokens: 50,
     },
   };
 
@@ -51,10 +52,10 @@ export const getProviderRequestBody = (
 
 const getSystemPrompt = (
   language: string | undefined,
-  framework: Framework | undefined,
+  framework: FrameworkType | undefined,
 ) => {
   return COMPLETION_SYSTEM_PROMPT.replaceAll(
-    '{language_or_framework}',
+    PROMPT_LANGUAGE_OR_FRAMEWORK_PLACEHOLDER,
     framework || language || '',
   );
 };

@@ -1,39 +1,28 @@
-import {EditorModel, EditorPosition} from '../../types/common';
+import {EditorModelType, EditorPositionType} from '../../types/common';
+import {getCharAtPosition} from './common';
 
 export const isCodeAfterCursor = (
-  position: EditorPosition,
-  model: EditorModel,
+  position: EditorPositionType,
+  model: EditorModelType,
 ): boolean => {
-  // Characters that are acceptable to be after the cursor
-  const acceptableCharacters = ['"', "'", '}', ']', ')', ',', ' '];
-
+  const acceptableAfterCursor = new Set(['"', "'", '}', ']', ')', ',', ' ']);
   const line = model.getLineContent(position.lineNumber);
+  const charAfterCursor = getCharAtPosition(line, position.column - 1);
 
-  const charAfterCursor = line.slice(position.column - 1)[0];
-
-  if (!charAfterCursor || acceptableCharacters.includes(charAfterCursor)) {
-    return false;
-  }
-
-  return true;
+  return !acceptableAfterCursor.has(charAfterCursor) && !!charAfterCursor;
 };
 
 export const isLineEnd = (
-  position: EditorPosition,
-  model: EditorModel,
+  position: EditorPositionType,
+  model: EditorModelType,
 ): boolean => {
-  const lineEndCharacters = [';', '{', '}', ']', ')'];
-
+  const lineEndRegex = /^[a-zA-Z]+$/;
+  const lineEndCharacters = new Set([';', '{', '}', ']', ')']);
   const line = model.getLineContent(position.lineNumber);
+  const charBeforeCursor = getCharAtPosition(line, position.column - 2);
 
-  const charBeforeCursor = line
-    .slice(0, position.column - 1)
-    .trim()
-    .slice(-1);
-
-  if (lineEndCharacters.includes(charBeforeCursor)) {
-    return true;
-  }
-
-  return false;
+  return (
+    lineEndRegex.test(charBeforeCursor) ||
+    lineEndCharacters.has(charBeforeCursor)
+  );
 };

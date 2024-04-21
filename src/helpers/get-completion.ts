@@ -1,18 +1,30 @@
-import * as monaco from 'monaco-editor';
-
 import Config from '../classes/config';
-import {COMPLETION_CODE_KEY} from '../constants/completion';
+import {
+  COMPLETION_CODE_KEY,
+  PROMPT_CURSOR_PLACEHOLDER,
+} from '../constants/completion';
+import {EditorModelType, EditorPositionType} from '../types/common';
 import {
   CompletionProviderType,
   CompletionRequestParams,
 } from '../types/completion';
 import {parseJson} from '../utils/common';
+import {isValidCompletion} from '../utils/completion/validate-completion';
 
 export const fetchCompletionItem = async ({
   code,
   language,
   framework,
-}: CompletionRequestParams) => {
+  model,
+  position,
+}: CompletionRequestParams & {
+  model: EditorModelType;
+  position: EditorPositionType;
+}) => {
+  if (!isValidCompletion(position, model) || !code) {
+    return null;
+  }
+
   const endpoint = Config.getEndpoint();
 
   if (!endpoint) {
@@ -35,7 +47,9 @@ export const fetchCompletionItem = async ({
   return extractCompletionFromResponse(data);
 };
 
-const extractCompletionFromResponse = (data: any): string => {
+const extractCompletionFromResponse = (
+  data: any,
+): string | undefined | null => {
   const completion: Record<CompletionProviderType, string> = {
     openai: data.choices[0].message.function_call.arguments,
   };
@@ -47,26 +61,26 @@ const extractCompletionFromResponse = (data: any): string => {
 
 // Extract the code from the editor value and insert a {cursor} placeholder at the cursor position
 export const extractCodeForCompletion = (
-  editorValue: string,
-  cursorPosition: monaco.Position,
+  code: string,
+  cursorPosition: EditorPositionType,
 ) => {
   const lineNumber = cursorPosition.lineNumber - 1;
   const column = cursorPosition.column - 1;
 
-  const lines = editorValue.split('\n');
+  const lines = code.split('\n');
 
   lines[lineNumber] =
     lines[lineNumber].substring(0, column) +
-    '{cursor}' +
+    PROMPT_CURSOR_PLACEHOLDER +
     lines[lineNumber].substring(column);
 
   return lines.join('\n');
 };
 
 export const computeCacheKeyForCompletion = (
-  position: monaco.Position,
+  cursorPosition: EditorPositionType,
   code: string,
 ) => {
-  const codeUntilCursor = code.substring(0, position.column - 1);
-  return `${position.lineNumber}:${position.column}:${codeUntilCursor}`;
+  const codeUntilCursor = code.substring(0, cursorPosition.column - 1);
+  return `${cursorPosition.lineNumber}:${cursorPosition.column}:${codeUntilCursor}`;
 };

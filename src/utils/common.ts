@@ -45,3 +45,16 @@ export const parseJson = (jsonString: string | null) => {
     return null;
   }
 };
+
+export const extractSuffixAfterLastPrefix = (
+  fullString: string,
+  prefix: string,
+): string | null => {
+  const lastIndex = fullString.lastIndexOf(prefix);
+
+  if (lastIndex === -1) {
+    return null;
+  }
+
+  return fullString.slice(lastIndex + prefix.length);
+};

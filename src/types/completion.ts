@@ -1,4 +1,4 @@
-import {Framework} from './common';
+import {FrameworkType} from './common';
 
 export interface CompletionConstructorParams {
   model: CompletionModelType | undefined;
@@ -7,7 +7,7 @@ export interface CompletionConstructorParams {
 export interface CompletionRequestParams {
   code: string;
   language: string | undefined;
-  framework: Framework | undefined;
+  framework: FrameworkType | undefined;
 }
 
 export type CompletionProviderType = 'openai';

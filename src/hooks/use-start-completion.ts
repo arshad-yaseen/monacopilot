@@ -1,37 +1,45 @@
 import React from 'react';
 
-import { Monaco } from '@monaco-editor/react';
+import {Monaco} from '@monaco-editor/react';
 
+import {LocalCodePredictionEngine} from '../classes/local-code-prediction-engine';
 import {
   computeCacheKeyForCompletion,
-  extractCodeForCompletion,
   fetchCompletionItem,
 } from '../helpers/get-completion';
-import { Framework } from '../types/common';
-import { localPredictionModel } from '../utils/completion/local-prediction-model';
-import { isValidCompletion } from '../utils/completion/validate-completion';
-import { useDebounceAsyncFn } from './use-debounce-async-fn';
+import {EditorInlineCompletionType, FrameworkType} from '../types/common';
+import useTypingDebounceFn from './use-typing-debounce-fn';
+
+const localPredictionEngine = new LocalCodePredictionEngine();
 
 export const useStartCompletion = (
   monacoInstance: Monaco | null,
   language: string,
-  framework: Framework | undefined,
+  framework?: FrameworkType,
 ) => {
-  const completionCache = React.useRef(new Map());
-  const lastCompletion = React.useRef<string | null>(null);
-  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const fetchCompletionItemDebounced = useDebounceAsyncFn(
-    fetchCompletionItem,
-    200,
+  const completionCache = React.useRef<Map<string, EditorInlineCompletionType>>(
+    new Map(),
   );
+  const isCompletionHandled = React.useRef<boolean>(false);
+  const fetchCompletionItemDebounced = useTypingDebounceFn(fetchCompletionItem);
 
   React.useEffect(() => {
-    if (!monacoInstance || !language) return;
+    if (!monacoInstance || !language) {
+      return undefined;
+    }
 
     const completionProvider =
       monacoInstance.languages.registerInlineCompletionsProvider(language, {
-        provideInlineCompletions: async (model, position) => {
+        provideInlineCompletions: async (model, position, _, token) => {
+          if (token.isCancellationRequested) {
+            return {items: []};
+          }
+
+          if (isCompletionHandled.current) {
+            isCompletionHandled.current = false;
+            return {items: []};
+          }
+
           const code = model.getValue();
           const cursorRange = new monacoInstance.Range(
             position.lineNumber,
@@ -39,73 +47,74 @@ export const useStartCompletion = (
             position.lineNumber,
             position.column,
           );
-
-          if (!isValidCompletion(position, model) || !code) return null;
-
-          // Check if the code is a common code snippet, if so, return the completion
-          const localPrediction = localPredictionModel(language, code);
-
-          if (localPrediction) {
-            return {
-              items: [{insertText: localPrediction, range: cursorRange}],
-              enableForwardStability: true,
-            };
-          }
-
-          if (lastCompletion.current) {
-            return {
-              items: [{insertText: lastCompletion.current, range: cursorRange}],
-              enableForwardStability: true,
-            };
-          }
-
           const cacheKey = computeCacheKeyForCompletion(position, code);
 
+          // Check cache first
           if (completionCache.current.has(cacheKey)) {
+            const cachedItem = completionCache.current.get(cacheKey);
+            if (cachedItem) {
+              return {
+                items: [cachedItem],
+                enableForwardStability: true,
+              };
+            }
+          }
+
+          // Local Prediction
+          const localPrediction = localPredictionEngine.predictCode(
+            language,
+            code,
+          );
+          if (localPrediction) {
+            const newItem = {
+              insertText: {
+                snippet: localPrediction,
+              },
+              range: cursorRange,
+              completeBracketPairs: true,
+            };
+            completionCache.current.set(cacheKey, newItem);
+            isCompletionHandled.current = true;
             return {
-              items: [
-                {
-                  insertText: completionCache.current.get(cacheKey),
-                  range: cursorRange,
-                },
-              ],
+              items: [newItem],
               enableForwardStability: true,
             };
           }
 
+          // Fetch completion from the LLM model
           try {
             const completion = await fetchCompletionItemDebounced({
-              code: extractCodeForCompletion(code, position),
+              code,
               language,
               framework,
+              model,
+              position,
             });
 
-            lastCompletion.current = completion;
-
-            if (!completion) return null;
-
-            completionCache.current.set(cacheKey, completion);
-
-            return {
-              items: [{insertText: completion, range: cursorRange}],
-              enableForwardStability: true,
-            };
+            if (completion) {
+              const newItem = {
+                insertText: completion,
+                range: cursorRange,
+                completeBracketPairs: true,
+              };
+              completionCache.current.set(cacheKey, newItem);
+              isCompletionHandled.current = true;
+              return {
+                items: [newItem],
+                enableForwardStability: true,
+              };
+            }
           } catch (error) {
-            return null;
-          } finally {
-            timeoutRef.current = setTimeout(() => {
-              lastCompletion.current = null;
-            }, 300);
+            console.error(error);
           }
+
+          return {items: []};
         },
         freeInlineCompletions: () => {},
       });
 
     return () => {
       completionProvider.dispose();
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
     };
   }, [monacoInstance, language, framework, fetchCompletionItemDebounced]);
 

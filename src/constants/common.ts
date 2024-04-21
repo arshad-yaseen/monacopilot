@@ -1,16 +1,12 @@
-import {EditorOptions} from '../types/common';
+import {EditorOptionsType} from '../types/common';
 
-export const EDITOR_DEFAULT_OPTIONS: EditorOptions = {
+export const EDITOR_DEFAULT_OPTIONS: EditorOptionsType = {
   scrollBeyondLastColumn: 0,
   codeLens: false,
   minimap: {
     enabled: false,
   },
   quickSuggestions: false,
-  inlineSuggest: {
-    enabled: true,
-    mode: 'prefix',
-  },
   folding: false,
   foldingHighlight: false,
   foldingImportsByDefault: false,

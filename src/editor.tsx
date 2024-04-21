@@ -5,7 +5,7 @@ import {Monaco, Editor as MonacoEditor} from '@monaco-editor/react';
 import Config from './classes/config';
 import {EDITOR_DEFAULT_OPTIONS} from './constants/common';
 import {useStartCompletion} from './hooks/use-start-completion';
-import {EditorOptions, EditorProps, EditorType} from './types/common';
+import {EditorOptionsType, EditorProps, EditorType} from './types/common';
 import {deepMerge} from './utils/common';
 
 const Editor = ({endpoint, framework, ...props}: EditorProps) => {
@@ -32,7 +32,10 @@ const Editor = ({endpoint, framework, ...props}: EditorProps) => {
     <MonacoEditor
       {...props}
       onMount={onEditorDidMount}
-      options={deepMerge<EditorOptions>(props.options, EDITOR_DEFAULT_OPTIONS)}
+      options={deepMerge<EditorOptionsType>(
+        props.options,
+        EDITOR_DEFAULT_OPTIONS,
+      )}
     />
   );
 };
