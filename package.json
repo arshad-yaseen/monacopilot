@@ -16,7 +16,8 @@
     "lint:test": "pnpm -C test lint",
     "format": "prettier --write .",
     "checks": "pnpm type-check && pnpm lint && pnpm lint:test",
-    "release": "pnpm build && pnpm checks && changeset && changeset version && changeset publish"
+    "prepare-release": "pnpm build && pnpm checks && changeset && changeset version",
+    "release": "changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
