@@ -1,4 +1,3 @@
 packages:
-  - 'completion-server'
   - 'test'
   - '.'

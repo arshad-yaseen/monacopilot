@@ -12,12 +12,10 @@
     "type-check": "tsc --noEmit",
     "build": "tsup src/index.ts",
     "dev:test": "pnpm -C test dev",
-    "dev:completion-server": "pnpm -C completion-server dev",
     "lint": "eslint . --ext .ts,.tsx --fix",
     "lint:test": "pnpm -C test lint",
     "format": "prettier --write .",
     "checks": "pnpm type-check && pnpm lint && pnpm lint:test",
-    "deploy:completion-server": "pnpm -C completion-server run deploy",
     "release": "pnpm build && pnpm checks && changeset && changeset version && changeset publish"
   },
   "devDependencies": {
