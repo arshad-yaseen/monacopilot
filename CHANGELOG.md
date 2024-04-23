@@ -1,5 +1,13 @@
 # ai-monaco-editor
 
+## 0.7.1
+
+### Patch Changes
+
+- New syntax rule
+- Improved prompt
+- Fix bracket close issue
+
 ## 0.7.0
 
 ### Minor Changes
