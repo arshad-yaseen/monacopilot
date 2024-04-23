@@ -1,17 +1,14 @@
 import {EditorModelType, EditorPositionType} from '../../types/common';
 import {getCharAtPosition} from './common';
 
-/** Check if there is anything after the cursor
- * That is, if there is any character after the cursor position
- */
-export const isAnythingAfterCursor = (
+export const isEmptyAfterCursor = (
   position: EditorPositionType,
   model: EditorModelType,
-): boolean => {
+) => {
   const line = model.getLineContent(position.lineNumber);
-  const charAfterCursor = getCharAtPosition(line, position.column - 1);
-
-  return charAfterCursor !== '';
+  const index = position.column - 1;
+  const textAfterCursor = line.substring(index).trim();
+  return textAfterCursor === '';
 };
 
 /** Check if there is code after the cursor */

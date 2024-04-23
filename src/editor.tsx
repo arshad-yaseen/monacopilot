@@ -2,7 +2,6 @@ import React from 'react';
 
 import {Monaco, Editor as MonacoEditor} from '@monaco-editor/react';
 
-import Config from './classes/config';
 import {EDITOR_DEFAULT_OPTIONS} from './constants/common';
 import useStartCompletion from './hooks/use-start-completion';
 import {EditorOptionsType, EditorProps, EditorType} from './types/common';
@@ -13,10 +12,6 @@ const Editor = ({endpoint, framework, ...props}: EditorProps) => {
     null,
   );
 
-  React.useEffect(() => {
-    Config.setEndpoint(endpoint);
-  }, [endpoint]);
-
   const onEditorDidMount = React.useCallback(
     (editor: EditorType, monaco: Monaco) => {
       setMonacoInstance(monaco);
@@ -26,7 +21,7 @@ const Editor = ({endpoint, framework, ...props}: EditorProps) => {
     [props],
   );
 
-  useStartCompletion(monacoInstance, props.language, framework);
+  useStartCompletion(endpoint, monacoInstance, props.language, framework);
 
   return (
     <MonacoEditor

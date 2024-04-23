@@ -2,7 +2,6 @@ import React from 'react';
 
 import {Monaco} from '@monaco-editor/react';
 
-import Config from '../classes/config';
 import {LocalCodePredictionEngine} from '../classes/local-code-prediction-engine';
 import {
   computeCacheKeyForCompletion,
@@ -14,6 +13,7 @@ import useTypingDebounceFn from './use-typing-debounce-fn';
 const localPredictionEngine = new LocalCodePredictionEngine();
 
 const useStartCompletion = (
+  endpoint: string | undefined,
   monacoInstance: Monaco | null,
   language: string | undefined,
   framework: FrameworkType | undefined,
@@ -27,9 +27,6 @@ const useStartCompletion = (
     fetchCompletionItem,
     600,
   );
-
-  // The endpoint to fetch the completion item that is provided by the user.
-  const endpoint = Config.getEndpoint();
 
   React.useEffect(() => {
     if (!monacoInstance || !language || !endpoint) {

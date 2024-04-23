@@ -6,8 +6,8 @@ import {
 import {EditorModelType, EditorPositionType} from '../../types/common';
 import {
   getCodeBeforeAndAfterCursor,
-  isAnythingAfterCursor,
   isCodeAfterCursor,
+  isEmptyAfterCursor,
 } from './syntax-parser';
 
 /**
@@ -34,7 +34,7 @@ const codeContextualScore = (
 ) => {
   const code = model.getValue();
   const {codeBeforeCursor} = getCodeBeforeAndAfterCursor(cursorPosition, model);
-  const afterCursorWhitespace = isAnythingAfterCursor(cursorPosition, model);
+  const afterCursorWhitespace = isEmptyAfterCursor(cursorPosition, model);
   const documentLength = code.length;
   const promptEndPos = model.getOffsetAt(cursorPosition);
 
