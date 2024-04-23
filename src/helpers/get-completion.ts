@@ -1,13 +1,10 @@
-import {
-  EditorModelType,
-  EditorPositionType,
-  FrameworkType,
-} from '../types/common';
+import {EditorModelType, EditorPositionType} from '../types/common';
 import {
   CompletionMetadata,
   CompletionRequestParams,
   GroqCompletion,
 } from '../types/completion';
+import {FrameworkType} from '../types/editor-props';
 import {sanitizeCompletionCode} from '../utils/completion/common';
 import {
   getCodeBeforeAndAfterCursor,

@@ -4,9 +4,9 @@ import {
 } from 'groq-sdk/resources/chat/completions';
 
 import {CodeContextualFilterManager} from '../helpers/contextual-filter';
-import {FrameworkType} from './common';
+import {FrameworkType} from './editor-props';
 
-export type CompletionModelType = 'llama3-70b-8192' | 'llama3-8b-8192';
+export type CompletionModelType = 'llama3-70b-8192';
 export type GroqCompletionCreateParams = ChatCompletionCreateParamsBase;
 export type GroqCompletion = ChatCompletion & {error?: string};
 

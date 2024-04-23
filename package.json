@@ -44,7 +44,7 @@
     "monaco-editor-react",
     "ai-editor"
   ],
-  "homepage": "https://github.com/arshad-yaseen/ai-monaco-editor#readme",
+  "homepage": "https://github.com/arshad-yaseen/rich-monaco-editor#readme",
   "license": "MIT",
   "author": "Arshad Yaseen <m@arshadyaseen.com>",
   "peerDependencies": {

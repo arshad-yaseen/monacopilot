@@ -73,3 +73,14 @@ export const getCodeBeforeAndAfterCursor = (
 
   return {codeBeforeCursor, codeAfterCursor};
 };
+
+/** Check if the cursor is at the start of the line with trailing code */
+export const isCursorAtStartWithCodeAhead = (
+  position: EditorPositionType,
+  model: EditorModelType,
+) => {
+  const line = model.getLineContent(position.lineNumber);
+  const index = position.column - 1;
+  const textAfterCursor = line.substring(index).trim();
+  return position.column <= 2 && textAfterCursor !== '';
+};

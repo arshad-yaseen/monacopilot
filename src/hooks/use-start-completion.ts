@@ -7,16 +7,18 @@ import {
   computeCacheKeyForCompletion,
   fetchCompletionItem,
 } from '../helpers/get-completion';
-import {EditorInlineCompletionType, FrameworkType} from '../types/common';
+import {EditorInlineCompletionType} from '../types/common';
+import {CompletionSpeedType, FrameworkType} from '../types/editor-props';
 import useTypingDebounceFn from './use-typing-debounce-fn';
 
 const localPredictionEngine = new LocalCodePredictionEngine();
 
 const useStartCompletion = (
   endpoint: string | undefined,
-  monacoInstance: Monaco | null,
-  language: string | undefined,
   framework: FrameworkType | undefined,
+  completionSpeed: CompletionSpeedType | undefined = 'normal',
+  language: string | undefined,
+  monacoInstance: Monaco | null,
 ) => {
   const completionCache = React.useRef<Map<string, EditorInlineCompletionType>>(
     new Map(),
@@ -25,7 +27,11 @@ const useStartCompletion = (
 
   const fetchCompletionItemDebounced = useTypingDebounceFn(
     fetchCompletionItem,
-    600,
+    completionSpeed === 'slow'
+      ? 1000
+      : completionSpeed === 'normal'
+        ? 600
+        : 200,
   );
 
   React.useEffect(() => {
@@ -97,11 +103,14 @@ const useStartCompletion = (
               position,
             });
 
+            console.log('completion:', completion);
+
             if (completion) {
+              console.log('here');
+
               const newItem = {
                 insertText: completion,
                 range: cursorRange,
-                completeBracketPairs: true,
               };
 
               completionCache.current.set(cacheKey, newItem);
