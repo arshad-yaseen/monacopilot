@@ -14,16 +14,16 @@ import Config from './config';
 
 /**
  * Initializes with configuration options
- * and an API key, and provides a method to send a completion request to a configured provider.
+ * and an API key, and provides a method to send a completion request to Groq API and return the completion.
  *
- * @param {string} apiKey - The API key required to authenticate requests to the completion provider.
+ * @param {string} apiKey - The Groq API key.
  * @param {CompletionConstructorParams} [options] - Optional parameters to configure the completion model,
- * such as the model ID. Defaults to `gpt-3.5-turbo-0125` if not specified.
+ * such as the model ID. Defaults to `llama3-70b-8192` if not specified.
  *
  * @example
  * ```ts
- * const completion = new Completion(process.env.OPENAI_API_KEY, {
- *   model: 'gpt-3.5-turbo-0125',
+ * const completion = new Completion(process.env.GROQ_API_KEY, {
+ *   model: 'llama3-70b-8192',
  * });
  * ```
  */
