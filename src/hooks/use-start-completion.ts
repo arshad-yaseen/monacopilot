@@ -128,7 +128,13 @@ const useStartCompletion = (
     return () => {
       completionProvider.dispose();
     };
-  }, [monacoInstance, language, framework, fetchCompletionItemDebounced]);
+  }, [
+    monacoInstance,
+    language,
+    framework,
+    fetchCompletionItemDebounced,
+    endpoint,
+  ]);
 
   return null;
 };
