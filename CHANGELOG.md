@@ -1,5 +1,14 @@
 # ai-monaco-editor
 
+## 0.7.0
+
+### Minor Changes
+
+- Groq provider
+- Provider type-safety,
+- Faster suggessions
+- Enhanced predictions
+
 ## 0.6.0
 
 ### Minor Changes
