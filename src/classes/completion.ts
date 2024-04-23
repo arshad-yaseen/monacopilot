@@ -1,27 +1,24 @@
 import {
-  _COMPLETION_SERVER_BASE_URL,
+  COMPLETION_SYSTEM_PROMPT,
   DEFAULT_COMPLETION_MODEL,
-  PROVIDER_API_ENDPOINTS,
+  GROQ_API_ENDPOINT,
 } from '../constants/completion';
-import {
-  getProviderRequestBody,
-  getProviderRequestHeaders,
-} from '../helpers/create-completion';
 import {
   CompletionConstructorParams,
   CompletionRequestParams,
+  GroqCompletion,
+  GroqCompletionCreateParams,
 } from '../types/completion';
+import {POST} from '../utils/http';
 import Config from './config';
 
-let totalTokens = 0;
-
 /**
- * Represents a completion request handler. This class initializes with configuration options
+ * Initializes with configuration options
  * and an API key, and provides a method to send a completion request to a configured provider.
  *
  * @param {string} apiKey - The API key required to authenticate requests to the completion provider.
  * @param {CompletionConstructorParams} [options] - Optional parameters to configure the completion model,
- * such as the model ID. Defaults to 'gpt-3.5-turbo-0125' if not specified.
+ * such as the model ID. Defaults to `gpt-3.5-turbo-0125` if not specified.
  *
  * @example
  * ```ts
@@ -42,45 +39,47 @@ class Completion {
     Config.setModel(options?.model || DEFAULT_COMPLETION_MODEL);
   }
 
-  public async run(req: Request): Promise<unknown> {
+  public async run(req: Request) {
     try {
       const data = (await req.json()) as CompletionRequestParams;
-      const provider = Config.getProvider();
       const model = Config.getModel();
 
-      const endpoint = PROVIDER_API_ENDPOINTS[provider] ?? '';
-      const body = getProviderRequestBody(data, provider, model);
-      const headers = getProviderRequestHeaders(provider, this.apiKey);
+      const endpoint = GROQ_API_ENDPOINT;
+      const body: GroqCompletionCreateParams = {
+        model,
+        max_tokens: 200,
+        temperature: 0.5,
+        messages: [
+          {
+            role: 'system',
+            content: COMPLETION_SYSTEM_PROMPT,
+          },
+          {
+            role: 'user',
+            content: JSON.stringify(data.completionMetadata),
+          },
+        ],
+      };
 
-      const fullUrl = `${_COMPLETION_SERVER_BASE_URL}/run`;
+      const headers = {
+        Authorization: `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+      };
 
-      const response = await fetch(fullUrl, {
-        method: 'POST',
-        headers: {
-          ...headers,
-          'x-api-key': this.apiKey,
-          'Content-Type': 'application/json',
+      const completion = await POST<GroqCompletion, GroqCompletionCreateParams>(
+        endpoint,
+        body,
+        {
+          headers,
+          error: 'Error while fetching from groq API.',
         },
-        body: JSON.stringify({
-          providerApiEndpoint: endpoint,
-          providerHeaders: headers,
-          providerBody: body,
-        }),
-      });
-
-      if (!response.ok) {
-        return null;
-      }
-
-      const completion = await response.json();
-
-      totalTokens += completion?.usage.total_tokens ?? 0;
-      console.clear();
-      console.log(totalTokens);
+      );
 
       return completion;
     } catch (error) {
-      return null;
+      return {
+        error: `An unexpected error occurred: ${error}`,
+      };
     }
   }
 }

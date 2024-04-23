@@ -15,14 +15,10 @@ export type FrameworkType = (typeof frameworks)[number];
 
 export interface EditorProps extends MonacoEditorProps {
   /**
-   * Language of the current model.
-   */
-  language: string;
-  /**
    * The API endpoint where you started the completion service.
    * [Learn more](https://ai-monaco-editor.vercel.app/docs/getting-started#endpoint)
    */
-  endpoint: EndpointType;
+  endpoint?: EndpointType;
   /**
    * The framework you want to use for the completion.
    * This can provide framework-specific completions.

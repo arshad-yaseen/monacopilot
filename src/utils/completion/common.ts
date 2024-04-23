@@ -14,3 +14,13 @@ export const getCursorPostionLabel = ({
 }: EditorPositionType) => {
   return `Line ${lineNumber}, Column ${column}`;
 };
+
+export const sanitizeCompletionCode = (code: string): string => {
+  code = code.replace(/\\n/g, '\n');
+
+  if (code.startsWith('```') && code.endsWith('```')) {
+    return code.slice(3, -3);
+  }
+
+  return code;
+};

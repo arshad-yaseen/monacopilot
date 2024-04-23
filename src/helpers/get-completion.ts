@@ -1,88 +1,102 @@
-import Config from '../classes/config';
-import {COMPLETION_CODE_KEY} from '../constants/completion';
-import {EditorModelType, EditorPositionType} from '../types/common';
 import {
-  CompletionProviderType,
+  EditorModelType,
+  EditorPositionType,
+  FrameworkType,
+} from '../types/common';
+import {
+  CompletionMetadata,
   CompletionRequestParams,
+  GroqCompletion,
 } from '../types/completion';
-import {objectToString, parseJson} from '../utils/common';
+import {sanitizeCompletionCode} from '../utils/completion/common';
+import {
+  getCodeBeforeAndAfterCursor,
+  isFillInMode,
+} from '../utils/completion/syntax-parser';
 import {isValidCompletion} from '../utils/completion/validate-completion';
+import {POST} from '../utils/http';
 
 export const fetchCompletionItem = async ({
+  endpoint,
   code,
   language,
   framework,
   model,
   position,
-}: CompletionRequestParams & {
+}: {
+  endpoint: string;
+  code: string;
+  language: string;
+  framework: FrameworkType | undefined;
   model: EditorModelType;
   position: EditorPositionType;
-}): Promise<string | null | undefined> => {
+}) => {
   if (!isValidCompletion(position, model, language) || !code) {
     return null;
   }
 
-  const endpoint = Config.getEndpoint();
+  const data = await POST<GroqCompletion, CompletionRequestParams>(
+    endpoint,
+    {
+      completionMetadata: constructCompletionMetadata(
+        code,
+        position,
+        model,
+        language,
+        framework,
+      ),
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      error: 'Error while fetching completion item',
+    },
+  );
 
-  if (!endpoint) {
+  if (data.error) {
     return null;
   }
 
-  const body = {
-    code: extractCodeForCompletion(code, position),
-    language,
-    framework,
-  } satisfies CompletionRequestParams;
-
-  const response = await fetch(endpoint, {
-    method: 'POST',
-    body: JSON.stringify(body),
-  });
-
-  const data = await response.json();
-
-  return extractCompletionFromResponse(data);
+  return sanitizeCompletionCode(data.choices[0].message.content);
 };
 
-// Extract the completion code from the response based on the provider
-const extractCompletionFromResponse = (
-  data: any,
-): string | null | undefined => {
-  const completion: Record<CompletionProviderType, string> = {
-    openai: data?.choices?.[0]?.message?.content,
-  };
-
-  const provider = Config.getProvider();
-
-  try {
-    const completionCode = parseJson(completion[provider])[COMPLETION_CODE_KEY];
-
-    if (typeof completionCode === 'object') {
-      return objectToString(completionCode);
-    } else {
-      return completionCode;
-    }
-  } catch (e) {
-    return null;
-  }
-};
-
-// Adjust code string with cursor position placeholder
-export const extractCodeForCompletion = (
+// Construct completion metadata based on the cursor position and code.
+// This metadata is used to generate the completion code from LLM models.
+export const constructCompletionMetadata = (
   code: string,
-  cursorPosition: EditorPositionType,
-): string => {
-  const lines = code.split('\n');
-  const {lineNumber, column} = cursorPosition;
+  position: EditorPositionType,
+  model: EditorModelType,
+  language: string,
+  framework: FrameworkType | undefined,
+): CompletionMetadata => {
+  const {lineNumber, column} = position;
+  const completionMode = isFillInMode(position, model) ? 'fill-in' : 'extend';
 
-  lines[lineNumber - 1] =
-    lines[lineNumber - 1].substring(0, column - 1) +
-    `// Cursor is here at line ${lineNumber}, column ${column}` +
-    lines[lineNumber - 1].substring(column - 1);
+  const {codeBeforeCursor, codeAfterCursor} = getCodeBeforeAndAfterCursor(
+    position,
+    model,
+  );
 
-  return lines.join('\n');
+  return {
+    language,
+    framework: framework || undefined,
+    cursorPosition: {
+      line: lineNumber,
+      column,
+    },
+    codeBeforeCursor,
+    codeAfterCursor,
+    editorState: {
+      completionMode,
+      codeLengthBeforeCursor: codeBeforeCursor.length,
+      totalCodeLength: code.length,
+    },
+  };
 };
+
 // Compute a cache key based on the cursor's position and preceding text
+// This key is used to cache completion results for the same code context
 export const computeCacheKeyForCompletion = (
   {lineNumber, column}: EditorPositionType,
   code: string,

@@ -2,19 +2,20 @@ import React from 'react';
 
 import {Monaco} from '@monaco-editor/react';
 
+import Config from '../classes/config';
 import {LocalCodePredictionEngine} from '../classes/local-code-prediction-engine';
 import {
   computeCacheKeyForCompletion,
   fetchCompletionItem,
 } from '../helpers/get-completion';
 import {EditorInlineCompletionType, FrameworkType} from '../types/common';
-import useDebounceAsyncFn from './use-debounce-async-fn';
+import useTypingDebounceFn from './use-typing-debounce-fn';
 
 const localPredictionEngine = new LocalCodePredictionEngine();
 
 const useStartCompletion = (
   monacoInstance: Monaco | null,
-  language: string,
+  language: string | undefined,
   framework: FrameworkType | undefined,
 ) => {
   const completionCache = React.useRef<Map<string, EditorInlineCompletionType>>(
@@ -22,12 +23,16 @@ const useStartCompletion = (
   );
   const isCompletionHandled = React.useRef<boolean>(false);
 
-  const fetchCompletionItemDebounced = useDebounceAsyncFn(fetchCompletionItem, {
-    wait: 300,
-  });
+  const fetchCompletionItemDebounced = useTypingDebounceFn(
+    fetchCompletionItem,
+    600,
+  );
+
+  // The endpoint to fetch the completion item that is provided by the user.
+  const endpoint = Config.getEndpoint();
 
   React.useEffect(() => {
-    if (!monacoInstance || !language) {
+    if (!monacoInstance || !language || !endpoint) {
       return undefined;
     }
 
@@ -52,6 +57,7 @@ const useStartCompletion = (
           );
           const cacheKey = computeCacheKeyForCompletion(position, code);
 
+          // Check if the completion is already cached
           if (completionCache.current.has(cacheKey)) {
             const cachedItem = completionCache.current.get(cacheKey);
             isCompletionHandled.current = true;
@@ -63,6 +69,7 @@ const useStartCompletion = (
             }
           }
 
+          // Check if the code is a common code snippet, if so, predict the next code snippet
           const localPrediction = localPredictionEngine.predictCode(
             language,
             code,
@@ -83,15 +90,15 @@ const useStartCompletion = (
           }
 
           try {
+            // Fetch the completion item from the LLM model
             const completion = await fetchCompletionItemDebounced({
+              endpoint,
               code,
               language,
               framework,
               model,
               position,
             });
-
-            console.log('completion', completion);
 
             if (completion) {
               const newItem = {
@@ -109,6 +116,7 @@ const useStartCompletion = (
               };
             }
           } catch (error) {
+            console.error('Error fetching completion item:', error);
             return {items: []};
           }
 

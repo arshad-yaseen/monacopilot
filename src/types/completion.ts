@@ -1,5 +1,14 @@
-import {CodeContextualFilterManager} from '../utils/completion/contextual-filter';
+import {
+  ChatCompletion,
+  ChatCompletionCreateParamsBase,
+} from 'groq-sdk/resources/chat/completions';
+
+import {CodeContextualFilterManager} from '../helpers/contextual-filter';
 import {FrameworkType} from './common';
+
+export type CompletionModelType = 'llama3-70b-8192' | 'llama3-8b-8192';
+export type GroqCompletionCreateParams = ChatCompletionCreateParamsBase;
+export type GroqCompletion = ChatCompletion & {error?: string};
 
 export interface CompletionConstructorParams {
   model: CompletionModelType | undefined;
@@ -13,9 +22,23 @@ export interface LocalPrediction {
 }
 
 export interface CompletionRequestParams {
-  code: string;
-  language: string | undefined;
+  completionMetadata: CompletionMetadata;
+}
+
+export interface CompletionMetadata {
+  language: string;
   framework: FrameworkType | undefined;
+  cursorPosition: {
+    line: number;
+    column: number;
+  };
+  codeAfterCursor: string;
+  codeBeforeCursor: string;
+  editorState: {
+    completionMode: 'fill-in' | 'extend';
+    codeLengthBeforeCursor: number;
+    totalCodeLength: number;
+  };
 }
 
 export interface CodeContextualFilterProperties {
@@ -36,7 +59,3 @@ export interface CodeContextualFilterContext {
   ) => CodeContextualFilterManager;
   prefix?: string;
 }
-
-export type CompletionProviderType = 'openai';
-
-export type CompletionModelType = 'gpt-3.5-turbo-0125';
