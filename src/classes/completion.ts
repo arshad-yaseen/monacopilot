@@ -56,7 +56,7 @@ class Completion {
           },
           {
             role: 'user',
-            content: JSON.stringify(data.completionMetadata),
+            content: JSON.stringify(data),
           },
         ],
       };

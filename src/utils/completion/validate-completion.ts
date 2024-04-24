@@ -7,7 +7,7 @@ import {EditorModelType, EditorPositionType} from '../../types/common';
 import {
   getCodeBeforeAndAfterCursor,
   isCodeAfterCursor,
-  isCursorAtStartWithCodeAhead,
+  isCursorAtStartWithCodeAround,
   isEmptyAfterCursor,
 } from './syntax-parser';
 
@@ -24,7 +24,7 @@ export const isValidCompletion = (
     codeContextualScore(cursorPosition, model, language) >
       CONTEXTUAL_FILTER_ACCEPT_THRESHOLD &&
     !isCodeAfterCursor(cursorPosition, model) &&
-    !isCursorAtStartWithCodeAhead(cursorPosition, model)
+    !isCursorAtStartWithCodeAround(cursorPosition, model)
   );
 };
 

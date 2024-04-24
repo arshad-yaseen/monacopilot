@@ -1,4 +1,4 @@
-# ai-monaco-editor
+# rich-monaco-editor
 
 ## 0.7.1
 
@@ -21,7 +21,9 @@
 
 ### Minor Changes
 
-- Code Contextual Filtering, New debouncing method, New robust systen prompt
+- Code Contextual Filtering
+- New debouncing method
+- New robust systen prompt
 
 ## 0.5.5
 
@@ -33,7 +35,8 @@
 
 ### Patch Changes
 
-- Custom rate limiting, better naming conventions
+- Custom rate limiting
+- better naming conventions
 
 ## 1.2.3
 

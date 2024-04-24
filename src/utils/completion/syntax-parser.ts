@@ -36,19 +36,22 @@ export const isFillInMode = (
   position: EditorPositionType,
   model: EditorModelType,
 ) => {
-  const currentLine = model.getLineContent(position.lineNumber);
-  const index = position.column - 1; // Convert to 0-based index
-
-  const textBeforeCursor = currentLine.substring(0, index).trim();
-  const textAfterCursor = currentLine.substring(index).trim();
+  const {codeBeforeCursor, codeAfterCursor} = getCodeBeforeAndAfterCursor(
+    position,
+    model,
+  );
 
   // Conditions that likely indicate "fill-in" mode.
-  const openSymbols = '({[=,<>&|!'; // Open symbols that might need completion
-  const closeSymbols = ')}];'; // Closing symbols that might indicate the need for completion before them
+  const openSymbols = '({[=,<>&|!"'; // Open symbols that might need completion
+  const closeSymbols = ')}];"'; // Closing symbols that might indicate the need for completion before them
+
+  if (codeBeforeCursor.slice(-1) === ' ' || codeAfterCursor.charAt(0) === '') {
+    return false;
+  }
 
   return (
-    openSymbols.includes(textBeforeCursor.slice(-1)) ||
-    closeSymbols.includes(textAfterCursor.charAt(0))
+    openSymbols.includes(codeBeforeCursor.slice(-1)) ||
+    closeSymbols.includes(codeAfterCursor.charAt(0))
   );
 };
 
@@ -75,12 +78,16 @@ export const getCodeBeforeAndAfterCursor = (
 };
 
 /** Check if the cursor is at the start of the line with trailing code */
-export const isCursorAtStartWithCodeAhead = (
+export const isCursorAtStartWithCodeAround = (
   position: EditorPositionType,
   model: EditorModelType,
 ) => {
-  const line = model.getLineContent(position.lineNumber);
-  const index = position.column - 1;
-  const textAfterCursor = line.substring(index).trim();
-  return position.column <= 2 && textAfterCursor !== '';
+  const {codeAfterCursor, codeBeforeCursor} = getCodeBeforeAndAfterCursor(
+    position,
+    model,
+  );
+
+  return (
+    position.column <= 2 && (codeAfterCursor !== '' || codeBeforeCursor !== '')
+  );
 };
