@@ -40,7 +40,7 @@ const Editor = ({
 
       props.onMount?.(editor, monaco);
     },
-    [props],
+    [props, theme],
   );
 
   useStartCompletion(
