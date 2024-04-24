@@ -8,15 +8,14 @@ import {
   fetchCompletionItem,
 } from '../helpers/get-completion';
 import {EditorInlineCompletionType} from '../types/common';
-import {CompletionSpeedType, FrameworkType} from '../types/editor-props';
+import {CompletionEndpointType, FrameworkType} from '../types/editor-props';
 import useTypingDebounceFn from './use-typing-debounce-fn';
 
 const localPredictionEngine = new LocalCodePredictionEngine();
 
 const useStartCompletion = (
-  endpoint: string | undefined,
+  completionEndpoint: CompletionEndpointType | undefined,
   framework: FrameworkType | undefined,
-  completionSpeed: CompletionSpeedType | undefined = 'normal',
   language: string | undefined,
   monacoInstance: Monaco | null,
 ) => {
@@ -27,15 +26,11 @@ const useStartCompletion = (
 
   const fetchCompletionItemDebounced = useTypingDebounceFn(
     fetchCompletionItem,
-    completionSpeed === 'slow'
-      ? 1000
-      : completionSpeed === 'normal'
-        ? 600
-        : 200,
+    600,
   );
 
   React.useEffect(() => {
-    if (!monacoInstance || !language || !endpoint) {
+    if (!monacoInstance || !language || !completionEndpoint) {
       return undefined;
     }
 
@@ -95,7 +90,7 @@ const useStartCompletion = (
           try {
             // Fetch the completion item from the LLM model
             const completion = await fetchCompletionItemDebounced({
-              endpoint,
+              completionEndpoint,
               code,
               language,
               framework,
@@ -103,11 +98,7 @@ const useStartCompletion = (
               position,
             });
 
-            console.log('completion:', completion);
-
             if (completion) {
-              console.log('here');
-
               const newItem = {
                 insertText: completion,
                 range: cursorRange,
@@ -139,7 +130,7 @@ const useStartCompletion = (
     language,
     framework,
     fetchCompletionItemDebounced,
-    endpoint,
+    completionEndpoint,
   ]);
 
   return null;

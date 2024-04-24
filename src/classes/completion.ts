@@ -71,7 +71,7 @@ class Completion {
         body,
         {
           headers,
-          error: 'Error while fetching from groq API.',
+          error: 'Error while fetching from groq API',
         },
       );
 

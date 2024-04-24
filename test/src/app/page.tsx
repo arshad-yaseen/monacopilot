@@ -6,8 +6,8 @@ export default function Home() {
   return (
     <main className="flex min-h-screen w-screen flex-col items-center">
       <Editor
-        language="go"
-        endpoint="/api/auto-complete"
+        language="javascript"
+        completionEndpoint="/api/auto-complete"
         className="h-screen w-screen"
       />
     </main>

@@ -1,17 +1,19 @@
 import {type EditorProps as MonacoEditorProps} from '@monaco-editor/react';
 
 import frameworks from '../constants/frameworks';
+import themes from '../themes';
+import {EditorBuiltInTheme} from './common';
 
-export type EndpointType = string;
+export type CompletionEndpointType = string;
 export type FrameworkType = (typeof frameworks)[number];
-export type CompletionSpeedType = 'slow' | 'normal' | 'fast';
+export type ThemeType = keyof typeof themes;
 
 export default interface EditorProps extends MonacoEditorProps {
   /**
    * The API endpoint where you started the completion service.
    * [Learn more](https://rich-monaco-editor.vercel.app/docs/getting-started#endpoint)
    */
-  endpoint?: EndpointType;
+  completionEndpoint?: CompletionEndpointType;
   /**
    * The framework you want to use for the completion.
    * This can provide framework-specific completions.
@@ -20,13 +22,8 @@ export default interface EditorProps extends MonacoEditorProps {
    */
   framework?: FrameworkType;
   /**
-   * Defines the completion speed with different cost-effectiveness and speed trade-offs:
-   * - 'slow': Most cost-effective but slowest.
-   * - 'normal': Balances cost and speed (default).
-   * - 'fast': Increases speed and cost.
-   * Learn more about cost differences and details at:
-   * [Completion Speed Documentation](https://rich-monaco-editor.vercel.app/docs/getting-started#completion-speed)
-   * @default 'normal'
+   * The theme you want to use for the editor.
+   * You can play with the themes [here](https://rich-monaco-editor.vercel.app/themes).
    */
-  completionSpeed?: CompletionSpeedType;
+  theme?: EditorBuiltInTheme | ThemeType;
 }
