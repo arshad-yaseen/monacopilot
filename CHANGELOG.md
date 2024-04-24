@@ -1,5 +1,12 @@
 # rich-monaco-editor
 
+## 0.7.2
+
+### Patch Changes
+
+- Custom Themes
+- Export new Types
+
 ## 0.7.1
 
 ### Patch Changes
