@@ -17,7 +17,8 @@
     "format": "prettier --write .",
     "checks": "pnpm type-check && pnpm lint && pnpm lint:test",
     "prepare-release": "pnpm build && pnpm checks && changeset && changeset version",
-    "release": "changeset publish"
+    "release": "changeset publish",
+    "generate-themes": "node scripts/generate-themes.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
@@ -28,6 +29,7 @@
     "@typescript-eslint/eslint-plugin": "^7.3.1",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.1",
+    "fast-plist": "^0.1.3",
     "groq-sdk": "^0.3.2",
     "monaco-editor": "^0.47.0",
     "prettier": "^3.2.5",
