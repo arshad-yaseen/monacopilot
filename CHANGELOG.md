@@ -1,5 +1,12 @@
 # rich-monaco-editor
 
+## 0.8.0
+
+### Minor Changes
+
+- Generate and process themes from tmTheme files and Generate theme types script
+- Better prompt
+
 ## 0.7.2
 
 ### Patch Changes
