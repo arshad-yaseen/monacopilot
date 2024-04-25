@@ -7,13 +7,13 @@ const __dirname = path.dirname(__filename);
 
 const THEMES_DIR_PATH = '../themes';
 const THEMES_FILE_PATH = '../src/themes.ts';
+const THEMES_TYPE_DECLARED_FILE_PATH = '../src/types/editor-props.ts';
 
 const readAndProcessThemes = async () => {
   const themesDir = path.resolve(__dirname, THEMES_DIR_PATH);
 
   try {
     const files = await fs.readdir(themesDir);
-
     const themeJsonFiles = await Promise.all(
       files.map(async file => {
         const content = await fs.readFile(path.join(themesDir, file), 'utf-8');
@@ -21,8 +21,8 @@ const readAndProcessThemes = async () => {
       }),
     );
 
-    // Renaming files and creating content for themes.ts
     let themesFileContent = '';
+    let themesType = [];
 
     for (const file of themeJsonFiles) {
       const fileName = Object.keys(file)[0];
@@ -33,19 +33,17 @@ const readAndProcessThemes = async () => {
           .replace(/-+$/, '')
           .toLowerCase() + '.json';
 
-      // Rename the file asynchronously
       await fs.rename(
         path.join(themesDir, fileName),
         path.join(themesDir, newFileName),
       );
 
       const themeName = newFileName.replace(/\.json$/, '');
-
       const json = JSON.parse(Object.values(file)[0]);
       themesFileContent += `"${themeName}": ${JSON.stringify(json)},\n`;
+      themesType.push(`'${themeName}'`);
     }
 
-    // Writing to themes.ts
     const themesFilePath = path.resolve(__dirname, THEMES_FILE_PATH);
     const themesFileData = `
       import { EditorThemeData } from './types/common';
@@ -66,6 +64,26 @@ const readAndProcessThemes = async () => {
     `;
 
     await fs.writeFile(themesFilePath, themesFileData);
+
+    const themesTypeFilePath = path.resolve(
+      __dirname,
+      THEMES_TYPE_DECLARED_FILE_PATH,
+    );
+    let existingThemesTypeFileContent = await fs.readFile(
+      themesTypeFilePath,
+      'utf-8',
+    );
+    const themesTypeData = `export type ThemeType = ${themesType.join(' | ')};`;
+
+    const typeDeclarationRegex = /export type ThemeType\s*=\s*[^;]*;/s;
+
+    // Replace existing ThemeType definition
+    existingThemesTypeFileContent = existingThemesTypeFileContent.replace(
+      typeDeclarationRegex,
+      themesTypeData,
+    );
+
+    await fs.writeFile(themesTypeFilePath, existingThemesTypeFileContent);
     console.log('Themes processed successfully!');
   } catch (error) {
     console.error('Error processing themes:', error);
