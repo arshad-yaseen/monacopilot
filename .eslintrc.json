@@ -26,7 +26,7 @@
     "dist/",
     "/tsup.config.ts",
     "test/",
-    "/completion-server"
+    "website/"
   ],
   "plugins": ["@typescript-eslint"],
   "rules": {
