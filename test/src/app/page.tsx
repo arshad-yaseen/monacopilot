@@ -8,7 +8,6 @@ export default function Home() {
       <Editor
         language="javascript"
         completionEndpoint="/api/auto-complete"
-        theme="github-dark"
         className="h-screen w-screen"
       />
     </main>

@@ -1,3 +1,5 @@
+import * as monaco from 'monaco-editor';
+
 import {EditorModelType, EditorPositionType} from '../types/common';
 import {
   CompletionMetadata,
@@ -20,6 +22,7 @@ export const fetchCompletionItem = async ({
   framework,
   model,
   position,
+  token,
 }: {
   code: string;
   language: string;
@@ -27,10 +30,13 @@ export const fetchCompletionItem = async ({
   framework: FrameworkType | undefined;
   model: EditorModelType;
   position: EditorPositionType;
+  token: monaco.CancellationToken;
 }) => {
   if (!isValidCompletion(position, model, language) || !code) {
     return null;
   }
+
+  const abortController = new AbortController();
 
   const data = await POST<GroqCompletion, CompletionRequestParams>(
     completionEndpoint,
@@ -48,8 +54,14 @@ export const fetchCompletionItem = async ({
         'Content-Type': 'application/json',
       },
       error: 'Error while fetching completion item',
+      signal: abortController.signal,
     },
   );
+
+  if (token.isCancellationRequested) {
+    abortController.abort();
+    return null;
+  }
 
   if (data.error) {
     return null;

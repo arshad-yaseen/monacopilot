@@ -26,7 +26,7 @@ const useStartCompletion = (
 
   const fetchCompletionItemDebounced = useTypingDebounceFn(
     fetchCompletionItem,
-    600,
+    300,
   );
 
   React.useEffect(() => {
@@ -37,10 +37,6 @@ const useStartCompletion = (
     const completionProvider =
       monacoInstance.languages.registerInlineCompletionsProvider(language, {
         provideInlineCompletions: async (model, position, _, token) => {
-          if (token.isCancellationRequested) {
-            return {items: []};
-          }
-
           if (isCompletionHandled.current) {
             isCompletionHandled.current = false;
             return {items: []};
@@ -87,6 +83,10 @@ const useStartCompletion = (
             };
           }
 
+          if (token.isCancellationRequested) {
+            return {items: []};
+          }
+
           try {
             // Fetch the completion item from the LLM model
             const completion = await fetchCompletionItemDebounced({
@@ -96,6 +96,7 @@ const useStartCompletion = (
               framework,
               model,
               position,
+              token,
             });
 
             if (completion) {

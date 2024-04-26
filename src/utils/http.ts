@@ -7,6 +7,7 @@ interface RequestOptions<
   body?: MethodType extends 'POST' | 'PUT' ? BodyType : never;
   headers?: HeadersInit;
   error?: string;
+  signal?: AbortSignal;
 }
 
 async function request<
@@ -32,6 +33,7 @@ async function request<
     method: method,
     headers,
     body,
+    signal: options.signal,
   });
 
   if (!response.ok) {
