@@ -1,5 +1,11 @@
 # monacopilot
 
+## 0.8.2
+
+### Patch Changes
+
+- Rename package from rich-monaco-editor to monacopilot
+
 ## 0.8.1
 
 ### Patch Changes
