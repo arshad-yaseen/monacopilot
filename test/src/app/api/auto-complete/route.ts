@@ -1,4 +1,4 @@
-import {Completion} from 'rich-monaco-editor';
+import {Completion} from 'monacopilot';
 
 const completion = new Completion(process.env.GROQ_API_KEY!, {
   model: 'llama3-70b-8192',

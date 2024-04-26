@@ -1,6 +1,6 @@
 {
-  "name": "rich-monaco-editor",
-  "version": "0.8.0",
+  "name": "monacopilot",
+  "version": "0.8.1",
   "description": "Extended Monaco Editor with AI auto-completion, suggestions, and new themes for React.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -43,11 +43,11 @@
     "monaco-editor",
     "react-monaco-editor",
     "ai-monaco-editor",
-    "rich-monaco-editor",
+    "monacopilot",
     "monaco-editor-react",
     "ai-editor"
   ],
-  "homepage": "https://github.com/arshad-yaseen/rich-monaco-editor#readme",
+  "homepage": "https://github.com/arshad-yaseen/monacopilot#readme",
   "license": "MIT",
   "author": "Arshad Yaseen <m@arshadyaseen.com>",
   "peerDependencies": {

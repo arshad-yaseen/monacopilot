@@ -12,7 +12,7 @@
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.5",
     "next": "14.1.4",
-    "rich-monaco-editor": "workspace:*",
+    "monacopilot": "workspace:*",
     "react": "^18",
     "react-dom": "^18"
   },

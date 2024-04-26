@@ -1,4 +1,10 @@
-# rich-monaco-editor
+# monacopilot
+
+## 0.8.1
+
+### Patch Changes
+
+- Improve completion response time
 
 ## 0.8.0
 
