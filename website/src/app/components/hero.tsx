@@ -1,6 +1,10 @@
-import EditorDemo from '@/components/editor-demo';
-import {Button} from '@/components/ui/button';
-import Snippet from '@/components/ui/snippet';
+import Link from 'next/link';
+
+import EditorDemo from '@/app/components/editor-demo';
+import {buttonVariants} from '@/app/components/ui/button';
+import Snippet from '@/app/components/ui/snippet';
+import {GITHUB_REPO_URL} from '@/app/constants';
+import {cn} from '@/app/utils/misc';
 import {GitHubLogoIcon} from '@radix-ui/react-icons';
 import {motion} from 'framer-motion';
 
@@ -11,7 +15,7 @@ const Hero = () => {
         initial={{opacity: 0}}
         animate={{opacity: 1}}
         transition={{duration: 1}}
-        className="text-5xl font-semibold tracking-tighter text-center leading-tight relative">
+        className="md:text-5xl text-4xl font-semibold tracking-tighter text-center leading-tight relative">
         Monaco Editor <br />
         Redefined
       </motion.h1>
@@ -27,18 +31,36 @@ const Hero = () => {
         animate={{opacity: 1, y: 0}}
         transition={{duration: 0.4, delay: 0.4}}
         className="flex gap-2">
-        <Button className="rounded-full">Documentation</Button>
-        <Button variant="outline" className="rounded-full gap-2">
+        <Link
+          href="/docs"
+          className={cn(
+            buttonVariants({
+              variant: 'default',
+            }),
+            'rounded-full',
+          )}>
+          Documentation
+        </Link>
+        <Link
+          href={GITHUB_REPO_URL}
+          target="_blank"
+          className={cn(
+            buttonVariants({
+              variant: 'outline',
+            }),
+            'rounded-full gap-2',
+          )}>
           <GitHubLogoIcon />
           GitHub
-        </Button>
+        </Link>
       </motion.div>
       <EditorDemo />
       <motion.div
         initial={{opacity: 0, y: 6}}
         animate={{opacity: 1, y: 0}}
-        transition={{duration: 0.4, delay: 0.8}}>
-        <Snippet value="npm install monacopilot" />
+        transition={{duration: 0.4, delay: 0.8}}
+        className="w-full flex items-center justify-center">
+        <Snippet value="npm install monacopilot" className="sm:w-fit w-full" />
       </motion.div>
     </section>
   );

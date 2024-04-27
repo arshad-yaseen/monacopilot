@@ -53,6 +53,7 @@ const Editor = ({
   return (
     <MonacoEditor
       {...props}
+      key={theme}
       theme={theme}
       onMount={onEditorDidMount}
       options={deepMerge<EditorOptionsType>(
