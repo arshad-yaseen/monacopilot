@@ -7,9 +7,9 @@ import {font} from '@/utils/fonts';
 import {cn} from '@/utils/misc';
 
 export const metadata: Metadata = {
-  title: 'Rich Monaco Editor',
+  title: 'Monacopilot',
   description:
-    'Extended Monaco Editor with AI auto-completion, suggestions, and new themes for React.',
+    'Extended Monaco Editor with AI auto-completion and new themes for React.',
 };
 
 export default function RootLayout({
