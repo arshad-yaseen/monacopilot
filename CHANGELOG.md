@@ -1,5 +1,11 @@
 # monacopilot
 
+## 0.8.5
+
+### Patch Changes
+
+- Rename Completion constructor to Copilot
+
 ## 0.8.4
 
 ### Patch Changes
