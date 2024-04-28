@@ -8,7 +8,7 @@ module.exports = {
   github: {
     release: true,
     draft: true,
-    releaseName: 'Release v${version}',
+    releaseName: 'Monacopilot v${version}',
     commitArgs: ['-S'],
     tagArgs: ['-s'],
     assets: ['tar/*.tgz'],
