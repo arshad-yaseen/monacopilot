@@ -2,6 +2,7 @@ import {
   COMPLETION_SYSTEM_PROMPT,
   DEFAULT_COMPLETION_MODEL,
   GROQ_API_ENDPOINT,
+  PROMPT_CURSOR_POSITION_PLACEHOLDER,
 } from '../constants/completion';
 import {
   CompletionConstructorParams,
@@ -53,7 +54,10 @@ class Copilot {
         messages: [
           {
             role: 'system',
-            content: COMPLETION_SYSTEM_PROMPT,
+            content: COMPLETION_SYSTEM_PROMPT.replaceAll(
+              PROMPT_CURSOR_POSITION_PLACEHOLDER,
+              `line ${data.completionMetadata.cursorPosition.line}, column ${data.completionMetadata.cursorPosition.column}`,
+            ),
           },
           {
             role: 'user',

@@ -1,3 +1,5 @@
+import {useRouter} from 'next/router';
+
 import {
   DESCRIPTION,
   DOCS_REPO_BASE_URL,
@@ -56,12 +58,20 @@ const config: DocsThemeConfig = {
   docsRepositoryBase: DOCS_REPO_BASE_URL,
   logo,
   useNextSeoProps() {
-    return {
-      titleTemplate: `%s - ${NAME}`,
-    };
+    const {asPath} = useRouter();
+    if (asPath !== '/') {
+      return {
+        titleTemplate: `%s - ${NAME}`,
+      };
+    }
   },
   head: function useHead() {
     const {title} = useConfig();
+    const {route} = useRouter();
+    const socialCard =
+      route === '/' || !title
+        ? WEBSITE_URL + '/api/og'
+        : WEBSITE_URL + `/api/og?title=${title}`;
 
     return (
       <>
@@ -72,12 +82,13 @@ const config: DocsThemeConfig = {
         <meta name="description" content={DESCRIPTION} />
         <meta name="og:description" content={DESCRIPTION} />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content={socialCard} />
         <meta name="twitter:site:domain" content={WEBSITE_DOMAIN} />
         <meta name="twitter:url" content={WEBSITE_URL} />
         <meta name="og:title" content={title ? title + ` - ${NAME}` : NAME} />
+        <meta name="og:image" content={socialCard} />
         <meta name="apple-mobile-web-app-title" content={NAME} />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="icon" href="/favicon.png" type="image/png" />
+        <link rel="icon" href="/favicon.ico" />
       </>
     );
   },

@@ -3,29 +3,29 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 import {
   DoubleArrowRightIcon,
   LightningBoltIcon,
   ShadowIcon,
-} from "@radix-ui/react-icons";
+} from '@radix-ui/react-icons';
 
 const FEATURES = [
   {
     icon: LightningBoltIcon,
-    title: "Framework Specific Completions",
-    description: "Get completions based on the framework you are using.",
+    title: 'Framework Specific Completions',
+    description: 'Get completions based on the framework you are using.',
   },
   {
     icon: ShadowIcon,
-    title: "55+ Themes",
+    title: '55+ Themes',
     description:
-      "Choose from a wide range of themes to customize your editor easily.",
+      'Choose from a wide range of themes to customize your editor easily.',
   },
   {
     icon: DoubleArrowRightIcon,
-    title: "Fast completions",
-    description: "Get completions in fast and efficient way.",
+    title: 'Fast completions',
+    description: 'Get completions in fast and efficient way.',
   },
 ];
 
@@ -33,7 +33,7 @@ const Features = () => {
   return (
     <section className="w-full relative  flex flex-col items-center justify-center gap-10">
       <div className="w-full overflow-hidden">
-        <h2 className="lg:block text-[20.5rem] hidden leading-none tracking-normal opacity-10 shrink-0 -mt-8 font-semibold text-center">
+        <h2 className="lg:block text-[20.5rem] hidden leading-none tracking-normal opacity-10 shrink-0 -mt-[1.9rem] font-semibold text-center">
           Features
         </h2>
       </div>
@@ -42,7 +42,7 @@ const Features = () => {
         {FEATURES.map((feature, index) => (
           <Card key={index} className="rounded-xl h-full">
             <CardHeader className="gap-2">
-              <feature.icon className={"size-10 text-neutral-400"} />
+              <feature.icon className={'size-10 text-neutral-400'} />
               <div />
               <CardTitle className="text-2xl">{feature.title}</CardTitle>
               <CardDescription>{feature.description}</CardDescription>

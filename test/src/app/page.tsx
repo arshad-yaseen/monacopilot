@@ -7,7 +7,8 @@ export default function Home() {
     <main className="flex min-h-screen w-screen flex-col items-center">
       <Editor
         language="javascript"
-        endpoint="/api/auto-complete"
+        theme="twilight"
+        endpoint="/api/copilot"
         className="h-screen w-screen"
       />
     </main>

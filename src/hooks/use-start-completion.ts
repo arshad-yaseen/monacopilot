@@ -26,7 +26,7 @@ const useStartCompletion = (
 
   const fetchCompletionItemDebounced = useTypingDebounceFn(
     fetchCompletionItem,
-    400,
+    600,
   );
 
   React.useEffect(() => {

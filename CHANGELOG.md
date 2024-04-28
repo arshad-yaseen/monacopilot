@@ -10,7 +10,7 @@
 
 ### Patch Changes
 
-- Rename completi
+- Rename completion
 
 ## 0.8.3
 
