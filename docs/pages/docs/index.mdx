@@ -1,0 +1,78 @@
+import {Tabs, Card} from 'nextra/components';
+import {
+  MagicWandIcon,
+} from "@radix-ui/react-icons";
+
+# Quick Start
+
+**Monacopilot** is a wrapper for Monaco Editor that offers AI autocompletion and new themes for React. It's similar to GitHub Copilot, but for Monaco Editor.
+
+To get started with Monacopilot, you can install it first:
+
+<Tabs items={["npm", "pnpm", "yarn", "bun"]}>
+  <Tabs.Tab>
+    ```bash
+     npm install monacopilot 
+     ```
+    </Tabs.Tab>
+  <Tabs.Tab>
+  ```bash
+   pnpm install monacopilot 
+   ```
+  </Tabs.Tab>
+    <Tabs.Tab>
+    ```bash
+     yarn add monacopilot 
+     ```
+    </Tabs.Tab>
+    <Tabs.Tab>
+    ```bash
+     bun add monacopilot 
+     ```
+    </Tabs.Tab>
+</Tabs>
+
+Just import the `Editor` component and use it in your code:
+
+```jsx
+import { Editor } from "monacopilot";
+
+function App() {
+  return <Editor value="console.log('Hello, world!')" language="javascript" />;
+}
+```
+
+The above code is a simple example of how to use Monacopilot in your React application.
+
+### Themes
+
+Monacopilot comes with a wide range of themes that you can use in your editor. To use a theme, you can just pass the `theme` prop to the `Editor` component:
+
+```jsx {8}
+import { Editor } from "monacopilot";
+
+function App() {
+  return (
+    <Editor
+      value="console.log('Hello, world!')"
+      language="javascript"
+      theme="github-light"
+    />
+  )
+}
+```
+
+The above code uses the `github-light` theme in the editor. There are many other themes available. If you want to play around with the themes, you can check out the [themes](/themes) page.
+
+### More Options and Usage
+
+Since Monacopilot is a wrapper around `@monaco-editor/react`, you can use all the props and import statements that you would use with @monaco-editor/react. For more information, you can check out the [@monaco-editor/react documentation](https://github.com/suren-atoyan/monaco-react/blob/master/README.md).
+
+## Next Steps
+
+Now that you have Monacopilot installed and running, it behaves like a normal Monaco Editor but with additional themes. This setup is sufficient if you only want to use the themes. If you're interested in utilizing the AI auto-completion feature, please refer to the Copilot Setup guide.
+
+<div className="h-4" />
+<Card title="Copilot Setup" href="/docs/guide/copilot-setup"
+icon={<MagicWandIcon />}
+/>

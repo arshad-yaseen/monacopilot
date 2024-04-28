@@ -1,0 +1,14 @@
+import "../style.css";
+import { font } from "../utils/fonts.ts";
+import { cn } from "../utils/misc.ts";
+import ThemeProvider from "../components/theme-provider.tsx";
+
+export default function App({ Component, pageProps }) {
+  return (
+    <ThemeProvider>
+      <main className={cn(font.sans.variable, font.mono.variable, "font-sans")}>
+        <Component {...pageProps} />
+      </main>
+    </ThemeProvider>
+  );
+}

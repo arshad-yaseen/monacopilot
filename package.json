@@ -12,7 +12,7 @@
     "type-check": "tsc --noEmit",
     "build": "tsup src/index.ts",
     "dev:test": "pnpm -C test dev",
-    "dev:website": "pnpm -C website dev",
+    "dev:docs": "pnpm -C docs dev",
     "lint": "eslint . --ext .ts,.tsx --fix",
     "lint:test": "pnpm -C test lint",
     "format": "prettier --write .",
