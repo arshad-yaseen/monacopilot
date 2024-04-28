@@ -1,5 +1,5 @@
 {
-  "name": "monacopilot-website",
+  "name": "website",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -16,7 +16,7 @@
     "clsx": "^2.1.1",
     "copy-to-clipboard": "^3.3.3",
     "framer-motion": "^11.1.7",
-    "monacopilot": "workspace:^",
+    "monacopilot": "^0.8.2",
     "next": "14.2.3",
     "next-themes": "^0.3.0",
     "react": "^18",

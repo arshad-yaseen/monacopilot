@@ -131,7 +131,7 @@ importers:
         specifier: ^11.1.7
         version: 11.1.7(react-dom@18.3.1)(react@18.3.1)
       monacopilot:
-        specifier: workspace:^
+        specifier: ^0.8.2
         version: link:..
       next:
         specifier: 14.2.3

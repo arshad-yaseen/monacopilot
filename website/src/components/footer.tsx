@@ -3,12 +3,12 @@
 import React from 'react';
 import Link from 'next/link';
 
-import ThemeToggle from '@/app/components/theme-toggle';
 import {
   CREATOR_NAME,
   CREATOR_TWITTER_URL,
   GROQ_HOMEPAGE_URL,
 } from '@/app/constants';
+import ThemeToggle from '@/components/theme-toggle';
 
 const Footer = () => {
   return (

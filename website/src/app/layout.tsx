@@ -2,9 +2,9 @@ import type {Metadata} from 'next';
 
 import './globals.css';
 
-import ThemeProvider from '@/app/components/theme-provider';
-import {font} from '@/app/utils/fonts';
-import {cn} from '@/app/utils/misc';
+import ThemeProvider from '@/components/theme-provider';
+import {font} from '@/utils/fonts';
+import {cn} from '@/utils/misc';
 
 export const metadata: Metadata = {
   title: 'Rich Monaco Editor',

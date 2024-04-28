@@ -1,6 +1,6 @@
 import {useCallback, useState} from 'react';
 
-import {cn} from '@/app/utils/misc';
+import {cn} from '@/utils/misc';
 import copy from 'copy-to-clipboard';
 import {AnimatePresence, motion, MotionConfig} from 'framer-motion';
 

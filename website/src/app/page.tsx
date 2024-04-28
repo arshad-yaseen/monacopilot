@@ -1,9 +1,9 @@
 'use client';
 
-import Features from '@/app/components/features';
-import Footer from '@/app/components/footer';
-import Hero from '@/app/components/hero';
-import ProudlyOpenSource from '@/app/components/prodly-os';
+import Features from '@/components/features';
+import Footer from '@/components/footer';
+import Hero from '@/components/hero';
+import ProudlyOpenSource from '@/components/prodly-os';
 
 export default function Home() {
   return (

@@ -1,10 +1,10 @@
 import Link from 'next/link';
 
-import EditorDemo from '@/app/components/editor-demo';
-import {buttonVariants} from '@/app/components/ui/button';
-import Snippet from '@/app/components/ui/snippet';
 import {GITHUB_REPO_URL} from '@/app/constants';
-import {cn} from '@/app/utils/misc';
+import EditorDemo from '@/components/editor-demo';
+import {buttonVariants} from '@/components/ui/button';
+import Snippet from '@/components/ui/snippet';
+import {cn} from '@/utils/misc';
 import {GitHubLogoIcon} from '@radix-ui/react-icons';
 import {motion} from 'framer-motion';
 

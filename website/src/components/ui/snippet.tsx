@@ -1,6 +1,6 @@
-import CopyButton from '@/app/components/copy-button';
-import {Card} from '@/app/components/ui/card';
-import {cn} from '@/app/utils/misc';
+import CopyButton from '@/components/copy-button';
+import {Card} from '@/components/ui/card';
+import {cn} from '@/utils/misc';
 
 interface SnippetProps {
   value: string;
