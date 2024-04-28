@@ -1,4 +1,4 @@
-import Completion from './classes/completion';
+import Copilot from './classes/copilot';
 import Editor from './editor';
 import type EditorProps from './types/editor-props';
 import type {
@@ -11,7 +11,7 @@ export * from '@monaco-editor/react';
 
 export {
   Editor,
-  Completion,
+  Copilot,
   EditorProps,
   ThemeType as Theme,
   endpointType,

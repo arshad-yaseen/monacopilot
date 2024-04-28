@@ -22,12 +22,12 @@ import Config from './config';
  *
  * @example
  * ```ts
- * const completion = new Completion(process.env.GROQ_API_KEY, {
+ * const copilot = new Copilot(process.env.GROQ_API_KEY, {
  *   model: 'llama3-70b-8192',
  * });
  * ```
  */
-class Completion {
+class Copilot {
   private apiKey: string;
 
   constructor(apiKey: string, options?: CompletionConstructorParams) {
@@ -85,4 +85,4 @@ class Completion {
   }
 }
 
-export default Completion;
+export default Copilot;
