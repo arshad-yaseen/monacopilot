@@ -2,7 +2,7 @@ import Completion from './classes/completion';
 import Editor from './editor';
 import type EditorProps from './types/editor-props';
 import type {
-  CompletionEndpointType,
+  endpointType,
   FrameworkType,
   ThemeType,
 } from './types/editor-props';
@@ -14,6 +14,6 @@ export {
   Completion,
   EditorProps,
   ThemeType as Theme,
-  CompletionEndpointType,
+  endpointType,
   FrameworkType,
 };

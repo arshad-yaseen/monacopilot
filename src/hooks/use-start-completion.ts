@@ -8,13 +8,13 @@ import {
   fetchCompletionItem,
 } from '../helpers/get-completion';
 import {EditorInlineCompletionType} from '../types/common';
-import {CompletionEndpointType, FrameworkType} from '../types/editor-props';
+import {endpointType, FrameworkType} from '../types/editor-props';
 import useTypingDebounceFn from './use-typing-debounce-fn';
 
 const localPredictionEngine = new LocalCodePredictionEngine();
 
 const useStartCompletion = (
-  completionEndpoint: CompletionEndpointType | undefined,
+  endpoint: endpointType | undefined,
   framework: FrameworkType | undefined,
   language: string | undefined,
   monacoInstance: Monaco | null,
@@ -30,7 +30,7 @@ const useStartCompletion = (
   );
 
   React.useEffect(() => {
-    if (!monacoInstance || !language || !completionEndpoint) {
+    if (!monacoInstance || !language || !endpoint) {
       return undefined;
     }
 
@@ -90,7 +90,7 @@ const useStartCompletion = (
           try {
             // Fetch the completion item from the LLM model
             const completion = await fetchCompletionItemDebounced({
-              completionEndpoint,
+              endpoint,
               code,
               language,
               framework,
@@ -131,7 +131,7 @@ const useStartCompletion = (
     language,
     framework,
     fetchCompletionItemDebounced,
-    completionEndpoint,
+    endpoint,
   ]);
 
   return null;

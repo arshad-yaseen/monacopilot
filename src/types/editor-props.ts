@@ -3,7 +3,7 @@ import {type EditorProps as MonacoEditorProps} from '@monaco-editor/react';
 import frameworks from '../constants/frameworks';
 import {EditorBuiltInTheme} from './common';
 
-export type CompletionEndpointType = string;
+export type endpointType = string;
 export type FrameworkType = (typeof frameworks)[number];
 
 /**
@@ -73,7 +73,7 @@ export default interface EditorProps extends MonacoEditorProps {
    * The API endpoint where you started the completion service.
    * [Learn more](https://monacopilot.vercel.app/docs/getting-started#endpoint)
    */
-  completionEndpoint?: CompletionEndpointType;
+  endpoint?: endpointType;
   /**
    * The framework you want to use for the completion.
    * This can provide framework-specific completions.

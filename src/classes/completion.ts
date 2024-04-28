@@ -39,7 +39,7 @@ class Completion {
     Config.setModel(options?.model || DEFAULT_COMPLETION_MODEL);
   }
 
-  public async run(
+  public async complete(
     data: CompletionRequestParams,
   ): Promise<GroqCompletion | {error: string}> {
     try {

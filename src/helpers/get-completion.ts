@@ -6,7 +6,7 @@ import {
   CompletionRequestParams,
   GroqCompletion,
 } from '../types/completion';
-import {CompletionEndpointType, FrameworkType} from '../types/editor-props';
+import {endpointType, FrameworkType} from '../types/editor-props';
 import {sanitizeCompletionCode} from '../utils/completion/common';
 import {
   getCodeBeforeAndAfterCursor,
@@ -16,7 +16,7 @@ import {isValidCompletion} from '../utils/completion/validate-completion';
 import {POST} from '../utils/http';
 
 export const fetchCompletionItem = async ({
-  completionEndpoint,
+  endpoint,
   code,
   language,
   framework,
@@ -26,7 +26,7 @@ export const fetchCompletionItem = async ({
 }: {
   code: string;
   language: string;
-  completionEndpoint: CompletionEndpointType;
+  endpoint: endpointType;
   framework: FrameworkType | undefined;
   model: EditorModelType;
   position: EditorPositionType;
@@ -39,7 +39,7 @@ export const fetchCompletionItem = async ({
   const abortController = new AbortController();
 
   const data = await POST<GroqCompletion, CompletionRequestParams>(
-    completionEndpoint,
+    endpoint,
     {
       completionMetadata: constructCompletionMetadata(
         code,
