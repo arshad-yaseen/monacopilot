@@ -39,9 +39,10 @@ class Completion {
     Config.setModel(options?.model || DEFAULT_COMPLETION_MODEL);
   }
 
-  public async run(req: Request) {
+  public async run(
+    data: CompletionRequestParams,
+  ): Promise<GroqCompletion | {error: string}> {
     try {
-      const data = (await req.json()) as CompletionRequestParams;
       const model = Config.getModel();
 
       const endpoint = GROQ_API_ENDPOINT;

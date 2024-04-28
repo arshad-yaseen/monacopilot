@@ -1,11 +1,10 @@
 import {Completion} from 'monacopilot';
 
-const completion = new Completion(process.env.GROQ_API_KEY!, {
-  model: 'llama3-70b-8192',
-});
+const completion = new Completion(process.env.GROQ_API_KEY!);
 
 export async function POST(req: Request) {
-  const data = await completion.run(req);
+  const data = await req.json();
+  const response = await completion.run(data);
 
-  return Response.json(data);
+  return Response.json(response);
 }
