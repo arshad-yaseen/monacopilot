@@ -56,7 +56,7 @@ export default async function (req) {
             left: 80,
             margin: 0,
             fontSize: 30,
-            letterSpacing: -1,
+            letterSpacing: -0.5,
           }}>
           Github Copilot for Web
         </p>

@@ -17,12 +17,10 @@
     "lint:test": "pnpm -C test lint",
     "format": "prettier --write .",
     "checks": "pnpm type-check && pnpm lint && pnpm lint:test",
-    "prepare-release": "pnpm build && pnpm checks && changeset && changeset version",
-    "release": "changeset publish",
+    "release": "release-it",
     "generate-themes": "node scripts/generate-themes.mjs"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
     "@types/node": "^20",
     "@types/react": "^18.2.69",
@@ -36,6 +34,7 @@
     "prettier": "^3.2.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "release-it": "^17.2.1",
     "tsup": "^8.0.2",
     "typescript": "^5.4.3"
   },
