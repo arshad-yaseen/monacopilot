@@ -1,5 +1,11 @@
 # monacopilot
 
+## 0.8.3
+
+### Patch Changes
+
+- completion.run takes request data instead of request
+
 ## 0.8.2
 
 ### Patch Changes
