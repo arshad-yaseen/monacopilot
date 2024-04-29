@@ -22,7 +22,7 @@ import Config from './config';
  * such as the model ID. Defaults to `llama3-70b-8192` if not specified.
  *
  * @example
- * ```ts
+ * ```typescript
  * const copilot = new Copilot(process.env.GROQ_API_KEY, {
  *   model: 'llama3-70b-8192',
  * });
@@ -61,7 +61,7 @@ class Copilot {
           },
           {
             role: 'user',
-            content: JSON.stringify(data),
+            content: JSON.stringify(data.completionMetadata),
           },
         ],
       };
