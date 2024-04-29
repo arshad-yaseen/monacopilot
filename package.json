@@ -47,7 +47,7 @@
     "monaco-editor-react",
     "ai-editor"
   ],
-  "homepage": "https://github.com/arshad-yaseen/monacopilot#readme",
+  "homepage": "https://monacopilot.vercel.app",
   "license": "MIT",
   "author": "Arshad Yaseen <m@arshadyaseen.com>",
   "peerDependencies": {
