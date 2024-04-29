@@ -24,7 +24,13 @@ Alternatively, `pnpm dev` to start the watch mode for automatic rebuilds on file
 
 #### Testing Monacopilot Locally
 
-To test Monacopilot locally, run:
+To test Monacopilot locally, first, you need to set the Groq API key as an environment variable in the `test` directory root within the `.env.local` file.
+
+```plaintext
+GROQ_API_KEY=your_api_key
+```
+
+Then, run:
 
 ```bash
 pnpm dev:test
