@@ -6,7 +6,7 @@ Extended Monaco Editor with AI auto-completion and new themes for React.
 
 [https://monacopilot.vercel.app/docs](https://monacopilot.vercel.app/docs)
 
-## Contributing to Monacopilot
+## Contributing
 
 #### Installation
 
