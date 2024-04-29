@@ -50,4 +50,6 @@ pnpm dev:docs
 
 Edit the `.mdx` files in the docs directory, and the documentation will refresh instantly, reflecting your changes.
 
+---
+
 We welcome contributions from the community to enhance Monacopilot's capabilities and make it even more powerful ❤️
