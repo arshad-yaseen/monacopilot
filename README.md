@@ -1,10 +1,10 @@
-## Monacopilot: The GitHub Copilot for Web
+# Monacopilot: The GitHub Copilot for Web
 
-### Documentation
+## Documentation
 
 [https://monacopilot.vercel.app/docs](https://monacopilot.vercel.app/docs)
 
-### Contributing to Monacopilot
+## Contributing to Monacopilot
 
 #### Installation
 
