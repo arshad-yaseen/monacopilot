@@ -1,6 +1,6 @@
 # Monacopilot
 
-The GitHub Copilot for Web.
+Extended Monaco Editor with AI auto-completion and new themes for React.
 
 ## Documentation
 
