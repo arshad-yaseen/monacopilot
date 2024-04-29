@@ -1,4 +1,4 @@
-# Monacopilot: The GitHub Copilot for Web.
+# Monacopilot: The GitHub Copilot for Web
 
 ## Documentation
 
@@ -6,8 +6,13 @@
 
 ## Contributing to Monacopilot
 
-1. **Installation**: The Monacopilot repository uses [PNPM Workspaces](https://pnpm.io/workspaces) and [Tsup](https://tsup.egoist.dev/). To install dependencies, run `pnpm install` in the project root directory.
-2. **Building the Package**: To build the package, execute the following command:
+### Installation
+
+The Monacopilot repository uses [PNPM Workspaces](https://pnpm.io/workspaces) and [Tsup](https://tsup.egoist.dev/). To install dependencies, run `pnpm install` in the project root directory.
+
+### Building the Package
+
+To build the package, execute the following command:
 
 ```bash
  pnpm build
@@ -15,13 +20,17 @@
 
 Alternatively, `pnpm dev` to start the watch mode for automatic rebuilds on file changes.
 
-3. **Testing Monacopilot Locally**: To test Monacopilot locally, run:
+### Testing Monacopilot Locally
+
+To test Monacopilot locally, run:
 
 ```bash
 pnpm dev:test
 ```
 
-4. **Contributing to the Documentation**: If you wish to contribute to the documentation, use the following command:
+### Contributing to the Documentation
+
+If you wish to contribute to the documentation, use the following command:
 
 ```bash
 pnpm dev:docs
