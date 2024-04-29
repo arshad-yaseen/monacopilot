@@ -1,0 +1,36 @@
+---
+title: Copilot Options
+---
+
+# Copilot Options
+
+Let's explore some of the additional options you can use with Copilot.
+
+#### Changing the Default Model
+
+Change the default model used for completions by setting the `model` parameter in the `Completion` constructor:
+
+```jsx {2}
+const copilot = new Copilot(process.env.GROQ_API_KEY, { 
+    model: 'mixtral-8x7b-32768' 
+});
+```
+
+#### Completions for Specific Frameworks
+
+Currently, the completions are shown based on the language specified in the editor. To enable completions for specific frameworks, pass the `framework` prop to the `Editor` component.
+
+```jsx {9}
+import { Editor } from "monacopilot";
+
+function App() {
+  return (
+    <Editor 
+      endpoint="/api/copilot"
+      value="console.log('Hello, world!')" 
+      language="javascript"
+      framework="react"
+    />
+  );
+}
+```

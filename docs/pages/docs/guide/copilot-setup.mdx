@@ -74,16 +74,6 @@ export default async function handler(req: GatsbyFunctionRequest, res: GatsbyFun
 </Tabs.Tab>
 </Tabs>
 
-##### Changing the Model
-
-Change the default model used for completions by setting the `model` parameter in the `Completion` constructor:
-
-```jsx {2}
-const copilot = new Copilot(process.env.GROQ_API_KEY, { 
-    model: 'mixtral-8x7b-32768' 
-});
-```
-
 #### Integrating Copilot to the Editor
 
 Utilize the `Editor` component with the AI auto-completion by setting the `endpoint` to the API handler:
@@ -102,4 +92,4 @@ function App() {
 }
 ```
 
-You have now successfully configured AI auto-completion in your project. Start coding in the editor and watch the auto-completion magic unfold!
+🎉 You have now successfully configured AI auto-completion in your project. Start coding in the editor and watch the auto-completion magic unfold!
