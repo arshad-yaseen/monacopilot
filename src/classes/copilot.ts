@@ -33,7 +33,7 @@ class Copilot {
 
   constructor(apiKey: string, options?: CompletionConstructorParams) {
     if (!apiKey) {
-      throw new Error('API key is missing in Completion constructor.');
+      throw new Error('API key is missing.');
     }
 
     this.apiKey = apiKey;
