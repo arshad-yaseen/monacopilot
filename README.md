@@ -1,4 +1,6 @@
-# Monacopilot: The GitHub Copilot for Web
+# Monacopilot
+
+The GitHub Copilot for Web.
 
 ## Documentation
 
