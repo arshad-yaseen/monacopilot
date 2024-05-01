@@ -11,7 +11,7 @@ export default function Home() {
     <main className="flex min-h-screen w-screen flex-col items-center">
       <div className="w-full flex justify-center items-center py-4 border-b">
         <div className="flex gap-2">
-          <label htmlFor="speed">Fast completion</label>
+          <label htmlFor="speed">Little Faster completion</label>
           <input
             type="checkbox"
             id="speed"
