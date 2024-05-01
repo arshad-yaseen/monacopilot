@@ -29,13 +29,13 @@ export interface CompletionMetadata {
   language: string;
   framework: FrameworkType | undefined;
   cursorPosition: {
-    line: number;
-    column: number;
+    lineNumber: number;
+    columnNumber: number;
   };
   codeAfterCursor: string;
   codeBeforeCursor: string;
   editorState: {
-    completionMode: 'fill-in' | 'extend';
+    completionMode: 'contextual-fill' | 'continuation' | 'expansion';
     codeLengthBeforeCursor: number;
     totalCodeLength: number;
   };

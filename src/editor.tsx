@@ -16,7 +16,13 @@ import {
 import EditorProps from './types/editor-props';
 import {deepMerge} from './utils/common';
 
-const Editor = ({endpoint, framework, theme, ...props}: EditorProps) => {
+const Editor = ({
+  endpoint,
+  framework,
+  theme,
+  completionSpeed,
+  ...props
+}: EditorProps) => {
   const [monacoInstance, setMonacoInstance] = React.useState<Monaco | null>(
     null,
   );
@@ -38,7 +44,13 @@ const Editor = ({endpoint, framework, theme, ...props}: EditorProps) => {
     [props, theme],
   );
 
-  useStartCompletion(endpoint, framework, props.language, monacoInstance);
+  useStartCompletion(
+    endpoint,
+    framework,
+    props.language,
+    completionSpeed,
+    monacoInstance,
+  );
 
   return (
     <MonacoEditor

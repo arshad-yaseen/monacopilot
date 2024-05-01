@@ -9,7 +9,7 @@ import React from 'react';
  */
 const useTypingDebounceFn = <T extends (...args: any[]) => Promise<any>>(
   func: T,
-  delay: number = 600,
+  delay: number = 1000,
 ): ((...funcArgs: Parameters<T>) => Promise<ReturnType<T>>) => {
   const [timer, setTimer] = React.useState<ReturnType<
     typeof setTimeout

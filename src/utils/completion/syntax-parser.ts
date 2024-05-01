@@ -1,4 +1,5 @@
 import {EditorModelType, EditorPositionType} from '../../types/common';
+import {CompletionMetadata} from '../../types/completion';
 import {getCharAtPosition} from './common';
 
 export const isEmptyAfterCursor = (
@@ -31,30 +32,6 @@ export const isCodeAfterCursor = (
   return !acceptableCharsAfterCursor.has(charAfterCursor) && !!charAfterCursor;
 };
 
-/** Check if the cursor is in a position where the code needs to be filled in*/
-export const isFillInMode = (
-  position: EditorPositionType,
-  model: EditorModelType,
-) => {
-  const {codeBeforeCursor, codeAfterCursor} = getCodeBeforeAndAfterCursor(
-    position,
-    model,
-  );
-
-  // Conditions that likely indicate "fill-in" mode.
-  const openSymbols = '({[=,<>&|!"'; // Open symbols that might need completion
-  const closeSymbols = ')}];"'; // Closing symbols that might indicate the need for completion before them
-
-  if (codeBeforeCursor.slice(-1) === ' ' || codeAfterCursor.charAt(0) === '') {
-    return false;
-  }
-
-  return (
-    openSymbols.includes(codeBeforeCursor.slice(-1)) ||
-    closeSymbols.includes(codeAfterCursor.charAt(0))
-  );
-};
-
 /** Get the before and after code of the cursor position */
 export const getCodeBeforeAndAfterCursor = (
   position: EditorPositionType,
@@ -77,17 +54,98 @@ export const getCodeBeforeAndAfterCursor = (
   return {codeBeforeCursor, codeAfterCursor};
 };
 
-/** Check if the cursor is at the start of the line with trailing code */
+/** Check if the cursor is at the start of the line with code around */
 export const isCursorAtStartWithCodeAround = (
   position: EditorPositionType,
   model: EditorModelType,
 ) => {
-  const {codeAfterCursor, codeBeforeCursor} = getCodeBeforeAndAfterCursor(
-    position,
-    model,
-  );
+  const currentLine = model.getLineContent(position.lineNumber);
+  const codeAfterCursorInCurrentLine = currentLine
+    .slice(position.column - 1)
+    .trim();
+  const codeBeforeCursorInCurrentLine = currentLine
+    .slice(0, position.column - 1)
+    .trim();
 
   return (
-    position.column <= 2 && (codeAfterCursor !== '' || codeBeforeCursor !== '')
+    position.column <= 3 &&
+    (codeAfterCursorInCurrentLine !== '' ||
+      codeBeforeCursorInCurrentLine !== '')
+  );
+};
+
+/**
+ * Determines the most suitable completion mode based on the cursor position and surrounding code context.
+ *
+ * @returns The completion mode ('contextual-fill', 'continuation', 'expansion').
+ */
+export const determineCompletionMode = (
+  position: EditorPositionType,
+  model: EditorModelType,
+): CompletionMetadata['editorState']['completionMode'] => {
+  const textUntilPosition = model.getValueInRange({
+    startLineNumber: 1,
+    startColumn: 1,
+    endLineNumber: position.lineNumber,
+    endColumn: position.column,
+  });
+
+  const currentLineText = model.getLineContent(position.lineNumber);
+
+  if (isCursorAtTextEnd(currentLineText, position.column)) {
+    if (isLineEmptyOrEndsWithClosingBrace(currentLineText)) {
+      return 'expansion';
+    }
+    return 'continuation';
+  }
+
+  if (
+    isInsideLiteralOrParentheses(
+      textUntilPosition,
+      currentLineText,
+      position.column,
+    )
+  ) {
+    return 'contextual-fill';
+  }
+
+  // Default to continuation mode if none of the specific conditions are met
+  return 'continuation';
+};
+
+const isCursorAtTextEnd = (lineText: string, column: number): boolean => {
+  const trimmedLine = lineText.trim();
+  return (
+    column > lineText.length || // Beyond the actual text
+    [';', '{', '}'].some(char => trimmedLine.endsWith(char)) // Ends with statement or block delimiters
+  );
+};
+
+// Check if the line is empty or ends with a closing brace
+const isLineEmptyOrEndsWithClosingBrace = (lineText: string) => {
+  const trimmedLine = lineText.trim();
+  return trimmedLine.length === 0 || trimmedLine.endsWith('}');
+};
+
+const isInsideLiteralOrParentheses = (
+  textUntilPosition: string,
+  lineText: string,
+  column: number,
+): boolean => {
+  const textBeforeCursor = textUntilPosition.trim();
+  const charBeforeCursor = textBeforeCursor[textBeforeCursor.length - 1];
+  const charAfterCursor = lineText[column - 1] || ''; // Safeguard against undefined for cursor at line end
+
+  return (
+    ['"', "'", '`', '(', '[', '{'].includes(charBeforeCursor) &&
+    charAfterCursor ===
+      {
+        '"': '"',
+        "'": "'",
+        '`': '`',
+        '(': ')',
+        '[': ']',
+        '{': '}',
+      }[charBeforeCursor]
   );
 };

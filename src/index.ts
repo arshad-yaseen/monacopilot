@@ -2,7 +2,7 @@ import Copilot from './classes/copilot';
 import Editor from './editor';
 import type EditorProps from './types/editor-props';
 import type {
-  endpointType,
+  EndpointType,
   FrameworkType,
   ThemeType,
 } from './types/editor-props';
@@ -14,6 +14,6 @@ export {
   Copilot,
   EditorProps,
   ThemeType as Theme,
-  endpointType,
+  EndpointType,
   FrameworkType,
 };

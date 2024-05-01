@@ -6,11 +6,11 @@ import {
   CompletionRequestParams,
   GroqCompletion,
 } from '../types/completion';
-import {endpointType, FrameworkType} from '../types/editor-props';
+import {EndpointType, FrameworkType} from '../types/editor-props';
 import {sanitizeCompletionCode} from '../utils/completion/common';
 import {
+  determineCompletionMode,
   getCodeBeforeAndAfterCursor,
-  isFillInMode,
 } from '../utils/completion/syntax-parser';
 import {isValidCompletion} from '../utils/completion/validate-completion';
 import {POST} from '../utils/http';
@@ -26,7 +26,7 @@ export const fetchCompletionItem = async ({
 }: {
   code: string;
   language: string;
-  endpoint: endpointType;
+  endpoint: EndpointType;
   framework: FrameworkType | undefined;
   model: EditorModelType;
   position: EditorPositionType;
@@ -80,7 +80,7 @@ export const constructCompletionMetadata = (
   framework: FrameworkType | undefined,
 ): CompletionMetadata => {
   const {lineNumber, column} = position;
-  const completionMode = isFillInMode(position, model) ? 'fill-in' : 'extend';
+  const completionMode = determineCompletionMode(position, model);
 
   const {codeBeforeCursor, codeAfterCursor} = getCodeBeforeAndAfterCursor(
     position,
@@ -91,8 +91,8 @@ export const constructCompletionMetadata = (
     language,
     framework: framework || undefined,
     cursorPosition: {
-      line: lineNumber,
-      column,
+      lineNumber: lineNumber,
+      columnNumber: column,
     },
     codeBeforeCursor,
     codeAfterCursor,
@@ -108,8 +108,14 @@ export const constructCompletionMetadata = (
 // This key is used to cache completion results for the same code context
 export const computeCacheKeyForCompletion = (
   {lineNumber, column}: EditorPositionType,
-  code: string,
+  model: EditorModelType,
 ): string => {
-  const codeUntilCursor = code.substring(0, column - 1);
+  const codeUntilCursor = model.getValueInRange({
+    startLineNumber: 1,
+    startColumn: 1,
+    endLineNumber: lineNumber,
+    endColumn: column,
+  });
+
   return `${lineNumber}:${column}:${codeUntilCursor}`;
 };

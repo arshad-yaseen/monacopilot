@@ -2,8 +2,8 @@ import {
   COMPLETION_SYSTEM_PROMPT,
   DEFAULT_COMPLETION_MODEL,
   GROQ_API_ENDPOINT,
-  PROMPT_CURSOR_POSITION_PLACEHOLDER,
 } from '../constants/completion';
+import {fillSystemPromptPlaceholders} from '../helpers/copilot';
 import {
   CompletionConstructorParams,
   CompletionRequestParams,
@@ -33,7 +33,7 @@ class Copilot {
 
   constructor(apiKey: string, options?: CompletionConstructorParams) {
     if (!apiKey) {
-      throw new Error('API key is missing.');
+      throw new Error('API key is missing');
     }
 
     this.apiKey = apiKey;
@@ -49,14 +49,14 @@ class Copilot {
       const endpoint = GROQ_API_ENDPOINT;
       const body: GroqCompletionCreateParams = {
         model,
-        max_tokens: 200,
-        temperature: 0.5,
+        max_tokens: 100,
+        temperature: 0.8,
         messages: [
           {
             role: 'system',
-            content: COMPLETION_SYSTEM_PROMPT.replaceAll(
-              PROMPT_CURSOR_POSITION_PLACEHOLDER,
-              `line ${data.completionMetadata.cursorPosition.line}, column ${data.completionMetadata.cursorPosition.column}`,
+            content: fillSystemPromptPlaceholders(
+              COMPLETION_SYSTEM_PROMPT,
+              data.completionMetadata,
             ),
           },
           {

@@ -2,35 +2,42 @@
 title: Copilot Options
 ---
 
-# Copilot Options
+import { Callout } from 'nextra/components'
 
-Let's explore some of the additional options you can use with Copilot.
+# Copilot Options
 
 #### Changing the Default Model
 
 Change the default model used for completions by setting the `model` parameter in the `Completion` constructor:
 
-```jsx {2}
+```jsx
 const copilot = new Copilot(process.env.GROQ_API_KEY, { 
     model: 'mixtral-8x7b-32768' 
 });
 ```
 
+#### Completion Speed
+
+By default, Copilot uses the `normal` completion speed. You can change the completion speed to `little-faster` by setting the `completionSpeed` prop in the `Editor` component.
+
+```jsx 
+<Editor 
+  completionSpeed="little-faster"
+  ...
+/>
+```
+
+<Callout type="info">
+For improved performance, consider using the `little-faster` completion speed, although it incurs more cost. See the [Copilot Cost Overview](/docs/copilot-cost-overview) for a detailed cost comparison. Opt for `little-faster` speed if completions are critical to your workflow.
+</Callout>
+
 #### Completions for Specific Framework
 
 Currently, the completions are shown based on the language specified in the editor. To enable completions for specific frameworks, pass the `framework` prop to the `Editor` component.
 
-```jsx {9}
-import { Editor } from "monacopilot";
-
-function App() {
-  return (
-    <Editor 
-      endpoint="/api/copilot"
-      value="console.log('Hello, world!')" 
-      language="javascript"
-      framework="react"
-    />
-  );
-}
+```jsx 
+<Editor 
+  framework="react"
+  ...
+/>
 ```
