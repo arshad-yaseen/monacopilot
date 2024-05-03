@@ -48,7 +48,7 @@ export const getCodeBeforeAndAfterCursor = (
     startLineNumber: position.lineNumber,
     startColumn: position.column,
     endLineNumber: model.getLineCount(),
-    endColumn: model.getLineMaxColumn(position.lineNumber),
+    endColumn: model.getLineMaxColumn(model.getLineCount()),
   });
 
   return {codeBeforeCursor, codeAfterCursor};

@@ -11,6 +11,7 @@
   "scripts": {
     "type-check": "tsc --noEmit",
     "build": "tsup src/index.ts",
+    "dev": "tsup src/index.ts --watch",
     "dev:test": "pnpm -C test dev",
     "dev:docs": "pnpm -C docs dev",
     "lint": "eslint . --ext .ts,.tsx --fix",

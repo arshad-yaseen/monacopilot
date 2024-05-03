@@ -22,9 +22,9 @@ export default function Home() {
       </div>
       <Editor
         language="javascript"
-        theme="github-light"
         endpoint="/api/copilot"
         className="h-screen w-screen"
+        theme="github-dark-dimmed"
         completionSpeed={isFastCompletion ? 'little-faster' : 'normal'}
         options={{
           padding: {top: 16},

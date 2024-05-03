@@ -12,7 +12,7 @@ Change the default model used for completions by setting the `model` parameter i
 
 ```jsx
 const copilot = new Copilot(process.env.GROQ_API_KEY, { 
-    model: 'mixtral-8x7b-32768' 
+    model: 'mixtral' 
 });
 ```
 
@@ -28,7 +28,7 @@ By default, Copilot uses the `normal` completion speed. You can change the compl
 ```
 
 <Callout type="info">
-For improved performance, consider using the `little-faster` completion speed, although it incurs more cost. See the [Copilot Cost Overview](/docs/copilot-cost-overview) for a detailed cost comparison. Opt for `little-faster` speed if completions are critical to your workflow.
+Still, `normal` speed is good in most cases. Opt for a `little-faster` speed if completions are critical to your workflow, although it incurs more cost. See the [Copilot Cost Overview](/docs/copilot-cost-overview) for a detailed cost comparison.
 </Callout>
 
 #### Completions for Specific Framework

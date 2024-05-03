@@ -31,7 +31,7 @@ const useStartCompletion = (
 
   const fetchCompletionItemDebounced = useTypingDebounceFn(
     fetchCompletionItem,
-    completionSpeed === 'little-faster' ? 300 : 600,
+    completionSpeed === 'little-faster' ? 350 : 600,
   );
 
   React.useEffect(() => {

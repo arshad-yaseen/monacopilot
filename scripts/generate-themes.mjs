@@ -1,259 +1,282 @@
+/**
+ * Converts VS Code themes to Monaco Editor themes.
+ * This script scans the root `themes` directory to retrieve all VS Code themes,
+ * then converts them into Monaco Editor-compatible themes.
+ * The resulting Monaco themes are saved to the `themes.ts` file within the `src` directory.
+ * Additionally, it updates the `ThemeType` type within the `editor-props.ts` file
+ * to include the newly generated theme names.
+ */
+
 import fs from 'fs/promises';
 import path from 'path';
 import {fileURLToPath} from 'url';
 
-import plist from 'fast-plist';
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const THEMES_DIR_PATH = '../themes';
-const THEMES_FILE_PATH = '../src/themes.ts';
-const THEMES_TYPE_DECLARED_FILE_PATH = '../src/types/editor-props.ts';
+const VSCODE_THEMES_DIR = path.resolve(__dirname, '../themes');
+const THEMES_DOT_TS_FILE = path.resolve(__dirname, '../src/themes.ts');
+const THEMES_TYPE_DEFINED_FILE = '../src/types/editor-props.ts';
 
-const rgbColor = color => {
-  if (typeof color === 'object') return color;
-  if (color[0] === '#')
-    return color
-      .match(/^#(..)(..)(..)/)
-      .slice(1)
-      .map(c => parseInt(c, 16));
-  else
-    return color
-      .match(/\(([^,]+),([^,]+),([^,]+)/)
-      .slice(1)
-      .map(c => parseInt(c, 10));
-};
-
-const darkness = color => {
-  const rgb = rgbColor(color);
-  return (0.21 * rgb[0] + 0.72 * rgb[1] + 0.07 * rgb[2]) / 255;
-};
-
-const parseColor = color => {
-  if (!color.length) return null;
-  if (color.length === 4) color = color.replace(/[a-fA-F\d]/g, '$&$&');
-  if (color.length === 7 || color.length === 9) return color; // substr(0, 7);
-  if (!color.match(/^#(..)(..)(..)(..)$/))
-    console.error("can't parse color", color);
-  let rgba = color
-    .match(/^#(..)(..)(..)(..)$/)
-    .slice(1)
-    .map(c => parseInt(c, 16));
-  rgba[3] = (rgba[3] / 0xff).toPrecision(2);
-  return `rgba(${rgba.join(', ')})`;
-};
-
-/**
- * Mapping from Visual Studio Code theme compatibility.
- * @see https://github.com/microsoft/vscode/blob/main/src/vs/workbench/services/themes/common/themeCompatibility.ts
- */
-const COLOR_MAP = [
-  {tm: 'foreground', mn: 'editor.foreground'},
-  {tm: 'background', mn: 'editor.background'},
-  {tm: 'selection', mn: 'editor.selectionBackground'},
-  {tm: 'inactiveSelection', mn: 'editor.inactiveSelectionBackground'},
-  {tm: 'selectionHighlightColor', mn: 'editor.selectionHighlightBackground'},
-  {tm: 'findMatchHighlight', mn: 'editor.findMatchHighlightBackground'},
-  {tm: 'currentFindMatchHighlight', mn: 'editor.findMatchBackground'},
-  {tm: 'hoverHighlight', mn: 'editor.hoverHighlightBackground'},
-  {tm: 'wordHighlight', mn: 'editor.wordHighlightBackground'},
-  {tm: 'wordHighlightStrong', mn: 'editor.wordHighlightStrongBackground'},
-  {tm: 'findRangeHighlight', mn: 'editor.findRangeHighlightBackground'},
-  {tm: 'findMatchHighlight', mn: 'peekViewResult.matchHighlightBackground'},
-  {tm: 'referenceHighlight', mn: 'peekViewEditor.matchHighlightBackground'},
-  {tm: 'lineHighlight', mn: 'editor.lineHighlightBackground'},
-  {tm: 'rangeHighlight', mn: 'editor.rangeHighlightBackground'},
-  {tm: 'caret', mn: 'editorCursor.foreground'},
-  {tm: 'invisibles', mn: 'editorWhitespace.foreground'},
-  {tm: 'guide', mn: 'editorIndentGuide.background'},
-  {tm: 'activeGuide', mn: 'editorIndentGuide.activeBackground'},
-  {tm: 'selectionBorder', mn: 'editor.selectionHighlightBorder'},
+const MONACO_COLOR_MAP = [
+  'foreground',
+  'errorForeground',
+  'descriptionForeground',
+  'focusBorder',
+  'contrastBorder',
+  'contrastActiveBorder',
+  'selection.background',
+  'textSeparator.foreground',
+  'textLink.foreground',
+  'textLink.activeForeground',
+  'textPreformat.foreground',
+  'textBlockQuote.background',
+  'textBlockQuote.border',
+  'textCodeBlock.background',
+  'widget.shadow',
+  'input.background',
+  'input.foreground',
+  'input.border',
+  'inputOption.activeBorder',
+  'input.placeholderForeground',
+  'inputValidation.infoBackground',
+  'inputValidation.infoBorder',
+  'inputValidation.warningBackground',
+  'inputValidation.warningBorder',
+  'inputValidation.errorBackground',
+  'inputValidation.errorBorder',
+  'dropdown.background',
+  'dropdown.foreground',
+  'dropdown.border',
+  'list.focusBackground',
+  'list.focusForeground',
+  'list.activeSelectionBackground',
+  'list.activeSelectionForeground',
+  'list.inactiveSelectionBackground',
+  'list.inactiveSelectionForeground',
+  'list.hoverBackground',
+  'list.hoverForeground',
+  'list.dropBackground',
+  'list.highlightForeground',
+  'pickerGroup.foreground',
+  'pickerGroup.border',
+  'button.foreground',
+  'button.background',
+  'button.hoverBackground',
+  'badge.background',
+  'badge.foreground',
+  'scrollbar.shadow',
+  'scrollbarSlider.background',
+  'scrollbarSlider.hoverBackground',
+  'scrollbarSlider.activeBackground',
+  'progressBar.background',
+  'editor.background',
+  'editor.foreground',
+  'editorWidget.background',
+  'editorWidget.border',
+  'editor.selectionBackground',
+  'editor.selectionForeground',
+  'editor.inactiveSelectionBackground',
+  'editor.selectionHighlightBackground',
+  'editor.findMatchBackground',
+  'editor.findMatchHighlightBackground',
+  'editor.findRangeHighlightBackground',
+  'editor.hoverHighlightBackground',
+  'editorHoverWidget.background',
+  'editorHoverWidget.border',
+  'editorLink.activeForeground',
+  'diffEditor.insertedTextBackground',
+  'diffEditor.removedTextBackground',
+  'diffEditor.insertedTextBorder',
+  'diffEditor.removedTextBorder',
+  'editorOverviewRuler.currentContentForeground',
+  'editorOverviewRuler.incomingContentForeground',
+  'editorOverviewRuler.commonContentForeground',
+  'editor.lineHighlightBackground',
+  'editor.lineHighlightBorder',
+  'editor.rangeHighlightBackground',
+  'editorCursor.foreground',
+  'editorWhitespace.foreground',
+  'editorIndentGuide.background',
+  'editorLineNumber.foreground',
+  'editorLineNumber.activeForeground',
+  'editorRuler.foreground',
+  'editorCodeLens.foreground',
+  'editorInlayHint.foreground',
+  'editorInlayHint.background',
+  'editorBracketMatch.background',
+  'editorBracketMatch.border',
+  'editorOverviewRuler.border',
+  'editorGutter.background',
+  'editorError.foreground',
+  'editorError.border',
+  'editorWarning.foreground',
+  'editorWarning.border',
+  'editorMarkerNavigationError.background',
+  'editorMarkerNavigationWarning.background',
+  'editorMarkerNavigation.background',
+  'editorSuggestWidget.background',
+  'editorSuggestWidget.border',
+  'editorSuggestWidget.foreground',
+  'editorSuggestWidget.selectedBackground',
+  'editorSuggestWidget.highlightForeground',
+  'editor.wordHighlightBackground',
+  'editor.wordHighlightStrongBackground',
+  'peekViewTitle.background',
+  'peekViewTitleLabel.foreground',
+  'peekViewTitleDescription.foreground',
+  'peekView.border',
+  'peekViewResult.background',
+  'peekViewResult.lineForeground',
+  'peekViewResult.fileForeground',
+  'peekViewResult.selectionBackground',
+  'peekViewResult.selectionForeground',
+  'peekViewEditor.background',
+  'peekViewEditorGutter.background',
+  'peekViewResult.matchHighlightBackground',
+  'peekViewEditor.matchHighlightBackground',
 ];
 
-const ansiColorMap = [
-  'ansiBlack',
-  'ansiRed',
-  'ansiGreen',
-  'ansiYellow',
-  'ansiBlue',
-  'ansiMagenta',
-  'ansiCyan',
-  'ansiWhite',
-  'ansiBrightBlack',
-  'ansiBrightRed',
-  'ansiBrightGreen',
-  'ansiBrightYellow',
-  'ansiBrightBlue',
-  'ansiBrightMagenta',
-  'ansiBrightCyan',
-  'ansiBrightWhite',
-];
+const calculateDarkness = color => {
+  if (!color) return 1;
+  const rgb = color.startsWith('#') ? parseInt(color.slice(1), 16) : 0;
+  const r = (rgb >> 16) & 0xff;
+  const g = (rgb >> 8) & 0xff;
+  const b = rgb & 0xff;
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+};
 
-ansiColorMap.forEach(color => {
-  COLOR_MAP.push({
-    tm: color,
-    mn: `terminal.${color}`,
-  });
-});
+const removeHash = color => color.replace('#', '');
 
-const GUTTER_COLOR_MAP = [];
-
-const parseTmTheme = rawTmThemeString => {
-  const rawData = plist.parse(rawTmThemeString);
-  const globalSettings = rawData.settings[0].settings;
-  const gutterSettings = rawData.gutterSettings;
-  const rules = [];
-
-  rawData.settings.forEach(setting => {
-    if (!setting.settings) {
-      return;
-    }
-
-    let scopes;
-
-    if (typeof setting.scope === 'string') {
-      scopes = setting.scope
-        .replace(/^[,]+/, '')
-        .replace(/[,]+$/, '')
-        .split(',');
-    } else if (Array.isArray(setting.scope)) {
-      scopes = setting.scope;
-    } else {
-      scopes = [''];
-    }
-
-    const rule = {};
-    const settings = setting.settings;
-
-    if (settings.foreground) {
-      rule.foreground = parseColor(settings.foreground)
-        .toLowerCase()
-        .replace('#', '');
-    }
-
-    if (settings.background) {
-      rule.background = parseColor(settings.background)
-        .toLowerCase()
-        .replace('#', '');
-    }
-
-    if (settings.fontStyle && typeof settings.fontStyle === 'string') {
-      rule.fontStyle = settings.fontStyle;
-    }
-
-    scopes.forEach(scope => {
-      if (!scope || !Object.keys(rule).length) {
-        return;
-      }
-      const r = {...rule, token: scope.trim()};
-      rules.push(r);
-    });
-  });
-
-  const globalColors = {};
-
-  COLOR_MAP.forEach(obj => {
-    if (globalSettings[obj.tm]) {
-      globalColors[obj.mn] = parseColor(globalSettings[obj.tm]);
-    }
-  });
-
-  if (gutterSettings) {
-    GUTTER_COLOR_MAP.forEach(obj => {
-      if (gutterSettings[obj.tm]) {
-        globalColors[obj.mn] = parseColor(gutterSettings[obj.tm]);
-      }
-    });
+const normalizeColor = color => {
+  // Make the color 6 digits long
+  if (color.length === 3) {
+    return color
+      .split('')
+      .map(char => char + char)
+      .join('');
   }
 
-  return {
-    base: darkness(globalColors['editor.background']) < 0.5 ? 'vs-dark' : 'vs',
+  // Make the color capital case
+  return color.toUpperCase();
+};
+
+const convertVsCodeThemeToMonaco = vsCodeTheme => {
+  const {tokenColors, colors, semanticTokenColors} = vsCodeTheme;
+
+  const base =
+    colors['editor.background'] &&
+    calculateDarkness(colors['editor.background']) < 0.5
+      ? 'vs-dark'
+      : 'vs';
+  const monacoTheme = {
+    base,
     inherit: true,
-    rules: rules,
-    colors: globalColors,
+    rules: [],
+    colors: {},
   };
+
+  // Convert standard token colors
+  tokenColors.forEach(token => {
+    if (token.scope && token.settings) {
+      const scopes = Array.isArray(token.scope) ? token.scope : [token.scope];
+      scopes.forEach(scope => {
+        if (!scope) return;
+        monacoTheme.rules.push({
+          token: scope,
+          ...(token.settings.foreground && {
+            foreground: normalizeColor(removeHash(token.settings.foreground)),
+          }),
+          ...(token.settings.fontStyle && {
+            fontStyle: token.settings.fontStyle,
+          }),
+        });
+      });
+    }
+  });
+
+  // Convert semantic token colors if needed
+  Object.keys(semanticTokenColors ?? {}).forEach(key => {
+    monacoTheme.rules.push({
+      token: key,
+      ...(semanticTokenColors[key].foreground && {
+        foreground: normalizeColor(
+          removeHash(semanticTokenColors[key].foreground),
+        ),
+      }),
+    });
+  });
+
+  // Convert global colors
+  Object.keys(colors).forEach(colorKey => {
+    const color = colors[colorKey];
+    const isMonacoColor = MONACO_COLOR_MAP.includes(colorKey);
+    // Only include colors that are supported by Monaco Editor
+    if (isMonacoColor && color) {
+      monacoTheme.colors[colorKey] = normalizeColor(color);
+    }
+  });
+
+  return monacoTheme;
 };
 
-const readAndProcessThemes = async () => {
-  const themesDir = path.resolve(__dirname, THEMES_DIR_PATH);
-
+const processThemes = async () => {
   try {
-    const files = await fs.readdir(themesDir);
-    const themeTmFiles = await Promise.all(
-      files.map(async file => {
-        const content = await fs.readFile(path.join(themesDir, file), 'utf-8');
-        return {[file]: content};
-      }),
-    );
+    let themes = {};
+    let themeNames = [];
 
-    let themesFileContent = '';
-    let themesType = [];
-
-    for (const file of themeTmFiles) {
-      const fileName = Object.keys(file)[0];
-      const newFileName =
-        fileName
-          .replace(/\.(tmtheme|tmTheme)$/, '')
-          .replace(/[\s_,.()]+/g, '-')
-          .replace(/-+$/, '')
-          .toLowerCase() + '.tmTheme';
-
-      await fs.rename(
-        path.join(themesDir, fileName),
-        path.join(themesDir, newFileName),
-      );
-
-      const themeName = newFileName.replace(/\.tmTheme$/, '');
-      const json = JSON.stringify(parseTmTheme(file[fileName]));
-      themesFileContent += `"${themeName}": ${json},\n`;
-      themesType.push(`'${themeName}'`);
+    const vsCodeThemeFiles = await fs.readdir(VSCODE_THEMES_DIR);
+    for (const themefile of vsCodeThemeFiles) {
+      const filePath = path.join(VSCODE_THEMES_DIR, themefile);
+      const themeContent = await fs.readFile(filePath, 'utf8');
+      const vsCodeTheme = JSON.parse(themeContent);
+      const monacoTheme = convertVsCodeThemeToMonaco(vsCodeTheme);
+      const themeName = path.basename(themefile, '.json');
+      themeNames.push(themeName);
+      themes[themeName] = monacoTheme;
+      console.log(`${themeName} ✅`);
     }
 
-    const themesFilePath = path.resolve(__dirname, THEMES_FILE_PATH);
-    const themesFileData = `
-      import { EditorThemeData } from './types/common';
+    const themesDotTsFileContent = `
+    import { EditorThemeData } from './types/common';
 
-      interface CustomThemeCollection {
-        [key: string]: EditorThemeData;
-      }
+    interface CustomThemeCollection {
+      [key: string]: EditorThemeData;
+    }
 
-      /**
-       * Themes for the Rich Monaco Editor.
-       * This file is automatically generated by the 'generate-themes' script.
-       * Do not manually modify this file. Instead, add themes to the 'themes' directory and run the script.
-       */
+    /**
+     * Themes for the Rich Monaco Editor.
+     * This file is automatically generated by the 'generate-themes' script.
+     * Do not manually modify this file. Instead, add themes to the 'themes' directory and run the script.
+     */
 
-      export default {
-        ${themesFileContent}
-      } as const satisfies CustomThemeCollection;
-    `;
+    export default ${JSON.stringify(themes, null, 2)} as const satisfies CustomThemeCollection;
+  `;
 
-    await fs.writeFile(themesFilePath, themesFileData);
+    // Write the themes to the themes.ts file in the src directory
+    await fs.writeFile(THEMES_DOT_TS_FILE, themesDotTsFileContent);
 
-    const themesTypeFilePath = path.resolve(
-      __dirname,
-      THEMES_TYPE_DECLARED_FILE_PATH,
-    );
-    let existingThemesTypeFileContent = await fs.readFile(
-      themesTypeFilePath,
-      'utf-8',
-    );
-    const themesTypeData = `export type ThemeType = ${themesType.join(' | ')};`;
+    const themesType = `export type ThemeType = ${themeNames
+      .map(name => `'${name}'`)
+      .join(' | ')};`;
 
-    const typeDeclarationRegex = /export type ThemeType\s*=\s*[^;]*;/s;
+    const themesTypeRegex = /export type ThemeType\s*=\s*[^;]*;/s;
 
-    // Replace existing ThemeType definition
-    existingThemesTypeFileContent = existingThemesTypeFileContent.replace(
-      typeDeclarationRegex,
-      themesTypeData,
+    // Replace the existing themes type in the types file
+    const typesFile = path.resolve(__dirname, THEMES_TYPE_DEFINED_FILE);
+    const typesFileContent = await fs.readFile(typesFile, 'utf8');
+    const updatedTypesFileContent = typesFileContent.replace(
+      themesTypeRegex,
+      themesType,
     );
 
-    await fs.writeFile(themesTypeFilePath, existingThemesTypeFileContent);
-    console.log('Themes processed successfully!');
+    // Write the updated types file
+    await fs.writeFile(typesFile, updatedTypesFileContent);
+
+    console.log('\nThemes processed successfully 🚀');
   } catch (error) {
-    console.error('Error processing themes:', error);
+    console.error('Failed to process themes:', error);
   }
 };
 
-readAndProcessThemes();
+processThemes();

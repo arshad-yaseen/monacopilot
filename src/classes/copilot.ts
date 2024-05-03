@@ -1,9 +1,9 @@
 import {
-  COMPLETION_SYSTEM_PROMPT,
+  COMPLETION_MODEL_ID,
   DEFAULT_COMPLETION_MODEL,
   GROQ_API_ENDPOINT,
 } from '../constants/completion';
-import {fillSystemPromptPlaceholders} from '../helpers/copilot';
+import {getSystemPrompt} from '../helpers/copilot';
 import {
   CompletionConstructorParams,
   CompletionRequestParams,
@@ -48,16 +48,12 @@ class Copilot {
 
       const endpoint = GROQ_API_ENDPOINT;
       const body: GroqCompletionCreateParams = {
-        model,
-        max_tokens: 100,
-        temperature: 0.8,
+        model: COMPLETION_MODEL_ID[model],
+        max_tokens: 200,
         messages: [
           {
             role: 'system',
-            content: fillSystemPromptPlaceholders(
-              COMPLETION_SYSTEM_PROMPT,
-              data.completionMetadata,
-            ),
+            content: getSystemPrompt(data.completionMetadata),
           },
           {
             role: 'user',
