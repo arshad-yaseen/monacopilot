@@ -30,7 +30,21 @@ pnpm dev:test
 
 #### Adding or Editing Themes
 
-To add a theme, you can add the `.tmTheme` file of the theme you want to include to the `themes` directory at the root. If you wish to edit any theme, simply edit the `.tmTheme` file of the theme you want to modify. Then, run the following command after updating or adding.
+##### Add a Theme
+
+To add a new theme to Monacopilot:
+
+1. Add a [VS Code-compatible theme]() JSON file to the `themes` directory at the root of the project.
+2. Run the `pnpm generate-themes` script. This script automatically converts the added VS Code theme to a Monaco Editor compatible theme and updates the `Theme` type declaration with the new theme name.
+
+If you are unfamiliar with what a VS Code theme JSON is, here is an example: [VS Code Theme JSON](https://github.com/codesandbox/vscode-theme/blob/main/themes/codesandbox-dark.json).
+
+##### Edit an Existing Theme
+
+To edit an existing theme:
+
+1. Modify the desired theme's JSON file located in the `themes` directory at the project root.
+2. Run `pnpm generate-themes` to apply the changes.
 
 ```bash
 pnpm generate-themes
