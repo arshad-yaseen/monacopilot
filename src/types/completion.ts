@@ -35,9 +35,7 @@ export interface CompletionMetadata {
   codeAfterCursor: string;
   codeBeforeCursor: string;
   editorState: {
-    completionMode: 'contextual-fill' | 'continuation' | 'expansion';
-    codeLengthBeforeCursor: number;
-    totalCodeLength: number;
+    completionMode: 'fill-in' | 'line-continuation' | 'continuation';
   };
 }
 

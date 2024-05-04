@@ -3,7 +3,7 @@ import {
   DEFAULT_COMPLETION_MODEL,
   GROQ_API_ENDPOINT,
 } from '../constants/completion';
-import {getSystemPrompt} from '../helpers/copilot';
+import {getCompletionInstruction} from '../helpers/copilot';
 import {
   CompletionConstructorParams,
   CompletionRequestParams,
@@ -52,12 +52,8 @@ class Copilot {
         max_tokens: 200,
         messages: [
           {
-            role: 'system',
-            content: getSystemPrompt(data.completionMetadata),
-          },
-          {
             role: 'user',
-            content: JSON.stringify(data.completionMetadata),
+            content: getCompletionInstruction(data.completionMetadata),
           },
         ],
       };

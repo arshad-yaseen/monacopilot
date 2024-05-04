@@ -94,9 +94,9 @@ export const determineCompletionMode = (
 
   if (isCursorAtTextEnd(currentLineText, position.column)) {
     if (isLineEmptyOrEndsWithClosingBrace(currentLineText)) {
-      return 'expansion';
+      return 'continuation';
     }
-    return 'continuation';
+    return 'line-continuation';
   }
 
   if (
@@ -106,11 +106,11 @@ export const determineCompletionMode = (
       position.column,
     )
   ) {
-    return 'contextual-fill';
+    return 'fill-in';
   }
 
-  // Default to continuation mode if none of the specific conditions are met
-  return 'continuation';
+  // Default to line-continuation mode if none of the specific conditions are met
+  return 'line-continuation';
 };
 
 const isCursorAtTextEnd = (lineText: string, column: number): boolean => {

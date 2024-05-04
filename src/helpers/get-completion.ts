@@ -42,7 +42,6 @@ export const fetchCompletionItem = async ({
     endpoint,
     {
       completionMetadata: constructCompletionMetadata(
-        code,
         position,
         model,
         language,
@@ -73,7 +72,6 @@ export const fetchCompletionItem = async ({
 // Construct completion metadata based on the cursor position and code.
 // This metadata is used to generate the completion code from LLM models.
 export const constructCompletionMetadata = (
-  code: string,
   position: EditorPositionType,
   model: EditorModelType,
   language: string,
@@ -98,8 +96,6 @@ export const constructCompletionMetadata = (
     codeAfterCursor,
     editorState: {
       completionMode,
-      codeLengthBeforeCursor: codeBeforeCursor.length,
-      totalCodeLength: code.length,
     },
   };
 };

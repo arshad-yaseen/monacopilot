@@ -137,13 +137,33 @@ const MONACO_COLOR_MAP = [
   'peekViewEditor.matchHighlightBackground',
 ];
 
+const parseColor = color => {
+  if (!color) return [0, 0, 0];
+  let r = 0,
+    g = 0,
+    b = 0;
+
+  color = color.trim().toLowerCase();
+
+  const hex = color.slice(1);
+  if (hex.length === 3) {
+    r = parseInt(hex[0] + hex[0], 16);
+    g = parseInt(hex[1] + hex[1], 16);
+    b = parseInt(hex[2] + hex[2], 16);
+  } else if (hex.length === 6) {
+    r = parseInt(hex.slice(0, 2), 16);
+    g = parseInt(hex.slice(2, 4), 16);
+    b = parseInt(hex.slice(4, 6), 16);
+  }
+
+  return [r, g, b];
+};
+
 const calculateDarkness = color => {
-  if (!color) return 1;
-  const rgb = color.startsWith('#') ? parseInt(color.slice(1), 16) : 0;
-  const r = (rgb >> 16) & 0xff;
-  const g = (rgb >> 8) & 0xff;
-  const b = rgb & 0xff;
-  return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  const [r, g, b] = parseColor(color);
+  // Use the ITU-R BT.709 formula for luminance
+  const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  return luminance / 255;
 };
 
 const removeHash = color => color.replace('#', '');

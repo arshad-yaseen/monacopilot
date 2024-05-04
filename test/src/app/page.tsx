@@ -24,7 +24,7 @@ export default function Home() {
         language="javascript"
         endpoint="/api/copilot"
         className="h-screen w-screen"
-        theme="github-dark-dimmed"
+        theme="github-light"
         completionSpeed={isFastCompletion ? 'little-faster' : 'normal'}
         options={{
           padding: {top: 16},
