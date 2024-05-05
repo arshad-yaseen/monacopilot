@@ -139,6 +139,7 @@ const useStartCompletion = (
     monacoInstance,
     language,
     framework,
+    externalContext,
     fetchCompletionItemDebounced,
     endpoint,
   ]);
