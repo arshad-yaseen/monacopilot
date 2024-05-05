@@ -12,27 +12,27 @@ const formatExternalContext = (
     .join('\n\n');
 };
 
-export const getCompletionInstruction = (
+export const getCompletionModelInstruction = (
   metadata: CompletionMetadata,
 ): string => {
-  let actionDescription: string;
+  let action: string;
   switch (metadata.editorState.completionMode) {
     case 'line-continuation':
-      actionDescription =
+      action =
         'continue seamlessly from the cursor, maintaining syntactical correctness and logical flow';
       break;
     case 'fill-in':
-      actionDescription =
+      action =
         'accurately fill in the missing segment, ensuring it integrates perfectly with the content before and after the cursor while adhering to syntax and logical coherence';
       break;
     default:
-      actionDescription =
+      action =
         'complete the next logical segment based on the provided context, ensuring syntactical correctness and logical coherence';
   }
 
   return `
     <completion-instruction>
-      You are a code completion assistant. Based on the cursor's position and the surrounding context, begin typing at the cursor. The completion mode "${metadata.editorState.completionMode}" requires you to ${actionDescription}.
+      You are a code completion assistant. Based on the cursor's position and the surrounding context, begin typing at the cursor. The completion mode "${metadata.editorState.completionMode}" requires you to ${action}.
       Follow line breaks, indentation, and spacing rules according to the programming language "${metadata.language}". Output only the completion without additional explanations.
     </completion-instruction>
 

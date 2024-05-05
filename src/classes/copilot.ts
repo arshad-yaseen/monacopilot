@@ -3,7 +3,7 @@ import {
   DEFAULT_COMPLETION_MODEL,
   GROQ_API_ENDPOINT,
 } from '../constants/completion';
-import {getCompletionInstruction} from '../helpers/copilot';
+import {getCompletionModelInstruction} from '../helpers/copilot';
 import {
   CompletionConstructorParams,
   CompletionRequestParams,
@@ -55,7 +55,7 @@ class Copilot {
         messages: [
           {
             role: 'user',
-            content: getCompletionInstruction(data.completionMetadata),
+            content: getCompletionModelInstruction(data.completionMetadata),
           },
         ],
       };
