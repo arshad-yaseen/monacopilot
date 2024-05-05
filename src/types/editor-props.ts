@@ -6,6 +6,22 @@ import {EditorBuiltInTheme} from './common';
 export type EndpointType = string;
 export type FrameworkType = (typeof frameworks)[number];
 export type CompletionSpeedType = 'little-faster' | 'normal';
+export type ExternalContextType = Array<{
+  /**
+   * The relative path from the current editing file to an external file.
+   *
+   * Examples:
+   * - To include a file `utils.js` in the same directory, set as `./utils.js`.
+   * - To include a file `utils.js` in the parent directory, set as `../utils.js`.
+   * - To include a file `utils.js` in the child directory, set as `./child/utils.js`.
+   */
+  path: string;
+
+  /**
+   * The content of the external file as a string.
+   */
+  content: string;
+}>;
 
 /**
  * Themes available for the Rich Monaco Editor.
@@ -14,7 +30,12 @@ export type CompletionSpeedType = 'little-faster' | 'normal';
 // Do not modify this type manually.
 // If you want to add a new theme, you can add it to the themes folder and run `generate-themes` script.
 // The script will automatically update this type.
-export type ThemeType = 'codesandbox-dark' | 'github-dark-dimmed' | 'github-dark' | 'github-light' | 'monokai';
+export type ThemeType =
+  | 'codesandbox-dark'
+  | 'github-dark-dimmed'
+  | 'github-dark'
+  | 'github-light'
+  | 'monokai';
 
 export default interface EditorProps extends MonacoEditorProps {
   /**
@@ -39,4 +60,9 @@ export default interface EditorProps extends MonacoEditorProps {
    * @default 'normal'
    */
   completionSpeed?: CompletionSpeedType;
+  /**
+   * Helps to give more relevant completions based on the full context.
+   * You can include things like the contents/codes of other files in the same workspace.
+   */
+  externalContext?: ExternalContextType;
 }

@@ -25,6 +25,12 @@ export default function Home() {
         endpoint="/api/copilot"
         className="h-screen w-screen"
         theme="github-light"
+        externalContext={[
+          {
+            path: './core/common/utils.ts',
+            content: `export const reverse = (str: string) => str.split('').reverse().join('');`,
+          },
+        ]}
         completionSpeed={isFastCompletion ? 'little-faster' : 'normal'}
         options={{
           padding: {top: 16},

@@ -18,7 +18,7 @@ const FEATURES = [
   },
   {
     icon: ShadowIcon,
-    title: '55+ Themes',
+    title: '20+ Popular Themes',
     description:
       'Choose from a wide range of themes to customize your editor easily.',
   },

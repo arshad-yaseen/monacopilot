@@ -4,7 +4,7 @@ import {
 } from 'groq-sdk/resources/chat/completions';
 
 import {CodeContextualFilterManager} from '../helpers/contextual-filter';
-import {FrameworkType} from './editor-props';
+import {ExternalContextType, FrameworkType} from './editor-props';
 
 export type CompletionModelType = 'llama';
 export type GroqCompletionCreateParams = ChatCompletionCreateParamsBase;
@@ -32,6 +32,7 @@ export interface CompletionMetadata {
     lineNumber: number;
     columnNumber: number;
   };
+  externalContext: ExternalContextType | undefined;
   codeAfterCursor: string;
   codeBeforeCursor: string;
   editorState: {

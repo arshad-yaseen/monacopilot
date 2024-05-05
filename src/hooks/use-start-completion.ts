@@ -11,6 +11,7 @@ import {EditorInlineCompletionType} from '../types/common';
 import {
   CompletionSpeedType,
   EndpointType,
+  ExternalContextType,
   FrameworkType,
 } from '../types/editor-props';
 import useTypingDebounceFn from './use-typing-debounce-fn';
@@ -22,6 +23,7 @@ const useStartCompletion = (
   framework: FrameworkType | undefined,
   language: string | undefined,
   completionSpeed: CompletionSpeedType | undefined,
+  externalContext: ExternalContextType | undefined,
   monacoInstance: Monaco | null,
 ) => {
   const completionCache = React.useRef<Map<string, EditorInlineCompletionType>>(
@@ -100,6 +102,7 @@ const useStartCompletion = (
               code,
               language,
               framework,
+              externalContext,
               model,
               position,
               token,

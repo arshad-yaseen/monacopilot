@@ -21,6 +21,7 @@ const Editor = ({
   framework,
   theme,
   completionSpeed,
+  externalContext,
   ...props
 }: EditorProps) => {
   const [monacoInstance, setMonacoInstance] = React.useState<Monaco | null>(
@@ -49,6 +50,7 @@ const Editor = ({
     framework,
     props.language,
     completionSpeed,
+    externalContext,
     monacoInstance,
   );
 

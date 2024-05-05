@@ -6,7 +6,11 @@ import {
   CompletionRequestParams,
   GroqCompletion,
 } from '../types/completion';
-import {EndpointType, FrameworkType} from '../types/editor-props';
+import {
+  EndpointType,
+  ExternalContextType,
+  FrameworkType,
+} from '../types/editor-props';
 import {sanitizeCompletionCode} from '../utils/completion/common';
 import {
   determineCompletionMode,
@@ -20,6 +24,7 @@ export const fetchCompletionItem = async ({
   code,
   language,
   framework,
+  externalContext,
   model,
   position,
   token,
@@ -28,6 +33,7 @@ export const fetchCompletionItem = async ({
   language: string;
   endpoint: EndpointType;
   framework: FrameworkType | undefined;
+  externalContext: ExternalContextType | undefined;
   model: EditorModelType;
   position: EditorPositionType;
   token: monaco.CancellationToken;
@@ -46,6 +52,7 @@ export const fetchCompletionItem = async ({
         model,
         language,
         framework,
+        externalContext,
       ),
     },
     {
@@ -76,6 +83,7 @@ export const constructCompletionMetadata = (
   model: EditorModelType,
   language: string,
   framework: FrameworkType | undefined,
+  externalContext: ExternalContextType | undefined,
 ): CompletionMetadata => {
   const {lineNumber, column} = position;
   const completionMode = determineCompletionMode(position, model);
@@ -92,6 +100,7 @@ export const constructCompletionMetadata = (
       lineNumber: lineNumber,
       columnNumber: column,
     },
+    externalContext,
     codeBeforeCursor,
     codeAfterCursor,
     editorState: {

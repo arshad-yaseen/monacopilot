@@ -1,7 +1,20 @@
 import {CompletionMetadata} from '../types/completion';
+import {ExternalContextType} from '../types/editor-props';
 
-export const getCompletionInstruction = (metadata: CompletionMetadata) => {
-  // Tailor the prompt based on the specified completion mode and the nature of the content at the cursor
+const formatExternalContext = (
+  externalContext: ExternalContextType | undefined,
+): string => {
+  if (!externalContext) {
+    return '';
+  }
+  return externalContext
+    .map(context => `<${context.path}>${context.content}</${context.path}>`)
+    .join('\n\n');
+};
+
+export const getCompletionInstruction = (
+  metadata: CompletionMetadata,
+): string => {
   let actionDescription: string;
   switch (metadata.editorState.completionMode) {
     case 'line-continuation':
@@ -18,14 +31,14 @@ export const getCompletionInstruction = (metadata: CompletionMetadata) => {
   }
 
   return `
-    <intro>
-      You are a code completion assistant. Based on the cursor's position and the surrounding context, complete the snippet below. The completion mode "${metadata.editorState.completionMode}" requires you to ${actionDescription}.
+    <completion-instruction>
+      You are a code completion assistant. Based on the cursor's position and the surrounding context, begin typing at the cursor. The completion mode "${metadata.editorState.completionMode}" requires you to ${actionDescription}.
       Follow line breaks, indentation, and spacing rules according to the programming language "${metadata.language}". Output only the completion without additional explanations.
-    </intro>
+    </completion-instruction>
 
     <code-context>
       Full context including all lines before and after the cursor position:
-      ${metadata.codeBeforeCursor}${metadata.codeAfterCursor}
+      ${metadata.codeBeforeCursor}{cursor}${metadata.codeAfterCursor}
     </code-context>
     
     <immediate-context>
@@ -37,6 +50,11 @@ export const getCompletionInstruction = (metadata: CompletionMetadata) => {
       Line and column number where the completion should start:
       Line ${metadata.cursorPosition.lineNumber}, Column ${metadata.cursorPosition.columnNumber}
     </cursor-position>
+
+    <external-context>
+      Other relevant files in the workspace:
+      ${formatExternalContext(metadata.externalContext)}
+    </external-context>
 
     <completion-details>
       Mode specifying the nature of the auto-completion task:

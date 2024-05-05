@@ -24,7 +24,7 @@ const isPalindrome = (str) => {};`,
 const EditorDemo = () => {
   const {resolvedTheme} = useTheme();
   const theme: Theme =
-    resolvedTheme === 'dark' ? 'github-dark' : 'github-light';
+    resolvedTheme === 'dark' ? 'codesandbox-dark' : 'github-light';
 
   return (
     <motion.div

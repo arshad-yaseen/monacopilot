@@ -50,6 +50,8 @@ class Copilot {
       const body: GroqCompletionCreateParams = {
         model: COMPLETION_MODEL_ID[model],
         max_tokens: 200,
+        temperature: 0.3,
+        top_p: 0.8,
         messages: [
           {
             role: 'user',
