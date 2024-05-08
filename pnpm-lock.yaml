@@ -82,7 +82,7 @@ importers:
         specifier: ^0.376.0
         version: 0.376.0(react@18.3.1)
       monacopilot:
-        specifier: ^0.8.13
+        specifier: ^0.8.15
         version: link:..
       next:
         specifier: 14.2.3
