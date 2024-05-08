@@ -1,11 +1,48 @@
 import {type EditorProps as MonacoEditorProps} from '@monaco-editor/react';
 
-import frameworks from '../constants/frameworks';
 import {EditorBuiltInTheme} from './common';
 
 export type EndpointType = string;
 export type FilenameType = string;
-export type FrameworkType = (typeof frameworks)[number];
+export type FrameworkType =
+  | 'react'
+  | 'angular'
+  | 'vue.js'
+  | 'express'
+  | 'django'
+  | 'flask'
+  | 'spring boot'
+  | 'asp.net core'
+  | 'ruby on rails'
+  | 'laravel'
+  | 'node.js'
+  | 'react native'
+  | 'flutter'
+  | 'tensorflow'
+  | 'pytorch'
+  | 'keras'
+  | 'scikit-learn'
+  | 'fastapi'
+  | 'graphql'
+  | 'redux'
+  | 'electron'
+  | 'next.js'
+  | 'nuxt.js'
+  | 'gatsby'
+  | 'shopify'
+  | 'woocommerce'
+  | 'pandas'
+  | 'numpy'
+  | 'three.js'
+  | 'jest'
+  | 'cypress'
+  | 'selenium'
+  | 'playwright'
+  | 'puppeteer'
+  | 'material-ui'
+  | 'vuetify'
+  | 'ant design';
+
 export type CompletionSpeedType = 'little-faster' | 'normal';
 export type ExternalContextType = Array<{
   /**

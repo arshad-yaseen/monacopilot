@@ -12,34 +12,34 @@ const formatExternalContext = (
     .join('\n\n');
 };
 
-export const getCompletionModelInstruction = (
+/**
+ * Generates a detailed instruction for the LLM based on the completion metadata.
+ * @param {CompletionMetadata} metadata - Metadata containing details for code completion.
+ * @returns {Object} - An object containing the system and user prompts.
+ */
+export const getCompletionPrompt = (
   metadata: CompletionMetadata,
-): string => {
-  let action: string;
-  switch (metadata.editorState.completionMode) {
-    case 'line-continuation':
-      action =
-        'continue seamlessly from the cursor, maintaining syntactical correctness and logical flow';
-      break;
-    case 'fill-in':
-      action =
-        'accurately fill in the missing segment, ensuring it integrates perfectly with the content before and after the cursor while adhering to syntax and logical coherence';
-      break;
-    default:
-      action =
-        'complete the next logical segment based on the provided context, ensuring syntactical correctness and logical coherence';
-  }
+): {systemPrompt: string; userPrompt: string} => {
+  const actionMap: Record<
+    CompletionMetadata['editorState']['completionMode'],
+    string
+  > = {
+    'line-continuation':
+      'continue seamlessly from the cursor, maintaining syntactical correctness and logical flow',
+    'fill-in':
+      'accurately fill in the missing segment, ensuring it integrates perfectly with the content before and after the cursor while adhering to syntax and logical coherence',
+    continuation:
+      'complete the next logical segment based on the provided context, ensuring syntactical correctness and logical coherence',
+  };
 
-  return `
-    <completion-instruction>
-      You are a code completion assistant. Based on the cursor's position and the surrounding context, begin typing at the cursor. The completion mode "${metadata.editorState.completionMode}" requires you to ${action}.
-      Follow line breaks, indentation, and spacing rules according to the programming language "${metadata.language}". Output only the completion without additional explanations.
-    </completion-instruction>
+  const action = actionMap[metadata.editorState.completionMode];
 
-    <current-file>
-      The current file requiring completion:
-      ${metadata.filename}
-    </current-file>
+  const systemPrompt = `You are a code completion assistant. Based on the cursor's position and the surrounding code context, begin typing at the cursor. The completion mode "${metadata.editorState.completionMode}" requires you to ${action}.
+  ${metadata.language ? `Follow line breaks, indentation, and spacing rules according to the programming language "${metadata.language}".` : 'Follow general coding conventions.'}
+  Output only the completion without additional explanations.`;
+
+  const userPrompt = `
+    ${metadata.filename ? `<current-file>The current file requiring completion: ${metadata.filename}</current-file>` : ''}
 
     <code-context>
       Full context including all lines before and after the cursor position:
@@ -56,18 +56,15 @@ export const getCompletionModelInstruction = (
       Line ${metadata.cursorPosition.lineNumber}, Column ${metadata.cursorPosition.columnNumber}
     </cursor-position>
 
-    <external-context>
-      Other relevant files in the workspace:
-      ${formatExternalContext(metadata.externalContext)}
-    </external-context>
+    ${metadata.externalContext ? `<external-context>Other relevant files in the workspace: ${formatExternalContext(metadata.externalContext)}</external-context>` : ''}
 
     <completion-details>
       Mode specifying the nature of the auto-completion task:
       ${metadata.editorState.completionMode}
-      Programming language which dictates formatting rules:
-      ${metadata.language}
-      Framework being used, if applicable:
-      ${metadata.framework}
+      ${metadata.language ? `Programming language which dictates formatting rules: ${metadata.language}` : 'No specific programming language provided.'}
+      ${metadata.framework ? `Framework being used, if applicable: ${metadata.framework}` : ''}
     </completion-details>
   `;
+
+  return {systemPrompt, userPrompt};
 };

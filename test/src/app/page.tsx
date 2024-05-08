@@ -21,11 +21,11 @@ export default function Home() {
         </div>
       </div>
       <Editor
-        language="javascript"
         endpoint="/api/copilot"
-        className="h-screen w-screen"
+        language="javascript"
         theme="github-light"
         completionSpeed={isFastCompletion ? 'little-faster' : 'normal'}
+        className="h-screen w-screen"
         options={{
           padding: {top: 16},
         }}
