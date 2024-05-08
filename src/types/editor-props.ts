@@ -4,6 +4,7 @@ import frameworks from '../constants/frameworks';
 import {EditorBuiltInTheme} from './common';
 
 export type EndpointType = string;
+export type FilenameType = string;
 export type FrameworkType = (typeof frameworks)[number];
 export type CompletionSpeedType = 'little-faster' | 'normal';
 export type ExternalContextType = Array<{
@@ -38,6 +39,11 @@ export type ThemeType =
   | 'monokai';
 
 export default interface EditorProps extends MonacoEditorProps {
+  /**
+   * The name of the file you are editing. This is used to provide more relevant completions based on the file's purpose.
+   * For example, if you are editing a file named `utils.js`, the completions will be more relevant to utility functions.
+   */
+  filename?: FilenameType;
   /**
    * The API endpoint where you started the completion service.
    * [Learn more](https://monacopilot.vercel.app/docs/guide/copilot-setup#integrating-copilot-to-the-editor)

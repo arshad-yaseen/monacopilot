@@ -12,6 +12,7 @@ import {
   CompletionSpeedType,
   EndpointType,
   ExternalContextType,
+  FilenameType,
   FrameworkType,
 } from '../types/editor-props';
 import useTypingDebounceFn from './use-typing-debounce-fn';
@@ -19,6 +20,7 @@ import useTypingDebounceFn from './use-typing-debounce-fn';
 const localPredictionEngine = new LocalCodePredictionEngine();
 
 const useStartCompletion = (
+  filename: FilenameType | undefined,
   endpoint: EndpointType | undefined,
   framework: FrameworkType | undefined,
   language: string | undefined,
@@ -98,6 +100,7 @@ const useStartCompletion = (
           try {
             // Fetch the completion item from the LLM model
             const completion = await fetchCompletionItemDebounced({
+              filename,
               endpoint,
               code,
               language,

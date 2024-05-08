@@ -36,6 +36,11 @@ export const getCompletionModelInstruction = (
       Follow line breaks, indentation, and spacing rules according to the programming language "${metadata.language}". Output only the completion without additional explanations.
     </completion-instruction>
 
+    <current-file>
+      The current file requiring completion:
+      ${metadata.filename}
+    </current-file>
+
     <code-context>
       Full context including all lines before and after the cursor position:
       ${metadata.codeBeforeCursor}{cursor}${metadata.codeAfterCursor}
@@ -61,6 +66,8 @@ export const getCompletionModelInstruction = (
       ${metadata.editorState.completionMode}
       Programming language which dictates formatting rules:
       ${metadata.language}
+      Framework being used, if applicable:
+      ${metadata.framework}
     </completion-details>
   `;
 };

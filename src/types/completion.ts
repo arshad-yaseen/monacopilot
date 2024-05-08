@@ -4,7 +4,7 @@ import {
 } from 'groq-sdk/resources/chat/completions';
 
 import {CodeContextualFilterManager} from '../helpers/contextual-filter';
-import {ExternalContextType, FrameworkType} from './editor-props';
+import {ExternalContextType, FilenameType, FrameworkType} from './editor-props';
 
 export type CompletionModelType = 'llama';
 export type GroqCompletionCreateParams = ChatCompletionCreateParamsBase;
@@ -26,7 +26,8 @@ export interface CompletionRequestParams {
 }
 
 export interface CompletionMetadata {
-  language: string;
+  language: string | undefined;
+  filename: FilenameType | undefined;
   framework: FrameworkType | undefined;
   cursorPosition: {
     lineNumber: number;

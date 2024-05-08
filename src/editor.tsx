@@ -17,6 +17,7 @@ import EditorProps from './types/editor-props';
 import {deepMerge} from './utils/common';
 
 const Editor = ({
+  filename,
   endpoint,
   framework,
   theme,
@@ -46,6 +47,7 @@ const Editor = ({
   );
 
   useStartCompletion(
+    filename,
     endpoint,
     framework,
     props.language,

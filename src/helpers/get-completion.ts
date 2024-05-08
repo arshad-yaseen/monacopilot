@@ -1,16 +1,9 @@
-import * as monaco from 'monaco-editor';
-
-import {EditorModelType, EditorPositionType} from '../types/common';
 import {
-  CompletionMetadata,
-  CompletionRequestParams,
-  GroqCompletion,
-} from '../types/completion';
-import {
-  EndpointType,
-  ExternalContextType,
-  FrameworkType,
-} from '../types/editor-props';
+  EditorModelType,
+  EditorPositionType,
+  FetchCompletionItemParams,
+} from '../types/common';
+import {CompletionRequestParams, GroqCompletion} from '../types/completion';
 import {sanitizeCompletionCode} from '../utils/completion/common';
 import {
   determineCompletionMode,
@@ -20,6 +13,7 @@ import {isValidCompletion} from '../utils/completion/validate-completion';
 import {POST} from '../utils/http';
 
 export const fetchCompletionItem = async ({
+  filename,
   endpoint,
   code,
   language,
@@ -28,16 +22,7 @@ export const fetchCompletionItem = async ({
   model,
   position,
   token,
-}: {
-  code: string;
-  language: string;
-  endpoint: EndpointType;
-  framework: FrameworkType | undefined;
-  externalContext: ExternalContextType | undefined;
-  model: EditorModelType;
-  position: EditorPositionType;
-  token: monaco.CancellationToken;
-}) => {
+}: FetchCompletionItemParams) => {
   if (!isValidCompletion(position, model, language) || !code) {
     return null;
   }
@@ -47,13 +32,14 @@ export const fetchCompletionItem = async ({
   const data = await POST<GroqCompletion, CompletionRequestParams>(
     endpoint,
     {
-      completionMetadata: constructCompletionMetadata(
+      completionMetadata: constructCompletionMetadata({
+        filename,
         position,
         model,
         language,
         framework,
         externalContext,
-      ),
+      }),
     },
     {
       headers: {
@@ -78,13 +64,22 @@ export const fetchCompletionItem = async ({
 
 // Construct completion metadata based on the cursor position and code.
 // This metadata is used to generate the completion code from LLM models.
-export const constructCompletionMetadata = (
-  position: EditorPositionType,
-  model: EditorModelType,
-  language: string,
-  framework: FrameworkType | undefined,
-  externalContext: ExternalContextType | undefined,
-): CompletionMetadata => {
+export const constructCompletionMetadata = ({
+  filename,
+  position,
+  model,
+  language,
+  framework,
+  externalContext,
+}: Pick<
+  FetchCompletionItemParams,
+  | 'filename'
+  | 'position'
+  | 'model'
+  | 'language'
+  | 'framework'
+  | 'externalContext'
+>) => {
   const {lineNumber, column} = position;
   const completionMode = determineCompletionMode(position, model);
 
@@ -94,6 +89,7 @@ export const constructCompletionMetadata = (
   );
 
   return {
+    filename,
     language,
     framework: framework || undefined,
     cursorPosition: {
