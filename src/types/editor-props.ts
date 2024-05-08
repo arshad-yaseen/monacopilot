@@ -46,7 +46,7 @@ export type FrameworkType =
 export type CompletionSpeedType = 'little-faster' | 'normal';
 export type ExternalContextType = Array<{
   /**
-   * The relative path from the current editing file to an external file.
+   * The relative path from the current editing code in the editor to an external file.
    *
    * Examples:
    * - To include a file `utils.js` in the same directory, set as `./utils.js`.
