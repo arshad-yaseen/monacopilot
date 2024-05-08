@@ -145,6 +145,7 @@ const useStartCompletion = (
     externalContext,
     fetchCompletionItemDebounced,
     endpoint,
+    filename,
   ]);
 
   return null;
