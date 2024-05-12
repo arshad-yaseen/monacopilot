@@ -81,3 +81,7 @@ h3,
 h4 {
   letter-spacing: -0.025em;
 }
+
+.monaco-editor .line-numbers {
+  width: 25px !important;
+}
