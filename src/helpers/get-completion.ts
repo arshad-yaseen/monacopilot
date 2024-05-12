@@ -90,20 +90,6 @@ export const constructCompletionMetadata = ({
     model,
   );
 
-  const code = codeBeforeCursor + codeAfterCursor;
-
-  const codeMap = code.split('\n').reduce((acc, line, lineNumber) => {
-    line.split('').forEach((char, column) => {
-      acc = {
-        ...acc,
-        [`${lineNumber + 1}:${column + 1}`]: char,
-      };
-    });
-    return acc;
-  }, {});
-
-  console.log(codeMap);
-
   return {
     filename,
     language,

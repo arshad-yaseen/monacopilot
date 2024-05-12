@@ -17,19 +17,6 @@ export const isValidCompletion = (
   model: EditorModelType,
   language: string | undefined,
 ): boolean => {
-  console.log(
-    'contextual score is: ',
-    contextualScore(cursorPosition, model, language),
-  );
-  console.log(
-    'isCharAfterCursor is: ',
-    !isCharAfterCursor(cursorPosition, model),
-  );
-  console.log(
-    'isCursorAtStartWithCodeAround is: ',
-    !isCursorAtStartWithCodeAround(cursorPosition, model),
-  );
-
   return (
     contextualScore(cursorPosition, model, language) >
       CONTEXTUAL_FILTER_ACCEPT_THRESHOLD &&

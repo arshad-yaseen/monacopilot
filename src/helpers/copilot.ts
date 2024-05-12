@@ -1,17 +1,19 @@
 import {CompletionMetadata, CompletionMode} from '../types/completion';
 
-const getPromptPlaceholder = (completionMode: CompletionMode) => {
-  return completionMode === 'fill-in-the-middle'
-    ? '<<FILL_IN_THE_MIDDLE>>'
-    : '<<CONTINUATION>>';
+const CURSOR_PLACEHOLDER = '<|cursor|>';
+
+const getDescriptionForMode = (mode: CompletionMode): string => {
+  switch (mode) {
+    case 'fill-in-the-middle':
+      return 'filling in the middle of code';
+    case 'continuation':
+      return 'continuing the code';
+    default:
+      return 'unknown mode';
+  }
 };
 
-/**
- * Generates a detailed instruction for the LLM based on the completion metadata.
- * @param {CompletionMetadata} metadata - Metadata containing details for code completion.
- * @returns {Object} - An object containing the system and user prompts.
- */
-export const getSystemPrompt = (metadata: CompletionMetadata): string => {
+export const generateSystemPrompt = (metadata: CompletionMetadata): string => {
   const {
     language = 'the language',
     filename,
@@ -19,20 +21,18 @@ export const getSystemPrompt = (metadata: CompletionMetadata): string => {
     editorState,
   } = metadata;
 
-  const placeholder = getPromptPlaceholder(editorState.completionMode);
-
-  let prompt = `As an expert ${language} code completion assistant known for high accuracy in code completion, could you assist with the code at the location marked '${placeholder}' placeholder? This code is part of the ${filename ? `${filename} file` : 'a larger project'}. Please `;
+  let prompt = `As an expert ${language} code completion assistant known for high accuracy in ${getDescriptionForMode(editorState.completionMode)}, could you assist with the code at the cursor location marked '${CURSOR_PLACEHOLDER}'? This code is part of ${filename ? `the ${filename} file` : 'a larger project'}. Please `;
 
   switch (editorState.completionMode) {
     case 'fill-in-the-middle':
-      prompt += `generate a completion to fill the middle of the code surrounding '${placeholder}'. Ensure the completion precisely replaces '${placeholder}', maintaining consistency, semantic accuracy, and relevance to the context.`;
+      prompt += `generate a completion to fill the middle of the code surrounding '${CURSOR_PLACEHOLDER}'. Ensure the completion precisely replaces '${CURSOR_PLACEHOLDER}', maintaining consistency, semantic accuracy, and relevance to the context.`;
       break;
     case 'continuation':
-      prompt += `provide a continuation from '${placeholder}'. The completion should fluidly extend the existing code, precisely replacing '${placeholder}' while adhering to ${language} standards and ensuring semantic correctness and contextual appropriateness.`;
+      prompt += `provide a continuation from '${CURSOR_PLACEHOLDER}'. The completion should fluidly extend the existing code, precisely replacing '${CURSOR_PLACEHOLDER}' while adhering to ${language} standards and ensuring semantic correctness and contextual appropriateness.`;
       break;
   }
 
-  prompt += ` Directly output only the necessary completion code, without additional explanations or content.`;
+  prompt += ` Output only the necessary completion code, without additional explanations or content.`;
 
   if (framework) {
     prompt += ` The code utilizes the ${framework} framework in ${language}.`;
@@ -40,19 +40,15 @@ export const getSystemPrompt = (metadata: CompletionMetadata): string => {
     prompt += ` The code is implemented in ${language}.`;
   }
 
-  prompt = prompt.trim().endsWith('.') ? prompt : prompt + '.';
-
-  return prompt;
+  return prompt.endsWith('.') ? prompt : prompt + '.';
 };
 
-export const getUserPrompt = (metadata: CompletionMetadata): string => {
-  const {editorState, codeBeforeCursor, codeAfterCursor, externalContext} =
-    metadata;
-  const placeholder = getPromptPlaceholder(editorState.completionMode);
+export const generateUserPrompt = (metadata: CompletionMetadata): string => {
+  const {codeBeforeCursor, codeAfterCursor, externalContext} = metadata;
 
-  let prompt = `${codeBeforeCursor}${placeholder}${codeAfterCursor}\n`;
+  let prompt = `${codeBeforeCursor}${CURSOR_PLACEHOLDER}${codeAfterCursor}\n\n`;
 
-  // Append external context information if it exists
+  // Append external context information if available
   if (externalContext && externalContext.length > 0) {
     prompt += externalContext
       .map(context => `// Path: ${context.path}\n${context.content}\n`)

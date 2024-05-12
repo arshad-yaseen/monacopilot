@@ -3,7 +3,7 @@ import {
   DEFAULT_COMPLETION_MODEL,
   GROQ_API_ENDPOINT,
 } from '../constants/completion';
-import {getSystemPrompt, getUserPrompt} from '../helpers/copilot';
+import {generateSystemPrompt, generateUserPrompt} from '../helpers/copilot';
 import {
   CompletionRequestParams,
   GroqCompletion,
@@ -53,11 +53,11 @@ class Copilot {
         messages: [
           {
             role: 'system',
-            content: getSystemPrompt(completionMetadata),
+            content: generateSystemPrompt(completionMetadata),
           },
           {
             role: 'user',
-            content: getUserPrompt(completionMetadata),
+            content: generateUserPrompt(completionMetadata),
           },
         ],
       };
