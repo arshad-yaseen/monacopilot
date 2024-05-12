@@ -1,19 +1,19 @@
 import {EditorModelType, EditorPositionType} from '../../types/common';
-import {CompletionMetadata} from '../../types/completion';
+import {CompletionMode} from '../../types/completion';
 import {getCharAtPosition} from './common';
 
-export const isEmptyAfterCursor = (
+export const isAfterCursorWhitespace = (
   position: EditorPositionType,
   model: EditorModelType,
 ) => {
   const line = model.getLineContent(position.lineNumber);
   const index = position.column - 1;
-  const textAfterCursor = line.substring(index).trim();
-  return textAfterCursor === '';
+  const textAfterCursor = line.substring(index);
+  return /\s/.test(textAfterCursor);
 };
 
 /** Check if there is code after the cursor */
-export const isCodeAfterCursor = (
+export const isCharAfterCursor = (
   position: EditorPositionType,
   model: EditorModelType,
 ): boolean => {
@@ -25,6 +25,8 @@ export const isCodeAfterCursor = (
     ')',
     ',',
     ' ',
+    ':',
+    '.',
   ]);
   const line = model.getLineContent(position.lineNumber);
   const charAfterCursor = getCharAtPosition(line, position.column - 1);
@@ -77,75 +79,23 @@ export const isCursorAtStartWithCodeAround = (
 /**
  * Determines the most suitable completion mode based on the cursor position and surrounding code context.
  *
- * @returns The completion mode ('contextual-fill', 'continuation', 'expansion').
+ * @returns The completion mode ('fill-in-the-middle' | 'continuation').
  */
 export const determineCompletionMode = (
   position: EditorPositionType,
   model: EditorModelType,
-): CompletionMetadata['editorState']['completionMode'] => {
-  const textUntilPosition = model.getValueInRange({
-    startLineNumber: 1,
-    startColumn: 1,
-    endLineNumber: position.lineNumber,
-    endColumn: position.column,
-  });
+): CompletionMode => {
+  const {codeAfterCursor} = getCodeBeforeAndAfterCursor(position, model);
+  const significantCharacterCount = 3;
 
-  const currentLineText = model.getLineContent(position.lineNumber);
+  // Calculate the number of non-whitespace characters in the code after the cursor
+  const nonWhitespaceCount = [...codeAfterCursor].reduce((count, char) => {
+    return char.trim() !== '' && count < significantCharacterCount
+      ? count + 1
+      : count;
+  }, 0);
 
-  if (isCursorAtTextEnd(currentLineText, position.column)) {
-    if (isLineEmptyOrEndsWithClosingBrace(currentLineText)) {
-      return 'continuation';
-    }
-    return 'line-continuation';
-  }
-
-  if (
-    isInsideLiteralOrParentheses(
-      textUntilPosition,
-      currentLineText,
-      position.column,
-    )
-  ) {
-    return 'fill-in';
-  }
-
-  // Default to line-continuation mode if none of the specific conditions are met
-  return 'line-continuation';
-};
-
-const isCursorAtTextEnd = (lineText: string, column: number): boolean => {
-  const trimmedLine = lineText.trim();
-  return (
-    column > lineText.length || // Beyond the actual text
-    [';', '{', '}'].some(char => trimmedLine.endsWith(char)) // Ends with statement or block delimiters
-  );
-};
-
-// Check if the line is empty or ends with a closing brace
-const isLineEmptyOrEndsWithClosingBrace = (lineText: string) => {
-  const trimmedLine = lineText.trim();
-  return trimmedLine.length === 0 || trimmedLine.endsWith('}');
-};
-
-const isInsideLiteralOrParentheses = (
-  textUntilPosition: string,
-  lineText: string,
-  column: number,
-): boolean => {
-  const textBeforeCursor = textUntilPosition.trim();
-  const charBeforeCursor = textBeforeCursor[textBeforeCursor.length - 1];
-  const charAfterCursor = lineText[column - 1] || ''; // Safeguard against undefined for cursor at line end
-
-  return (
-    ['"', "'", '`', '(', '[', '{'].includes(charBeforeCursor) &&
-    charAfterCursor ===
-      {
-        '"': '"',
-        "'": "'",
-        '`': '`',
-        '(': ')',
-        '[': ']',
-        '{': '}',
-      }[charBeforeCursor]
-  );
+  return nonWhitespaceCount >= significantCharacterCount
+    ? 'fill-in-the-middle'
+    : 'continuation';
 };

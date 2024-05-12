@@ -123,7 +123,6 @@ const FILTER_CHARACTER_MAP: {
   '~': 95,
 };
 
-// Array of weights for the contextual filter
 const FILTER_WEIGHTS: number[] = [
   0.9978708359643611, 0.7001905605239328, -0.1736749244124868,
   -0.22994157947320112, 0.13406692641682572, -0.007751370662011853,
@@ -192,7 +191,7 @@ const FILTER_WEIGHTS: number[] = [
 const FILTER_INTERCEPT: number = -0.3043572714994554;
 
 // 15% acceptance threshold
-const CONTEXTUAL_FILTER_ACCEPT_THRESHOLD: number = 0.15;
+const CONTEXTUAL_FILTER_ACCEPT_THRESHOLD: number = 0.13;
 
 export {
   FILTER_LANGUAGE_MAP,

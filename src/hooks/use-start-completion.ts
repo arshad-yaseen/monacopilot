@@ -112,7 +112,7 @@ const useStartCompletion = (
             });
 
             if (completion) {
-              const newItem = {
+              const newItem: EditorInlineCompletionType = {
                 insertText: completion,
                 range: cursorRange,
               };
@@ -126,7 +126,6 @@ const useStartCompletion = (
               };
             }
           } catch (error) {
-            console.error('Error fetching completion item:', error);
             return {items: []};
           }
 

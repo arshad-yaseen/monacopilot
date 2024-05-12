@@ -1,14 +1,11 @@
 import {CONTEXTUAL_FILTER_ACCEPT_THRESHOLD} from '../../constants/contextual-filter';
-import {
-  CodeContextualFilterManager,
-  codeContextualFilterScore,
-} from '../../helpers/contextual-filter';
+import {getContextualFilterScore} from '../../helpers/contextual-filter';
 import {EditorModelType, EditorPositionType} from '../../types/common';
 import {
   getCodeBeforeAndAfterCursor,
-  isCodeAfterCursor,
+  isAfterCursorWhitespace,
+  isCharAfterCursor,
   isCursorAtStartWithCodeAround,
-  isEmptyAfterCursor,
 } from './syntax-parser';
 
 /**
@@ -20,36 +17,47 @@ export const isValidCompletion = (
   model: EditorModelType,
   language: string | undefined,
 ): boolean => {
+  console.log(
+    'contextual score is: ',
+    contextualScore(cursorPosition, model, language),
+  );
+  console.log(
+    'isCharAfterCursor is: ',
+    !isCharAfterCursor(cursorPosition, model),
+  );
+  console.log(
+    'isCursorAtStartWithCodeAround is: ',
+    !isCursorAtStartWithCodeAround(cursorPosition, model),
+  );
+
   return (
-    codeContextualScore(cursorPosition, model, language) >
+    contextualScore(cursorPosition, model, language) >
       CONTEXTUAL_FILTER_ACCEPT_THRESHOLD &&
-    !isCodeAfterCursor(cursorPosition, model) &&
+    !isCharAfterCursor(cursorPosition, model) &&
     !isCursorAtStartWithCodeAround(cursorPosition, model)
   );
 };
 
 // Compute the contextual score for the current editor state
-const codeContextualScore = (
+const contextualScore = (
   cursorPosition: EditorPositionType,
   model: EditorModelType,
   language: string | undefined,
 ) => {
-  const code = model.getValue();
   const {codeBeforeCursor} = getCodeBeforeAndAfterCursor(cursorPosition, model);
-  const afterCursorWhitespace = isEmptyAfterCursor(cursorPosition, model);
-  const documentLength = code.length;
+  const afterCursorWhitespace = isAfterCursorWhitespace(cursorPosition, model);
+  const documentLength = model.getValueLength();
   const promptEndPos = model.getOffsetAt(cursorPosition);
 
-  return codeContextualFilterScore({
+  return getContextualFilterScore({
     properties: {
-      afterCursorWhitespace: afterCursorWhitespace.toString(),
+      afterCursorWhitespace: afterCursorWhitespace ? 'true' : 'false',
       languageId: language,
     },
     measurements: {
       documentLength,
       promptEndPos,
     },
-    get: (manager: typeof CodeContextualFilterManager) => new manager(),
     prefix: codeBeforeCursor,
   });
 };

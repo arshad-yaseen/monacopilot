@@ -10,8 +10,4 @@ export default {
   'async (': ') => {\n\t$1\n}$0',
   'async =>': ' {\n\t$1\n}$0',
   ') =>': ' {',
-  'function fibonacci':
-    '(n) {\n  if (n <= 1) {\n    return n;\n  }\n  return fibonacci(n - 1) + fibonacci(n - 2);\n}',
-  'const fibonacci ':
-    '= (n) => {\n  if (n <= 1) {\n    return n;\n  }\n  return fibonacci(n - 1) + fibonacci(n - 2);\n}',
 };

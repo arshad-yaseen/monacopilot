@@ -3,13 +3,13 @@ import {
   DEFAULT_COMPLETION_MODEL,
   GROQ_API_ENDPOINT,
 } from '../constants/completion';
-import {getCompletionPrompt} from '../helpers/copilot';
+import {getSystemPrompt, getUserPrompt} from '../helpers/copilot';
 import {
-  CompletionConstructorParams,
   CompletionRequestParams,
   GroqCompletion,
   GroqCompletionCreateParams,
 } from '../types/completion';
+import {CopilotOptions} from '../types/copilot';
 import {POST} from '../utils/http';
 import Config from './config';
 
@@ -18,7 +18,7 @@ import Config from './config';
  * and an API key, and provides a method to send a completion request to Groq API and return the completion.
  *
  * @param {string} apiKey - The Groq API key.
- * @param {CompletionConstructorParams} [options] - Optional parameters to configure the completion model,
+ * @param {CopilotOptions} [options] - Optional parameters to configure the completion model,
  * such as the model ID. Defaults to `llama3-70b-8192` if not specified.
  *
  * @example
@@ -31,7 +31,7 @@ import Config from './config';
 class Copilot {
   private apiKey: string;
 
-  constructor(apiKey: string, options?: CompletionConstructorParams) {
+  constructor(apiKey: string, options?: CopilotOptions) {
     if (!apiKey) {
       throw new Error('API key is missing');
     }
@@ -40,36 +40,24 @@ class Copilot {
     Config.setModel(options?.model || DEFAULT_COMPLETION_MODEL);
   }
 
-  public async complete(
-    data: CompletionRequestParams,
-  ): Promise<GroqCompletion | {error: string}> {
+  public async complete({
+    completionMetadata,
+  }: CompletionRequestParams): Promise<GroqCompletion | {error: string}> {
     try {
       const model = Config.getModel();
 
       const endpoint = GROQ_API_ENDPOINT;
 
-      const {systemPrompt, userPrompt} = getCompletionPrompt(
-        data.completionMetadata,
-      );
-
-      console.log({
-        systemPrompt,
-        userPrompt,
-      });
-
       const body: GroqCompletionCreateParams = {
         model: COMPLETION_MODEL_ID[model],
-        max_tokens: 200,
-        temperature: 0.3,
-        top_p: 0.8,
         messages: [
           {
             role: 'system',
-            content: systemPrompt,
+            content: getSystemPrompt(completionMetadata),
           },
           {
             role: 'user',
-            content: userPrompt,
+            content: getUserPrompt(completionMetadata),
           },
         ],
       };

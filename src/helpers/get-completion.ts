@@ -3,8 +3,11 @@ import {
   EditorPositionType,
   FetchCompletionItemParams,
 } from '../types/common';
-import {CompletionRequestParams, GroqCompletion} from '../types/completion';
-import {sanitizeCompletionCode} from '../utils/completion/common';
+import {
+  CompletionMetadata,
+  CompletionRequestParams,
+  GroqCompletion,
+} from '../types/completion';
 import {
   determineCompletionMode,
   getCodeBeforeAndAfterCursor,
@@ -59,7 +62,7 @@ export const fetchCompletionItem = async ({
     return null;
   }
 
-  return sanitizeCompletionCode(data.choices[0].message.content);
+  return data.choices[0].message.content;
 };
 
 // Construct completion metadata based on the cursor position and code.
@@ -79,8 +82,7 @@ export const constructCompletionMetadata = ({
   | 'language'
   | 'framework'
   | 'externalContext'
->) => {
-  const {lineNumber, column} = position;
+>): CompletionMetadata => {
   const completionMode = determineCompletionMode(position, model);
 
   const {codeBeforeCursor, codeAfterCursor} = getCodeBeforeAndAfterCursor(
@@ -88,14 +90,24 @@ export const constructCompletionMetadata = ({
     model,
   );
 
+  const code = codeBeforeCursor + codeAfterCursor;
+
+  const codeMap = code.split('\n').reduce((acc, line, lineNumber) => {
+    line.split('').forEach((char, column) => {
+      acc = {
+        ...acc,
+        [`${lineNumber + 1}:${column + 1}`]: char,
+      };
+    });
+    return acc;
+  }, {});
+
+  console.log(codeMap);
+
   return {
     filename,
     language,
     framework: framework || undefined,
-    cursorPosition: {
-      lineNumber: lineNumber,
-      columnNumber: column,
-    },
     externalContext,
     codeBeforeCursor,
     codeAfterCursor,
@@ -108,15 +120,10 @@ export const constructCompletionMetadata = ({
 // Compute a cache key based on the cursor's position and preceding text
 // This key is used to cache completion results for the same code context
 export const computeCacheKeyForCompletion = (
-  {lineNumber, column}: EditorPositionType,
+  cursorPosition: EditorPositionType,
   model: EditorModelType,
 ): string => {
-  const codeUntilCursor = model.getValueInRange({
-    startLineNumber: 1,
-    startColumn: 1,
-    endLineNumber: lineNumber,
-    endColumn: column,
-  });
+  const {codeBeforeCursor} = getCodeBeforeAndAfterCursor(cursorPosition, model);
 
-  return `${lineNumber}:${column}:${codeUntilCursor}`;
+  return `${cursorPosition.lineNumber}:${cursorPosition.column}:${codeBeforeCursor}`;
 };

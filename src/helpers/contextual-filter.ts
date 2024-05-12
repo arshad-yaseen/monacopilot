@@ -4,10 +4,10 @@ import {
   FILTER_LANGUAGE_MAP,
   FILTER_WEIGHTS,
 } from '../constants/contextual-filter';
-import {CodeContextualFilterContext} from '../types/completion';
+import {ContextualFilterContext} from '../types/completion';
 import {getLastLineLength} from '../utils/completion/common';
 
-class CodeContextualFilterManager {
+class ContextualFilterManager {
   previousLabel: number;
   previousLabelTimestamp: number;
   probabilityAccept: number;
@@ -24,79 +24,65 @@ class CodeContextualFilterManager {
  * @param context The contextual filter context.
  * @returns The contextual filter score.
  */
-const codeContextualFilterScore = (
-  context: CodeContextualFilterContext,
+export const getContextualFilterScore = (
+  context: ContextualFilterContext,
 ): number => {
-  const manager = context.get(CodeContextualFilterManager);
-  const previousLabel = manager.previousLabel;
-  let modifier = 0;
-
+  const manager = new ContextualFilterManager();
+  const prevLabel = manager.previousLabel;
+  let correction = 0;
   if (context.properties.afterCursorWhitespace === 'true') {
-    modifier = 1;
+    correction = 1;
   }
+  const timeSinceLastLabel =
+    (Date.now() - manager.previousLabelTimestamp) / 1000;
+  const timeFactor = Math.log(1 + timeSinceLastLabel);
 
-  const timeDifference = (Date.now() - manager.previousLabelTimestamp) / 1000;
-  const timeScore = Math.log(1 + timeDifference);
-
-  let lastLineLengthScore = 0;
-  let characterMapScore = 0;
+  let lastLineLog = 0,
+    lastCharWeight = 0,
+    trimLineLog = 0,
+    trimCharWeight = 0;
 
   if (context.prefix) {
-    lastLineLengthScore = Math.log(1 + getLastLineLength(context.prefix));
-    const lastCharacter = context.prefix.slice(-1);
-
-    if (lastCharacter in FILTER_CHARACTER_MAP) {
-      characterMapScore = FILTER_CHARACTER_MAP[lastCharacter];
-    }
+    lastLineLog = Math.log(1 + getLastLineLength(context.prefix));
+    const lastChar = context.prefix.slice(-1);
+    lastCharWeight = FILTER_CHARACTER_MAP[lastChar] ?? 0;
   }
 
-  let documentLengthScore = 0;
-  if (context.measurements.documentLength) {
-    documentLengthScore = Math.log(1 + context.measurements.documentLength);
+  const trimmedPrefix = context.prefix?.trimEnd();
+  if (trimmedPrefix) {
+    trimLineLog = Math.log(1 + getLastLineLength(trimmedPrefix));
+    const trimChar = trimmedPrefix.slice(-1);
+    trimCharWeight = FILTER_CHARACTER_MAP[trimChar] ?? 0;
   }
 
-  let promptEndPosScore = 0;
-  if (context.measurements.promptEndPos) {
-    promptEndPosScore = Math.log(1 + context.measurements.promptEndPos);
-  }
-
-  let relativePositionScore = 0;
-  if (
-    context.measurements.promptEndPos &&
-    context.measurements.documentLength
-  ) {
-    relativePositionScore =
-      (context.measurements.promptEndPos + 0.5) /
-      (1 + context.measurements.documentLength);
-  }
-
-  let languageScore = 0;
-  if (
-    context.properties.languageId &&
-    context.properties.languageId in FILTER_LANGUAGE_MAP
-  ) {
-    languageScore = FILTER_LANGUAGE_MAP[context.properties.languageId];
-  }
+  const docLengthLog = context.measurements.documentLength
+    ? Math.log(1 + context.measurements.documentLength)
+    : 0;
+  const promptPosLog = context.measurements.promptEndPos
+    ? Math.log(1 + context.measurements.promptEndPos)
+    : 0;
+  const relativePromptPos =
+    context.measurements.promptEndPos && context.measurements.documentLength
+      ? (context.measurements.promptEndPos + 0.5) /
+        (1 + context.measurements.documentLength)
+      : 0;
+  const languageWeight = context.properties.languageId
+    ? FILTER_LANGUAGE_MAP[context.properties.languageId]
+    : 0;
 
   let score = FILTER_INTERCEPT;
-  score += FILTER_WEIGHTS[0] * previousLabel;
-  score += FILTER_WEIGHTS[1] * modifier;
-  score += FILTER_WEIGHTS[2] * timeScore;
-  score += FILTER_WEIGHTS[3] * lastLineLengthScore;
-  score += FILTER_WEIGHTS[4] * documentLengthScore;
-  score += FILTER_WEIGHTS[5] * promptEndPosScore;
-  score += FILTER_WEIGHTS[6] * relativePositionScore;
-  score += FILTER_WEIGHTS[7 + languageScore];
-  score += FILTER_WEIGHTS[29 + characterMapScore];
+  score +=
+    FILTER_WEIGHTS[0] * prevLabel +
+    FILTER_WEIGHTS[1] * correction +
+    FILTER_WEIGHTS[2] * timeFactor;
+  score += FILTER_WEIGHTS[3] * lastLineLog + FILTER_WEIGHTS[4] * trimLineLog;
+  score += FILTER_WEIGHTS[5] * docLengthLog + FILTER_WEIGHTS[6] * promptPosLog;
+  score += FILTER_WEIGHTS[7] * relativePromptPos;
+  score += FILTER_WEIGHTS[8 + languageWeight];
+  score += FILTER_WEIGHTS[29 + lastCharWeight];
+  score += FILTER_WEIGHTS[125 + trimCharWeight];
 
-  const acceptanceProbability = 1 / (1 + Math.exp(-score));
-  manager.probabilityAccept = acceptanceProbability;
-
-  return acceptanceProbability;
-};
-
-export {
-  CodeContextualFilterManager,
-  getLastLineLength,
-  codeContextualFilterScore,
+  const probability = 1 / (1 + Math.exp(-score));
+  manager.probabilityAccept = probability;
+  return probability;
 };

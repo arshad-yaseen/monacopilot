@@ -1,15 +1,9 @@
-import {CompletionMetadata} from '../types/completion';
-import {ExternalContextType} from '../types/editor-props';
+import {CompletionMetadata, CompletionMode} from '../types/completion';
 
-const formatExternalContext = (
-  externalContext: ExternalContextType | undefined,
-): string => {
-  if (!externalContext) {
-    return '';
-  }
-  return externalContext
-    .map(context => `<${context.path}>${context.content}</${context.path}>`)
-    .join('\n\n');
+const getPromptPlaceholder = (completionMode: CompletionMode) => {
+  return completionMode === 'fill-in-the-middle'
+    ? '<<FILL_IN_THE_MIDDLE>>'
+    : '<<CONTINUATION>>';
 };
 
 /**
@@ -17,54 +11,53 @@ const formatExternalContext = (
  * @param {CompletionMetadata} metadata - Metadata containing details for code completion.
  * @returns {Object} - An object containing the system and user prompts.
  */
-export const getCompletionPrompt = (
-  metadata: CompletionMetadata,
-): {systemPrompt: string; userPrompt: string} => {
-  const actionMap: Record<
-    CompletionMetadata['editorState']['completionMode'],
-    string
-  > = {
-    'line-continuation':
-      'continue seamlessly from the cursor, maintaining syntactical correctness and logical flow',
-    'fill-in':
-      'accurately fill in the missing segment, ensuring it integrates perfectly with the content before and after the cursor while adhering to syntax and logical coherence',
-    continuation:
-      'complete the next logical segment based on the provided context, ensuring syntactical correctness and logical coherence',
-  };
+export const getSystemPrompt = (metadata: CompletionMetadata): string => {
+  const {
+    language = 'the language',
+    filename,
+    framework,
+    editorState,
+  } = metadata;
 
-  const action = actionMap[metadata.editorState.completionMode];
+  const placeholder = getPromptPlaceholder(editorState.completionMode);
 
-  const systemPrompt = `You are a code completion assistant. Based on the cursor's position and the surrounding code context, begin typing at the cursor. The completion mode "${metadata.editorState.completionMode}" requires you to ${action}.
-  ${metadata.language ? `Follow line breaks, indentation, and spacing rules according to the programming language "${metadata.language}".` : 'Follow general coding conventions.'}
-  Output only the completion without additional explanations.`;
+  let prompt = `As an expert ${language} code completion assistant known for high accuracy in code completion, could you assist with the code at the location marked '${placeholder}' placeholder? This code is part of the ${filename ? `${filename} file` : 'a larger project'}. Please `;
 
-  const userPrompt = `
-    ${metadata.filename ? `<current-file>The current file requiring completion: ${metadata.filename}</current-file>` : ''}
+  switch (editorState.completionMode) {
+    case 'fill-in-the-middle':
+      prompt += `generate a completion to fill the middle of the code surrounding '${placeholder}'. Ensure the completion precisely replaces '${placeholder}', maintaining consistency, semantic accuracy, and relevance to the context.`;
+      break;
+    case 'continuation':
+      prompt += `provide a continuation from '${placeholder}'. The completion should fluidly extend the existing code, precisely replacing '${placeholder}' while adhering to ${language} standards and ensuring semantic correctness and contextual appropriateness.`;
+      break;
+  }
 
-    <code-context>
-      Full context including all lines before and after the cursor position:
-      ${metadata.codeBeforeCursor}{cursor}${metadata.codeAfterCursor}
-    </code-context>
-    
-    <immediate-context>
-      Content directly before the cursor, serving as the immediate context for the completion:
-      ${metadata.codeBeforeCursor}
-    </immediate-context>
+  prompt += ` Directly output only the necessary completion code, without additional explanations or content.`;
 
-    <cursor-position>
-      Line and column number where the completion should start:
-      Line ${metadata.cursorPosition.lineNumber}, Column ${metadata.cursorPosition.columnNumber}
-    </cursor-position>
+  if (framework) {
+    prompt += ` The code utilizes the ${framework} framework in ${language}.`;
+  } else {
+    prompt += ` The code is implemented in ${language}.`;
+  }
 
-    ${metadata.externalContext ? `<external-context>Other relevant files in the workspace: ${formatExternalContext(metadata.externalContext)}</external-context>` : ''}
+  prompt = prompt.trim().endsWith('.') ? prompt : prompt + '.';
 
-    <completion-details>
-      Mode specifying the nature of the auto-completion task:
-      ${metadata.editorState.completionMode}
-      ${metadata.language ? `Programming language which dictates formatting rules: ${metadata.language}` : 'No specific programming language provided.'}
-      ${metadata.framework ? `Framework being used, if applicable: ${metadata.framework}` : ''}
-    </completion-details>
-  `;
+  return prompt;
+};
 
-  return {systemPrompt, userPrompt};
+export const getUserPrompt = (metadata: CompletionMetadata): string => {
+  const {editorState, codeBeforeCursor, codeAfterCursor, externalContext} =
+    metadata;
+  const placeholder = getPromptPlaceholder(editorState.completionMode);
+
+  let prompt = `${codeBeforeCursor}${placeholder}${codeAfterCursor}\n`;
+
+  // Append external context information if it exists
+  if (externalContext && externalContext.length > 0) {
+    prompt += externalContext
+      .map(context => `// Path: ${context.path}\n${context.content}\n`)
+      .join('\n');
+  }
+
+  return prompt;
 };
