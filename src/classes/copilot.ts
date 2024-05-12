@@ -1,5 +1,5 @@
 import {
-  COMPLETION_MODEL_ID,
+  COMPLETION_MODEL_IDS,
   DEFAULT_COMPLETION_MODEL,
   GROQ_API_ENDPOINT,
 } from '../constants/completion';
@@ -33,7 +33,7 @@ class Copilot {
 
   constructor(apiKey: string, options?: CopilotOptions) {
     if (!apiKey) {
-      throw new Error('API key is missing');
+      throw new Error('Groq API key is required to initialize Copilot.');
     }
 
     this.apiKey = apiKey;
@@ -46,10 +46,8 @@ class Copilot {
     try {
       const model = Config.getModel();
 
-      const endpoint = GROQ_API_ENDPOINT;
-
       const body: GroqCompletionCreateParams = {
-        model: COMPLETION_MODEL_ID[model],
+        model: COMPLETION_MODEL_IDS[model],
         messages: [
           {
             role: 'system',
@@ -68,7 +66,7 @@ class Copilot {
       };
 
       const completion = await POST<GroqCompletion, GroqCompletionCreateParams>(
-        endpoint,
+        GROQ_API_ENDPOINT,
         body,
         {
           headers,

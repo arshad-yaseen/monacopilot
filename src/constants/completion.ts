@@ -1,6 +1,6 @@
 import {CompletionModelType} from '../types/completion';
 
-export const COMPLETION_MODEL_ID: Record<CompletionModelType, string> = {
+export const COMPLETION_MODEL_IDS: Record<CompletionModelType, string> = {
   llama: 'llama3-70b-8192',
 };
 
