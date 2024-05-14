@@ -22,10 +22,8 @@ const EDITOR_OPTIONS: EditorProps['options'] = {
   scrollBeyondLastLine: false,
   fontFamily: 'var(--font-mono)',
   fontSize: 15,
-  scrollbar: {alwaysConsumeMouseWheel: false},
   renderLineHighlightOnlyWhenFocus: true,
   lineDecorationsWidth: 0,
-  cursorSmoothCaretAnimation: 'on',
 };
 
 const EditorDemo = () => {
@@ -58,12 +56,12 @@ const EditorDemo = () => {
       transition={{duration: 0.4, delay: 0.6}}
       className="rounded-xl my-8 overflow-hidden bg-background border shadow-md shadow-neutral-50 dark:shadow-neutral-900 md:w-[700px] w-full h-[400px] relative">
       <Tabs defaultValue="index.js" className="w-full h-full">
-        <TabsList className="absolute top-0 left-0 rounded-b-none z-50 w-full justify-start px-3 h-12 gap-2">
+        <TabsList className="absolute top-0 border-b left-0 rounded-b-none z-50 w-full justify-start px-3 h-12 gap-2 bg-neutral-50 dark:bg-neutral-950">
           {files.map(file => (
             <TabsTrigger
               key={file.filename}
               value={file.filename}
-              className="rounded-md border dark:border-neutral-700 font-mono border-neutral-300">
+              className="rounded-md border font-mono">
               {file.filename}
             </TabsTrigger>
           ))}
