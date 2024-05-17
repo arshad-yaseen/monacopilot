@@ -4,11 +4,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {
-  DoubleArrowRightIcon,
-  LightningBoltIcon,
-  ShadowIcon,
-} from '@radix-ui/react-icons';
+import {FileIcon, LightningBoltIcon, ShadowIcon} from '@radix-ui/react-icons';
 
 const FEATURES = [
   {
@@ -17,15 +13,16 @@ const FEATURES = [
     description: 'Get completions based on the framework you are using.',
   },
   {
+    icon: FileIcon,
+    title: 'Multi-file Completions',
+    description:
+      "You can provide other files' code or content and get completions that are relevant to that context.",
+  },
+  {
     icon: ShadowIcon,
     title: '20+ Popular Themes',
     description:
       'Choose from a wide range of themes to customize your editor easily.',
-  },
-  {
-    icon: DoubleArrowRightIcon,
-    title: 'Fast completions',
-    description: 'Get completions in fast and efficient way.',
   },
 ];
 

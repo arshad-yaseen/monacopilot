@@ -20,7 +20,7 @@ export interface CompletionRequestParams {
   completionMetadata: CompletionMetadata;
 }
 
-export type CompletionMode = 'fill-in-the-middle' | 'continuation';
+export type CompletionMode = 'fill-in-the-middle' | 'completion';
 
 export interface CompletionMetadata {
   language: string | undefined;

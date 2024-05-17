@@ -11,36 +11,32 @@ const useTypingDebounceFn = <T extends (...args: any[]) => Promise<any>>(
   func: T,
   delay: number = 1000,
 ): ((...funcArgs: Parameters<T>) => Promise<ReturnType<T>>) => {
-  const [timer, setTimer] = React.useState<ReturnType<
-    typeof setTimeout
-  > | null>(null);
+  const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const debouncedFunc = React.useCallback(
     (...args: Parameters<T>): Promise<ReturnType<T>> => {
-      if (timer) {
-        clearTimeout(timer);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
       }
 
       return new Promise<ReturnType<T>>((resolve, reject) => {
-        const newTimer = setTimeout(() => {
+        timerRef.current = setTimeout(() => {
           func(...args)
             .then(resolve)
             .catch(reject);
         }, delay);
-
-        setTimer(newTimer);
       });
     },
-    [func, delay, timer],
+    [func, delay],
   );
 
   React.useEffect(() => {
     return () => {
-      if (timer) {
-        clearTimeout(timer);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
       }
     };
-  }, [timer]);
+  }, []);
 
   return debouncedFunc;
 };

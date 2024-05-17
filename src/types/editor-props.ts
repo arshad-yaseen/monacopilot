@@ -44,7 +44,7 @@ export type FrameworkType =
   | 'ant design';
 
 export type CompletionSpeedType = 'little-faster' | 'normal';
-export type ExternalContextType = Array<{
+export type ExternalContextType = {
   /**
    * The relative path from the current editing code in the editor to an external file.
    *
@@ -59,7 +59,7 @@ export type ExternalContextType = Array<{
    * The content of the external file as a string.
    */
   content: string;
-}>;
+}[];
 
 /**
  * Themes available for the Rich Monaco Editor.

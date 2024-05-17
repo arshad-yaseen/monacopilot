@@ -79,23 +79,27 @@ export const isCursorAtStartWithCodeAround = (
 /**
  * Determines the most suitable completion mode based on the cursor position and surrounding code context.
  *
- * @returns The completion mode ('fill-in-the-middle' | 'continuation').
+ * @returns The completion mode ('fill-in-the-middle' | 'completion').
  */
 export const determineCompletionMode = (
   position: EditorPositionType,
   model: EditorModelType,
 ): CompletionMode => {
-  const {codeAfterCursor} = getCodeBeforeAndAfterCursor(position, model);
-  const significantCharacterCount = 3;
+  const {lineNumber, column} = position;
 
-  // Calculate the number of non-whitespace characters in the code after the cursor
-  const nonWhitespaceCount = [...codeAfterCursor].reduce((count, char) => {
-    return char.trim() !== '' && count < significantCharacterCount
-      ? count + 1
-      : count;
-  }, 0);
+  const currentLine = model.getLineContent(lineNumber);
 
-  return nonWhitespaceCount >= significantCharacterCount
-    ? 'fill-in-the-middle'
-    : 'continuation';
+  const codeBeforeCursorInLine = currentLine.slice(0, column - 1).trim();
+  const codeAfterCursorInLine = currentLine.slice(column - 1).trim();
+
+  // Determine if there is content before or after the cursor in the current line
+  const hasCodeBeforeCursor = codeBeforeCursorInLine.length > 0;
+  const hasCodeAfterCursor = codeAfterCursorInLine.length > 0;
+
+  // Determine fill-in-the-middle based on code presence
+  if (hasCodeBeforeCursor && hasCodeAfterCursor) {
+    return 'fill-in-the-middle';
+  }
+
+  return 'completion';
 };

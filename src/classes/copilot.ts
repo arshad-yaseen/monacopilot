@@ -19,12 +19,12 @@ import Config from './config';
  *
  * @param {string} apiKey - The Groq API key.
  * @param {CopilotOptions} [options] - Optional parameters to configure the completion model,
- * such as the model ID. Defaults to `llama3-70b-8192` if not specified.
+ * such as the model ID. Defaults to `llama` if not specified.
  *
  * @example
  * ```typescript
  * const copilot = new Copilot(process.env.GROQ_API_KEY, {
- *   model: 'llama3-70b-8192',
+ *   model: 'llama',
  * });
  * ```
  */

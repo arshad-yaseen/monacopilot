@@ -16,7 +16,7 @@ export const EDITOR_DEFAULT_OPTIONS: EditorOptionsType = {
   automaticLayout: true,
 };
 
-export const EDITOR_BUILT_IN_THEMES: Array<EditorBuiltInTheme> = [
+export const EDITOR_BUILT_IN_THEMES: EditorBuiltInTheme[] = [
   'light',
   'vs-dark',
 ];

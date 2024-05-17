@@ -191,7 +191,7 @@ const FILTER_WEIGHTS: number[] = [
 const FILTER_INTERCEPT: number = -0.3043572714994554;
 
 // 15% acceptance threshold
-const CONTEXTUAL_FILTER_ACCEPT_THRESHOLD: number = 0.13;
+const CONTEXTUAL_FILTER_ACCEPT_THRESHOLD: number = 0.15;
 
 export {
   FILTER_LANGUAGE_MAP,
