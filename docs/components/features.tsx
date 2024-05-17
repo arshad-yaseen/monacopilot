@@ -14,7 +14,7 @@ const FEATURES = [
   },
   {
     icon: FileIcon,
-    title: 'Multi-file Completions',
+    title: 'Multi-file Context',
     description:
       "You can provide other files' code or content and get completions that are relevant to that context.",
   },

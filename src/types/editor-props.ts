@@ -68,12 +68,7 @@ export type ExternalContextType = {
 // Do not modify this type manually.
 // If you want to add a new theme, you can add it to the themes folder and run `generate-themes` script.
 // The script will automatically update this type.
-export type ThemeType =
-  | 'codesandbox-dark'
-  | 'github-dark-dimmed'
-  | 'github-dark'
-  | 'github-light'
-  | 'monokai';
+export type ThemeType = 'codesandbox-dark' | 'dracula-soft' | 'dracula' | 'github-dark-dimmed' | 'github-dark' | 'github-light' | 'monokai' | 'nord' | 'one-dark-pro-darker' | 'one-monokai';
 
 export default interface EditorProps extends MonacoEditorProps {
   /**

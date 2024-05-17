@@ -23,7 +23,7 @@ export default function Home() {
       <Editor
         endpoint="/api/copilot"
         language="javascript"
-        theme="github-light"
+        theme="one-dark-pro-darker"
         completionSpeed={isFastCompletion ? 'little-faster' : 'normal'}
         className="h-screen w-screen"
         options={{

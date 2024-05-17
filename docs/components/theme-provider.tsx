@@ -1,16 +1,15 @@
-"use client";
+'use client';
 
-import { PropsWithChildren } from "react";
+import {PropsWithChildren} from 'react';
 
-import { ThemeProvider as ThemeProviderBase } from "next-themes";
+import {ThemeProvider as ThemeProviderBase} from 'next-themes';
 
-const ThemeProvider = ({ children }: PropsWithChildren) => {
+const ThemeProvider = ({children}: PropsWithChildren) => {
   return (
     <ThemeProviderBase
       attribute="class"
       defaultTheme="light"
-      disableTransitionOnChange
-    >
+      disableTransitionOnChange>
       {children}
     </ThemeProviderBase>
   );
