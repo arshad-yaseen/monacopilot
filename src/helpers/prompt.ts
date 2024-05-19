@@ -1,6 +1,8 @@
 import {CompletionMetadata, CompletionMode} from '../types/completion';
 
 const CURSOR_PLACEHOLDER = '<<CURSOR>>';
+export const COMPLETION_NOT_REQUIRED_PLACEHOLDER =
+  'Here completion is not required.';
 
 const getProperLanguageName = (language?: string): string | undefined => {
   return language === 'javascript' ? 'latest JavaScript' : language;
@@ -12,6 +14,8 @@ const getDescriptionForMode = (mode: CompletionMode): string => {
       return 'filling in the middle of the code';
     case 'completion':
       return 'completing the code';
+    default:
+      return 'unknown mode';
   }
 };
 
@@ -55,7 +59,7 @@ export const generateUserPrompt = (metadata: CompletionMetadata): string => {
       break;
   }
 
-  prompt += ` Output only the necessary completion code, without additional explanations or content.${frameworkText}`;
+  prompt += ` Output only the necessary completion code, without additional explanations or content. If the completion is not required, does not make sense, or is not needed at the '${CURSOR_PLACEHOLDER}' location, please output '${COMPLETION_NOT_REQUIRED_PLACEHOLDER}'.${frameworkText}`;
 
   let codeForCompletion = `${codeBeforeCursor}${CURSOR_PLACEHOLDER}${codeAfterCursor}\n\n`;
 

@@ -14,6 +14,7 @@ import {
 } from '../utils/completion/syntax-parser';
 import {isValidCompletion} from '../utils/completion/validate-completion';
 import {POST} from '../utils/http';
+import {COMPLETION_NOT_REQUIRED_PLACEHOLDER} from './prompt';
 
 export const fetchCompletionItem = async ({
   filename,
@@ -62,7 +63,11 @@ export const fetchCompletionItem = async ({
     return null;
   }
 
-  return data.choices[0].message.content;
+  return sanitizeCompletion(data.choices[0].message.content);
+};
+
+const sanitizeCompletion = (completion: string): string => {
+  return completion.replace(COMPLETION_NOT_REQUIRED_PLACEHOLDER, '');
 };
 
 // Construct completion metadata based on the cursor position and code.
