@@ -5,7 +5,10 @@
  * @param {T} fallback - the fallback object to merge with
  * @return {T} the merged object
  */
-export function deepMerge<T>(partial: Partial<T> | undefined, fallback: T): T {
+export const deepMerge = <T>(
+  partial: Partial<T> | undefined,
+  fallback: T,
+): T => {
   const merged: any = {...fallback};
 
   for (const key in partial) {
@@ -28,4 +31,16 @@ export function deepMerge<T>(partial: Partial<T> | undefined, fallback: T): T {
   }
 
   return merged;
-}
+};
+
+export const joinWithAnd = (arr: string[] | undefined): string => {
+  if (!arr || arr.length === 0) {
+    return '';
+  }
+
+  if (arr.length === 1) {
+    return arr[0];
+  }
+
+  return `${arr.slice(0, -1).join(', ')} and ${arr.slice(-1)}`;
+};

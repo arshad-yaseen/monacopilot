@@ -3,7 +3,7 @@ import Editor from './editor';
 import type EditorProps from './types/editor-props';
 import type {
   EndpointType,
-  FrameworkType,
+  TechnologiesType,
   ThemeType,
 } from './types/editor-props';
 
@@ -15,5 +15,5 @@ export {
   EditorProps,
   ThemeType as Theme,
   EndpointType,
-  FrameworkType,
+  TechnologiesType,
 };

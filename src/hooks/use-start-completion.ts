@@ -13,7 +13,7 @@ import {
   EndpointType,
   ExternalContextType,
   FilenameType,
-  FrameworkType,
+  TechnologiesType,
 } from '../types/editor-props';
 import useTypingDebounceFn from './use-typing-debounce-fn';
 
@@ -22,7 +22,7 @@ const localPredictionEngine = new LocalCodePredictionEngine();
 const useStartCompletion = (
   filename: FilenameType | undefined,
   endpoint: EndpointType | undefined,
-  framework: FrameworkType | undefined,
+  technologies: TechnologiesType | undefined,
   language: string | undefined,
   completionSpeed: CompletionSpeedType | undefined,
   externalContext: ExternalContextType | undefined,
@@ -104,7 +104,7 @@ const useStartCompletion = (
               endpoint,
               code,
               language,
-              framework,
+              technologies,
               externalContext,
               model,
               position,
@@ -140,7 +140,7 @@ const useStartCompletion = (
   }, [
     monacoInstance,
     language,
-    framework,
+    technologies,
     externalContext,
     fetchCompletionItemDebounced,
     endpoint,

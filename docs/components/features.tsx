@@ -9,8 +9,9 @@ import {FileIcon, LightningBoltIcon, ShadowIcon} from '@radix-ui/react-icons';
 const FEATURES = [
   {
     icon: LightningBoltIcon,
-    title: 'Framework Specific Completions',
-    description: 'Get completions based on the framework you are using.',
+    title: 'Frameworks Specific Completions',
+    description:
+      'Get completions based on the frameworks or libraries you are using.',
   },
   {
     icon: FileIcon,

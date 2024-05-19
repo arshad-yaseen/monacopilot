@@ -3,7 +3,11 @@ import {
   ChatCompletionCreateParamsBase,
 } from 'groq-sdk/resources/chat/completions';
 
-import {ExternalContextType, FilenameType, FrameworkType} from './editor-props';
+import {
+  ExternalContextType,
+  FilenameType,
+  TechnologiesType,
+} from './editor-props';
 
 export type CompletionModelType = 'llama';
 export type GroqCompletionCreateParams = ChatCompletionCreateParamsBase;
@@ -25,7 +29,7 @@ export type CompletionMode = 'fill-in-the-middle' | 'completion';
 export interface CompletionMetadata {
   language: string | undefined;
   filename: FilenameType | undefined;
-  framework: FrameworkType | undefined;
+  technologies: TechnologiesType | undefined;
   externalContext: ExternalContextType | undefined;
   codeAfterCursor: string;
   codeBeforeCursor: string;

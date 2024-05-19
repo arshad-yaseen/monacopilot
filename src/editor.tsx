@@ -19,7 +19,7 @@ import {deepMerge} from './utils/common';
 const Editor = ({
   filename,
   endpoint,
-  framework,
+  technologies,
   theme,
   completionSpeed,
   externalContext,
@@ -49,7 +49,7 @@ const Editor = ({
   useStartCompletion(
     filename,
     endpoint,
-    framework,
+    technologies,
     props.language,
     completionSpeed,
     externalContext,

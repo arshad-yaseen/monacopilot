@@ -1,4 +1,6 @@
 import {CompletionMetadata, CompletionMode} from '../types/completion';
+import {TechnologiesType} from '../types/editor-props';
+import {joinWithAnd} from '../utils/common';
 
 const CURSOR_PLACEHOLDER = '<<CURSOR>>';
 
@@ -26,25 +28,34 @@ export const generateSystemPrompt = (metadata: CompletionMetadata): string => {
   return `You are an expert ${langText} code completion assistant known for exceptional skill in ${description}.`;
 };
 
+const formatTechnology = (
+  technologies?: TechnologiesType,
+  language?: string,
+): string => {
+  if (!technologies?.length && !language) return '';
+
+  const technologiesText = joinWithAnd(technologies);
+
+  const languageText = getProperLanguageName(language);
+
+  return `The code is written${languageText ? ` in ${languageText}` : ''}${technologiesText ? ` using ${technologiesText}` : ''}.`;
+};
+
 export const generateUserPrompt = (metadata: CompletionMetadata): string => {
   const {
     filename,
-    framework,
+    language,
+    technologies,
     editorState,
     codeBeforeCursor,
     codeAfterCursor,
     externalContext,
   } = metadata;
 
-  const language = getProperLanguageName(metadata.language);
   const modeDescription = getDescriptionForMode(editorState.completionMode);
   const fileNameText = filename
     ? `the file named ${filename}`
     : 'a larger project';
-
-  const frameworkText = framework
-    ? ` The code utilizes the ${framework} framework in ${language}.`
-    : ` The code is implemented in ${language}.`;
 
   let prompt = `You will be presented with a code snippet where the cursor location is marked with '${CURSOR_PLACEHOLDER}'. Your task is to assist with ${modeDescription}. This code is part of ${fileNameText}. Please `;
 
@@ -57,7 +68,7 @@ export const generateUserPrompt = (metadata: CompletionMetadata): string => {
       break;
   }
 
-  prompt += ` Output only the necessary completion code, without additional explanations or content.${frameworkText}`;
+  prompt += ` Output only the necessary completion code, without additional explanations or content.${formatTechnology(technologies, language)}`;
 
   let codeForCompletion = `${codeBeforeCursor}${CURSOR_PLACEHOLDER}${codeAfterCursor}\n\n`;
 

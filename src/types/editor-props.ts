@@ -4,45 +4,7 @@ import {EditorBuiltInTheme} from './common';
 
 export type EndpointType = string;
 export type FilenameType = string;
-export type FrameworkType =
-  | 'react'
-  | 'angular'
-  | 'vue.js'
-  | 'express'
-  | 'django'
-  | 'flask'
-  | 'spring boot'
-  | 'asp.net core'
-  | 'ruby on rails'
-  | 'laravel'
-  | 'node.js'
-  | 'react native'
-  | 'flutter'
-  | 'tensorflow'
-  | 'pytorch'
-  | 'keras'
-  | 'scikit-learn'
-  | 'fastapi'
-  | 'graphql'
-  | 'redux'
-  | 'electron'
-  | 'next.js'
-  | 'nuxt.js'
-  | 'gatsby'
-  | 'shopify'
-  | 'woocommerce'
-  | 'pandas'
-  | 'numpy'
-  | 'three.js'
-  | 'jest'
-  | 'cypress'
-  | 'selenium'
-  | 'playwright'
-  | 'puppeteer'
-  | 'material-ui'
-  | 'vuetify'
-  | 'ant design';
-
+export type TechnologiesType = string[];
 export type CompletionSpeedType = 'little-faster' | 'normal';
 export type ExternalContextType = {
   /**
@@ -62,13 +24,23 @@ export type ExternalContextType = {
 }[];
 
 /**
- * Themes available for the Rich Monaco Editor.
+ * Themes available for the Monacopilot
  */
 // This theme type is generated automatically from the themes folder.
 // Do not modify this type manually.
 // If you want to add a new theme, you can add it to the themes folder and run `generate-themes` script.
 // The script will automatically update this type.
-export type ThemeType = 'codesandbox-dark' | 'dracula-soft' | 'dracula' | 'github-dark-dimmed' | 'github-dark' | 'github-light' | 'monokai' | 'nord' | 'one-dark-pro-darker' | 'one-monokai';
+export type ThemeType =
+  | 'codesandbox-dark'
+  | 'dracula-soft'
+  | 'dracula'
+  | 'github-dark-dimmed'
+  | 'github-dark'
+  | 'github-light'
+  | 'monokai'
+  | 'nord'
+  | 'one-dark-pro-darker'
+  | 'one-monokai';
 
 export default interface EditorProps extends MonacoEditorProps {
   /**
@@ -82,11 +54,16 @@ export default interface EditorProps extends MonacoEditorProps {
    */
   endpoint?: EndpointType;
   /**
-   * The framework you want to use for the completion.
-   * This can provide framework-specific completions.
-   * If you don't specify a framework, the completion will be specific to the language (provided as the `language` prop).
+   * The technologies (libraries, frameworks, etc.) you want to use for the completion.
+   * This can provide technology-specific completions.
+   * If you don't specify a technology, the completion will be specific to the language (provided as the `language` prop).
+   *
+   * @example
+   * ['react', 'nextjs', 'tailwindcss', 'tanstack/react-query']
+   * ['tensorflow', 'keras', 'numpy', 'pandas']
+   * etc.
    */
-  framework?: FrameworkType;
+  technologies?: TechnologiesType;
   /**
    * The theme you want to use for the editor.
    */

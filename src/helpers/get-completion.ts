@@ -20,7 +20,7 @@ export const fetchCompletionItem = async ({
   endpoint,
   code,
   language,
-  framework,
+  technologies,
   externalContext,
   model,
   position,
@@ -40,7 +40,7 @@ export const fetchCompletionItem = async ({
         position,
         model,
         language,
-        framework,
+        technologies,
         externalContext,
       }),
     },
@@ -72,7 +72,7 @@ export const constructCompletionMetadata = ({
   position,
   model,
   language,
-  framework,
+  technologies,
   externalContext,
 }: Pick<
   FetchCompletionItemParams,
@@ -80,7 +80,7 @@ export const constructCompletionMetadata = ({
   | 'position'
   | 'model'
   | 'language'
-  | 'framework'
+  | 'technologies'
   | 'externalContext'
 >): CompletionMetadata => {
   const completionMode = determineCompletionMode(position, model);
@@ -93,7 +93,7 @@ export const constructCompletionMetadata = ({
   return {
     filename,
     language,
-    framework: framework || undefined,
+    technologies: technologies || undefined,
     externalContext,
     codeBeforeCursor,
     codeAfterCursor,

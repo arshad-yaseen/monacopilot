@@ -5,7 +5,7 @@ import {
   EndpointType,
   ExternalContextType,
   FilenameType,
-  FrameworkType,
+  TechnologiesType,
 } from './editor-props';
 
 export type EditorOptionsType = monaco.editor.IEditorOptions;
@@ -22,7 +22,7 @@ export interface FetchCompletionItemParams {
   language: string;
   endpoint: EndpointType;
   filename: FilenameType | undefined;
-  framework: FrameworkType | undefined;
+  technologies: TechnologiesType | undefined;
   externalContext: ExternalContextType | undefined;
   model: EditorModelType;
   position: EditorPositionType;
