@@ -1,5 +1,5 @@
-import {CompletionModelType} from './completion';
+import {CompletionModel} from './completion';
 
 export interface CopilotOptions {
-  model: CompletionModelType | undefined;
+  model: CompletionModel | undefined;
 }

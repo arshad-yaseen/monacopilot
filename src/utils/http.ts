@@ -10,7 +10,7 @@ interface RequestOptions<
   signal?: AbortSignal;
 }
 
-async function request<
+const request = async <
   ResponseType,
   BodyType = undefined,
   MethodType extends Method = Method,
@@ -18,7 +18,7 @@ async function request<
   url: string,
   method: MethodType,
   options: RequestOptions<BodyType, MethodType> = {},
-): Promise<ResponseType> {
+): Promise<ResponseType> => {
   const headers = {
     'Content-Type': 'application/json',
     ...options.headers,
@@ -43,22 +43,29 @@ async function request<
   }
 
   return response.json() as Promise<ResponseType>;
-}
+};
 
-export function GET<ResponseType>(
+const GET = <ResponseType>(
   url: string,
   options?: RequestOptions<undefined, 'GET'>,
-) {
+) => {
   return request<ResponseType, undefined, 'GET'>(url, 'GET', options);
-}
+};
 
-export function POST<ResponseType, BodyType>(
+const POST = <ResponseType, BodyType>(
   url: string,
   body: BodyType,
   options?: RequestOptions<BodyType, 'POST'>,
-) {
+) => {
   return request<ResponseType, BodyType, 'POST'>(url, 'POST', {
     ...options,
     body,
   });
-}
+};
+
+const HTTP = {
+  GET,
+  POST,
+};
+
+export default HTTP;

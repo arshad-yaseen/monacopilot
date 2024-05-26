@@ -1,19 +1,19 @@
 import {
-  EditorModelType,
-  EditorPositionType,
+  EditorModel,
+  EditorPosition,
   FetchCompletionItemParams,
 } from '../types/common';
 import {
   CompletionMetadata,
-  CompletionRequestParams,
-  GroqCompletion,
+  CompletionRequest,
+  CompletionResponse,
 } from '../types/completion';
 import {
   determineCompletionMode,
   getCodeBeforeAndAfterCursor,
 } from '../utils/completion/syntax-parser';
 import {isValidCompletion} from '../utils/completion/validate-completion';
-import {POST} from '../utils/http';
+import HTTP from '../utils/http';
 
 export const fetchCompletionItem = async ({
   filename,
@@ -25,14 +25,22 @@ export const fetchCompletionItem = async ({
   model,
   position,
   token,
-}: FetchCompletionItemParams) => {
+}: FetchCompletionItemParams): Promise<string | null> => {
   if (!isValidCompletion(position, model, language) || !code) {
     return null;
   }
 
-  const abortController = new AbortController();
+  const controller = new AbortController();
 
-  const data = await POST<GroqCompletion, CompletionRequestParams>(
+  if (token.isCancellationRequested) {
+    controller.abort();
+    return null;
+  }
+
+  const {completion, error} = await HTTP.POST<
+    CompletionResponse,
+    CompletionRequest
+  >(
     endpoint,
     {
       completionMetadata: constructCompletionMetadata({
@@ -49,20 +57,15 @@ export const fetchCompletionItem = async ({
         'Content-Type': 'application/json',
       },
       error: 'Error while fetching completion item',
-      signal: abortController.signal,
+      signal: controller.signal,
     },
   );
 
-  if (token.isCancellationRequested) {
-    abortController.abort();
+  if (error || !completion) {
     return null;
   }
 
-  if (data.error) {
-    return null;
-  }
-
-  return data.choices[0].message.content;
+  return completion;
 };
 
 // Construct completion metadata based on the cursor position and code.
@@ -93,7 +96,7 @@ export const constructCompletionMetadata = ({
   return {
     filename,
     language,
-    technologies: technologies || undefined,
+    technologies,
     externalContext,
     codeBeforeCursor,
     codeAfterCursor,
@@ -105,9 +108,9 @@ export const constructCompletionMetadata = ({
 
 // Compute a cache key based on the cursor's position and preceding text
 // This key is used to cache completion results for the same code context
-export const computeCacheKeyForCompletion = (
-  cursorPosition: EditorPositionType,
-  model: EditorModelType,
+export const computeCompletionCacheKey = (
+  cursorPosition: EditorPosition,
+  model: EditorModel,
 ): string => {
   const {codeBeforeCursor} = getCodeBeforeAndAfterCursor(cursorPosition, model);
 

@@ -3,34 +3,34 @@ import {
   ChatCompletionCreateParamsBase,
 } from 'groq-sdk/resources/chat/completions';
 
-import {
-  ExternalContextType,
-  FilenameType,
-  TechnologiesType,
-} from './editor-props';
+import {ExternalContext, Filename, Technologies} from './editor-props';
 
-export type CompletionModelType = 'llama';
+export type CompletionModel = 'llama';
+
 export type GroqCompletionCreateParams = ChatCompletionCreateParamsBase;
 export type GroqCompletion = ChatCompletion & {error?: string};
 
 export type LocalPredictionSnippets = Record<string, string>;
-
 export interface LocalPrediction {
   language: string;
   snippets: LocalPredictionSnippets;
 }
 
-export interface CompletionRequestParams {
+export interface CompletionRequest {
   completionMetadata: CompletionMetadata;
+}
+export interface CompletionResponse {
+  completion?: string;
+  error?: string;
 }
 
 export type CompletionMode = 'fill-in-the-middle' | 'completion';
 
 export interface CompletionMetadata {
   language: string | undefined;
-  filename: FilenameType | undefined;
-  technologies: TechnologiesType | undefined;
-  externalContext: ExternalContextType | undefined;
+  filename: Filename | undefined;
+  technologies: Technologies | undefined;
+  externalContext: ExternalContext | undefined;
   codeAfterCursor: string;
   codeBeforeCursor: string;
   editorState: {
@@ -38,18 +38,14 @@ export interface CompletionMetadata {
   };
 }
 
-export interface ContextualFilterProperties {
-  afterCursorWhitespace?: string;
-  languageId?: string;
-}
-
-export interface ContextualFilterMeasurements {
-  documentLength?: number;
-  promptEndPos?: number;
-}
-
 export interface ContextualFilterContext {
-  properties: ContextualFilterProperties;
-  measurements: ContextualFilterMeasurements;
+  properties: {
+    afterCursorWhitespace?: string;
+    languageId?: string;
+  };
+  measurements: {
+    documentLength?: number;
+    promptEndPos?: number;
+  };
   prefix?: string;
 }

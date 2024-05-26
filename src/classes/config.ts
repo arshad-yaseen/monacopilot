@@ -1,18 +1,18 @@
 import {DEFAULT_COMPLETION_MODEL} from '../constants/completion';
-import {CompletionModelType} from '../types/completion';
+import {CompletionModel} from '../types/completion';
 
 /**
  * Configuration class to store the following:
  * `model`: The LLM model to use for completion.
  */
 class Config {
-  private static model: CompletionModelType = DEFAULT_COMPLETION_MODEL;
+  private static model: CompletionModel = DEFAULT_COMPLETION_MODEL;
 
-  public static getModel(): CompletionModelType {
+  public static getModel(): CompletionModel {
     return this.model;
   }
 
-  public static setModel(value: CompletionModelType): void {
+  public static setModel(value: CompletionModel): void {
     this.model = value;
   }
 }

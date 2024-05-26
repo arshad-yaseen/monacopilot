@@ -1,10 +1,10 @@
-import {EditorModelType, EditorPositionType} from '../../types/common';
+import {EditorModel, EditorPosition} from '../../types/common';
 import {CompletionMode} from '../../types/completion';
 import {getCharAtPosition} from './common';
 
 export const isAfterCursorWhitespace = (
-  position: EditorPositionType,
-  model: EditorModelType,
+  position: EditorPosition,
+  model: EditorModel,
 ) => {
   const line = model.getLineContent(position.lineNumber);
   const index = position.column - 1;
@@ -14,8 +14,8 @@ export const isAfterCursorWhitespace = (
 
 /** Check if there is code after the cursor */
 export const isCharAfterCursor = (
-  position: EditorPositionType,
-  model: EditorModelType,
+  position: EditorPosition,
+  model: EditorModel,
 ): boolean => {
   const acceptableCharsAfterCursor = new Set([
     '"',
@@ -36,8 +36,8 @@ export const isCharAfterCursor = (
 
 /** Get the before and after code of the cursor position */
 export const getCodeBeforeAndAfterCursor = (
-  position: EditorPositionType,
-  model: EditorModelType,
+  position: EditorPosition,
+  model: EditorModel,
 ): {codeBeforeCursor: string; codeAfterCursor: string} => {
   const codeBeforeCursor = model.getValueInRange({
     startLineNumber: 1,
@@ -58,8 +58,8 @@ export const getCodeBeforeAndAfterCursor = (
 
 /** Check if the cursor is at the start of the line with code around */
 export const isCursorAtStartWithCodeAround = (
-  position: EditorPositionType,
-  model: EditorModelType,
+  position: EditorPosition,
+  model: EditorModel,
 ) => {
   const currentLine = model.getLineContent(position.lineNumber);
   const codeAfterCursorInCurrentLine = currentLine
@@ -82,8 +82,8 @@ export const isCursorAtStartWithCodeAround = (
  * @returns The completion mode ('fill-in-the-middle' | 'completion').
  */
 export const determineCompletionMode = (
-  position: EditorPositionType,
-  model: EditorModelType,
+  position: EditorPosition,
+  model: EditorModel,
 ): CompletionMode => {
   const {lineNumber, column} = position;
 

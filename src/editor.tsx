@@ -8,10 +8,10 @@ import {
 } from './constants/common';
 import useStartCompletion from './hooks/use-start-completion';
 import themes from './themes';
-import {
+import type {
   EditorBuiltInTheme,
-  EditorOptionsType,
-  EditorType,
+  EditorOptions,
+  StandaloneCodeEditor,
 } from './types/common';
 import EditorProps from './types/editor-props';
 import {deepMerge} from './utils/common';
@@ -30,7 +30,7 @@ const Editor = ({
   );
 
   const onEditorDidMount = React.useCallback(
-    (editor: EditorType, monaco: Monaco) => {
+    (editor: StandaloneCodeEditor, monaco: Monaco) => {
       setMonacoInstance(monaco);
 
       if (
@@ -62,10 +62,7 @@ const Editor = ({
       key={theme}
       theme={theme}
       onMount={onEditorDidMount}
-      options={deepMerge<EditorOptionsType>(
-        props.options,
-        EDITOR_DEFAULT_OPTIONS,
-      )}
+      options={deepMerge<EditorOptions>(props.options, EDITOR_DEFAULT_OPTIONS)}
     />
   );
 };

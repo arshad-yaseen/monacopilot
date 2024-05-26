@@ -4,36 +4,36 @@ import {Monaco} from '@monaco-editor/react';
 
 import {LocalCodePredictionEngine} from '../classes/local-code-prediction-engine';
 import {
-  computeCacheKeyForCompletion,
+  computeCompletionCacheKey,
   fetchCompletionItem,
 } from '../helpers/get-completion';
-import {EditorInlineCompletionType} from '../types/common';
+import {EditorInlineCompletion} from '../types/common';
 import {
-  CompletionSpeedType,
-  EndpointType,
-  ExternalContextType,
-  FilenameType,
-  TechnologiesType,
+  CompletionSpeed,
+  Endpoint,
+  ExternalContext,
+  Filename,
+  Technologies,
 } from '../types/editor-props';
-import useTypingDebounceFn from './use-typing-debounce-fn';
+import useDebounceFn from './use-debounce-fn';
 
 const localPredictionEngine = new LocalCodePredictionEngine();
 
 const useStartCompletion = (
-  filename: FilenameType | undefined,
-  endpoint: EndpointType | undefined,
-  technologies: TechnologiesType | undefined,
+  filename: Filename | undefined,
+  endpoint: Endpoint | undefined,
+  technologies: Technologies | undefined,
   language: string | undefined,
-  completionSpeed: CompletionSpeedType | undefined,
-  externalContext: ExternalContextType | undefined,
+  completionSpeed: CompletionSpeed | undefined,
+  externalContext: ExternalContext | undefined,
   monacoInstance: Monaco | null,
 ) => {
-  const completionCache = React.useRef<Map<string, EditorInlineCompletionType>>(
+  const completionCache = React.useRef<Map<string, EditorInlineCompletion>>(
     new Map(),
   );
   const isCompletionHandled = React.useRef<boolean>(false);
 
-  const fetchCompletionItemDebounced = useTypingDebounceFn(
+  const fetchCompletionItemDebounced = useDebounceFn(
     fetchCompletionItem,
     completionSpeed === 'little-faster' ? 350 : 600,
   );
@@ -59,7 +59,7 @@ const useStartCompletion = (
             position.column,
           );
 
-          const cacheKey = computeCacheKeyForCompletion(position, model);
+          const cacheKey = computeCompletionCacheKey(position, model);
 
           // Check if the completion is already cached
           if (completionCache.current.has(cacheKey)) {
@@ -98,7 +98,7 @@ const useStartCompletion = (
           }
 
           try {
-            // Fetch the completion item from the LLM model
+            // Fetch the completion item from the Groq
             const completion = await fetchCompletionItemDebounced({
               filename,
               endpoint,
@@ -112,7 +112,7 @@ const useStartCompletion = (
             });
 
             if (completion) {
-              const newItem: EditorInlineCompletionType = {
+              const newItem: EditorInlineCompletion = {
                 insertText: completion,
                 range: cursorRange,
               };

@@ -1,6 +1,6 @@
-import {EditorBuiltInTheme, EditorOptionsType} from '../types/common';
+import {EditorBuiltInTheme, EditorOptions} from '../types/common';
 
-export const EDITOR_DEFAULT_OPTIONS: EditorOptionsType = {
+export const EDITOR_DEFAULT_OPTIONS: EditorOptions = {
   scrollBeyondLastColumn: 0,
   codeLens: false,
   minimap: {

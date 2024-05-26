@@ -1,5 +1,5 @@
 import {CompletionMetadata, CompletionMode} from '../types/completion';
-import {TechnologiesType} from '../types/editor-props';
+import {Technologies} from '../types/editor-props';
 import {joinWithAnd} from '../utils/common';
 
 const CURSOR_PLACEHOLDER = '<<CURSOR>>';
@@ -29,7 +29,7 @@ export const generateSystemPrompt = (metadata: CompletionMetadata): string => {
 };
 
 const formatTechnology = (
-  technologies?: TechnologiesType,
+  technologies?: Technologies,
   language?: string,
 ): string => {
   if (!technologies?.length && !language) return '';

@@ -1,6 +1,6 @@
 import {CONTEXTUAL_FILTER_ACCEPT_THRESHOLD} from '../../constants/contextual-filter';
 import {getContextualFilterScore} from '../../helpers/contextual-filter';
-import {EditorModelType, EditorPositionType} from '../../types/common';
+import {EditorModel, EditorPosition} from '../../types/common';
 import {
   getCodeBeforeAndAfterCursor,
   isAfterCursorWhitespace,
@@ -13,8 +13,8 @@ import {
  * cursor position, and user behavior.
  */
 export const isValidCompletion = (
-  cursorPosition: EditorPositionType,
-  model: EditorModelType,
+  cursorPosition: EditorPosition,
+  model: EditorModel,
   language: string | undefined,
 ): boolean => {
   return (
@@ -27,8 +27,8 @@ export const isValidCompletion = (
 
 // Compute the contextual score for the current editor state
 const contextualScore = (
-  cursorPosition: EditorPositionType,
-  model: EditorModelType,
+  cursorPosition: EditorPosition,
+  model: EditorModel,
   language: string | undefined,
 ) => {
   const {codeBeforeCursor} = getCodeBeforeAndAfterCursor(cursorPosition, model);

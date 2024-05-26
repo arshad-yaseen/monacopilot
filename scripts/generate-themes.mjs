@@ -3,7 +3,7 @@
  * This script scans the root `themes` directory to retrieve all VS Code themes,
  * then converts them into Monaco Editor-compatible themes.
  * The resulting Monaco themes are saved to the `themes.ts` file within the `src` directory.
- * Additionally, it updates the `ThemeType` type within the `editor-props.ts` file
+ * Additionally, it updates the `CustomTheme` type within the `editor-props.ts` file
  * to include the newly generated theme names.
  */
 
@@ -288,9 +288,9 @@ const processThemes = async () => {
 
     await fs.writeFile(THEMES_DOT_TS_FILE, themesDotTsFileContent);
 
-    const themesType = `export type ThemeType = ${themeNames.map(name => `'${name}'`).join(' | ')};`;
+    const themesType = `type CustomTheme = ${themeNames.map(name => `'${name}'`).join(' | ')};`;
 
-    const themesTypeRegex = /export type ThemeType\s*=\s*[^;]*;/s;
+    const themesTypeRegex = /type CustomTheme\s*=\s*[^;]*;/s;
 
     const typesFile = path.resolve(__dirname, THEMES_TYPE_DEFINED_FILE);
     const typesFileContent = await fs.readFile(typesFile, 'utf8');

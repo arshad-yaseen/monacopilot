@@ -5,12 +5,13 @@ import {
 } from '../constants/completion';
 import {generateSystemPrompt, generateUserPrompt} from '../helpers/prompt';
 import {
-  CompletionRequestParams,
+  CompletionRequest,
+  CompletionResponse,
   GroqCompletion,
   GroqCompletionCreateParams,
 } from '../types/completion';
 import {CopilotOptions} from '../types/copilot';
-import {POST} from '../utils/http';
+import HTTP from '../utils/http';
 import Config from './config';
 
 /**
@@ -40,9 +41,14 @@ class Copilot {
     Config.setModel(options?.model || DEFAULT_COMPLETION_MODEL);
   }
 
+  /**
+   * Sends a completion request to Groq API and returns the completion.
+   * @param {CompletionRequest} params - The metadata required to generate the completion.
+   * @returns {Promise<CompletionResponse>} The completed code snippet.
+   */
   public async complete({
     completionMetadata,
-  }: CompletionRequestParams): Promise<GroqCompletion | {error: string}> {
+  }: CompletionRequest): Promise<CompletionResponse> {
     try {
       const model = Config.getModel();
 
@@ -65,19 +71,21 @@ class Copilot {
         'Content-Type': 'application/json',
       };
 
-      const completion = await POST<GroqCompletion, GroqCompletionCreateParams>(
-        GROQ_API_ENDPOINT,
-        body,
-        {
-          headers,
-          error: 'Error while fetching from groq API',
-        },
-      );
+      const completion = await HTTP.POST<
+        GroqCompletion,
+        GroqCompletionCreateParams
+      >(GROQ_API_ENDPOINT, body, {
+        headers,
+        error: 'Error while fetching from groq API',
+      });
 
-      return completion;
-    } catch (error) {
       return {
-        error: `An unexpected error occurred: ${error}`,
+        completion: completion.choices[0].message.content,
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        error: error.message,
       };
     }
   }

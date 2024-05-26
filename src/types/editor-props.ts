@@ -1,12 +1,32 @@
-import {type EditorProps as MonacoEditorProps} from '@monaco-editor/react';
+import type {EditorProps as MonacoEditorProps} from '@monaco-editor/react';
 
 import {EditorBuiltInTheme} from './common';
 
-export type EndpointType = string;
-export type FilenameType = string;
-export type TechnologiesType = string[];
-export type CompletionSpeedType = 'little-faster' | 'normal';
-export type ExternalContextType = {
+/**
+ * Themes available for the Monacopilot
+ */
+// This theme type is generated automatically from the themes folder.
+// Do not modify this type manually.
+// If you want to add a new theme, you can add it to the themes folder and run `generate-themes` script.
+// The script will automatically update this type.
+type CustomTheme =
+  | 'codesandbox-dark'
+  | 'dracula-soft'
+  | 'dracula'
+  | 'github-dark-dimmed'
+  | 'github-dark'
+  | 'github-light'
+  | 'monokai'
+  | 'nord'
+  | 'one-dark-pro-darker'
+  | 'one-monokai';
+
+export type Theme = EditorBuiltInTheme | CustomTheme;
+export type Endpoint = string;
+export type Filename = string;
+export type Technologies = string[];
+export type CompletionSpeed = 'little-faster' | 'normal';
+export type ExternalContext = {
   /**
    * The relative path from the current editing code in the editor to an external file.
    *
@@ -23,36 +43,17 @@ export type ExternalContextType = {
   content: string;
 }[];
 
-/**
- * Themes available for the Monacopilot
- */
-// This theme type is generated automatically from the themes folder.
-// Do not modify this type manually.
-// If you want to add a new theme, you can add it to the themes folder and run `generate-themes` script.
-// The script will automatically update this type.
-export type ThemeType =
-  | 'codesandbox-dark'
-  | 'dracula-soft'
-  | 'dracula'
-  | 'github-dark-dimmed'
-  | 'github-dark'
-  | 'github-light'
-  | 'monokai'
-  | 'nord'
-  | 'one-dark-pro-darker'
-  | 'one-monokai';
-
 export default interface EditorProps extends MonacoEditorProps {
   /**
    * The name of the file you are editing. This is used to provide more relevant completions based on the file's purpose.
    * For example, if you are editing a file named `utils.js`, the completions will be more relevant to utility functions.
    */
-  filename?: FilenameType;
+  filename?: Filename;
   /**
    * The API endpoint where you started the completion service.
    * [Learn more](https://monacopilot.vercel.app/docs/guide/copilot-setup#integrating-copilot-to-the-editor)
    */
-  endpoint?: EndpointType;
+  endpoint?: Endpoint;
   /**
    * The technologies (libraries, frameworks, etc.) you want to use for the completion.
    * This can provide technology-specific completions.
@@ -63,21 +64,21 @@ export default interface EditorProps extends MonacoEditorProps {
    * ['tensorflow', 'keras', 'numpy', 'pandas']
    * etc.
    */
-  technologies?: TechnologiesType;
+  technologies?: Technologies;
   /**
    * The theme you want to use for the editor.
    */
-  theme?: EditorBuiltInTheme | ThemeType;
+  theme?: Theme;
   /**
    * Controls the speed of the completion.
    * Set to `little-faster` for slightly faster completions. Note that this option has a high cost, though not exorbitant.
    * For a detailed cost comparison, see the [cost overview table](https://monacopilot.vercel.app/docs/copilot-cost-overview).
    * @default 'normal'
    */
-  completionSpeed?: CompletionSpeedType;
+  completionSpeed?: CompletionSpeed;
   /**
    * Helps to give more relevant completions based on the full context.
    * You can include things like the contents/codes of other files in the same workspace.
    */
-  externalContext?: ExternalContextType;
+  externalContext?: ExternalContext;
 }

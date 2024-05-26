@@ -1,13 +1,13 @@
 import React from 'react';
 
 /**
- * Debounces a function that returns a Promise, and calls it instantly after typing stops.
+ * Debounces a function that returns a Promise.
  *
  * @param func - The function to debounce. This should be a function that returns a Promise.
  * @param delay - The delay in milliseconds to wait before considering that typing has stopped.
  * @returns A debounced version of the function.
  */
-const useTypingDebounceFn = <T extends (...args: any[]) => Promise<any>>(
+const useDebounceFn = <T extends (...args: any[]) => Promise<any>>(
   func: T,
   delay: number = 1000,
 ): ((...funcArgs: Parameters<T>) => Promise<ReturnType<T>>) => {
@@ -41,4 +41,4 @@ const useTypingDebounceFn = <T extends (...args: any[]) => Promise<any>>(
   return debouncedFunc;
 };
 
-export default useTypingDebounceFn;
+export default useDebounceFn;
