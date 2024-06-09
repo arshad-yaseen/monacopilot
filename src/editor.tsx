@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Monaco, Editor as MonacoEditor} from '@monaco-editor/react';
+import {Editor as MonacoEditor, type Monaco} from '@monaco-editor/react';
 
 import {
   EDITOR_BUILT_IN_THEMES,
@@ -13,7 +13,7 @@ import type {
   EditorOptions,
   StandaloneCodeEditor,
 } from './types/common';
-import EditorProps from './types/editor-props';
+import type EditorProps from './types/editor-props';
 import {deepMerge} from './utils/common';
 
 const Editor = ({

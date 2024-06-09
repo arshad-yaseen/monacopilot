@@ -4,7 +4,7 @@ import {
   FILTER_LANGUAGE_MAP,
   FILTER_WEIGHTS,
 } from '../constants/contextual-filter';
-import {ContextualFilterContext} from '../types/completion';
+import type {ContextualFilterContext} from '../types/completion';
 import {getLastLineLength} from '../utils/completion/common';
 
 class ContextualFilterManager {

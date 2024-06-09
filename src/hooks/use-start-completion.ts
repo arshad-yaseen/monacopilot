@@ -7,8 +7,8 @@ import {
   computeCompletionCacheKey,
   fetchCompletionItem,
 } from '../helpers/get-completion';
-import {EditorInlineCompletion} from '../types/common';
-import {
+import type {EditorInlineCompletion} from '../types/common';
+import type {
   CompletionSpeed,
   Endpoint,
   ExternalContext,

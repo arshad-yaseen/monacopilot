@@ -1,5 +1,5 @@
-import {EditorModel, EditorPosition} from '../../types/common';
-import {CompletionMode} from '../../types/completion';
+import type {EditorModel, EditorPosition} from '../../types/common';
+import type {CompletionMode} from '../../types/completion';
 import {getCharAtPosition} from './common';
 
 export const isAfterCursorWhitespace = (

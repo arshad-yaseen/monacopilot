@@ -1,4 +1,4 @@
-import {EditorPosition} from '../../types/common';
+import type {EditorPosition} from '../../types/common';
 
 export const getCharAtPosition = (line: string, position: number) =>
   line[position] || '';

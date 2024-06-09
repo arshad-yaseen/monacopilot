@@ -1,4 +1,4 @@
-import {LocalPrediction} from '../../types/completion';
+import type {LocalPrediction} from '../../types/completion';
 import javascript from './javascript';
 
 export default [

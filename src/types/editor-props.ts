@@ -1,6 +1,6 @@
 import type {EditorProps as MonacoEditorProps} from '@monaco-editor/react';
 
-import {EditorBuiltInTheme} from './common';
+import type {EditorBuiltInTheme} from './common';
 
 /**
  * Themes available for the Monacopilot

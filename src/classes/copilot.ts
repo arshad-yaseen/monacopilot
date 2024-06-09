@@ -4,7 +4,7 @@ import {
   GROQ_API_ENDPOINT,
 } from '../constants/completion';
 import {generateSystemPrompt, generateUserPrompt} from '../helpers/prompt';
-import {
+import type {
   CompletionRequest,
   CompletionResponse,
   GroqCompletion,

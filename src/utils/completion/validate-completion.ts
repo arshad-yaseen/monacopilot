@@ -1,6 +1,6 @@
 import {CONTEXTUAL_FILTER_ACCEPT_THRESHOLD} from '../../constants/contextual-filter';
 import {getContextualFilterScore} from '../../helpers/contextual-filter';
-import {EditorModel, EditorPosition} from '../../types/common';
+import type {EditorModel, EditorPosition} from '../../types/common';
 import {
   getCodeBeforeAndAfterCursor,
   isAfterCursorWhitespace,

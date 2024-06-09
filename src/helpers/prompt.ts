@@ -1,5 +1,5 @@
-import {CompletionMetadata, CompletionMode} from '../types/completion';
-import {Technologies} from '../types/editor-props';
+import type {CompletionMetadata, CompletionMode} from '../types/completion';
+import type {Technologies} from '../types/editor-props';
 import {joinWithAnd} from '../utils/common';
 
 const CURSOR_PLACEHOLDER = '<<CURSOR>>';

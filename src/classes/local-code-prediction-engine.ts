@@ -1,5 +1,5 @@
 import predictions from '../helpers/local-prediction';
-import {LocalPredictionSnippets} from '../types/completion';
+import type {LocalPredictionSnippets} from '../types/completion';
 
 export class LocalCodePredictionEngine {
   private predictions: Map<string, LocalPredictionSnippets>;

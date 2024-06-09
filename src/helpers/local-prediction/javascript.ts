@@ -10,4 +10,7 @@ export default {
   'async (': ') => {\n\t$1\n}$0',
   'async =>': ' {\n\t$1\n}$0',
   ') =>': ' {',
+  '=>': ' {',
+  'new M': 'ap',
+  'new W': 'eakMap',
 };

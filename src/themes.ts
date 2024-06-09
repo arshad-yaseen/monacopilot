@@ -1,4 +1,4 @@
-import {EditorThemeData} from './types/common';
+import type {EditorThemeData} from './types/common';
 
 interface CustomThemeCollection {
   [key: string]: EditorThemeData;

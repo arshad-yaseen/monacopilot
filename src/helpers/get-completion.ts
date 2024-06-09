@@ -1,12 +1,9 @@
-import {
-  EditorModel,
-  EditorPosition,
-  FetchCompletionItemParams,
-} from '../types/common';
-import {
+import type {EditorModel, EditorPosition} from '../types/common';
+import type {
   CompletionMetadata,
   CompletionRequest,
   CompletionResponse,
+  FetchCompletionItemParams,
 } from '../types/completion';
 import {
   determineCompletionMode,

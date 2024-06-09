@@ -1,9 +1,19 @@
-import {
+import type {
   ChatCompletion,
   ChatCompletionCreateParamsBase,
 } from 'groq-sdk/resources/chat/completions';
 
-import {ExternalContext, Filename, Technologies} from './editor-props';
+import type {
+  EditorCompletionCancellationToken,
+  EditorModel,
+  EditorPosition,
+} from './common';
+import type {
+  Endpoint,
+  ExternalContext,
+  Filename,
+  Technologies,
+} from './editor-props';
 
 export type CompletionModel = 'llama';
 
@@ -48,4 +58,16 @@ export interface ContextualFilterContext {
     promptEndPos?: number;
   };
   prefix?: string;
+}
+
+export interface FetchCompletionItemParams {
+  code: string;
+  language: string;
+  endpoint: Endpoint;
+  filename: Filename | undefined;
+  technologies: Technologies | undefined;
+  externalContext: ExternalContext | undefined;
+  model: EditorModel;
+  position: EditorPosition;
+  token: EditorCompletionCancellationToken;
 }

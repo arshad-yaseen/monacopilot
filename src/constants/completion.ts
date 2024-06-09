@@ -1,4 +1,4 @@
-import {CompletionModel} from '../types/completion';
+import type {CompletionModel} from '../types/completion';
 
 export const COMPLETION_MODEL_IDS: Record<CompletionModel, string> = {
   llama: 'llama3-70b-8192',
