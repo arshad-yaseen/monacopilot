@@ -29,7 +29,7 @@ const FEATURES = [
 
 const Features = () => {
   return (
-    <section className="w-full relative  flex flex-col items-center justify-center gap-10">
+    <section className="w-full relative flex flex-col items-center justify-center gap-10">
       <div className="w-full overflow-hidden">
         <h2 className="lg:block text-[20.5rem] hidden leading-none tracking-normal opacity-10 shrink-0 -mt-[1.9rem] font-semibold text-center">
           Features

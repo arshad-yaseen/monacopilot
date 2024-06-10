@@ -6,7 +6,7 @@ import {LocalCodePredictionEngine} from '../classes/local-code-prediction-engine
 import {
   computeCompletionCacheKey,
   fetchCompletionItem,
-} from '../helpers/get-completion';
+} from '../helpers/completion';
 import type {EditorInlineCompletion} from '../types/common';
 import type {
   CompletionSpeed,
