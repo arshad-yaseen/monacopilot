@@ -57,7 +57,7 @@ export const generateUserPrompt = (metadata: CompletionMetadata): string => {
     ? `the file named ${filename}`
     : 'a larger project';
 
-  let prompt = `You will be presented with a code snippet where the cursor location is marked with '${CURSOR_PLACEHOLDER}'. Your task is to assist with ${modeDescription}. This code is part of ${fileNameText}. Please `;
+  let prompt = `You will be presented with a code snippet in '<code>' tag where the cursor location is marked with '${CURSOR_PLACEHOLDER}'. Your task is to assist with ${modeDescription}. This code is part of ${fileNameText}. Please `;
 
   switch (editorState.completionMode) {
     case 'fill-in-the-middle':
