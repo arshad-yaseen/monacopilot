@@ -5,7 +5,7 @@ import {
   FILTER_WEIGHTS,
 } from '../constants/contextual-filter';
 import type {ContextualFilterContext} from '../types/completion';
-import {getLastLineLength} from '../utils/completion/common';
+import {getLastLineLength} from '../utils/editor';
 
 class ContextualFilterManager {
   previousLabel: number;

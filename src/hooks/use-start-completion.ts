@@ -15,6 +15,7 @@ import type {
   Filename,
   Technologies,
 } from '../types/copilot-editor-props';
+import {getLine} from '../utils/editor';
 import useDebounceFn from './use-debounce-fn';
 
 const localPredictionEngine = new LocalCodePredictionEngine();
@@ -76,7 +77,7 @@ const useStartCompletion = (
           // Check if the code is a common code snippet, if so, predict the next code snippet
           const localPrediction = localPredictionEngine.predictCode(
             language,
-            code,
+            getLine(code, position.lineNumber),
           );
           if (localPrediction) {
             const newItem = {

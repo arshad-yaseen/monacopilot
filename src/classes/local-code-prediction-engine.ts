@@ -1,5 +1,6 @@
 import predictions from '../helpers/local-prediction';
 import type {LocalPredictionSnippets} from '../types/completion';
+import {reverse} from '../utils/common';
 
 export class LocalCodePredictionEngine {
   private predictions: Map<string, LocalPredictionSnippets>;
@@ -21,13 +22,13 @@ export class LocalCodePredictionEngine {
    * @param codeSnippet The current code snippet.
    * @returns The predicted code snippet, if no prediction is found, return an empty string.
    */
-  predictCode(language: string, codeSnippet: string): string {
+  predictCode(language: string, currentLineCode: string): string {
     const prediction = this.predictions.get(language);
     if (!prediction) return '';
 
-    codeSnippet = codeSnippet.split('').reverse().join('');
+    currentLineCode = reverse(currentLineCode);
     for (const key in prediction) {
-      if (codeSnippet.startsWith(key.split('').reverse().join(''))) {
+      if (currentLineCode.startsWith(reverse(key))) {
         return prediction[key];
       }
     }
