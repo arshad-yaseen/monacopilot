@@ -11,7 +11,7 @@ import { Callout } from 'nextra/components'
 Provide additional code, such as neighboring code snippets. This facilitates more accurate and workspace-specific completions by Copilot. The `externalContext` is structured as an array, allowing you to include content from multiple files.
 
 ```jsx
-<Editor 
+<CopilotEditor 
   externalContext={[
     {
       // Relative path from the current code in the editor
@@ -44,7 +44,7 @@ const copilot = new Copilot(process.env.GROQ_API_KEY, {
 By default, Copilot uses the `normal` completion speed. You can change this to `little-faster` for less latency in completions.
 
 ```jsx 
-<Editor 
+<CopilotEditor 
   completionSpeed="little-faster"
   ...
 />
@@ -60,7 +60,7 @@ The name of the file you are editing. This is used to provide more relevant comp
 For example, if you are editing a file named `utils.js`, the completions will be more relevant to utility functions.
 
 ```jsx
-<Editor 
+<CopilotEditor 
   filename="utils.js" // or "index.js", "utils/objects.js", etc.
   ...
 />
@@ -68,10 +68,10 @@ For example, if you are editing a file named `utils.js`, the completions will be
 
 #### Completions for Specific Technologies
 
-Currently, the completions are shown based on the language specified in the editor. To enable completions for specific technologies, pass the `technologies` prop to the `Editor` component.
+Currently, the completions are shown based on the language specified in the editor. To enable completions for specific technologies, pass the `technologies` prop to the `CopilotEditor` component.
 
 ```jsx 
-<Editor 
+<CopilotEditor 
   technologies={['react', 'next.js', 'tailwindcss']}
   ...
 />

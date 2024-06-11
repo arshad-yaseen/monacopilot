@@ -2,7 +2,7 @@
 
 import {useState} from 'react';
 
-import {Editor} from 'monacopilot';
+import CopilotEditor from 'monacopilot';
 
 export default function Home() {
   const [isFastCompletion, setFastCompletion] = useState(false);
@@ -20,7 +20,7 @@ export default function Home() {
           />
         </div>
       </div>
-      <Editor
+      <CopilotEditor
         endpoint="/api/copilot"
         language="javascript"
         theme="one-dark-pro-darker"

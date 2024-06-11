@@ -32,13 +32,13 @@ To get started with Monacopilot, you can install it first:
     </Tabs.Tab>
 </Tabs>
 
-Just import the `Editor` component and use it in your code:
+Just import the `CopilotEditor` and use it in your code:
 
 ```jsx
-import { Editor } from "monacopilot";
+import CopilotEditor from "monacopilot";
 
 function App() {
-  return <Editor value="console.log('Hello, world!')" language="javascript" />;
+  return <CopilotEditor value="console.log('Hello, world!')" language="javascript" />;
 }
 ```
 
@@ -46,14 +46,14 @@ The above code is a simple example of how to use Monacopilot in your React appli
 
 ### Themes
 
-Monacopilot comes with a wide range of themes that you can use in your editor. To use a theme, you can just pass the `theme` prop to the `Editor` component:
+Monacopilot comes with a wide range of themes that you can use in your editor. To use a theme, you can just pass the `theme` prop to the `CopilotEditor` component:
 
 ```jsx {8}
-import { Editor } from "monacopilot";
+import CopilotEditor from "monacopilot";
 
 function App() {
   return (
-    <Editor
+    <CopilotEditor
       value="console.log('Hello, world!')"
       language="javascript"
       theme="github-light"
@@ -62,7 +62,7 @@ function App() {
 }
 ```
 
-The above code uses the `github-light` theme in the editor. There are many other themes available. If you want to play around with the themes, you can check out the [themes](/themes) page.
+The above code uses the `github-light` theme in the editor. There are many other themes available.
 
 ### More Options and Usage
 

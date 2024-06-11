@@ -1,5 +1,5 @@
 import type {CompletionMetadata, CompletionMode} from '../types/completion';
-import type {Technologies} from '../types/editor-props';
+import type {Technologies} from '../types/copilot-editor-props';
 import {joinWithAnd} from '../utils/common';
 
 const CURSOR_PLACEHOLDER = '<<CURSOR>>';
@@ -15,7 +15,7 @@ const getDescriptionForMode = (mode: CompletionMode): string => {
     case 'completion':
       return 'completing the code';
     default:
-      return 'unknown mode';
+      return 'completing the code';
   }
 };
 

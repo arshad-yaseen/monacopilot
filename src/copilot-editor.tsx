@@ -13,10 +13,10 @@ import type {
   EditorOptions,
   StandaloneCodeEditor,
 } from './types/common';
-import type EditorProps from './types/editor-props';
+import type EditorProps from './types/copilot-editor-props';
 import {deepMerge} from './utils/common';
 
-const Editor = ({
+const CopilotEditor = ({
   filename,
   endpoint,
   technologies,
@@ -67,4 +67,4 @@ const Editor = ({
   );
 };
 
-export default Editor;
+export default CopilotEditor;

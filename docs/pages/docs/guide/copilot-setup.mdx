@@ -76,14 +76,14 @@ export default async function handler(req: GatsbyFunctionRequest, res: GatsbyFun
 
 #### Integrating Copilot to the Editor
 
-Utilize the `Editor` component with the AI auto-completion by setting the `endpoint` to the API handler:
+Utilize the `CopilotEditor` component with the AI auto-completion by setting the `endpoint` to the API handler:
 
 ```jsx {6}
-import { Editor } from "monacopilot";
+import CopilotEditor from "monacopilot";
 
 function App() {
   return (
-    <Editor 
+    <CopilotEditor 
       endpoint="/api/copilot"
       language="javascript"
     />

@@ -43,7 +43,7 @@ export type ExternalContext = {
   content: string;
 }[];
 
-export default interface EditorProps extends MonacoEditorProps {
+export default interface CopilotEditorProps extends MonacoEditorProps {
   /**
    * The name of the file you are editing. This is used to provide more relevant completions based on the file's purpose.
    * For example, if you are editing a file named `utils.js`, the completions will be more relevant to utility functions.

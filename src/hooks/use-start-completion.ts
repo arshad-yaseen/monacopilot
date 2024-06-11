@@ -14,7 +14,7 @@ import type {
   ExternalContext,
   Filename,
   Technologies,
-} from '../types/editor-props';
+} from '../types/copilot-editor-props';
 import useDebounceFn from './use-debounce-fn';
 
 const localPredictionEngine = new LocalCodePredictionEngine();
