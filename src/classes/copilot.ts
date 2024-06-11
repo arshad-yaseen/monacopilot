@@ -66,22 +66,6 @@ class Copilot {
         ],
       };
 
-      console.log(
-        JSON.stringify({
-          model: COMPLETION_MODEL_IDS[model],
-          messages: [
-            {
-              role: 'system',
-              content: generateSystemPrompt(completionMetadata),
-            },
-            {
-              role: 'user',
-              content: generateUserPrompt(completionMetadata),
-            },
-          ],
-        }),
-      );
-
       const headers = {
         Authorization: `Bearer ${this.apiKey}`,
         'Content-Type': 'application/json',
