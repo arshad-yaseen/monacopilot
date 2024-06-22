@@ -21,7 +21,6 @@ const CopilotEditor = ({
   endpoint,
   technologies,
   theme,
-  completionSpeed,
   externalContext,
   ...props
 }: EditorProps) => {
@@ -51,7 +50,6 @@ const CopilotEditor = ({
     endpoint,
     technologies,
     props.language,
-    completionSpeed,
     externalContext,
     monacoInstance,
   );

@@ -25,7 +25,6 @@ export type Theme = EditorBuiltInTheme | CustomTheme;
 export type Endpoint = string;
 export type Filename = string;
 export type Technologies = string[];
-export type CompletionSpeed = 'little-faster' | 'normal';
 export type ExternalContext = {
   /**
    * The relative path from the current editing code in the editor to an external file.
@@ -69,13 +68,6 @@ export default interface CopilotEditorProps extends MonacoEditorProps {
    * The theme you want to use for the editor.
    */
   theme?: Theme;
-  /**
-   * Controls the speed of the completion.
-   * Set to `little-faster` for slightly faster completions. Note that this option has a high cost, though not exorbitant.
-   * For a detailed cost comparison, see the [cost overview table](https://monacopilot.vercel.app/docs/copilot-cost-overview).
-   * @default 'normal'
-   */
-  completionSpeed?: CompletionSpeed;
   /**
    * Helps to give more relevant completions based on the full context.
    * You can include things like the contents/codes of other files in the same workspace.

@@ -9,14 +9,13 @@ import {
 } from '../helpers/completion';
 import type {EditorInlineCompletion} from '../types/common';
 import type {
-  CompletionSpeed,
   Endpoint,
   ExternalContext,
   Filename,
   Technologies,
 } from '../types/copilot-editor-props';
 import {getLine} from '../utils/editor';
-import useDebounceFn from './use-debounce-fn';
+import useDebounce from './use-debounce-fn';
 
 const localPredictionEngine = new LocalCodePredictionEngine();
 
@@ -25,7 +24,6 @@ const useStartCompletion = (
   endpoint: Endpoint | undefined,
   technologies: Technologies | undefined,
   language: string | undefined,
-  completionSpeed: CompletionSpeed | undefined,
   externalContext: ExternalContext | undefined,
   monacoInstance: Monaco | null,
 ) => {
@@ -34,10 +32,7 @@ const useStartCompletion = (
   );
   const isCompletionHandled = React.useRef<boolean>(false);
 
-  const fetchCompletionItemDebounced = useDebounceFn(
-    fetchCompletionItem,
-    completionSpeed === 'little-faster' ? 350 : 600,
-  );
+  const fetchCompletionItemDebounced = useDebounce(fetchCompletionItem, 300);
 
   React.useEffect(() => {
     if (!monacoInstance || !language || !endpoint) {

@@ -39,21 +39,6 @@ const copilot = new Copilot(process.env.GROQ_API_KEY, {
 });
 ```
 
-#### Completion Speed
-
-By default, Copilot uses the `normal` completion speed. You can change this to `little-faster` for less latency in completions.
-
-```jsx 
-<CopilotEditor 
-  completionSpeed="little-faster"
-  ...
-/>
-```
-
-<Callout type="info">
-Still, `normal` speed is good in most cases. Opt for a `little-faster` speed if completions are very critical to your workflow, although it incurs more cost. See the [Copilot Cost Overview](/docs/copilot-cost-overview) for a detailed cost comparison.
-</Callout>
-
 #### Filename
 
 The name of the file you are editing. This is used to provide more relevant completions based on the file's purpose.
