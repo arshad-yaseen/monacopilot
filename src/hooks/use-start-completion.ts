@@ -15,7 +15,7 @@ import type {
   Technologies,
 } from '../types/copilot-editor-props';
 import {getLine} from '../utils/editor';
-import useDebounce from './use-debounce-fn';
+import useDebounceFn from './use-debounce-fn';
 
 const localPredictionEngine = new LocalCodePredictionEngine();
 
@@ -32,7 +32,7 @@ const useStartCompletion = (
   );
   const isCompletionHandled = React.useRef<boolean>(false);
 
-  const fetchCompletionItemDebounced = useDebounce(fetchCompletionItem, 300);
+  const fetchCompletionItemDebounced = useDebounceFn(fetchCompletionItem, 300);
 
   React.useEffect(() => {
     if (!monacoInstance || !language || !endpoint) {
