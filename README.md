@@ -1,6 +1,6 @@
 # Monacopilot
 
-<video src="monacopilot-demo.mp4" autoPlay muted />
+<video src="monacopilot-demo.mp4" autoPlay muted></video>
 
 Extended Monaco Editor with AI auto-completion and new themes for React.
 
