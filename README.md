@@ -1,6 +1,6 @@
 # Monacopilot
 
-https://github.com/arshad-yaseen/monacopilot/assets/104856374/1aebf4ee-d7e9-4106-86c7-e438ba473f54
+![Monacopilot Demo](monacopilot-demo.gif)
 
 Extended Monaco Editor with AI auto-completion and new themes for React.
 
