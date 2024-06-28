@@ -13,7 +13,7 @@ import type {
   ExternalContext,
   Filename,
   Technologies,
-} from '../types/copilot-editor-props';
+} from '../types/monacopilot-props';
 import {getLine} from '../utils/editor';
 import useDebounceFn from './use-debounce-fn';
 

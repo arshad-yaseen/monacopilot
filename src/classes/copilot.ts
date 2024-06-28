@@ -83,7 +83,6 @@ class Copilot {
         completion: completion.choices[0].message.content,
       };
     } catch (error) {
-      console.error(error);
       return {
         error: error.message,
       };

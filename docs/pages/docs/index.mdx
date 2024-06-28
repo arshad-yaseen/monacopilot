@@ -5,74 +5,76 @@ import {
 
 # Getting Started
 
-**Monacopilot** is a wrapper for Monaco Editor that offers AI autocompletion and new themes for React. It's similar to GitHub Copilot, but for Monaco Editor.
+**Monacopilot** is a wrapper for the Monaco Editor, providing AI-powered autocompletion and an array of new themes for React. Similar to GitHub Copilot, but for Monaco Editor.
 
-To get started with Monacopilot, you can install it first:
+### Installation
+
+To get started with Monacopilot, install it via your preferred package manager:
 
 <Tabs items={["npm", "pnpm", "yarn", "bun"]}>
-  <Tabs.Tab>
+  <Tabs.Tab title="npm">
     ```bash
     npm install monacopilot
     ```
-    </Tabs.Tab>
-  <Tabs.Tab>
-  ```bash
-  pnpm install monacopilot
-  ```
   </Tabs.Tab>
-    <Tabs.Tab>
+  <Tabs.Tab title="pnpm">
+    ```bash
+    pnpm install monacopilot
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab title="yarn">
     ```bash
     yarn add monacopilot
     ```
-    </Tabs.Tab>
-    <Tabs.Tab>
+  </Tabs.Tab>
+  <Tabs.Tab title="bun">
     ```bash
     bun add monacopilot
     ```
-    </Tabs.Tab>
+  </Tabs.Tab>
 </Tabs>
 
-Just import the `CopilotEditor` and use it in your code:
+### Usage
+
+Import Monacopilot into your React application and use it as shown below:
 
 ```jsx
-import CopilotEditor from "monacopilot";
+import MonaCopilot from "monacopilot";
 
 function App() {
-  return <CopilotEditor value="console.log('Hello, world!')" language="javascript" />;
+  return <MonaCopilot value="console.log('Hello, world!')" language="javascript" />;
 }
 ```
 
-The above code is a simple example of how to use Monacopilot in your React application.
+The above example demonstrates how to integrate Monacopilot into a simple React application.
 
 ### Themes
 
-Monacopilot comes with a wide range of themes that you can use in your editor. To use a theme, you can just pass the `theme` prop to the `CopilotEditor` component:
+Monacopilot offers a wide range of themes for customizing your editor. You can apply a theme by passing the `theme` prop to the MonaCopilot component:
 
 ```jsx {8}
-import CopilotEditor from "monacopilot";
+import MonaCopilot from "monacopilot";
 
 function App() {
   return (
-    <CopilotEditor
+    <MonaCopilot
       value="console.log('Hello, world!')"
       language="javascript"
       theme="github-light"
     />
-  )
+  );
 }
 ```
 
-The above code uses the `github-light` theme in the editor. There are many other themes available.
+In this example, the `github-light` theme is applied to the editor. Numerous other themes are available for you to explore.
 
-### More Options and Usage
+### Advanced Usage
 
-Since Monacopilot is a wrapper around `@monaco-editor/react`, you can use all the props and import statements that you would use with @monaco-editor/react. For more information, you can check out the [@monaco-editor/react documentation](https://github.com/suren-atoyan/monaco-react/blob/master/README.md).
+Monacopilot, being a wrapper around `@monaco-editor/react`, supports all the properties and import statements used with `@monaco-editor/react`. For more detailed information, refer to the [@monaco-editor/react documentation](https://github.com/suren-atoyan/monaco-react/blob/master/README.md).
 
-## Next Steps
+### Next Steps
 
-Now that you have Monacopilot installed and running, it behaves like a normal Monaco Editor but with additional themes. This setup is sufficient if you only want to use the themes. If you're interested in utilizing the AI auto-completion feature, please refer to the Copilot Setup guide.
+Now that you have Monacopilot installed and running, it functions like a standard Monaco Editor with added theme capabilities. If you are interested in utilizing the AI auto-completion feature, proceed to the Copilot Setup guide.
 
 <div className="h-4" />
-<Card title="Copilot Setup" href="/docs/guide/copilot-setup"
-icon={<MagicWandIcon />}
-/>
+<Card title="Copilot Setup" href="/docs/copilot/setup" icon={<MagicWandIcon />} />

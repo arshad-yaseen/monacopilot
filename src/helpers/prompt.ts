@@ -1,5 +1,5 @@
 import type {CompletionMetadata, CompletionMode} from '../types/completion';
-import type {Technologies} from '../types/copilot-editor-props';
+import type {Technologies} from '../types/monacopilot-props';
 import {joinWithAnd} from '../utils/common';
 
 const CURSOR_PLACEHOLDER = '<<CURSOR>>';

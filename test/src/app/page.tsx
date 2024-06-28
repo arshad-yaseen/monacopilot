@@ -1,11 +1,11 @@
 'use client';
 
-import CopilotEditor from 'monacopilot';
+import MonaCopilot from 'monacopilot';
 
 export default function Home() {
   return (
     <main className="flex min-h-screen w-screen flex-col items-center">
-      <CopilotEditor
+      <MonaCopilot
         endpoint="/api/copilot"
         language="javascript"
         theme="github-light"

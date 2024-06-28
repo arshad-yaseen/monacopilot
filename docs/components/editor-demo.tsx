@@ -1,5 +1,5 @@
 import {motion} from 'framer-motion';
-import CopilotEditor, {Theme} from 'monacopilot';
+import MonaCopilot, {Theme} from 'monacopilot';
 import {useTheme} from 'next-themes';
 
 const EDITOR_DEFAULTS = {
@@ -27,7 +27,7 @@ const EditorDemo = () => {
       animate={{opacity: 1, y: 0}}
       transition={{duration: 0.4, delay: 0.6}}
       className="rounded-xl my-8 overflow-hidden bg-background border shadow-md shadow-neutral-50 dark:shadow-neutral-900 md:w-[700px] w-full h-[400px]">
-      <CopilotEditor
+      <MonaCopilot
         endpoint="/api/copilot"
         language={EDITOR_DEFAULTS.language}
         theme={theme}

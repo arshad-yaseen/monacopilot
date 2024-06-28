@@ -13,17 +13,17 @@ import type {
   EditorOptions,
   StandaloneCodeEditor,
 } from './types/common';
-import type EditorProps from './types/copilot-editor-props';
+import type MonaCopilotProps from './types/monacopilot-props';
 import {deepMerge} from './utils/common';
 
-const CopilotEditor = ({
+const MonaCopilot = ({
   filename,
   endpoint,
   technologies,
   theme,
   externalContext,
   ...props
-}: EditorProps) => {
+}: MonaCopilotProps) => {
   const [monacoInstance, setMonacoInstance] = React.useState<Monaco | null>(
     null,
   );
@@ -65,4 +65,4 @@ const CopilotEditor = ({
   );
 };
 
-export default CopilotEditor;
+export default MonaCopilot;

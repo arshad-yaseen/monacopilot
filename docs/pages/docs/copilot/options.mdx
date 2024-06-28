@@ -1,0 +1,82 @@
+---
+title: Copilot Options
+---
+
+import { Callout } from 'nextra/components'
+
+# Copilot Options
+
+This guide outlines various configuration options available for customizing the auto completion integration in your editor.
+
+### External Context
+
+Enhance the accuracy and relevance of Copilot's completions by providing additional code context from your workspace.
+
+```jsx
+<MonaCopilot 
+  externalContext={[
+    {
+      path: './utils.js',
+      content: 'export const reverse = (str) => str.split("").reverse().join("")'
+    }
+  ]}
+  // ... other props
+/>
+```
+
+The `externalContext` prop accepts an array, allowing you to include content from multiple files. Each item in the array should contain:
+
+- `path`: The relative path from the current code in the editor
+- `content`: The actual code content of the file
+
+#### Benefits
+
+By providing external context, Copilot can offer more intelligent suggestions. For example, if you start typing `const isPalindrome = `, Copilot may suggest using the `reverse` function from `utils.js` and even help with the correct import statement.
+
+<Callout type="info">
+  Note: Including more external context may slightly increase completion costs.
+</Callout>
+
+### Changing the Default Model
+
+You can specify a different model for completions by setting the `model` parameter in the `Copilot` constructor.
+
+```jsx
+const copilot = new Copilot(process.env.GROQ_API_KEY, { 
+    model: 'falcon' 
+});
+```
+
+The default model is `llama` if not specified.
+
+### Filename
+
+Specify the name of the file being edited to receive more contextually relevant completions.
+
+```jsx
+<MonaCopilot 
+  filename="utils.js"
+  // ... other props
+/>
+```
+
+Examples of filename values:
+- `"index.js"`
+- `"utils/objects.js"`
+
+### Completions for Specific Technologies
+
+Enable completions tailored to specific technologies by using the `technologies` prop.
+
+```jsx 
+<MonaCopilot 
+  technologies={['react', 'next.js', 'tailwindcss']}
+  // ... other props
+/>
+```
+
+This configuration will provide completions relevant to React, Next.js, and Tailwind CSS.
+
+---
+
+By leveraging these options, you can fine-tune Copilot's behavior to better suit your development environment and needs. Experiment with different configurations to find the optimal setup for your project.

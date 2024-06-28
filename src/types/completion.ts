@@ -13,7 +13,7 @@ import type {
   ExternalContext,
   Filename,
   Technologies,
-} from './copilot-editor-props';
+} from './monacopilot-props';
 
 export type CompletionModel = 'llama';
 
