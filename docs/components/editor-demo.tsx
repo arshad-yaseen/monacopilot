@@ -3,7 +3,7 @@ import MonaCopilot, {Theme} from 'monacopilot';
 import {useTheme} from 'next-themes';
 
 const EDITOR_DEFAULTS = {
-  value: `// Start coding here to see the autocompletions in action!`,
+  value: `// Start coding here to see the autocompletion in action!`,
   language: 'javascript',
   options: {
     padding: {top: 16, bottom: 16},
