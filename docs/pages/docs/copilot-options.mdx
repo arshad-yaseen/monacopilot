@@ -26,10 +26,8 @@ Enhance the accuracy and relevance of Copilot's completions by providing additio
 
 The `externalContext` prop accepts an array, allowing you to include content from multiple files. Each item in the array should contain:
 
-- `path`: The relative path from the current code in the editor
+- `path`: The relative path from the current file
 - `content`: The actual code content of the file
-
-#### Benefits
 
 By providing external context, Copilot can offer more intelligent suggestions. For example, if you start typing `const isPalindrome = `, Copilot may suggest using the `reverse` function from `utils.js` and even help with the correct import statement.
 
@@ -55,14 +53,12 @@ Specify the name of the file being edited to receive more contextually relevant 
 
 ```jsx
 <MonaCopilot 
-  filename="utils.js"
+  filename="utils.js" // "index.js", "utils/objects.js", etc.
   // ... other props
 />
 ```
 
-Examples of filename values:
-- `"index.js"`
-- `"utils/objects.js"`
+Now, the completions will be more relevant to utilities.
 
 ### Completions for Specific Technologies
 
@@ -76,7 +72,3 @@ Enable completions tailored to specific technologies by using the `technologies`
 ```
 
 This configuration will provide completions relevant to React, Next.js, and Tailwind CSS.
-
----
-
-By leveraging these options, you can fine-tune Copilot's behavior to better suit your development environment and needs. Experiment with different configurations to find the optimal setup for your project.

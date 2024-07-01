@@ -1,9 +1,18 @@
+import {useEffect, useState} from 'react';
 import Link from 'next/link';
 
-import {GITHUB_REPO_URL} from '@/constants';
+import {GITHUB_REPO_NAME, GITHUB_REPO_URL} from '@/constants';
 import {GitHubLogoIcon} from '@radix-ui/react-icons';
 
 const ProudlyOpenSource = () => {
+  const [stars, setStars] = useState<number>(0);
+
+  useEffect(() => {
+    fetch(`https://api.github.com/repos/${GITHUB_REPO_NAME}`)
+      .then(res => res.json())
+      .then(data => setStars(data.stargazers_count));
+  }, []);
+
   return (
     <div className="container gap-4 flex flex-col items-center justify-center w-full py-24">
       <h2 className="md:text-5xl text-4xl font-semibold text-center ">
@@ -21,7 +30,7 @@ const ProudlyOpenSource = () => {
         <div className="size-8 bg-neutral-900 flex items-center justify-center text-white dark:bg-neutral-100 dark:text-neutral-950 rounded-full">
           <GitHubLogoIcon className="size-5" />
         </div>
-        3500+ Stars on GitHub
+        {stars} Stars on GitHub
       </Link>
     </div>
   );

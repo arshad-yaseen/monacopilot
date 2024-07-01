@@ -31,7 +31,7 @@ const Features = () => {
   return (
     <section className="w-full relative flex flex-col items-center justify-center gap-10">
       <div className="w-full overflow-hidden">
-        <h2 className="lg:block text-[20.5rem] hidden leading-none tracking-normal opacity-10 shrink-0 -mt-[1.9rem] font-semibold text-center">
+        <h2 className="lg:block text-[20.5rem] hidden leading-none tracking-normal text-neutral-200 dark:text-neutral-800 shrink-0 -mt-[1rem] font-semibold text-center">
           Features
         </h2>
       </div>

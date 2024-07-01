@@ -1,7 +1,5 @@
 # Monacopilot
 
-![Monacopilot Demo](monacopilot-demo.gif)
-
 Extended Monaco Editor with AI auto-completion and new themes for React.
 
 ## Documentation

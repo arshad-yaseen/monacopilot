@@ -1,6 +1,11 @@
 {
   "index": "Getting Started",
-  "copilot": "Copilot",
+  "copilot-setup": "Copilot Setup",
+  "copilot-options": "Copilot Options",
+  "completion-endpoint": "Completion Endpoint",
+  "---": {
+    "type": "separator"
+  },
   "copilot-cost-overview": "Copilot Cost Overview",
   "faq": "FAQ"
 }
