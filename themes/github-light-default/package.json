@@ -1,6 +1,6 @@
 {
   "name": "@monacopilot/github-light-default",
-  "version": {},
+  "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [

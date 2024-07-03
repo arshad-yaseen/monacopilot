@@ -109,7 +109,7 @@ export default ${JSON.stringify(monacoTheme, null, 2)} as const satisfies monaco
   await fs.writeFile(path.join(themeDir, 'index.ts'), themeFileContent, 'utf8');
   await fs.writeFile(
     path.join(themeDir, 'package.json'),
-    createPackageJsonContent(themeName),
+    await createPackageJsonContent(themeName),
     'utf8',
   );
   await fs.writeFile(
@@ -119,11 +119,12 @@ export default ${JSON.stringify(monacoTheme, null, 2)} as const satisfies monaco
   );
 };
 
-const createPackageJsonContent = themeName =>
-  JSON.stringify(
+const createPackageJsonContent = async themeName => {
+  const version = await getCurrentVersion(themeName);
+  return JSON.stringify(
     {
       name: `@monacopilot/${themeName}`,
-      version: getCurrentVersion(themeName),
+      version,
       main: 'dist/index.js',
       types: 'dist/index.d.ts',
       files: ['dist'],
@@ -141,6 +142,7 @@ const createPackageJsonContent = themeName =>
     null,
     2,
   );
+};
 
 const createTsConfigContent = () =>
   JSON.stringify(
@@ -156,13 +158,16 @@ const createTsConfigContent = () =>
     2,
   );
 
-const getCurrentVersion = async themeDir => {
+const getCurrentVersion = async themeName => {
   try {
-    const packageJson = await fs.readFile(
-      path.join(themeDir, 'package.json'),
-      'utf8',
+    const packageJsonPath = path.join(
+      MONACO_THEMES_SAVE_LOCATION,
+      themeName,
+      'package.json',
     );
-    return JSON.parse(packageJson).version;
+    const packageJson = await fs.readFile(packageJsonPath, 'utf8');
+    const version = JSON.parse(packageJson).version;
+    return typeof version === 'string' ? version : '1.0.0';
   } catch {
     return '1.0.0';
   }
