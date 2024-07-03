@@ -2,17 +2,17 @@ import {
   COMPLETION_MODEL_IDS,
   DEFAULT_COMPLETION_MODEL,
   GROQ_API_ENDPOINT,
-} from '../constants/completion';
-import {generateSystemPrompt, generateUserPrompt} from '../helpers/prompt';
-import type {
+} from '../../constants/completion';
+import {generateSystemPrompt, generateUserPrompt} from '../../helpers/prompt';
+import {
   CompletionRequest,
   CompletionResponse,
   GroqCompletion,
   GroqCompletionCreateParams,
-} from '../types/completion';
-import {CopilotOptions} from '../types/copilot';
-import HTTP from '../utils/http';
-import Config from './config';
+} from '../../types/completion';
+import {CopilotOptions} from '../../types/copilot';
+import HTTP from '../../utils/http';
+import Config from '../config';
 
 /**
  * Initializes with configuration options

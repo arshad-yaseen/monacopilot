@@ -7,12 +7,11 @@ export default function Home() {
     <main className="flex min-h-screen w-screen flex-col items-center">
       <MonaCopilot
         endpoint="/api/copilot"
-        language="javascript"
-        theme="github-light"
+        language="rust"
+        theme="github-dark-dimmed"
         className="h-screen w-screen"
         options={{
           padding: {top: 16},
-          fontSize: 16,
         }}
       />
     </main>

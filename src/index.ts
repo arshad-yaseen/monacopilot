@@ -1,4 +1,4 @@
-import Copilot from './classes/copilot';
+import Copilot from './classes/core/copilot';
 import MonaCopilot from './monacopilot';
 import type {CompletionRequest, CompletionResponse} from './types/completion';
 import type MonaCopilotProps from './types/monacopilot-props';

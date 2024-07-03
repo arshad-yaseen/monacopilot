@@ -2,20 +2,20 @@ import React from 'react';
 
 import {Monaco} from '@monaco-editor/react';
 
-import {LocalCodePredictionEngine} from '../classes/local-code-prediction-engine';
+import {LocalCodePredictionEngine} from '../../classes/local-code-prediction-engine';
 import {
   computeCompletionCacheKey,
   fetchCompletionItem,
-} from '../helpers/completion';
-import type {EditorInlineCompletion} from '../types/common';
-import type {
+} from '../../helpers/completion';
+import {EditorInlineCompletion} from '../../types/common';
+import {
   Endpoint,
   ExternalContext,
   Filename,
   Technologies,
-} from '../types/monacopilot-props';
-import {getLine} from '../utils/editor';
-import useDebounceFn from './use-debounce-fn';
+} from '../../types/monacopilot-props';
+import {getLine} from '../../utils/editor';
+import useDebounceFn from '../use-debounce-fn';
 
 const localPredictionEngine = new LocalCodePredictionEngine();
 
@@ -32,7 +32,7 @@ const useStartCompletion = (
   );
   const isCompletionHandled = React.useRef<boolean>(false);
 
-  const fetchCompletionItemDebounced = useDebounceFn(fetchCompletionItem, 300);
+  const fetchCompletionItemDebounced = useDebounceFn(fetchCompletionItem, 250);
 
   React.useEffect(() => {
     if (!monacoInstance || !language || !endpoint) {

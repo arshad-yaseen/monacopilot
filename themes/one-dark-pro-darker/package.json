@@ -1,0 +1,19 @@
+{
+  "name": "@monacopilot/one-dark-pro-darker",
+  "version": "1.0.2",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc --project tsconfig.json"
+  },
+  "license": "MIT",
+  "keywords": [
+    "monacopilot",
+    "one-dark-pro-darker"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arshad-yaseen/monacopilot"
+  },
+  "author": "Arshad Yaseen <m@arshadyaseen.com>"
+}

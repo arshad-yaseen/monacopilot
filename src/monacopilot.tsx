@@ -6,7 +6,7 @@ import {
   EDITOR_BUILT_IN_THEMES,
   EDITOR_DEFAULT_OPTIONS,
 } from './constants/common';
-import useStartCompletion from './hooks/use-start-completion';
+import useStartCompletion from './hooks/core/use-start-completion';
 import themes from './themes';
 import type {
   EditorBuiltInTheme,

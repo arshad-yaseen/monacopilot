@@ -26,7 +26,8 @@
     "dist/",
     "/tsup.config.ts",
     "test/",
-    "docs/"
+    "docs/",
+    "themes/"
   ],
   "plugins": ["@typescript-eslint"],
   "rules": {
