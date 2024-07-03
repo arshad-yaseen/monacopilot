@@ -1,6 +1,7 @@
 {
   "name": "@monacopilot/github-dark-dimmed",
   "version": "1.0.6",
+  "private": false,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -15,6 +16,5 @@
     "type": "git",
     "url": "https://github.com/arshad-yaseen/monacopilot"
   },
-  "author": "Arshad Yaseen <m@arshadyaseen.com>",
-  "gitHead": "3f3d9c62361bfe517b26412d158e60d0eb707237"
+  "author": "Arshad Yaseen <m@arshadyaseen.com>"
 }
