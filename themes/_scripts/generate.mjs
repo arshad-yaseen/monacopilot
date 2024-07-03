@@ -150,6 +150,7 @@ export default ${JSON.stringify(monacoTheme, null, 2)} as const satisfies monaco
           version: currentVersion,
           main: 'dist/index.js',
           types: 'dist/index.d.ts',
+          files: ['dist'],
           scripts: {
             build: 'tsc --project tsconfig.json',
           },
