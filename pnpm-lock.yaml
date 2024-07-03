@@ -179,8 +179,6 @@ importers:
         specifier: ^5
         version: 5.4.5
 
-  themes: {}
-
 packages:
   /@alloc/quick-lru@5.2.0:
     resolution:
