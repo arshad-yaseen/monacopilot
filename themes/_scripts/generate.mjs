@@ -105,19 +105,6 @@ const convertVsCodeThemeToMonaco = vsCodeTheme => {
   return monacoTheme;
 };
 
-// Increment semantic version
-const patchVersion = version => {
-  let [major, minor, patch] = version.split('.').map(Number);
-  if (++patch >= 10) {
-    patch = 0;
-    if (++minor >= 10) {
-      minor = 0;
-      major++;
-    }
-  }
-  return `${major}.${minor}.${patch}`;
-};
-
 // Process themes
 const processThemes = async () => {
   try {
@@ -140,10 +127,8 @@ const processThemes = async () => {
       const themeName = path.basename(themeFile, '.json');
       const themeDir = path.join(MONACO_THEMES_SAVE_LOCATION, themeName);
 
-      const themeFileContent = `
-import * as monaco from 'monaco-editor';
-export default ${JSON.stringify(monacoTheme, null, 2)} as const satisfies monaco.editor.IStandaloneThemeData;
-`;
+      const themeFileContent = `import * as monaco from 'monaco-editor';
+export default ${JSON.stringify(monacoTheme, null, 2)} as const satisfies monaco.editor.IStandaloneThemeData;`;
 
       await fs.mkdir(themeDir, {recursive: true});
       await fs.writeFile(
@@ -162,7 +147,7 @@ export default ${JSON.stringify(monacoTheme, null, 2)} as const satisfies monaco
       const packageJsonContent = JSON.stringify(
         {
           name: `@monacopilot/${themeName}`,
-          version: patchVersion(currentVersion),
+          version: currentVersion,
           main: 'dist/index.js',
           types: 'dist/index.d.ts',
           scripts: {
