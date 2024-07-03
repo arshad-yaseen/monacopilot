@@ -1,6 +1,6 @@
 {
   "name": "@monacopilot/github-light",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -15,5 +15,6 @@
     "type": "git",
     "url": "https://github.com/arshad-yaseen/monacopilot"
   },
-  "author": "Arshad Yaseen <m@arshadyaseen.com>"
+  "author": "Arshad Yaseen <m@arshadyaseen.com>",
+  "gitHead": "d687fdf9b1c6b66438d119502bf532a3467d7ee5"
 }
