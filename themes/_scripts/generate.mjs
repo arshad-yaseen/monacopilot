@@ -160,6 +160,9 @@ export default ${JSON.stringify(monacoTheme, null, 2)} as const satisfies monaco
             url: 'https://github.com/arshad-yaseen/monacopilot',
           },
           author: 'Arshad Yaseen <m@arshadyaseen.com>',
+          publishConfig: {
+            access: 'public',
+          },
         },
         null,
         2,

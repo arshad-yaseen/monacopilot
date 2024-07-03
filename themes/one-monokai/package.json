@@ -15,5 +15,8 @@
     "type": "git",
     "url": "https://github.com/arshad-yaseen/monacopilot"
   },
-  "author": "Arshad Yaseen <m@arshadyaseen.com>"
+  "author": "Arshad Yaseen <m@arshadyaseen.com>",
+  "publishConfig": {
+    "access": "public"
+  }
 }
