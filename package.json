@@ -17,7 +17,7 @@
     "lint": "eslint . --ext .ts,.tsx --fix",
     "lint:test": "pnpm -C test lint",
     "format": "prettier --write .",
-    "checks": "pnpm type-check && pnpm lint && pnpm lint:test",
+    "pre-commit": "pnpm format && pnpm type-check && pnpm lint && pnpm lint:test",
     "generate:themes": "node themes/_scripts/generate.mjs",
     "build:themes": "npx lerna run build",
     "publish:themes": "npx lerna publish --force-publish --no-private",

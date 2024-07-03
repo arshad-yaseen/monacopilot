@@ -148,7 +148,6 @@ export default ${JSON.stringify(monacoTheme, null, 2)} as const satisfies monaco
         {
           name: `@monacopilot/${themeName}`,
           version: currentVersion,
-          private: false,
           main: 'dist/index.js',
           types: 'dist/index.d.ts',
           scripts: {
