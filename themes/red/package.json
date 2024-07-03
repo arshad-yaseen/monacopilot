@@ -1,0 +1,26 @@
+{
+  "name": "@monacopilot/red",
+  "version": {},
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig.json"
+  },
+  "license": "MIT",
+  "keywords": [
+    "monacopilot",
+    "red"
+  ],
+  "homepage": "https://monacopilot.vercel.app/themes",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arshad-yaseen/monacopilot"
+  },
+  "author": "Arshad Yaseen <m@arshadyaseen.com>",
+  "publishConfig": {
+    "access": "public"
+  }
+}

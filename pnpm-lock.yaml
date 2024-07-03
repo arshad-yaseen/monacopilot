@@ -53,6 +53,9 @@ importers:
       release-it:
         specifier: ^17.2.1
         version: 17.2.1(typescript@5.4.5)
+      shiki:
+        specifier: ^1.10.1
+        version: 1.10.1
       tsup:
         specifier: ^8.0.2
         version: 8.0.2(typescript@5.4.5)
@@ -2900,6 +2903,13 @@ packages:
     resolution:
       {
         integrity: sha512-hw437iINopmQuxWPSUEvqE56NCPsiU8N4AYtfHmJFckclktzK9YQJieD3XkDCDH4OjL+C7zgPUh73R/nrcHrqw==,
+      }
+    dev: true
+
+  /@shikijs/core@1.10.1:
+    resolution:
+      {
+        integrity: sha512-qdiJS5a/QGCff7VUFIqd0hDdWly9rDp8lhVmXVrS11aazX8LOTRLHAXkkEeONNsS43EcCd7gax9LLoOz4vlFQA==,
       }
     dev: true
 
@@ -13711,6 +13721,15 @@ packages:
       vscode-oniguruma: 1.7.0
       vscode-textmate: 8.0.0
     dev: false
+
+  /shiki@1.10.1:
+    resolution:
+      {
+        integrity: sha512-uafV7WCgN4YYrccH6yxpnps6k38sSTlFRrwc4jycWmhWxJIm9dPrk+XkY1hZ2t0I7jmacMNb15Lf2fspa/Y3lg==,
+      }
+    dependencies:
+      '@shikijs/core': 1.10.1
+    dev: true
 
   /side-channel@1.0.6:
     resolution:
