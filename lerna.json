@@ -2,5 +2,6 @@
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "packages": ["themes/*"],
   "version": "1.0.10",
+  "message": "Bump themes",
   "npmClient": "pnpm"
 }

@@ -156,6 +156,7 @@ export default ${JSON.stringify(monacoTheme, null, 2)} as const satisfies monaco
           },
           license: 'MIT',
           keywords: ['monacopilot', themeName],
+          homepage: 'https://monacopilot.vercel.app/themes',
           repository: {
             type: 'git',
             url: 'https://github.com/arshad-yaseen/monacopilot',
