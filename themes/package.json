@@ -1,6 +1,6 @@
 {
   "name": "monacopilot-themes",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Themes for Monacopilot.",
   "main": "index.js",
   "scripts": {
