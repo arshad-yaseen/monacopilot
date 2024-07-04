@@ -1,6 +1,6 @@
 {
   "name": "monacopilot",
-  "version": "0.8.24",
+  "version": "0.9.0",
   "description": "Extended Monaco Editor with AI auto-completion and new themes for React.",
   "main": "./build/index.js",
   "module": "./build/index.mjs",
