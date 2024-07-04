@@ -13,6 +13,7 @@ const MonaCopilot = ({
   endpoint,
   technologies,
   externalContext,
+  onMount,
   ...props
 }: MonaCopilotProps) => {
   const [monacoInstance, setMonacoInstance] = React.useState<Monaco | null>(
@@ -23,9 +24,9 @@ const MonaCopilot = ({
     (editor: StandaloneCodeEditor, monaco: Monaco) => {
       setMonacoInstance(monaco);
 
-      props.onMount?.(editor, monaco);
+      onMount?.(editor, monaco);
     },
-    [props.onMount],
+    [onMount],
   );
 
   useStartCompletion(
