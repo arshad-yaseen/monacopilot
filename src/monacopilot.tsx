@@ -17,10 +17,12 @@ const MonaCopilot = ({
   onMount,
   ...props
 }: MonaCopilotProps) => {
+  const disposableRef = React.useRef<(() => void) | undefined>();
+
   const onEditorDidMount = React.useCallback(
     (editor: StandaloneCodeEditor, monaco: Monaco) => {
       try {
-        registerCopilot({
+        disposableRef.current = registerCopilot({
           monaco,
           filename,
           endpoint,
@@ -43,6 +45,12 @@ const MonaCopilot = ({
       props.language,
     ],
   );
+
+  React.useEffect(() => {
+    return () => {
+      disposableRef.current?.();
+    };
+  }, []);
 
   return (
     <MonacoEditor
