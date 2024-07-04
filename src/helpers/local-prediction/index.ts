@@ -1,7 +1,7 @@
-import type {LocalPrediction} from '../../types/completion';
+import {LocalPrediction} from '../../types';
 import javascript from './javascript';
 
-export default [
+export const predictions = [
   {
     language: 'javascript',
     snippets: javascript,

@@ -1,3 +1,5 @@
+export * from './errors';
+
 export class MonacoPilotError extends Error {
   constructor(
     public readonly code: string,

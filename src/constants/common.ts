@@ -1,4 +1,4 @@
-import type {EditorOptions} from '../types/common';
+import {EditorOptions} from '../types';
 
 export const EDITOR_DEFAULT_OPTIONS: EditorOptions = {
   scrollBeyondLastColumn: 0,

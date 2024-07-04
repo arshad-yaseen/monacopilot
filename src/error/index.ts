@@ -38,6 +38,4 @@ class ErrorHandler {
   }
 }
 
-const err = (error: unknown) => new ErrorHandler(error);
-
-export default err;
+export const err = (error: unknown) => new ErrorHandler(error);

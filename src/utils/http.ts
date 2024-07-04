@@ -63,9 +63,7 @@ const POST = <ResponseType, BodyType>(
   });
 };
 
-const HTTP = {
+export const HTTP = {
   GET,
   POST,
 };
-
-export default HTTP;

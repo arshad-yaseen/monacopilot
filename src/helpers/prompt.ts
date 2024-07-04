@@ -1,6 +1,5 @@
-import type {CompletionMetadata, CompletionMode} from '../types/completion';
-import type {Technologies} from '../types/monacopilot-props';
-import {joinWithAnd} from '../utils/common';
+import {CompletionMetadata, CompletionMode, Technologies} from '../types';
+import {joinWithAnd} from '../utils';
 
 const CURSOR_PLACEHOLDER = '<<CURSOR>>';
 

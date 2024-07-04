@@ -1,4 +1,34 @@
 /**
+ * Debounces a function that returns a Promise.
+ *
+ * @param func - The function to debounce. This should be a function that returns a Promise.
+ * @param delay - The delay in milliseconds to wait before considering that typing has stopped.
+ * @returns A debounced version of the function.
+ */
+export const debounce = <T extends (...args: any[]) => Promise<any>>(
+  func: T,
+  delay: number = 1000,
+): ((...funcArgs: Parameters<T>) => Promise<ReturnType<T>>) => {
+  let timerRef: ReturnType<typeof setTimeout> | null = null;
+
+  const debouncedFunc = (...args: Parameters<T>): Promise<ReturnType<T>> => {
+    if (timerRef) {
+      clearTimeout(timerRef);
+    }
+
+    return new Promise<ReturnType<T>>((resolve, reject) => {
+      timerRef = setTimeout(() => {
+        func(...args)
+          .then(resolve)
+          .catch(reject);
+      }, delay);
+    });
+  };
+
+  return debouncedFunc;
+};
+
+/**
  * Merges a partial object with a fallback object, deeply combining the two.
  *
  * @param {Partial<T>} partial - the partial object to merge (can be undefined)

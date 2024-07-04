@@ -1,15 +1,16 @@
-import type {EditorModel, EditorPosition} from '../types/common';
-import type {
+import {
   CompletionMetadata,
   CompletionRequest,
   CompletionResponse,
+  EditorModel,
+  EditorPosition,
   FetchCompletionItemParams,
-} from '../types/completion';
+} from '../types';
+import {HTTP} from '../utils';
 import {
   determineCompletionMode,
   getCodeBeforeAndAfterCursor,
-} from '../utils/completion/syntax-parser';
-import HTTP from '../utils/http';
+} from '../utils/completion';
 
 const CONTENT_TYPE_JSON = 'application/json';
 const ERROR_MESSAGE = 'Error while fetching completion item';

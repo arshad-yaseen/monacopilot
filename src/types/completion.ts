@@ -3,13 +3,13 @@ import type {
   ChatCompletionCreateParamsBase,
 } from 'groq-sdk/resources/chat/completions';
 
-import type {
+import {
   EditorCancellationToken,
   EditorInlineCompletion,
   EditorModel,
   EditorPosition,
 } from './common';
-import type {
+import {
   Endpoint,
   ExternalContext,
   Filename,

@@ -1,7 +1,7 @@
-import err from '../error';
-import predictions from '../helpers/local-prediction';
-import type {LocalPredictionSnippets} from '../types/completion';
-import {reverseString} from '../utils/common';
+import {err} from '../error';
+import {predictions} from '../helpers/local-prediction';
+import {LocalPredictionSnippets} from '../types';
+import {reverseString} from '../utils';
 
 export class LocalCodePredictionEngine {
   private readonly predictions: Map<string, LocalPredictionSnippets>;

@@ -1,8 +1,7 @@
-import type {EditorModel, EditorPosition} from '../../types/common';
-import type {CompletionMode} from '../../types/completion';
+import {CompletionMode, EditorModel, EditorPosition} from '../../types';
 import {getCharAtPosition} from '../editor';
 
-const DEFAULT_RECENT_COMPLETION_THRESHOLD = 1000; // 1 second
+const DEFAULT_RECENT_COMPLETION_THRESHOLD = 2000; // 2 seconds
 
 const ACCEPTABLE_CHARS_AFTER_CURSOR = new Set([
   '"',

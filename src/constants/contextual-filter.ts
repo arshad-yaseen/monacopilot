@@ -190,8 +190,8 @@ const FILTER_WEIGHTS: number[] = [
 // Intercept for the logistic regression model
 const FILTER_INTERCEPT: number = -0.3043572714994554;
 
-// 20% acceptance threshold
-const CONTEXTUAL_FILTER_ACCEPT_THRESHOLD: number = 0.2;
+// 15% acceptance threshold
+const CONTEXTUAL_FILTER_ACCEPT_THRESHOLD: number = 0.15;
 
 export {
   FILTER_LANGUAGE_MAP,

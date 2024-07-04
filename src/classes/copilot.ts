@@ -2,24 +2,24 @@ import {
   COMPLETION_MODEL_IDS,
   DEFAULT_COMPLETION_MODEL,
   GROQ_API_ENDPOINT,
-} from '../constants/completion';
-import err from '../error';
+} from '../constants';
+import {err} from '../error';
 import {CompletionError} from '../error/errors';
-import {generateSystemPrompt, generateUserPrompt} from '../helpers/prompt';
+import {generateSystemPrompt, generateUserPrompt} from '../helpers';
 import {
   CompletionRequest,
   CompletionResponse,
+  CopilotOptions,
   GroqCompletion,
   GroqCompletionCreateParams,
-} from '../types/completion';
-import {CopilotOptions} from '../types/copilot';
-import HTTP from '../utils/http';
+} from '../types';
+import {HTTP} from '../utils';
 import Config from './config';
 
 /**
  * Copilot class for handling code completions using the Groq API.
  */
-class Copilot {
+export class Copilot {
   private readonly apiKey: string;
 
   /**
@@ -92,5 +92,3 @@ class Copilot {
     };
   }
 }
-
-export default Copilot;

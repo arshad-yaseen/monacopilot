@@ -1,9 +1,7 @@
-import {Monaco} from '@monaco-editor/react';
-
-import {LocalCodePredictionEngine} from '../../classes/local-code-prediction-engine';
-import {CompletionValidator} from '../../classes/validate-completion';
-import err from '../../error';
+import {CompletionValidator, LocalCodePredictionEngine} from '../../classes';
+import {err} from '../../error';
 import {
+  CompletionCacheItem,
   EditorCancellationToken,
   EditorInlineCompletion,
   EditorInlineCompletionContext,
@@ -11,17 +9,14 @@ import {
   EditorModel,
   EditorPosition,
   EditorRange,
-} from '../../types/common';
-import {CompletionCacheItem} from '../../types/completion';
-import {RegisterCopilotParams} from '../../types/copilot';
-import {
   Endpoint,
   ExternalContext,
   Filename,
+  Monaco,
+  RegisterCopilotParams,
   Technologies,
-} from '../../types/monacopilot-props';
-import debounceFn from '../../utils/debounce';
-import {getLine} from '../../utils/editor';
+} from '../../types';
+import {debounce, getLine} from '../../utils';
 import {computeCompletionCacheKey, fetchCompletionItem} from '../completion';
 
 const LOCAL_PREDICTION_ENGINE = new LocalCodePredictionEngine();
@@ -29,7 +24,7 @@ const COMPLETION_CACHE = new Map<string, CompletionCacheItem>();
 
 let LAST_COMPLETION_TIME = Date.now();
 
-const debouncedFetchCompletionItem = debounceFn(fetchCompletionItem, 200);
+const debouncedFetchCompletionItem = debounce(fetchCompletionItem, 200);
 
 /**
  * Register Copilot with Monaco editor.
@@ -40,7 +35,7 @@ const debouncedFetchCompletionItem = debounceFn(fetchCompletionItem, 200);
  * @param language The language of the code snippet.
  * @param externalContext The external context of the code snippet.
  */
-const registerCopilot = ({
+export const registerCopilot = ({
   monaco,
   filename,
   endpoint,
@@ -178,5 +173,3 @@ const createInlineCompletionResult = (
   items,
   enableForwardStability: true,
 });
-
-export default registerCopilot;

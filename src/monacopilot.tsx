@@ -2,12 +2,16 @@ import React from 'react';
 
 import {Editor as MonacoEditor} from '@monaco-editor/react';
 
-import {EDITOR_DEFAULT_OPTIONS} from './constants/common';
-import err from './error';
-import registerCopilot from './helpers/copilot/register';
-import type {EditorOptions, Monaco, StandaloneCodeEditor} from './types/common';
-import type MonaCopilotProps from './types/monacopilot-props';
-import {deepMerge} from './utils/common';
+import {EDITOR_DEFAULT_OPTIONS} from './constants';
+import {err} from './error';
+import {registerCopilot} from './helpers/copilot';
+import {
+  EditorOptions,
+  Monaco,
+  MonaCopilotProps,
+  StandaloneCodeEditor,
+} from './types';
+import {deepMerge} from './utils';
 
 const MonaCopilot = ({
   filename,
@@ -17,12 +21,12 @@ const MonaCopilot = ({
   onMount,
   ...props
 }: MonaCopilotProps) => {
-  const disposableRef = React.useRef<(() => void) | undefined>();
+  const _disposeCopilotRef = React.useRef<(() => void) | undefined>();
 
   const onEditorDidMount = React.useCallback(
     (editor: StandaloneCodeEditor, monaco: Monaco) => {
       try {
-        disposableRef.current = registerCopilot({
+        _disposeCopilotRef.current = registerCopilot({
           monaco,
           filename,
           endpoint,
@@ -48,7 +52,7 @@ const MonaCopilot = ({
 
   React.useEffect(() => {
     return () => {
-      disposableRef.current?.();
+      _disposeCopilotRef.current?.();
     };
   }, []);
 
