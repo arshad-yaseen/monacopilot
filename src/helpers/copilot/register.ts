@@ -1,6 +1,7 @@
 import {Monaco} from '@monaco-editor/react';
 
 import {LocalCodePredictionEngine} from '../../classes/local-code-prediction-engine';
+import {CompletionValidator} from '../../classes/validate-completion';
 import err from '../../error';
 import {
   EditorCancellationToken,
@@ -19,11 +20,16 @@ import {
   Filename,
   Technologies,
 } from '../../types/monacopilot-props';
+import debounceFn from '../../utils/debounce';
 import {getLine} from '../../utils/editor';
 import {computeCompletionCacheKey, fetchCompletionItem} from '../completion';
 
 const LOCAL_PREDICTION_ENGINE = new LocalCodePredictionEngine();
 const COMPLETION_CACHE = new Map<string, CompletionCacheItem>();
+
+let LAST_COMPLETION_TIME = Date.now();
+
+const debouncedFetchCompletionItem = debounceFn(fetchCompletionItem, 200);
 
 /**
  * Register Copilot with Monaco editor.
@@ -82,6 +88,17 @@ const handleInlineCompletions = async (
     externalContext?: ExternalContext;
   },
 ): Promise<EditorInlineCompletionsResult> => {
+  const completionValidator = new CompletionValidator(
+    position,
+    model,
+    options.language,
+    LAST_COMPLETION_TIME,
+  );
+
+  if (!completionValidator.shouldProvideCompletions()) {
+    return createInlineCompletionResult([]);
+  }
+
   const cacheKey = computeCompletionCacheKey(position, model);
   const cachedItem = COMPLETION_CACHE.get(cacheKey);
 
@@ -113,7 +130,7 @@ const handleInlineCompletions = async (
   }
 
   try {
-    const completion = await fetchCompletionItem({
+    const completion = await debouncedFetchCompletionItem({
       ...options,
       code,
       model,
@@ -122,6 +139,7 @@ const handleInlineCompletions = async (
     });
 
     if (completion) {
+      LAST_COMPLETION_TIME = Date.now();
       const newItem = createCompletionItem(completion, cursorRange);
       cacheCompletionItem(cacheKey, newItem);
       return createInlineCompletionResult([newItem]);

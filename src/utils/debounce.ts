@@ -1,34 +1,31 @@
-function debounce<T extends (...args: any[]) => Promise<any>>(
+/**
+ * Debounces a function that returns a Promise.
+ *
+ * @param func - The function to debounce. This should be a function that returns a Promise.
+ * @param delay - The delay in milliseconds to wait before considering that typing has stopped.
+ * @returns A debounced version of the function.
+ */
+const debounceFn = <T extends (...args: any[]) => Promise<any>>(
   func: T,
-  wait: number,
-): (...args: Parameters<T>) => Promise<ReturnType<T>> {
-  let timeout: NodeJS.Timeout | null = null;
-  let pendingPromise: Promise<ReturnType<T>> | null = null;
+  delay: number = 1000,
+): ((...funcArgs: Parameters<T>) => Promise<ReturnType<T>>) => {
+  let timerRef: ReturnType<typeof setTimeout> | null = null;
 
-  return (...args: Parameters<T>): Promise<ReturnType<T>> => {
-    if (pendingPromise) {
-      return pendingPromise;
+  const debouncedFunc = (...args: Parameters<T>): Promise<ReturnType<T>> => {
+    if (timerRef) {
+      clearTimeout(timerRef);
     }
 
-    pendingPromise = new Promise<ReturnType<T>>((resolve, reject) => {
-      const later = () => {
-        timeout = null;
+    return new Promise<ReturnType<T>>((resolve, reject) => {
+      timerRef = setTimeout(() => {
         func(...args)
           .then(resolve)
-          .catch(reject)
-          .finally(() => {
-            pendingPromise = null;
-          });
-      };
-
-      if (timeout) {
-        clearTimeout(timeout);
-      }
-      timeout = setTimeout(later, wait);
+          .catch(reject);
+      }, delay);
     });
-
-    return pendingPromise;
   };
-}
 
-export default debounce;
+  return debouncedFunc;
+};
+
+export default debounceFn;

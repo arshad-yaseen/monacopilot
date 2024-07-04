@@ -2,6 +2,8 @@ import type {EditorModel, EditorPosition} from '../../types/common';
 import type {CompletionMode} from '../../types/completion';
 import {getCharAtPosition} from '../editor';
 
+const DEFAULT_RECENT_COMPLETION_THRESHOLD = 1000; // 1 second
+
 const ACCEPTABLE_CHARS_AFTER_CURSOR = new Set([
   '"',
   "'",
@@ -87,4 +89,12 @@ export const determineCompletionMode = (
   return codeBeforeCursor && codeAfterCursor
     ? 'fill-in-the-middle'
     : 'completion';
+};
+
+export const isLastCompletionTooRecent = (
+  lastCompletionTime: number,
+  currentTime: number,
+  threshold: number = DEFAULT_RECENT_COMPLETION_THRESHOLD,
+): boolean => {
+  return currentTime - lastCompletionTime < threshold;
 };

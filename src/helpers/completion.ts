@@ -9,7 +9,6 @@ import {
   determineCompletionMode,
   getCodeBeforeAndAfterCursor,
 } from '../utils/completion/syntax-parser';
-import {isValidCompletion} from '../utils/completion/validate-completion';
 import HTTP from '../utils/http';
 
 const CONTENT_TYPE_JSON = 'application/json';
@@ -18,7 +17,6 @@ const ERROR_MESSAGE = 'Error while fetching completion item';
 export const fetchCompletionItem = async ({
   filename,
   endpoint,
-  code,
   language,
   technologies,
   externalContext,
@@ -26,10 +24,6 @@ export const fetchCompletionItem = async ({
   position,
   token,
 }: FetchCompletionItemParams): Promise<string | null> => {
-  if (!isValidCompletion(position, model, language) || !code) {
-    return null;
-  }
-
   const controller = new AbortController();
 
   if (token.isCancellationRequested) {
