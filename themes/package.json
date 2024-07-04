@@ -6,7 +6,6 @@
   "scripts": {
     "build": "tsup src/index.ts",
     "dev": "tsup src/index.ts --watch",
-    "pre-commit": "pnpm -C monacopilot type-check && pnpm -C monacopilot lint && pnpm -C monacopilot lint:test",
     "release": "release-it"
   },
   "keywords": [

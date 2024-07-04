@@ -1,7 +1,7 @@
 module.exports = {
   git: {
     commitMessage: 'Bump themes v${version}',
-    tagName: 'v${version}',
+    tagName: 'Themes v${version}',
     requireCommits: true,
     requireCleanWorkingDir: true,
   },
@@ -17,6 +17,6 @@ module.exports = {
     publish: true,
   },
   hooks: {
-    'before:init': ['pnpm build', 'pnpm pre-commit'],
+    'before:init': ['pnpm build'],
   },
 };
