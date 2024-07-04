@@ -3,7 +3,8 @@ import React from 'react';
 import {Editor as MonacoEditor} from '@monaco-editor/react';
 
 import {EDITOR_DEFAULT_OPTIONS} from './constants/common';
-import useStartCompletion from './hooks/core/use-start-completion';
+import err from './error';
+import registerCopilot from './helpers/copilot/register';
 import type {EditorOptions, Monaco, StandaloneCodeEditor} from './types/common';
 import type MonaCopilotProps from './types/monacopilot-props';
 import {deepMerge} from './utils/common';
@@ -16,26 +17,31 @@ const MonaCopilot = ({
   onMount,
   ...props
 }: MonaCopilotProps) => {
-  const [monacoInstance, setMonacoInstance] = React.useState<Monaco | null>(
-    null,
-  );
-
   const onEditorDidMount = React.useCallback(
     (editor: StandaloneCodeEditor, monaco: Monaco) => {
-      setMonacoInstance(monaco);
+      try {
+        registerCopilot({
+          monaco,
+          filename,
+          endpoint,
+          technologies,
+          externalContext,
+          language: props.language,
+        });
+      } catch (error) {
+        err(error).monacopilotError('Error while registering copilot');
+      }
 
       onMount?.(editor, monaco);
     },
-    [onMount],
-  );
-
-  useStartCompletion(
-    filename,
-    endpoint,
-    technologies,
-    props.language,
-    externalContext,
-    monacoInstance,
+    [
+      filename,
+      endpoint,
+      technologies,
+      externalContext,
+      onMount,
+      props.language,
+    ],
   );
 
   return (

@@ -45,6 +45,6 @@ export const joinWithAnd = (arr: string[] | undefined): string => {
   return `${arr.slice(0, -1).join(', ')} and ${arr.slice(-1)}`;
 };
 
-export const reverse = (str: string): string => {
+export const reverseString = (str: string): string => {
   return str.split('').reverse().join('');
 };

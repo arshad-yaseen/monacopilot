@@ -8,6 +8,12 @@ import {
   isCursorAtStartWithCodeAround,
 } from './syntax-parser';
 
+interface ContextualScoreParams {
+  cursorPosition: EditorPosition;
+  model: EditorModel;
+  language?: string;
+}
+
 /**
  * Determines if the auto-completion should be triggered based on the editor state,
  * cursor position, and user behavior.
@@ -15,22 +21,24 @@ import {
 export const isValidCompletion = (
   cursorPosition: EditorPosition,
   model: EditorModel,
-  language: string | undefined,
+  language?: string,
 ): boolean => {
   return (
-    contextualScore(cursorPosition, model, language) >
+    calculateContextualScore({cursorPosition, model, language}) >
       CONTEXTUAL_FILTER_ACCEPT_THRESHOLD &&
     !isCharAfterCursor(cursorPosition, model) &&
     !isCursorAtStartWithCodeAround(cursorPosition, model)
   );
 };
 
-// Compute the contextual score for the current editor state
-const contextualScore = (
-  cursorPosition: EditorPosition,
-  model: EditorModel,
-  language: string | undefined,
-) => {
+/**
+ * Calculates the contextual score for the current editor state.
+ */
+const calculateContextualScore = ({
+  cursorPosition,
+  model,
+  language,
+}: ContextualScoreParams): number => {
   const {codeBeforeCursor} = getCodeBeforeAndAfterCursor(cursorPosition, model);
   const afterCursorWhitespace = isAfterCursorWhitespace(cursorPosition, model);
   const documentLength = model.getValueLength();
@@ -38,7 +46,7 @@ const contextualScore = (
 
   return getContextualFilterScore({
     properties: {
-      afterCursorWhitespace: afterCursorWhitespace ? 'true' : 'false',
+      afterCursorWhitespace: String(afterCursorWhitespace),
       languageId: language,
     },
     measurements: {

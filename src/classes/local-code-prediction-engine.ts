@@ -1,38 +1,55 @@
+import err from '../error';
 import predictions from '../helpers/local-prediction';
 import type {LocalPredictionSnippets} from '../types/completion';
-import {reverse} from '../utils/common';
+import {reverseString} from '../utils/common';
 
 export class LocalCodePredictionEngine {
-  private predictions: Map<string, LocalPredictionSnippets>;
+  private readonly predictions: Map<string, LocalPredictionSnippets>;
 
   constructor() {
     this.predictions = new Map();
     this.loadPredictions();
   }
 
-  private loadPredictions() {
+  /**
+   * Predict the next code snippet based on the current common code snippet.
+   * @param language The language of the code snippet.
+   * @param currentLineCode The current code snippet.
+   * @returns The predicted code snippet, or an empty string if no prediction is found.
+   */
+  public predictCode(language: string, currentLineCode: string): string {
+    try {
+      const languagePredictions = this.predictions.get(language);
+      if (!languagePredictions) {
+        return '';
+      }
+
+      const reversedCurrentLine = reverseString(currentLineCode);
+      return this.findMatchingPrediction(
+        languagePredictions,
+        reversedCurrentLine,
+      );
+    } catch (error) {
+      err(error).predictionError('Error while predicting code');
+      return '';
+    }
+  }
+
+  private loadPredictions(): void {
     predictions.forEach(prediction => {
       this.predictions.set(prediction.language, prediction.snippets);
     });
   }
 
-  /**
-   * Predict the next code snippet based on the current common code snippet.
-   * @param language The language of the code snippet.
-   * @param codeSnippet The current code snippet.
-   * @returns The predicted code snippet, if no prediction is found, return an empty string.
-   */
-  predictCode(language: string, currentLineCode: string): string {
-    const prediction = this.predictions.get(language);
-    if (!prediction) return '';
-
-    currentLineCode = reverse(currentLineCode);
-    for (const key in prediction) {
-      if (currentLineCode.startsWith(reverse(key))) {
-        return prediction[key];
+  private findMatchingPrediction(
+    predictions: LocalPredictionSnippets,
+    reversedCurrentLine: string,
+  ): string {
+    for (const [key, value] of Object.entries(predictions)) {
+      if (reversedCurrentLine.startsWith(reverseString(key))) {
+        return value;
       }
     }
-
     return '';
   }
 }
