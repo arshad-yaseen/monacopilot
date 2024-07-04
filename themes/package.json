@@ -2,7 +2,12 @@
   "name": "monacopilot-themes",
   "version": "1.0.2",
   "description": "Themes for Monacopilot.",
-  "main": "index.js",
+  "main": "./build/index.js",
+  "module": "./build/index.mjs",
+  "types": "./build/index.d.ts",
+  "files": [
+    "build"
+  ],
   "scripts": {
     "build": "tsup src/index.ts",
     "dev": "tsup src/index.ts --watch",
