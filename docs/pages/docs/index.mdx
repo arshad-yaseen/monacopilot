@@ -5,7 +5,7 @@ import {
 
 # Getting Started
 
-**Monacopilot** is a wrapper for the Monaco Editor, providing AI-powered autocompletion and an array of new themes for React. Similar to GitHub Copilot, but for Monaco Editor.
+**Monacopilot** provides AI autocompletion for Monaco Editor in React, inspired by GitHub Copilot.
 
 ### Installation
 
@@ -46,27 +46,7 @@ function App() {
 }
 ```
 
-The above example demonstrates how to integrate Monacopilot into a simple React application.
-
-### Themes
-
-Monacopilot offers a wide range of themes for customizing your editor. You can apply a theme by passing the `theme` prop to the MonaCopilot component:
-
-```jsx {8}
-import MonaCopilot from "monacopilot";
-
-function App() {
-  return (
-    <MonaCopilot
-      value="console.log('Hello, world!')"
-      language="javascript"
-      theme="github-light"
-    />
-  );
-}
-```
-
-In this example, the `github-light` theme is applied to the editor. Numerous other themes are available for you to explore.
+The above example demonstrates basic usage of Monacopilot. The `value` prop is used to set the initial value of the editor, and the `language` prop is used to specify the language of the editor.
 
 ### Advanced Usage
 
@@ -74,7 +54,7 @@ Monacopilot, being a wrapper around `@monaco-editor/react`, supports all the pro
 
 ### Next Steps
 
-Now that you have Monacopilot installed and running, it functions like a standard Monaco Editor with added theme capabilities. If you are interested in utilizing the AI auto-completion feature, proceed to the Copilot Setup guide.
+Now that you have Monacopilot installed and running, it functions like a standard Monaco Editor. If you are interested in utilizing the AI auto-completion, proceed to the Copilot Setup guide.
 
 <div className="h-4" />
 <Card title="Copilot Setup" href="/docs/copilot/setup" icon={<MagicWandIcon />} />

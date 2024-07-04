@@ -1,5 +1,5 @@
-import {DEFAULT_COMPLETION_MODEL} from '../constants/completion';
-import type {CompletionModel} from '../types/completion';
+import {DEFAULT_COMPLETION_MODEL} from '../constants';
+import {CompletionModel} from '../types';
 
 /**
  * Configuration class to store the following:

@@ -1,40 +1,40 @@
-import type {EditorModel, EditorPosition} from '../../types/common';
-import type {CompletionMode} from '../../types/completion';
+import {CompletionMode, EditorModel, EditorPosition} from '../../types';
 import {getCharAtPosition} from '../editor';
+
+const DEFAULT_RECENT_COMPLETION_THRESHOLD = 2000; // 2 seconds
+
+const ACCEPTABLE_CHARS_AFTER_CURSOR = new Set([
+  '"',
+  "'",
+  '}',
+  ']',
+  ')',
+  ',',
+  ' ',
+  ':',
+  '.',
+]);
 
 export const isAfterCursorWhitespace = (
   position: EditorPosition,
   model: EditorModel,
-) => {
+): boolean => {
   const line = model.getLineContent(position.lineNumber);
-  const index = position.column - 1;
-  const textAfterCursor = line.substring(index);
-  return /\s/.test(textAfterCursor);
+  const textAfterCursor = line.substring(position.column - 1);
+  return /^\s*$/.test(textAfterCursor);
 };
 
-/** Check if there is code after the cursor */
 export const isCharAfterCursor = (
   position: EditorPosition,
   model: EditorModel,
 ): boolean => {
-  const acceptableCharsAfterCursor = new Set([
-    '"',
-    "'",
-    '}',
-    ']',
-    ')',
-    ',',
-    ' ',
-    ':',
-    '.',
-  ]);
   const line = model.getLineContent(position.lineNumber);
   const charAfterCursor = getCharAtPosition(line, position.column - 1);
-
-  return !acceptableCharsAfterCursor.has(charAfterCursor) && !!charAfterCursor;
+  return (
+    !ACCEPTABLE_CHARS_AFTER_CURSOR.has(charAfterCursor) && !!charAfterCursor
+  );
 };
 
-/** Get the before and after code of the cursor position */
 export const getCodeBeforeAndAfterCursor = (
   position: EditorPosition,
   model: EditorModel,
@@ -56,11 +56,10 @@ export const getCodeBeforeAndAfterCursor = (
   return {codeBeforeCursor, codeAfterCursor};
 };
 
-/** Check if the cursor is at the start of the line with code around */
 export const isCursorAtStartWithCodeAround = (
   position: EditorPosition,
   model: EditorModel,
-) => {
+): boolean => {
   const currentLine = model.getLineContent(position.lineNumber);
   const codeAfterCursorInCurrentLine = currentLine
     .slice(position.column - 1)
@@ -76,30 +75,25 @@ export const isCursorAtStartWithCodeAround = (
   );
 };
 
-/**
- * Determines the most suitable completion mode based on the cursor position and surrounding code context.
- *
- * @returns The completion mode ('fill-in-the-middle' | 'completion').
- */
 export const determineCompletionMode = (
   position: EditorPosition,
   model: EditorModel,
 ): CompletionMode => {
-  const {lineNumber, column} = position;
+  const currentLine = model.getLineContent(position.lineNumber);
+  const [codeBeforeCursor, codeAfterCursor] = [
+    currentLine.slice(0, position.column - 1).trim(),
+    currentLine.slice(position.column - 1).trim(),
+  ];
 
-  const currentLine = model.getLineContent(lineNumber);
+  return codeBeforeCursor && codeAfterCursor
+    ? 'fill-in-the-middle'
+    : 'completion';
+};
 
-  const codeBeforeCursorInLine = currentLine.slice(0, column - 1).trim();
-  const codeAfterCursorInLine = currentLine.slice(column - 1).trim();
-
-  // Determine if there is content before or after the cursor in the current line
-  const hasCodeBeforeCursor = codeBeforeCursorInLine.length > 0;
-  const hasCodeAfterCursor = codeAfterCursorInLine.length > 0;
-
-  // Determine fill-in-the-middle based on code presence
-  if (hasCodeBeforeCursor && hasCodeAfterCursor) {
-    return 'fill-in-the-middle';
-  }
-
-  return 'completion';
+export const isLastCompletionTooRecent = (
+  lastCompletionTime: number,
+  currentTime: number,
+  threshold: number = DEFAULT_RECENT_COMPLETION_THRESHOLD,
+): boolean => {
+  return currentTime - lastCompletionTime < threshold;
 };

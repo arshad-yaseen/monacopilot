@@ -1,6 +1,6 @@
 # Monacopilot
 
-Extended Monaco Editor with AI auto-completion and new themes for React.
+Extended [Monaco Editor](https://microsoft.github.io/monaco-editor/) with AI auto-completion, inspired by [GitHub Copilot](https://github.com/features/copilot/).
 
 ## Documentation
 

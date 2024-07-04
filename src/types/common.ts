@@ -11,4 +11,8 @@ export type EditorRange = monaco.IRange;
 export type EditorInlineCompletion = monaco.languages.InlineCompletion;
 export type EditorThemeData = monaco.editor.IStandaloneThemeData;
 export type EditorBuiltInTheme = Theme;
-export type EditorCompletionCancellationToken = monaco.CancellationToken;
+export type EditorCancellationToken = monaco.CancellationToken;
+export type EditorInlineCompletionContext =
+  monaco.languages.InlineCompletionContext;
+export type EditorInlineCompletionsResult =
+  monaco.languages.InlineCompletions<monaco.languages.InlineCompletion>;

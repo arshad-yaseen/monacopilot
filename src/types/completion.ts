@@ -3,12 +3,13 @@ import type {
   ChatCompletionCreateParamsBase,
 } from 'groq-sdk/resources/chat/completions';
 
-import type {
-  EditorCompletionCancellationToken,
+import {
+  EditorCancellationToken,
+  EditorInlineCompletion,
   EditorModel,
   EditorPosition,
 } from './common';
-import type {
+import {
   Endpoint,
   ExternalContext,
   Filename,
@@ -64,10 +65,16 @@ export interface FetchCompletionItemParams {
   code: string;
   language: string;
   endpoint: Endpoint;
-  filename: Filename | undefined;
-  technologies: Technologies | undefined;
-  externalContext: ExternalContext | undefined;
+  filename?: Filename;
+  technologies?: Technologies;
+  externalContext?: ExternalContext;
   model: EditorModel;
   position: EditorPosition;
-  token: EditorCompletionCancellationToken;
+  token: EditorCancellationToken;
+}
+
+export interface CompletionCacheItem {
+  completion: EditorInlineCompletion;
+  timestamp: number;
+  isExpired: () => boolean;
 }

@@ -1,21 +1,23 @@
-import type {EditorModel, EditorPosition} from '../types/common';
-import type {
+import {
   CompletionMetadata,
   CompletionRequest,
   CompletionResponse,
+  EditorModel,
+  EditorPosition,
   FetchCompletionItemParams,
-} from '../types/completion';
+} from '../types';
+import {HTTP} from '../utils';
 import {
   determineCompletionMode,
   getCodeBeforeAndAfterCursor,
-} from '../utils/completion/syntax-parser';
-import {isValidCompletion} from '../utils/completion/validate-completion';
-import HTTP from '../utils/http';
+} from '../utils/completion';
+
+const CONTENT_TYPE_JSON = 'application/json';
+const ERROR_MESSAGE = 'Error while fetching completion item';
 
 export const fetchCompletionItem = async ({
   filename,
   endpoint,
-  code,
   language,
   technologies,
   externalContext,
@@ -23,10 +25,6 @@ export const fetchCompletionItem = async ({
   position,
   token,
 }: FetchCompletionItemParams): Promise<string | null> => {
-  if (!isValidCompletion(position, model, language) || !code) {
-    return null;
-  }
-
   const controller = new AbortController();
 
   if (token.isCancellationRequested) {
@@ -34,39 +32,33 @@ export const fetchCompletionItem = async ({
     return null;
   }
 
-  const {completion, error} = await HTTP.POST<
-    CompletionResponse,
-    CompletionRequest
-  >(
-    endpoint,
-    {
-      completionMetadata: constructCompletionMetadata({
-        filename,
-        position,
-        model,
-        language,
-        technologies,
-        externalContext,
-      }),
-    },
-    {
-      headers: {
-        'Content-Type': 'application/json',
+  try {
+    const {completion} = await HTTP.POST<CompletionResponse, CompletionRequest>(
+      endpoint,
+      {
+        completionMetadata: constructCompletionMetadata({
+          filename,
+          position,
+          model,
+          language,
+          technologies,
+          externalContext,
+        }),
       },
-      error: 'Error while fetching completion item',
-      signal: controller.signal,
-    },
-  );
+      {
+        headers: {'Content-Type': CONTENT_TYPE_JSON},
+        error: ERROR_MESSAGE,
+        signal: controller.signal,
+      },
+    );
 
-  if (error || !completion) {
+    return completion || null;
+  } catch (error) {
+    console.error(ERROR_MESSAGE, error);
     return null;
   }
-
-  return completion;
 };
 
-// Construct completion metadata based on the cursor position and code.
-// This metadata is used to generate the completion code from LLM models.
 export const constructCompletionMetadata = ({
   filename,
   position,
@@ -74,17 +66,11 @@ export const constructCompletionMetadata = ({
   language,
   technologies,
   externalContext,
-}: Pick<
+}: Omit<
   FetchCompletionItemParams,
-  | 'filename'
-  | 'position'
-  | 'model'
-  | 'language'
-  | 'technologies'
-  | 'externalContext'
+  'code' | 'endpoint' | 'token'
 >): CompletionMetadata => {
   const completionMode = determineCompletionMode(position, model);
-
   const {codeBeforeCursor, codeAfterCursor} = getCodeBeforeAndAfterCursor(
     position,
     model,
@@ -97,19 +83,14 @@ export const constructCompletionMetadata = ({
     externalContext,
     codeBeforeCursor,
     codeAfterCursor,
-    editorState: {
-      completionMode,
-    },
+    editorState: {completionMode},
   };
 };
 
-// Compute a cache key based on the cursor's position and preceding text
-// This key is used to cache completion results for the same code context
 export const computeCompletionCacheKey = (
   cursorPosition: EditorPosition,
   model: EditorModel,
 ): string => {
   const {codeBeforeCursor} = getCodeBeforeAndAfterCursor(cursorPosition, model);
-
   return `${cursorPosition.lineNumber}:${cursorPosition.column}:${codeBeforeCursor}`;
 };

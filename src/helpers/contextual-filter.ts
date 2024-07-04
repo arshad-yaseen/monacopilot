@@ -3,9 +3,9 @@ import {
   FILTER_INTERCEPT,
   FILTER_LANGUAGE_MAP,
   FILTER_WEIGHTS,
-} from '../constants/contextual-filter';
-import type {ContextualFilterContext} from '../types/completion';
-import {getLastLineLength} from '../utils/editor';
+} from '../constants';
+import {ContextualFilterContext} from '../types';
+import {getLastLineLength} from '../utils';
 
 class ContextualFilterManager {
   previousLabel: number;
