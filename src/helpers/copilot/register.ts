@@ -24,7 +24,7 @@ const COMPLETION_CACHE = new Map<string, CompletionCacheItem>();
 
 let LAST_COMPLETION_TIME = Date.now();
 
-const debouncedFetchCompletionItem = debounce(fetchCompletionItem, 200);
+const debouncedFetchCompletionItem = debounce(fetchCompletionItem, 250);
 
 /**
  * Register Copilot with Monaco editor.
