@@ -1,5 +1,7 @@
-import {Theme} from '@monaco-editor/react';
+import {Theme, type Monaco as _Monaco} from '@monaco-editor/react';
 import * as monaco from 'monaco-editor';
+
+export type Monaco = _Monaco;
 
 export type EditorOptions = monaco.editor.IEditorOptions;
 export type StandaloneCodeEditor = monaco.editor.IStandaloneCodeEditor;

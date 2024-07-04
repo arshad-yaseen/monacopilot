@@ -8,8 +8,8 @@ export default function Home() {
       <MonaCopilot
         endpoint="/api/copilot"
         language="rust"
-        theme="github-dark-dimmed"
         className="h-screen w-screen"
+        theme={'vs-dark'}
         options={{
           padding: {top: 16},
         }}

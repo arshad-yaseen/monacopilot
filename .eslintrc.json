@@ -23,7 +23,7 @@
   },
   "ignorePatterns": [
     "node_modules/",
-    "dist/",
+    "build/",
     "/tsup.config.ts",
     "test/",
     "docs/",

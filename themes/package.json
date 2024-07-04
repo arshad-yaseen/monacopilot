@@ -1,0 +1,30 @@
+{
+  "name": "monacopilot-themes",
+  "version": "1.0.0",
+  "description": "Themes for Monacopilot.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsup src/index.ts",
+    "dev": "tsup src/index.ts --watch",
+    "pre-commit": "pnpm -C monacopilot type-check && pnpm -C monacopilot lint && pnpm -C monacopilot lint:test",
+    "release": "release-it"
+  },
+  "keywords": [
+    "monacopilot",
+    "themes",
+    "monaco-themes"
+  ],
+  "homepage": "https://monacopilot.vercel.app/themes",
+  "license": "MIT",
+  "author": "Arshad Yaseen <m@arshadyaseen.com>",
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "dependencies": {
+    "shiki": "^1.10.1"
+  },
+  "devDependencies": {
+    "@shikijs/core": "^1.10.1"
+  }
+}

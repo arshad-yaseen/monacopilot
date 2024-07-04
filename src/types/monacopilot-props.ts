@@ -1,27 +1,5 @@
 import type {EditorProps as MonacoEditorProps} from '@monaco-editor/react';
 
-import type {EditorBuiltInTheme} from './common';
-
-/**
- * Themes available for the Monacopilot
- */
-// This theme type is generated automatically from the themes folder.
-// Do not modify this type manually.
-// If you want to add a new theme, you can add it to the themes folder and run `generate-themes` script.
-// The script will automatically update this type.
-type CustomTheme =
-  | 'codesandbox-dark'
-  | 'dracula-soft'
-  | 'dracula'
-  | 'github-dark-dimmed'
-  | 'github-dark'
-  | 'github-light'
-  | 'monokai'
-  | 'nord'
-  | 'one-dark-pro-darker'
-  | 'one-monokai';
-
-export type Theme = EditorBuiltInTheme | CustomTheme;
 export type Endpoint = string;
 export type Filename = string;
 export type Technologies = string[];
@@ -64,10 +42,6 @@ export default interface MonaCopilotProps extends MonacoEditorProps {
    * etc.
    */
   technologies?: Technologies;
-  /**
-   * The theme you want to use for the editor.
-   */
-  theme?: Theme;
   /**
    * Helps to give more relevant completions based on the full context.
    * You can include things like the contents/codes of other files in the same workspace.

@@ -1,18 +1,10 @@
 import React from 'react';
 
-import {Editor as MonacoEditor, type Monaco} from '@monaco-editor/react';
+import {Editor as MonacoEditor} from '@monaco-editor/react';
 
-import {
-  EDITOR_BUILT_IN_THEMES,
-  EDITOR_DEFAULT_OPTIONS,
-} from './constants/common';
+import {EDITOR_DEFAULT_OPTIONS} from './constants/common';
 import useStartCompletion from './hooks/core/use-start-completion';
-import themes from './themes';
-import type {
-  EditorBuiltInTheme,
-  EditorOptions,
-  StandaloneCodeEditor,
-} from './types/common';
+import type {EditorOptions, Monaco, StandaloneCodeEditor} from './types/common';
 import type MonaCopilotProps from './types/monacopilot-props';
 import {deepMerge} from './utils/common';
 
@@ -20,7 +12,6 @@ const MonaCopilot = ({
   filename,
   endpoint,
   technologies,
-  theme,
   externalContext,
   ...props
 }: MonaCopilotProps) => {
@@ -32,17 +23,9 @@ const MonaCopilot = ({
     (editor: StandaloneCodeEditor, monaco: Monaco) => {
       setMonacoInstance(monaco);
 
-      if (
-        theme &&
-        !EDITOR_BUILT_IN_THEMES.includes(theme as EditorBuiltInTheme)
-      ) {
-        monaco.editor.defineTheme(theme, themes[theme]);
-        monaco.editor.setTheme(theme);
-      }
-
       props.onMount?.(editor, monaco);
     },
-    [props, theme],
+    [props.onMount],
   );
 
   useStartCompletion(
@@ -57,8 +40,6 @@ const MonaCopilot = ({
   return (
     <MonacoEditor
       {...props}
-      key={theme}
-      theme={theme}
       onMount={onEditorDidMount}
       options={deepMerge<EditorOptions>(props.options, EDITOR_DEFAULT_OPTIONS)}
     />
