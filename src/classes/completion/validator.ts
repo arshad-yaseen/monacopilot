@@ -18,6 +18,10 @@ export class CompletionValidator {
   /**
    * Initializes the validator with the current cursor position, editor model,
    * and timestamps of the last completion.
+   * @param cursorPosition - The current cursor position.
+   * @param model - The editor model.
+   * @param language - The language of the editor.
+   * @param lastCompletionTime - The timestamp of the last completion.
    */
   constructor(
     cursorPosition: EditorPosition,

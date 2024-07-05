@@ -1,13 +1,21 @@
 import {CLOSING_BRACKETS, OPENING_BRACKETS} from '../../constants';
 import {Bracket, EditorModel, EditorPosition} from '../../types';
-import {getLineCount, getTextBeforeCursor} from '../../utils';
+import {
+  getLineCount,
+  getTextAfterCursor,
+  getTextBeforeCursor,
+} from '../../utils';
 
+/**
+ * This class is responsible for formatting code completions
+ * to ensure that they are displayed correctly in the editor.
+ */
 export class CompletionFormatter {
   private formattedCompletion = '';
   private originalCompletion = '';
-  private model: EditorModel;
-  private cursorPosition: EditorPosition;
-  private lineCount: number;
+  private readonly model: EditorModel;
+  private readonly cursorPosition: EditorPosition;
+  private readonly lineCount: number;
 
   constructor(model: EditorModel, position: EditorPosition) {
     this.model = model;
@@ -15,25 +23,24 @@ export class CompletionFormatter {
     this.lineCount = getLineCount(model);
   }
 
-  // Check if the open and close brackets are a matching pair
-  private isMatchingPair = (open?: Bracket, close?: string): boolean => {
+  // Check if the given brackets form a matching pair
+  private isMatchingPair(open?: Bracket, close?: string): boolean {
     return (
       (open === '(' && close === ')') ||
       (open === '[' && close === ']') ||
       (open === '{' && close === '}')
     );
-  };
+  }
 
-  // Match the completion brackets to ensure they are balanced
-  private matchCompletionBrackets = (): CompletionFormatter => {
+  // Ensure that brackets in the completion are properly matched and balanced
+  private matchCompletionBrackets(): this {
     let accumulatedCompletion = '';
     const openBrackets: Bracket[] = [];
+
     for (const character of this.originalCompletion) {
       if (OPENING_BRACKETS.includes(character)) {
-        openBrackets.push(character);
-      }
-
-      if (CLOSING_BRACKETS.includes(character)) {
+        openBrackets.push(character as Bracket);
+      } else if (CLOSING_BRACKETS.includes(character)) {
         if (
           openBrackets.length &&
           this.isMatchingPair(openBrackets[openBrackets.length - 1], character)
@@ -46,15 +53,13 @@ export class CompletionFormatter {
       accumulatedCompletion += character;
     }
 
-    // If the brackets are not balanced, return the original completion, otherwise return the matched completion
     this.formattedCompletion =
       accumulatedCompletion.trimEnd() || this.originalCompletion.trimEnd();
-
     return this;
-  };
+  }
 
-  private ignoreBlankLines = (): CompletionFormatter => {
-    // If the completion is a blank line, return an empty string
+  // Remove blank lines from the completion
+  private ignoreBlankLines(): this {
     if (
       this.formattedCompletion.trimStart() === '' &&
       this.originalCompletion !== '\n'
@@ -62,85 +67,104 @@ export class CompletionFormatter {
       this.formattedCompletion = this.formattedCompletion.trim();
     }
     return this;
-  };
+  }
 
-  // Remove leading and trailing whitespace from the text
-  private normalise = (text: string) => text?.trim();
+  // Normalize code or text by trimming whitespace
+  private normalise(text: string): string {
+    return text?.trim() ?? '';
+  }
 
-  private removeDuplicateStartOfSuggestions(): this {
-    // Remove the text that is already present in the editor from the completion
+  // Remove duplicates from both start and end of completion
+  private removeDuplicatesFromStartAndEndOfCompletion(): this {
     const before = getTextBeforeCursor(this.cursorPosition, this.model).trim();
-
+    const after = getTextAfterCursor(this.cursorPosition, this.model).trim();
     const completion = this.normalise(this.formattedCompletion);
 
-    const maxLength = Math.min(completion.length, before.length);
-    let overlapLength = 0;
-
-    for (let length = 1; length <= maxLength; length++) {
-      const endOfBefore = before.substring(before.length - length);
-      const startOfCompletion = completion.substring(0, length);
+    // Handle start duplicates
+    let startOverlapLength = 0;
+    const maxStartLength = Math.min(completion.length, before.length);
+    for (let length = 1; length <= maxStartLength; length++) {
+      const endOfBefore = before.slice(-length);
+      const startOfCompletion = completion.slice(0, length);
       if (endOfBefore === startOfCompletion) {
-        overlapLength = length;
+        startOverlapLength = length;
+      } else {
+        break;
       }
     }
 
-    // Remove the overlapping part from the start of completion
-    if (overlapLength > 0) {
-      this.formattedCompletion =
-        this.formattedCompletion.substring(overlapLength);
+    // Handle end duplicates
+    let endOverlapLength = 0;
+    const maxEndLength = Math.min(
+      completion.length - startOverlapLength,
+      after.length,
+    );
+    for (let length = 1; length <= maxEndLength; length++) {
+      const startOfAfter = after.slice(0, length);
+      const endOfCompletion = completion.slice(-length);
+      if (startOfAfter === endOfCompletion) {
+        endOverlapLength = length;
+      } else {
+        break;
+      }
+    }
+
+    // Apply the trimming
+    if (startOverlapLength > 0 || endOverlapLength > 0) {
+      this.formattedCompletion = this.formattedCompletion.slice(
+        startOverlapLength,
+        -endOverlapLength || undefined,
+      );
     }
 
     return this;
   }
 
-  // Remove duplicate lines that are already present in the editor
-  private preventDuplicateLines = (): CompletionFormatter => {
-    let nextLineIndex = this.cursorPosition.lineNumber + 1;
-    while (
+  // Prevent suggesting completions that duplicate existing lines
+  private preventDuplicateLines(): this {
+    for (
+      let nextLineIndex = this.cursorPosition.lineNumber + 1;
       nextLineIndex < this.cursorPosition.lineNumber + 3 &&
-      nextLineIndex < this.lineCount
+      nextLineIndex < this.lineCount;
+      nextLineIndex++
     ) {
       const line = this.model.getLineContent(nextLineIndex);
       if (this.normalise(line) === this.normalise(this.originalCompletion)) {
         this.formattedCompletion = '';
         return this;
       }
-      nextLineIndex++;
     }
     return this;
-  };
+  }
 
-  // Remove newlines after spaces or newlines
-  public removeInvalidLineBreaks = (): CompletionFormatter => {
-    if (this.formattedCompletion.endsWith('\n')) {
-      this.formattedCompletion = this.formattedCompletion.trimEnd();
-    }
+  // Remove any trailing line breaks
+  public removeInvalidLineBreaks(): this {
+    this.formattedCompletion = this.formattedCompletion.trimEnd();
     return this;
-  };
+  }
 
-  private trimStart = () => {
+  // Remove leading whitespace that would push the completion past the cursor position
+  private trimStart(): this {
     const firstNonSpaceIndex = this.formattedCompletion.search(/\S/);
-
-    /* If the first non-space character is in front of the cursor, remove it */
     if (firstNonSpaceIndex > this.cursorPosition.column - 1) {
       this.formattedCompletion =
-        this.formattedCompletion.substring(firstNonSpaceIndex);
+        this.formattedCompletion.slice(firstNonSpaceIndex);
     }
-
     return this;
-  };
+  }
 
-  public format = (completion: string): string => {
+  // Apply all formatting rules to the completion
+  public format(completion: string): string {
     this.formattedCompletion = '';
     this.originalCompletion = completion;
 
     this.matchCompletionBrackets()
       .ignoreBlankLines()
-      .removeDuplicateStartOfSuggestions()
+      .removeDuplicatesFromStartAndEndOfCompletion()
       .preventDuplicateLines()
       .removeInvalidLineBreaks()
       .trimStart();
 
     return this.formattedCompletion;
-  };
+  }
 }

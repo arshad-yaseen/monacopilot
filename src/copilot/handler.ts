@@ -20,20 +20,31 @@ import {
 } from '../utils/completion';
 
 const LOCAL_PREDICTION_ENGINE = new LocalPredictionEngine();
-let LAST_COMPLETION_TIME = Date.now();
+
+// Keep track of the last completion time to prevent excessive requests
+let lastCompletionTime = Date.now();
 
 const debouncedFetchCompletionItem = debounce(fetchCompletionItem, 300);
 
-const handleInlineCompletions = async (
+/**
+ * Handles inline completions for the editor
+ * @param monaco - Monaco editor instance
+ * @param model - Current editor model
+ * @param position - Current cursor position
+ * @param _ - Inline completion context (unused)
+ * @param token - Cancellation token
+ * @param options - Additional options for completion
+ * @returns Promise resolving to EditorInlineCompletionsResult
+ */
+async function handleInlineCompletions(
   monaco: Monaco,
   model: EditorModel,
   position: EditorPosition,
   _: EditorInlineCompletionContext,
   token: EditorCancellationToken,
   options: Omit<RegisterCopilotParams, 'monaco'>,
-): Promise<EditorInlineCompletionsResult> => {
+): Promise<EditorInlineCompletionsResult> {
   const text = model.getValue();
-
   const range = new monaco.Range(
     position.lineNumber,
     position.column,
@@ -41,11 +52,12 @@ const handleInlineCompletions = async (
     position.column,
   );
 
+  // Validate if completions should be provided
   const completionValidator = new CompletionValidator(
     position,
     model,
     options.language,
-    LAST_COMPLETION_TIME,
+    lastCompletionTime,
   );
 
   if (!completionValidator.shouldProvideCompletions()) {
@@ -53,25 +65,25 @@ const handleInlineCompletions = async (
     return createInlineCompletionResult([]);
   }
 
-  // Filter cached completions to include only those that are on the same line
-  const cachedCompletions = getCompletionCache().filter(cache => {
-    return cache.range.startLineNumber >= position.lineNumber;
-  });
+  // Check for cached completions
+  const cachedCompletions = getCompletionCache().filter(
+    cache => cache.range.startLineNumber >= position.lineNumber,
+  );
 
-  // If there are cached completions, return them
   if (cachedCompletions.length > 0) {
     const items = cachedCompletions.map(cache => ({
       insertText: cache.completion,
       range: cache.range,
     }));
-
     return createInlineCompletionResult(items);
   }
 
+  // Check if the operation has been cancelled
   if (token.isCancellationRequested) {
     return createInlineCompletionResult([]);
   }
 
+  // Try to get a local prediction first
   const localPrediction = LOCAL_PREDICTION_ENGINE.predict(
     options.language,
     model.getLineContent(position.lineNumber),
@@ -80,14 +92,13 @@ const handleInlineCompletions = async (
   if (localPrediction) {
     return createInlineCompletionResult([
       {
-        insertText: {
-          snippet: localPrediction,
-        },
+        insertText: {snippet: localPrediction},
         range,
       },
     ]);
   }
 
+  // If no local prediction, fetch completion from the Groq API
   try {
     const completion = await debouncedFetchCompletionItem({
       ...options,
@@ -98,8 +109,7 @@ const handleInlineCompletions = async (
     });
 
     if (completion) {
-      LAST_COMPLETION_TIME = Date.now();
-
+      lastCompletionTime = Date.now();
       const formattedCompletion = formatCompletion(model, position, completion);
       const completionInsertRange = computeCompletionInsertRange(
         formattedCompletion,
@@ -107,6 +117,7 @@ const handleInlineCompletions = async (
         range,
       );
 
+      // Cache the completion
       addCompletionCache({
         completion: formattedCompletion,
         range: completionInsertRange,
@@ -123,7 +134,8 @@ const handleInlineCompletions = async (
     err(error).completionError('Failed to fetch completion item');
   }
 
+  // Return an empty result if no completion was found or an error occurred
   return createInlineCompletionResult([]);
-};
+}
 
 export default handleInlineCompletions;
