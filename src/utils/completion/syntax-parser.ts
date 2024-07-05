@@ -1,7 +1,7 @@
 import {CompletionMode, EditorModel, EditorPosition} from '../../types';
 import {getCharAtPosition} from '../editor';
 
-const DEFAULT_RECENT_COMPLETION_THRESHOLD = 2000; // 2 seconds
+const DEFAULT_RECENT_COMPLETION_THRESHOLD = 500; // ms
 
 const ACCEPTABLE_CHARS_AFTER_CURSOR = new Set([
   '"',

@@ -13,9 +13,9 @@ export interface CopilotOptions {
 
 export interface RegisterCopilotParams {
   monaco: Monaco;
+  endpoint: Endpoint;
+  language: string;
   filename?: Filename;
-  endpoint?: Endpoint;
   technologies?: Technologies;
-  language?: string;
   externalContext?: ExternalContext;
 }

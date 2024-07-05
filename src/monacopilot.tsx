@@ -3,8 +3,8 @@ import React from 'react';
 import {Editor as MonacoEditor} from '@monaco-editor/react';
 
 import {EDITOR_DEFAULT_OPTIONS} from './constants';
+import {registerCopilot} from './copilot/register';
 import {err} from './error';
-import {registerCopilot} from './helpers/copilot';
 import {
   EditorOptions,
   Monaco,
@@ -21,19 +21,21 @@ const MonaCopilot = ({
   onMount,
   ...props
 }: MonaCopilotProps) => {
-  const _disposeCopilotRef = React.useRef<(() => void) | undefined>();
+  const _unregisterCopilotRef = React.useRef<(() => void) | undefined>();
 
   const onEditorDidMount = React.useCallback(
     (editor: StandaloneCodeEditor, monaco: Monaco) => {
       try {
-        _disposeCopilotRef.current = registerCopilot({
-          monaco,
-          filename,
-          endpoint,
-          technologies,
-          externalContext,
-          language: props.language,
-        });
+        if (endpoint && props.language) {
+          _unregisterCopilotRef.current = registerCopilot({
+            monaco,
+            filename,
+            technologies,
+            externalContext,
+            endpoint,
+            language: props.language,
+          });
+        }
       } catch (error) {
         err(error).monacopilotError('Error while registering copilot');
       }
@@ -41,18 +43,18 @@ const MonaCopilot = ({
       onMount?.(editor, monaco);
     },
     [
-      filename,
       endpoint,
-      technologies,
-      externalContext,
+      filename,
       onMount,
       props.language,
+      technologies,
+      externalContext,
     ],
   );
 
   React.useEffect(() => {
     return () => {
-      _disposeCopilotRef.current?.();
+      _unregisterCopilotRef.current?.();
     };
   }, []);
 

@@ -73,8 +73,4 @@ export interface FetchCompletionItemParams {
   token: EditorCancellationToken;
 }
 
-export interface CompletionCacheItem {
-  completion: EditorInlineCompletion;
-  timestamp: number;
-  isExpired: () => boolean;
-}
+export type CompletionCacheItem = EditorInlineCompletion;
