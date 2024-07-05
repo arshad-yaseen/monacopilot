@@ -55,7 +55,7 @@ const handleInlineCompletions = async (
 
   // Filter cached completions to include only those that are on the same line
   const cachedCompletions = getCompletionCache().filter(cache => {
-    return cache.range.startLineNumber === position.lineNumber;
+    return cache.range.startLineNumber >= position.lineNumber;
   });
 
   // If there are cached completions, return them

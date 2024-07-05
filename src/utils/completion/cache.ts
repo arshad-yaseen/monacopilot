@@ -4,7 +4,7 @@ import {CompletionCacheItem} from '../../types';
  * First-in-first-out cache for completion items.
  */
 
-const MAX_CACHE_SIZE = 10;
+const MAX_CACHE_SIZE = 8;
 
 const COMPLETION_CACHE = new Set<CompletionCacheItem>();
 
