@@ -70,14 +70,6 @@ async function handleInlineCompletions(
     cache => cache.range.startLineNumber >= position.lineNumber,
   );
 
-  if (cachedCompletions.length > 0) {
-    const items = cachedCompletions.map(cache => ({
-      insertText: cache.completion,
-      range: cache.range,
-    }));
-    return createInlineCompletionResult(items);
-  }
-
   // Check if the operation has been cancelled
   if (token.isCancellationRequested) {
     return createInlineCompletionResult([]);
@@ -123,11 +115,17 @@ async function handleInlineCompletions(
         range: completionInsertRange,
       });
 
+      const catchedItems = cachedCompletions.map(cache => ({
+        insertText: cache.completion,
+        range: cache.range,
+      }));
+
       return createInlineCompletionResult([
         {
           insertText: formattedCompletion,
           range,
         },
+        ...catchedItems,
       ]);
     }
   } catch (error) {
