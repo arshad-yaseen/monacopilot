@@ -1,25 +1,46 @@
-import {fetchCompletionItem} from '../../helpers';
+import {CompletionFormatter} from '../../classes';
 import {
   EditorInlineCompletion,
   EditorInlineCompletionsResult,
+  EditorModel,
+  EditorPosition,
   EditorRange,
 } from '../../types';
-import {debounce} from '../../utils';
+import {getLastLineColumnCount} from '../editor';
 
 export * from './cache';
-export * from './syntax-parser';
+export * from './context-parser';
 
-export const debouncedFetchCompletionItem = debounce(fetchCompletionItem, 250);
+/**
+ * Computes the range to insert the completion in the editor.
+ */
+export const computeCompletionInsertRange = (
+  completion: string,
+  position: EditorPosition,
+  currentRange: EditorRange,
+) => {
+  const newLineCount = (completion.match(/\n/g) || []).length;
+  const lastLineColumnCount = getLastLineColumnCount(completion);
 
-export const createCompletionItem = (
-  insertText: string,
-  range: EditorRange,
-  completeBracketPairs: boolean = false,
-): EditorInlineCompletion => ({
-  insertText: {snippet: insertText},
-  range,
-  completeBracketPairs,
-});
+  return {
+    startLineNumber: position.lineNumber,
+    startColumn: position.column,
+    endLineNumber: position.lineNumber + newLineCount,
+    endColumn:
+      position.lineNumber === currentRange.startLineNumber && newLineCount === 0
+        ? position.column + lastLineColumnCount
+        : lastLineColumnCount,
+  };
+};
+
+export const formatCompletion = (
+  model: EditorModel,
+  position: EditorPosition,
+  completion: string,
+): string => {
+  const formatter = new CompletionFormatter(model, position);
+  return formatter.format(completion);
+};
 
 export const createInlineCompletionResult = (
   items: EditorInlineCompletion[],

@@ -1,18 +1,25 @@
-import {CompletionCacheItem, EditorInlineCompletion} from '../../types';
+import {CompletionCacheItem} from '../../types';
 
-const COMPLETION_CACHE = new Map<string, CompletionCacheItem>();
+/**
+ * First-in-first-out cache for completion items.
+ */
 
-export const cacheCompletionItem = (
-  key: string,
-  item: EditorInlineCompletion,
-): void => {
-  COMPLETION_CACHE.set(key, item);
+const MAX_CACHE_SIZE = 10;
+
+const COMPLETION_CACHE = new Set<CompletionCacheItem>();
+
+export const getCompletionCache = (): CompletionCacheItem[] => {
+  return Array.from(COMPLETION_CACHE);
 };
 
-export const getCachedItem = (key: string): CompletionCacheItem | undefined => {
-  return COMPLETION_CACHE.get(key);
+export const addCompletionCache = (cacheItem: CompletionCacheItem) => {
+  if (COMPLETION_CACHE.size >= MAX_CACHE_SIZE) {
+    COMPLETION_CACHE.delete(COMPLETION_CACHE.values().next().value);
+  }
+
+  COMPLETION_CACHE.add(cacheItem);
 };
 
-export const clearCache = (): void => {
+export const clearCompletionCache = (): void => {
   COMPLETION_CACHE.clear();
 };

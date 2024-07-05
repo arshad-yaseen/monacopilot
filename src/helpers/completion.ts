@@ -1,19 +1,16 @@
+import {err} from '../error';
 import {
   CompletionMetadata,
+  CompletionMode,
   CompletionRequest,
   CompletionResponse,
   EditorModel,
   EditorPosition,
   FetchCompletionItemParams,
 } from '../types';
-import {HTTP} from '../utils';
-import {
-  determineCompletionMode,
-  getCodeBeforeAndAfterCursor,
-} from '../utils/completion';
+import {getTextAfterCursor, getTextBeforeCursor, HTTP} from '../utils';
 
 const CONTENT_TYPE_JSON = 'application/json';
-const ERROR_MESSAGE = 'Error while fetching completion item';
 
 export const fetchCompletionItem = async ({
   filename,
@@ -47,14 +44,14 @@ export const fetchCompletionItem = async ({
       },
       {
         headers: {'Content-Type': CONTENT_TYPE_JSON},
-        error: ERROR_MESSAGE,
+        error: 'Error while fetching completion item',
         signal: controller.signal,
       },
     );
 
     return completion || null;
   } catch (error) {
-    console.error(ERROR_MESSAGE, error);
+    err(error).completionError('Error while fetching completion item');
     return null;
   }
 };
@@ -68,29 +65,32 @@ export const constructCompletionMetadata = ({
   externalContext,
 }: Omit<
   FetchCompletionItemParams,
-  'code' | 'endpoint' | 'token'
+  'text' | 'endpoint' | 'token'
 >): CompletionMetadata => {
   const completionMode = determineCompletionMode(position, model);
-  const {codeBeforeCursor, codeAfterCursor} = getCodeBeforeAndAfterCursor(
-    position,
-    model,
-  );
+
+  const textBeforeCursor = getTextBeforeCursor(position, model);
+  const textAfterCursor = getTextAfterCursor(position, model);
 
   return {
     filename,
     language,
     technologies,
     externalContext,
-    codeBeforeCursor,
-    codeAfterCursor,
+    textBeforeCursor,
+    textAfterCursor,
     editorState: {completionMode},
   };
 };
 
-export const computeCompletionCacheKey = (
-  cursorPosition: EditorPosition,
+const determineCompletionMode = (
+  position: EditorPosition,
   model: EditorModel,
-): string => {
-  const {codeBeforeCursor} = getCodeBeforeAndAfterCursor(cursorPosition, model);
-  return `${cursorPosition.lineNumber}:${cursorPosition.column}:${codeBeforeCursor}`;
+): CompletionMode => {
+  const textBeforeCursor = getTextBeforeCursor(position, model);
+  const textAfterCursor = getTextAfterCursor(position, model);
+
+  return textBeforeCursor && textAfterCursor
+    ? 'fill-in-the-middle'
+    : 'completion';
 };

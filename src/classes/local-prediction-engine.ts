@@ -3,7 +3,7 @@ import {predictions} from '../helpers/local-prediction';
 import {LocalPredictionSnippets} from '../types';
 import {reverseString} from '../utils';
 
-export class LocalCodePredictionEngine {
+export class LocalPredictionEngine {
   private readonly predictions: Map<string, LocalPredictionSnippets>;
 
   constructor() {
@@ -12,25 +12,25 @@ export class LocalCodePredictionEngine {
   }
 
   /**
-   * Predict the next code snippet based on the current common code snippet.
-   * @param language The language of the code snippet.
-   * @param currentLineCode The current code snippet.
-   * @returns The predicted code snippet, or an empty string if no prediction is found.
+   * Predict the next text snippet based on the current common text snippet.
+   * @param language The language.
+   * @param currentLineText The current text snippet.
+   * @returns The predicted text snippet, or an empty string if no prediction is found.
    */
-  public predictCode(language: string, currentLineCode: string): string {
+  public predict(language: string, currentLineText: string): string {
     try {
       const languagePredictions = this.predictions.get(language);
       if (!languagePredictions) {
         return '';
       }
 
-      const reversedCurrentLine = reverseString(currentLineCode);
+      const reversedCurrentLine = reverseString(currentLineText);
       return this.findMatchingPrediction(
         languagePredictions,
         reversedCurrentLine,
       );
     } catch (error) {
-      err(error).predictionError('Error while predicting code');
+      err(error).predictionError('Error while predicting next text snippet');
       return '';
     }
   }

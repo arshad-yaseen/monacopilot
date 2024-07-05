@@ -9,7 +9,7 @@ export default function Home() {
         endpoint="/api/copilot"
         language="javascript"
         className="h-screen w-screen"
-        theme="vs"
+        theme="vs-dark"
         options={{
           padding: {top: 16},
         }}

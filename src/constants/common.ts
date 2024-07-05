@@ -14,4 +14,5 @@ export const EDITOR_DEFAULT_OPTIONS: EditorOptions = {
   fontSize: 14,
   wordWrap: 'on',
   automaticLayout: true,
+  formatOnPaste: true,
 };

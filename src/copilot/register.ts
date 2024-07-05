@@ -1,6 +1,6 @@
 import {err} from '../error';
 import {RegisterCopilotParams} from '../types';
-import {clearCache} from '../utils/completion';
+import {clearCompletionCache} from '../utils/completion';
 import handleInlineCompletions from './handler';
 
 /**
@@ -35,7 +35,7 @@ export const registerCopilot = ({
 
     return () => {
       _icp.dispose();
-      clearCache();
+      clearCompletionCache();
     };
   } catch (error) {
     err(error).editorError('Error while registering copilot');

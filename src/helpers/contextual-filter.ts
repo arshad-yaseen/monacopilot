@@ -5,7 +5,7 @@ import {
   FILTER_WEIGHTS,
 } from '../constants';
 import {ContextualFilterContext} from '../types';
-import {getLastLineLength} from '../utils';
+import {getLastLineColumnCount} from '../utils';
 
 class ContextualFilterManager {
   previousLabel: number;
@@ -43,14 +43,14 @@ export const getContextualFilterScore = (
     trimCharWeight = 0;
 
   if (context.prefix) {
-    lastLineLog = Math.log(1 + getLastLineLength(context.prefix));
+    lastLineLog = Math.log(1 + getLastLineColumnCount(context.prefix));
     const lastChar = context.prefix.slice(-1);
     lastCharWeight = FILTER_CHARACTER_MAP[lastChar] ?? 0;
   }
 
   const trimmedPrefix = context.prefix?.trimEnd();
   if (trimmedPrefix) {
-    trimLineLog = Math.log(1 + getLastLineLength(trimmedPrefix));
+    trimLineLog = Math.log(1 + getLastLineColumnCount(trimmedPrefix));
     const trimChar = trimmedPrefix.slice(-1);
     trimCharWeight = FILTER_CHARACTER_MAP[trimChar] ?? 0;
   }

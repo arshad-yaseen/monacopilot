@@ -1,4 +1,4 @@
-export * from './completion-validator';
+export * from './completion';
 export * from './config';
 export * from './copilot';
-export * from './local-code-prediction-engine';
+export * from './local-prediction-engine';

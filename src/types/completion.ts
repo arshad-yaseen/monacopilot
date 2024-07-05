@@ -5,10 +5,10 @@ import type {
 
 import {
   EditorCancellationToken,
-  EditorInlineCompletion,
   EditorModel,
   EditorPosition,
-} from './common';
+  EditorRange,
+} from './editor';
 import {
   Endpoint,
   ExternalContext,
@@ -42,8 +42,8 @@ export interface CompletionMetadata {
   filename: Filename | undefined;
   technologies: Technologies | undefined;
   externalContext: ExternalContext | undefined;
-  codeAfterCursor: string;
-  codeBeforeCursor: string;
+  textAfterCursor: string;
+  textBeforeCursor: string;
   editorState: {
     completionMode: CompletionMode;
   };
@@ -62,7 +62,7 @@ export interface ContextualFilterContext {
 }
 
 export interface FetchCompletionItemParams {
-  code: string;
+  text: string;
   language: string;
   endpoint: Endpoint;
   filename?: Filename;
@@ -73,4 +73,7 @@ export interface FetchCompletionItemParams {
   token: EditorCancellationToken;
 }
 
-export type CompletionCacheItem = EditorInlineCompletion;
+export type CompletionCacheItem = {
+  completion: string;
+  range: EditorRange;
+};

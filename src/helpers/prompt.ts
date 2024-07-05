@@ -24,7 +24,7 @@ export const generateSystemPrompt = (metadata: CompletionMetadata): string => {
     metadata.editorState.completionMode,
   );
   const langText = language || '';
-  return `You are an expert ${langText} code completion assistant with deep knowledge of software engineering principles, design patterns, and best practices. You excel at ${description} with precision, maintaining code consistency, and adhering to industry standards. Your completions are known for being semantically accurate, syntactically correct, and highly relevant to the given context.`;
+  return `You are an expert ${langText} code completion assistant known for exceptional skill in ${description}.`;
 };
 
 const formatTechnology = (
@@ -34,9 +34,10 @@ const formatTechnology = (
   if (!technologies?.length && !language) return '';
 
   const technologiesText = joinWithAnd(technologies);
+
   const languageText = getProperLanguageName(language);
 
-  return `The code is written${languageText ? ` in ${languageText}` : ''}${technologiesText ? ` using ${technologiesText}` : ''}. Ensure your completion aligns with the conventions and best practices of these technologies.`;
+  return `The code is written${languageText ? ` in ${languageText}` : ''}${technologiesText ? ` using ${technologiesText}` : ''}.`;
 };
 
 export const generateUserPrompt = (metadata: CompletionMetadata): string => {
@@ -45,53 +46,34 @@ export const generateUserPrompt = (metadata: CompletionMetadata): string => {
     language,
     technologies,
     editorState,
-    codeBeforeCursor,
-    codeAfterCursor,
+    textBeforeCursor,
+    textAfterCursor,
     externalContext,
   } = metadata;
 
   const modeDescription = getDescriptionForMode(editorState.completionMode);
   const fileNameText = filename
-    ? `the file named '${filename}'`
+    ? `the file named ${filename}`
     : 'a larger project';
 
-  let prompt = `You will be presented with a code snippet enclosed in '<code>' tags. The cursor location is marked with '${CURSOR_PLACEHOLDER}'. Your task is to assist with ${modeDescription}. This code is part of ${fileNameText}. Please `;
+  let prompt = `You will be presented with a code snippet in '<code>' tag where the cursor location is marked with '${CURSOR_PLACEHOLDER}'. Your task is to assist with ${modeDescription}. This code is part of ${fileNameText}. Please `;
 
   switch (editorState.completionMode) {
     case 'fill-in-the-middle':
-      prompt += `generate a completion to fill the middle of the code around '${CURSOR_PLACEHOLDER}'. Your completion must:
-1. Replace '${CURSOR_PLACEHOLDER}' precisely.
-2. Maintain perfect consistency with the existing code style, indentation, and naming conventions.
-3. Ensure semantic accuracy and relevance to the surrounding context.
-4. Start exactly from the cursor position without any preceding characters.
-5. Not introduce any syntactical or semantic errors to the existing code.
-6. Seamlessly integrate with both the code before and after the cursor.
-7. Follow best practices and common patterns for the given language and technologies.`;
+      prompt += `generate a completion to fill the middle of the code around '${CURSOR_PLACEHOLDER}'. Ensure the completion replaces '${CURSOR_PLACEHOLDER}' precisely, maintaining consistency, semantic accuracy, and relevance to the context. The completion must start exactly from the cursor position without any preceding or following characters, and it should not introduce any syntactical or semantic errors to the existing code.`;
       break;
     case 'completion':
-      prompt += `provide the necessary completion for '${CURSOR_PLACEHOLDER}'. Your completion must:
-1. Start exactly from the cursor position without any preceding characters.
-2. Maintain perfect consistency with the existing code style, indentation, and naming conventions.
-3. Ensure semantic accuracy and relevance to the context.
-4. Not introduce any syntactical or semantic errors to the existing code.
-5. Provide a logical and appropriate continuation of the code.
-6. Follow best practices and common patterns for the given language and technologies.
-7. Be concise yet comprehensive, completing the current statement or block as needed.`;
+      prompt += `provide the necessary completion for '${CURSOR_PLACEHOLDER}' while ensuring consistency, semantic accuracy, and relevance to the context. The completion must start exactly from the cursor position without any preceding or following characters, and it should not introduce any syntactical or semantic errors to the existing code.`;
       break;
   }
 
-  prompt += `\n\nOutput only the necessary completion code, without any additional explanations, comments, or content. ${formatTechnology(technologies, language)}`;
+  prompt += ` Output only the necessary completion code, without additional explanations or content.${formatTechnology(technologies, language)}`;
 
-  if (language) {
-    prompt += `\n\nPay special attention to ${language}-specific syntax, built-in functions, and idiomatic expressions.`;
-  }
-
-  let codeForCompletion = `${codeBeforeCursor}${CURSOR_PLACEHOLDER}${codeAfterCursor}\n\n`;
+  let codeForCompletion = `${textBeforeCursor}${CURSOR_PLACEHOLDER}${textAfterCursor}\n\n`;
 
   if (externalContext && externalContext.length > 0) {
-    prompt += `\n\nConsider the following additional context from related files:`;
     codeForCompletion += externalContext
-      .map(context => `\n// Path: ${context.path}\n${context.content}`)
+      .map(context => `// Path: ${context.path}\n${context.content}\n`)
       .join('\n');
   }
 

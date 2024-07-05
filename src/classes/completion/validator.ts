@@ -1,13 +1,13 @@
-import {CONTEXTUAL_FILTER_ACCEPT_THRESHOLD} from '../constants';
-import {getContextualFilterScore} from '../helpers';
-import {EditorModel, EditorPosition} from '../types';
+import {CONTEXTUAL_FILTER_ACCEPT_THRESHOLD} from '../../constants';
+import {getContextualFilterScore} from '../../helpers';
+import {EditorModel, EditorPosition} from '../../types';
+import {getTextBeforeCursor} from '../../utils';
 import {
-  getCodeBeforeAndAfterCursor,
-  isAfterCursorWhitespace,
+  hasWhitespaceAfterCursor,
   isCharAfterCursor,
-  isCursorAtStartWithCodeAround,
+  isCursorAtStartWithTextAround,
   isLastCompletionTooRecent,
-} from '../utils/completion';
+} from '../../utils/completion';
 
 export class CompletionValidator {
   private cursorPosition: EditorPosition;
@@ -39,11 +39,8 @@ export class CompletionValidator {
     model: EditorModel,
     language: string,
   ): number {
-    const {codeBeforeCursor} = getCodeBeforeAndAfterCursor(
-      cursorPosition,
-      model,
-    );
-    const afterCursorWhitespace = isAfterCursorWhitespace(
+    const textBeforeCursor = getTextBeforeCursor(cursorPosition, model);
+    const afterCursorWhitespace = hasWhitespaceAfterCursor(
       cursorPosition,
       model,
     );
@@ -59,12 +56,12 @@ export class CompletionValidator {
         documentLength,
         promptEndPos,
       },
-      prefix: codeBeforeCursor,
+      prefix: textBeforeCursor,
     });
   }
 
   /**
-   * Determines whether code completions should be provided based on various conditions.
+   * Determines whether completions should be provided based on various conditions.
    * @returns {boolean} - True if completions should be provided, false otherwise.
    */
   public shouldProvideCompletions(): boolean {
@@ -79,7 +76,7 @@ export class CompletionValidator {
       //
       !isCharAfterCursor(this.cursorPosition, this.model) &&
       //
-      !isCursorAtStartWithCodeAround(this.cursorPosition, this.model) &&
+      !isCursorAtStartWithTextAround(this.cursorPosition, this.model) &&
       //
       !isLastCompletionTooRecent(this.lastCompletionTime, currentTime)
     );

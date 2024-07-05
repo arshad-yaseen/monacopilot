@@ -17,7 +17,7 @@ import {HTTP} from '../utils';
 import Config from './config';
 
 /**
- * Copilot class for handling code completions using the Groq API.
+ * Copilot class for handling completions using the Groq API.
  */
 export class Copilot {
   private readonly apiKey: string;
@@ -40,7 +40,7 @@ export class Copilot {
   /**
    * Sends a completion request to Groq API and returns the completion.
    * @param {CompletionRequest} params - The metadata required to generate the completion.
-   * @returns {Promise<CompletionResponse>} The completed code snippet or an error.
+   * @returns {Promise<CompletionResponse>} The completed text snippet or an error.
    */
   public async complete({
     completionMetadata,
