@@ -22,8 +22,8 @@ export const registerCopilot = ({
 }: RegisterCopilotParams): (() => void) | undefined => {
   try {
     const _icp = monaco.languages.registerInlineCompletionsProvider(language, {
-      provideInlineCompletions: async (model, position, context, token) =>
-        handleInlineCompletions(monaco, model, position, context, token, {
+      provideInlineCompletions: async (...p) =>
+        handleInlineCompletions(monaco, ...p, {
           language,
           filename,
           endpoint,
