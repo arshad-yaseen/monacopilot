@@ -45,6 +45,10 @@
     "ai-editor"
   ],
   "homepage": "https://monacopilot.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arshad-yaseen/monacopilot"
+  },
   "license": "MIT",
   "author": "Arshad Yaseen <m@arshadyaseen.com>",
   "peerDependencies": {

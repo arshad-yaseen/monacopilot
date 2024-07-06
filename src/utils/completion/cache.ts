@@ -1,25 +1,50 @@
-import {CompletionCacheItem} from '../../types';
+import {CompletionCache, EditorModel, EditorPosition} from '../../types';
 
 /**
  * First-in-first-out cache for completion items.
  */
+const MAX_CACHE_SIZE = 20;
+const COMPLETION_LOOKBACK = 3;
 
-const MAX_CACHE_SIZE = 8;
+const completionCache = new Set<CompletionCache>();
 
-const COMPLETION_CACHE = new Set<CompletionCacheItem>();
+/**
+ * Retrieves completion cache items based on the current position and model.
+ * @param position - The current editor position.
+ * @param model - The editor model.
+ * @returns An array of filtered completion cache items.
+ */
+export function getCompletionCache(
+  position: EditorPosition,
+  model: EditorModel,
+): CompletionCache[] {
+  return Array.from(completionCache).filter(cache => {
+    const currentValueInRange = model.getValueInRange(cache.range);
 
-export const getCompletionCache = (): CompletionCacheItem[] => {
-  return Array.from(COMPLETION_CACHE);
-};
+    return (
+      cache.completion.startsWith(currentValueInRange) &&
+      cache.range.startLineNumber === position.lineNumber &&
+      position.column >= cache.range.startColumn - COMPLETION_LOOKBACK
+    );
+  });
+}
 
-export const addCompletionCache = (cacheItem: CompletionCacheItem) => {
-  if (COMPLETION_CACHE.size >= MAX_CACHE_SIZE) {
-    COMPLETION_CACHE.delete(COMPLETION_CACHE.values().next().value);
+/**
+ * Adds a new completion cache item, maintaining the maximum cache size.
+ * @param cacheItem - The completion cache item to add.
+ */
+export function addCompletionCache(cacheItem: CompletionCache): void {
+  if (completionCache.size >= MAX_CACHE_SIZE) {
+    const oldestItem = completionCache.values().next().value;
+    completionCache.delete(oldestItem);
   }
 
-  COMPLETION_CACHE.add(cacheItem);
-};
+  completionCache.add(cacheItem);
+}
 
-export const clearCompletionCache = (): void => {
-  COMPLETION_CACHE.clear();
-};
+/**
+ * Clears the entire completion cache.
+ */
+export function clearCompletionCache(): void {
+  completionCache.clear();
+}

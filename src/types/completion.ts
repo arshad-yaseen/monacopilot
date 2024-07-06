@@ -73,7 +73,7 @@ export interface FetchCompletionItemParams {
   token: EditorCancellationToken;
 }
 
-export type CompletionCacheItem = {
+export type CompletionCache = {
   completion: string;
   range: EditorRange;
 };

@@ -4,7 +4,6 @@ import {
   GROQ_API_ENDPOINT,
 } from '../constants';
 import {err} from '../error';
-import {CompletionError} from '../error/errors';
 import {generateSystemPrompt, generateUserPrompt} from '../helpers';
 import {
   CompletionRequest,
@@ -56,17 +55,15 @@ export class Copilot {
       >(GROQ_API_ENDPOINT, body, {headers});
 
       if (!completion.choices || completion.choices.length === 0) {
-        throw new CompletionError('No completion choices received from API');
+        throw new Error('No completion choices received from API');
       }
 
       return {completion: completion.choices[0].message.content};
     } catch (error) {
-      if (error instanceof CompletionError) {
-        err(error).completionError('Failed to fetch completion');
-      } else if (error instanceof Error) {
+      if (error instanceof Error) {
         err(error).apiError('Failed to fetch completion');
       } else {
-        err(error).apiError('Unknown error during completion');
+        err(error).apiError('Unknown error while fetching completion');
       }
       return {error: 'Failed to generate completion'};
     }

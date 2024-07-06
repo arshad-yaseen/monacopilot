@@ -1,10 +1,6 @@
 import {CLOSING_BRACKETS, OPENING_BRACKETS} from '../../constants';
 import {Bracket, EditorModel, EditorPosition} from '../../types';
-import {
-  getLineCount,
-  getTextAfterCursor,
-  getTextBeforeCursor,
-} from '../../utils';
+import {getTextBeforeCursor} from '../../utils';
 
 /**
  * This class is responsible for formatting code completions
@@ -20,7 +16,7 @@ export class CompletionFormatter {
   constructor(model: EditorModel, position: EditorPosition) {
     this.model = model;
     this.cursorPosition = position;
-    this.lineCount = getLineCount(model);
+    this.lineCount = model.getLineCount();
   }
 
   // Check if the given brackets form a matching pair
@@ -74,10 +70,9 @@ export class CompletionFormatter {
     return text?.trim() ?? '';
   }
 
-  // Remove duplicates from both start and end of completion
-  private removeDuplicatesFromStartAndEndOfCompletion(): this {
+  // Remove duplicates from the start of the completion
+  private removeDuplicatesFromStartOfCompletion(): this {
     const before = getTextBeforeCursor(this.cursorPosition, this.model).trim();
-    const after = getTextAfterCursor(this.cursorPosition, this.model).trim();
     const completion = this.normalise(this.formattedCompletion);
 
     // Handle start duplicates
@@ -93,28 +88,10 @@ export class CompletionFormatter {
       }
     }
 
-    // Handle end duplicates
-    let endOverlapLength = 0;
-    const maxEndLength = Math.min(
-      completion.length - startOverlapLength,
-      after.length,
-    );
-    for (let length = 1; length <= maxEndLength; length++) {
-      const startOfAfter = after.slice(0, length);
-      const endOfCompletion = completion.slice(-length);
-      if (startOfAfter === endOfCompletion) {
-        endOverlapLength = length;
-      } else {
-        break;
-      }
-    }
-
     // Apply the trimming
-    if (startOverlapLength > 0 || endOverlapLength > 0) {
-      this.formattedCompletion = this.formattedCompletion.slice(
-        startOverlapLength,
-        -endOverlapLength || undefined,
-      );
+    if (startOverlapLength > 0) {
+      this.formattedCompletion =
+        this.formattedCompletion.slice(startOverlapLength);
     }
 
     return this;
@@ -160,7 +137,7 @@ export class CompletionFormatter {
 
     this.matchCompletionBrackets()
       .ignoreBlankLines()
-      .removeDuplicatesFromStartAndEndOfCompletion()
+      .removeDuplicatesFromStartOfCompletion()
       .preventDuplicateLines()
       .removeInvalidLineBreaks()
       .trimStart();

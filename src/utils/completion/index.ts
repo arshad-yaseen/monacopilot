@@ -17,7 +17,7 @@ export * from './context-parser';
 export const computeCompletionInsertRange = (
   completion: string,
   position: EditorPosition,
-  currentRange: EditorRange,
+  range: EditorRange,
 ) => {
   const newLineCount = (completion.match(/\n/g) || []).length;
   const lastLineColumnCount = getLastLineColumnCount(completion);
@@ -27,7 +27,7 @@ export const computeCompletionInsertRange = (
     startColumn: position.column,
     endLineNumber: position.lineNumber + newLineCount,
     endColumn:
-      position.lineNumber === currentRange.startLineNumber && newLineCount === 0
+      position.lineNumber === range.startLineNumber && newLineCount === 0
         ? position.column + lastLineColumnCount
         : lastLineColumnCount,
   };
