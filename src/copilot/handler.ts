@@ -2,15 +2,10 @@ import {CompletionValidator, LocalPredictionEngine} from '../classes';
 import {err} from '../error';
 import {fetchCompletionItem} from '../helpers';
 import {
-  EditorCancellationToken,
-  EditorInlineCompletionContext,
   EditorInlineCompletionsResult,
-  EditorModel,
-  EditorPosition,
-  Monaco,
-  RegisterCopilotParams,
+  InlineCompletionHandlerParams,
 } from '../types';
-import {debounce} from '../utils';
+import {debounce, getTextBeforeCursorInLine} from '../utils';
 import {
   addCompletionCache,
   computeCompletionInsertRange,
@@ -21,14 +16,11 @@ import {
 
 const LOCAL_PREDICTION_ENGINE = new LocalPredictionEngine();
 const DEBOUNCE_DELAY = 200;
-let lastCompletionTime = Date.now();
 
 const debouncedFetchCompletionItem = debounce(
   fetchCompletionItem,
   DEBOUNCE_DELAY,
 );
-
-interface CompletionOptions extends Omit<RegisterCopilotParams, 'monaco'> {}
 
 /**
  * Handles inline completions for the editor
@@ -37,17 +29,27 @@ interface CompletionOptions extends Omit<RegisterCopilotParams, 'monaco'> {}
  * @param position - Current cursor position
  * @param context - Inline completion context (unused)
  * @param token - Cancellation token
+ * @param hasCompletionBeenAccepted - Whether the completion was accepted
+ * @param onShowCompletion - Callback on showing completion
  * @param options - Additional options for completion
  * @returns Promise resolving to EditorInlineCompletionsResult
  */
-async function handleInlineCompletions(
-  monaco: Monaco,
-  model: EditorModel,
-  position: EditorPosition,
-  _: EditorInlineCompletionContext,
-  token: EditorCancellationToken,
-  options: CompletionOptions,
-): Promise<EditorInlineCompletionsResult> {
+const handleInlineCompletions = async ({
+  monaco,
+  model,
+  position,
+  context: _, // Unused
+  token,
+  hasCompletionBeenAccepted,
+  onShowCompletion,
+  options,
+}: InlineCompletionHandlerParams): Promise<EditorInlineCompletionsResult> => {
+  // If user accepted the completion, return empty completions
+  // This is to prevent immediate unnecessary fetching of new completion from Groq API after user accepts the completion
+  if (hasCompletionBeenAccepted) {
+    return createInlineCompletionResult([]);
+  }
+
   const text = model.getValue();
   const range = new monaco.Range(
     position.lineNumber,
@@ -56,12 +58,18 @@ async function handleInlineCompletions(
     position.column,
   );
 
-  if (!shouldProvideCompletions(position, model, options.language)) {
+  // Validate if completions should be provided
+  if (!new CompletionValidator(position, model).shouldProvideCompletions()) {
     return createInlineCompletionResult([]);
   }
 
-  const cachedCompletions = getCachedCompletions(position, model);
+  // Check if there are cached completions for the context
+  const cachedCompletions = getCompletionCache(position, model).map(cache => ({
+    insertText: cache.completion,
+    range: cache.range,
+  }));
   if (cachedCompletions.length) {
+    onShowCompletion();
     return createInlineCompletionResult(cachedCompletions);
   }
 
@@ -69,67 +77,17 @@ async function handleInlineCompletions(
     return createInlineCompletionResult([]);
   }
 
-  const localPrediction = getLocalPrediction(options.language, model, position);
+  const localPrediction = LOCAL_PREDICTION_ENGINE.predict(
+    options.language,
+    model.getLineContent(position.lineNumber),
+  );
   if (localPrediction) {
+    onShowCompletion();
     return createInlineCompletionResult([
       {insertText: {snippet: localPrediction}, range},
     ]);
   }
 
-  return await fetchAndProcessCompletion(
-    options,
-    text,
-    model,
-    position,
-    token,
-    range,
-  );
-}
-
-function shouldProvideCompletions(
-  position: EditorPosition,
-  model: EditorModel,
-  language: string,
-): boolean {
-  const completionValidator = new CompletionValidator(
-    position,
-    model,
-    language,
-    lastCompletionTime,
-  );
-  return completionValidator.shouldProvideCompletions();
-}
-
-function getCachedCompletions(
-  position: EditorPosition,
-  model: EditorModel,
-): {insertText: string; range: any}[] {
-  const cachedCompletions = getCompletionCache(position, model);
-  return cachedCompletions.map(cache => ({
-    insertText: cache.completion,
-    range: cache.range,
-  }));
-}
-
-function getLocalPrediction(
-  language: string,
-  model: EditorModel,
-  position: EditorPosition,
-): string | null {
-  return LOCAL_PREDICTION_ENGINE.predict(
-    language,
-    model.getLineContent(position.lineNumber),
-  );
-}
-
-async function fetchAndProcessCompletion(
-  options: CompletionOptions,
-  text: string,
-  model: EditorModel,
-  position: EditorPosition,
-  token: EditorCancellationToken,
-  range: any,
-): Promise<EditorInlineCompletionsResult> {
   try {
     const completion = await debouncedFetchCompletionItem({
       ...options,
@@ -140,24 +98,23 @@ async function fetchAndProcessCompletion(
     });
 
     if (completion) {
-      lastCompletionTime = Date.now();
       const formattedCompletion = formatCompletion(model, position, completion);
       const completionInsertRange = computeCompletionInsertRange(
         formattedCompletion,
-        position,
         range,
+        position,
+        model,
       );
 
       addCompletionCache({
         completion: formattedCompletion,
         range: completionInsertRange,
+        textBeforeCursorInLine: getTextBeforeCursorInLine(position, model),
       });
 
+      onShowCompletion();
       return createInlineCompletionResult([
-        {
-          insertText: formattedCompletion,
-          range: completionInsertRange,
-        },
+        {insertText: formattedCompletion, range: completionInsertRange},
       ]);
     }
   } catch (error) {
@@ -165,6 +122,6 @@ async function fetchAndProcessCompletion(
   }
 
   return createInlineCompletionResult([]);
-}
+};
 
 export default handleInlineCompletions;

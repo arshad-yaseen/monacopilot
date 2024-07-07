@@ -1,5 +1,4 @@
-import {CLOSING_BRACKETS, OPENING_BRACKETS} from '../../constants';
-import {Bracket, EditorModel, EditorPosition} from '../../types';
+import {EditorModel, EditorPosition} from '../../types';
 import {getTextBeforeCursor} from '../../utils';
 
 /**
@@ -17,41 +16,6 @@ export class CompletionFormatter {
     this.model = model;
     this.cursorPosition = position;
     this.lineCount = model.getLineCount();
-  }
-
-  // Check if the given brackets form a matching pair
-  private isMatchingPair(open?: Bracket, close?: string): boolean {
-    return (
-      (open === '(' && close === ')') ||
-      (open === '[' && close === ']') ||
-      (open === '{' && close === '}')
-    );
-  }
-
-  // Ensure that brackets in the completion are properly matched and balanced
-  private matchCompletionBrackets(): this {
-    let accumulatedCompletion = '';
-    const openBrackets: Bracket[] = [];
-
-    for (const character of this.originalCompletion) {
-      if (OPENING_BRACKETS.includes(character)) {
-        openBrackets.push(character as Bracket);
-      } else if (CLOSING_BRACKETS.includes(character)) {
-        if (
-          openBrackets.length &&
-          this.isMatchingPair(openBrackets[openBrackets.length - 1], character)
-        ) {
-          openBrackets.pop();
-        } else {
-          break;
-        }
-      }
-      accumulatedCompletion += character;
-    }
-
-    this.formattedCompletion =
-      accumulatedCompletion.trimEnd() || this.originalCompletion.trimEnd();
-    return this;
   }
 
   // Remove blank lines from the completion
@@ -132,11 +96,10 @@ export class CompletionFormatter {
 
   // Apply all formatting rules to the completion
   public format(completion: string): string {
-    this.formattedCompletion = '';
     this.originalCompletion = completion;
+    this.formattedCompletion = completion;
 
-    this.matchCompletionBrackets()
-      .ignoreBlankLines()
+    this.ignoreBlankLines()
       .removeDuplicatesFromStartOfCompletion()
       .preventDuplicateLines()
       .removeInvalidLineBreaks()

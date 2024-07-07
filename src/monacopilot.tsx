@@ -29,6 +29,7 @@ const MonaCopilot = ({
         if (endpoint && props.language) {
           _unregisterCopilotRef.current = registerCopilot({
             monaco,
+            editor,
             filename,
             technologies,
             externalContext,

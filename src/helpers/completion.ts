@@ -12,6 +12,11 @@ import {getTextAfterCursor, getTextBeforeCursor, HTTP} from '../utils';
 
 const CONTENT_TYPE_JSON = 'application/json';
 
+/**
+ * Fetches a completion item from the groq API.
+ * @param {FetchCompletionItemParams} params - The parameters for fetching the completion item.
+ * @returns {Promise<string | null>} The completion item or null if an error occurs or the request is aborted.
+ */
 export const fetchCompletionItem = async ({
   filename,
   endpoint,
@@ -56,6 +61,9 @@ export const fetchCompletionItem = async ({
   }
 };
 
+/**
+ * Constructs the metadata needed for fetching a completion item.
+ */
 export const constructCompletionMetadata = ({
   filename,
   position,
@@ -83,6 +91,12 @@ export const constructCompletionMetadata = ({
   };
 };
 
+/**
+ * Determines the completion mode based on the cursor position and editor model.
+ * @param {EditorPosition} position - The cursor position in the editor.
+ * @param {EditorModel} model - The editor model.
+ * @returns {CompletionMode} The determined completion mode.
+ */
 const determineCompletionMode = (
   position: EditorPosition,
   model: EditorModel,

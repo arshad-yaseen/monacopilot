@@ -49,18 +49,6 @@ export interface CompletionMetadata {
   };
 }
 
-export interface ContextualFilterContext {
-  properties: {
-    afterCursorWhitespace?: string;
-    languageId?: string;
-  };
-  measurements: {
-    documentLength?: number;
-    promptEndPos?: number;
-  };
-  prefix?: string;
-}
-
 export interface FetchCompletionItemParams {
   text: string;
   language: string;
@@ -76,4 +64,5 @@ export interface FetchCompletionItemParams {
 export type CompletionCache = {
   completion: string;
   range: EditorRange;
+  textBeforeCursorInLine: string;
 };

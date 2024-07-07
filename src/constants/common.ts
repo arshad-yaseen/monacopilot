@@ -15,4 +15,8 @@ export const EDITOR_DEFAULT_OPTIONS: EditorOptions = {
   wordWrap: 'on',
   automaticLayout: true,
   formatOnPaste: true,
+  inlineSuggest: {
+    enabled: true,
+    mode: undefined,
+  },
 };

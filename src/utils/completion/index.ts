@@ -6,7 +6,7 @@ import {
   EditorPosition,
   EditorRange,
 } from '../../types';
-import {getLastLineColumnCount} from '../editor';
+import {getCharAfterCursor, getLastLineColumnCount} from '../editor';
 
 export * from './cache';
 export * from './context-parser';
@@ -16,18 +16,21 @@ export * from './context-parser';
  */
 export const computeCompletionInsertRange = (
   completion: string,
-  position: EditorPosition,
   range: EditorRange,
-) => {
+  position: EditorPosition,
+  model: EditorModel,
+): EditorRange => {
   const newLineCount = (completion.match(/\n/g) || []).length;
   const lastLineColumnCount = getLastLineColumnCount(completion);
+  const charAfterCursor = getCharAfterCursor(position, model);
 
   return {
     startLineNumber: position.lineNumber,
     startColumn: position.column,
     endLineNumber: position.lineNumber + newLineCount,
-    endColumn:
-      position.lineNumber === range.startLineNumber && newLineCount === 0
+    endColumn: !completion.includes(charAfterCursor)
+      ? position.column
+      : position.lineNumber === range.startLineNumber && newLineCount === 0
         ? position.column + lastLineColumnCount
         : lastLineColumnCount,
   };

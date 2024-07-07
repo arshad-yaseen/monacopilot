@@ -63,6 +63,12 @@ export const deepMerge = <T>(
   return merged;
 };
 
+/**
+ * Joins an array of strings with commas and 'and' for the last element.
+ *
+ * @param arr - The array of strings to join
+ * @returns The joined string
+ */
 export const joinWithAnd = (arr: string[] | undefined): string => {
   if (!arr || arr.length === 0) {
     return '';
@@ -75,6 +81,12 @@ export const joinWithAnd = (arr: string[] | undefined): string => {
   return `${arr.slice(0, -1).join(', ')} and ${arr.slice(-1)}`;
 };
 
+/**
+ * Reverses a string.
+ *
+ * @param str - The string to reverse
+ * @returns The reversed string
+ */
 export const reverseString = (str: string): string => {
   return str.split('').reverse().join('');
 };

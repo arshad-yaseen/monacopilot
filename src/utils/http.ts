@@ -63,6 +63,15 @@ const POST = <ResponseType, BodyType>(
   });
 };
 
+/**
+ * HTTP utility functions for making GET and POST requests.
+ * @module HTTP
+ * @example
+ * import {HTTP} from './utils/http';
+ *
+ * const response = await HTTP.GET<{message: string}>('https://example.com');
+ * console.log(response.message);
+ */
 export const HTTP = {
   GET,
   POST,
