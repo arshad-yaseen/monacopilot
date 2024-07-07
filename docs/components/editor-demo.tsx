@@ -18,6 +18,7 @@ const EDITOR_DEFAULTS = {
 
 const EditorDemo = () => {
   const {resolvedTheme} = useTheme();
+
   const theme: Theme = resolvedTheme === 'dark' ? 'vs-dark' : 'light';
 
   return (
