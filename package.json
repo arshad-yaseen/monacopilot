@@ -1,7 +1,7 @@
 {
   "name": "monacopilot",
   "version": "0.9.1",
-  "description": "Extended Monaco Editor with AI auto-completion and new themes for React.",
+  "description": "AI auto-completion for Monaco Editor",
   "main": "./build/index.js",
   "module": "./build/index.mjs",
   "types": "./build/index.d.ts",
@@ -50,12 +50,5 @@
     "url": "https://github.com/arshad-yaseen/monacopilot"
   },
   "license": "MIT",
-  "author": "Arshad Yaseen <m@arshadyaseen.com>",
-  "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "dependencies": {
-    "@monaco-editor/react": "^4.6.0"
-  }
+  "author": "Arshad Yaseen <m@arshadyaseen.com>"
 }

@@ -1,3 +1,3 @@
-import {type Monaco as _Monaco} from '@monaco-editor/react';
+import * as monaco from 'monaco-editor';
 
-export type Monaco = _Monaco;
+export type Monaco = typeof monaco;

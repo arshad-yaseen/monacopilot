@@ -1,5 +1,5 @@
 import {err} from '../error';
-import {RegisterCopilotParams} from '../types';
+import {Monaco, RegisterCopilotOptions, StandaloneCodeEditor} from '../types';
 import {clearCompletionCache} from '../utils/completion';
 import handleInlineCompletions from './handler';
 
@@ -10,17 +10,15 @@ let isCompletionVisible = false;
  * Registers the Copilot with the Monaco editor.
  * @param monaco The Monaco instance.
  * @param editor The editor instance.
- * @param filename The filename of the code snippet.
- * @param endpoint The endpoint to fetch completion items.
- * @param technologies The technologies used in the code snippet.
- * @param language The language of the code snippet.
- * @param externalContext The external context of the code snippet.
+ * @param options The options for the Copilot.
+ *
+ * @returns A function to unregister the Copilot. Use this to clean up the Copilot.
  */
-export const registerCopilot = ({
-  monaco,
-  editor,
-  ...options
-}: RegisterCopilotParams): (() => void) | undefined => {
+export const registerCopilot = (
+  monaco: Monaco,
+  editor: StandaloneCodeEditor,
+  options: RegisterCopilotOptions,
+): (() => void) | undefined => {
   try {
     const inlineCompletionsProvider =
       monaco.languages.registerInlineCompletionsProvider(options.language, {
@@ -31,6 +29,7 @@ export const registerCopilot = ({
             position,
             context,
             token,
+
             hasCompletionBeenAccepted,
             onShowCompletion: () => (isCompletionVisible = true),
             options,

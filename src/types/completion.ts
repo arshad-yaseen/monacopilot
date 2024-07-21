@@ -3,18 +3,13 @@ import type {
   ChatCompletionCreateParamsBase,
 } from 'groq-sdk/resources/chat/completions';
 
+import {Endpoint, ExternalContext, Filename, Technologies} from './copilot';
 import {
   EditorCancellationToken,
   EditorModel,
   EditorPosition,
   EditorRange,
 } from './editor';
-import {
-  Endpoint,
-  ExternalContext,
-  Filename,
-  Technologies,
-} from './monacopilot-props';
 
 export type CompletionModel = 'llama';
 

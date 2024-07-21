@@ -1,12 +1,11 @@
 'use client';
 
-import MonaCopilot from 'monacopilot';
+import {Editor} from '@monaco-editor/react';
 
 export default function Home() {
   return (
     <main className="flex min-h-screen w-screen flex-col items-center">
-      <MonaCopilot
-        endpoint="/api/copilot"
+      <Editor
         language="javascript"
         className="h-screen w-screen"
         theme="vs-dark"

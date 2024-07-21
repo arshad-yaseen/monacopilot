@@ -9,8 +9,7 @@ export class CompletionValidator {
   private model: EditorModel;
 
   /**
-   * Initializes the validator with the current cursor position, editor model,
-   * and timestamps of the last completion.
+   * Initializes the validator with the current cursor position, editor model, and language.
    * @param cursorPosition - The current cursor position.
    * @param model - The editor model.
    * @param language - The language of the editor.

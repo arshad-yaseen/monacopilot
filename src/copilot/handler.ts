@@ -1,4 +1,4 @@
-import {CompletionValidator, LocalPredictionEngine} from '../classes';
+import {CompletionValidator} from '../classes';
 import {err} from '../error';
 import {fetchCompletionItem} from '../helpers';
 import {
@@ -14,7 +14,6 @@ import {
   getCompletionCache,
 } from '../utils/completion';
 
-const LOCAL_PREDICTION_ENGINE = new LocalPredictionEngine();
 const DEBOUNCE_DELAY = 200;
 
 const debouncedFetchCompletionItem = debounce(
@@ -45,12 +44,6 @@ const handleInlineCompletions = async ({
   onShowCompletion,
   options,
 }: InlineCompletionHandlerParams): Promise<EditorInlineCompletionsResult> => {
-  // If user accepted the completion, return empty completions
-  // This is to prevent immediate unnecessary fetching of new completion from Groq API after user accepts the completion
-  if (hasCompletionBeenAccepted) {
-    return createInlineCompletionResult([]);
-  }
-
   const text = model.getValue();
   const range = new monaco.Range(
     position.lineNumber,
@@ -78,15 +71,10 @@ const handleInlineCompletions = async ({
     return createInlineCompletionResult([]);
   }
 
-  const localPrediction = LOCAL_PREDICTION_ENGINE.predict(
-    options.language,
-    model.getLineContent(position.lineNumber),
-  );
-  if (localPrediction) {
-    onShowCompletion();
-    return createInlineCompletionResult([
-      {insertText: {snippet: localPrediction}, range},
-    ]);
+  // If user accepted the completion, return empty completions
+  // This is to prevent immediate unnecessary fetching of new completion from Groq API after user accepts the completion
+  if (hasCompletionBeenAccepted) {
+    return createInlineCompletionResult([]);
   }
 
   try {
