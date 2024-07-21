@@ -4,7 +4,7 @@ import {getTextBeforeCursorInLine} from '../editor';
 /**
  * First-in-first-out cache for completion items.
  */
-const MAX_CACHE_SIZE = 15;
+const MAX_CACHE_SIZE = 10;
 const completionCache: CompletionCache[] = [];
 
 /**
