@@ -1,15 +1,15 @@
-import {Tabs, Card} from 'nextra/components';
-import {
-  MagicWandIcon,
-} from "@radix-ui/react-icons";
+import { Tabs, Card, Callout } from 'nextra/components';
+import { MagicWandIcon } from "@radix-ui/react-icons";
 
-# Getting Started
+# Introduction
 
-**Monacopilot** provides AI autocompletion for Monaco Editor in React, inspired by GitHub Copilot.
+**Monacopilot** integrates AI auto-completion into the Monaco Editor, inspired by GitHub Copilot.
+
+<Callout type="info">
+  Currently, Groq does not implement billing, allowing free usage of their API. Starting in early July, a pay-as-you-go model will be introduced. During this free period, some latency in completions might be experienced. Post billing implementation, expect instant completions without latency.
+</Callout>
 
 ### Installation
-
-To get started with Monacopilot, install it via your preferred package manager:
 
 <Tabs items={["npm", "pnpm", "yarn", "bun"]}>
   <Tabs.Tab title="npm">
@@ -34,27 +34,71 @@ To get started with Monacopilot, install it via your preferred package manager:
   </Tabs.Tab>
 </Tabs>
 
-### Usage
+### Components
 
-Import Monacopilot into your React application and use it as shown below:
+Monacopilot provides two main components: `Copilot` and `registerCopilot`.
 
-```jsx
-import MonaCopilot from "monacopilot";
+#### Copilot
 
-function App() {
-  return <MonaCopilot value="console.log('Hello, world!')" language="javascript" />;
-}
+`Copilot` is a class for setting up the API endpoint to complete the code. This API endpoint is provided to the `registerCopilot` function.
+
+```javascript
+const express = require('express');
+const { Copilot } = require('monacopilot');
+
+const app = express();
+const copilot = new Copilot(process.env.GROQ_API_KEY); // Obtain API key from Groq console
+
+app.use(express.json());
+
+app.post('/copilot', async (req, res) => {
+  try {
+    const completion = await copilot.complete(req.body);
+    res.json(completion);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.listen(3000, () => console.log('Server running on port 3000'));
 ```
 
-The above example demonstrates basic usage of Monacopilot. The `value` prop is used to set the initial value of the editor, and the `language` prop is used to specify the language of the editor.
+#### RegisterCopilot
 
-### Advanced Usage
+`registerCopilot` is a function to register AI auto-completion in Monaco Editor.
 
-Monacopilot, being a wrapper around `@monaco-editor/react`, supports all the properties and import statements used with `@monaco-editor/react`. For more detailed information, refer to the [@monaco-editor/react documentation](https://github.com/suren-atoyan/monaco-react/blob/master/README.md).
+```javascript
+import { registerCopilot } from 'monacopilot';
+import * as monaco from 'monaco-editor-core';
 
-### Next Steps
+const editor = monaco.editor.create(document.getElementById('container'), {
+  value: 'const a = 1;',
+  language: 'javascript',
+});
 
-Now that you have Monacopilot installed and running, it functions like a standard Monaco Editor. If you are interested in utilizing the AI auto-completion, proceed to the Copilot Setup guide.
+registerCopilot(monaco, editor, {
+  endpoint: 'https://api.myapp.com/copilot',
+  language: 'javascript',
+});
+```
 
-<div className="h-4" />
-<Card title="Copilot Setup" href="/docs/copilot/setup" icon={<MagicWandIcon />} />
+The above code registers AI auto-completion in the Monaco Editor. Using Monacopilot in frameworks and libraries you love is easy and straightforward.
+
+### Guides
+
+Here's how you can use Monacopilot in your favorite libraries and frameworks.
+
+import { Cards } from 'nextra/components'
+
+<Cards num={2}>
+  <Cards.Card
+    image
+    arrow
+    title="Next.js"
+    href="/docs/nextjs"
+  >
+    <div className="flex items-center w-full h-full p-4">
+      <img src="/nextjs.png" alt="Next.js" className='h-[60px] w-[60px]' />
+    </div>
+  </Cards.Card>
+</Cards>

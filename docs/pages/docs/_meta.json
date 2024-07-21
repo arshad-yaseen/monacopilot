@@ -1,8 +1,11 @@
 {
-  "index": "Getting Started",
-  "copilot-setup": "Copilot Setup",
+  "index": "Introduction",
   "copilot-options": "Copilot Options",
-  "completion-endpoint": "Completion Endpoint",
+  "-- Guides": {
+    "type": "separator",
+    "title": "Guides"
+  },
+  "nextjs": "Next.js",
   "---": {
     "type": "separator"
   },

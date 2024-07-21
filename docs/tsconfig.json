@@ -16,6 +16,11 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "pages/docs/guides/nextjs.mdx"
+  ],
   "exclude": ["node_modules"]
 }

@@ -38,7 +38,6 @@ export interface RegisterCopilotOptions {
   language: string;
   /**
    * The API endpoint where you started the completion service.
-   * [Learn more](https://monacopilot.vercel.app/copilot/setup#integrating-copilot-to-the-editor)
    */
   endpoint: Endpoint;
   /**

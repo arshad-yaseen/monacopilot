@@ -1,0 +1,105 @@
+---
+title: Next.js
+---
+
+import { Tabs, Callout, Card } from 'nextra/components';
+import { Link1Icon } from '@radix-ui/react-icons';
+
+# Next.js
+
+This guide walks you through integrating AI auto-completion into your Next.js project.
+
+Start by obtaining an API key from the [Groq console](https://console.groq.com/keys).
+
+### Setting Up the API Key
+
+Once you have your API key, define it as an environment variable in your project:
+
+```bash filename=".env.local"
+GROQ_API_KEY=your-api-key
+```
+
+### API Handler
+
+Set up an API handler to manage auto-completion requests.
+
+<Tabs items={["App Router", "Pages Router"]}>
+  <Tabs.Tab title="App Router">
+    ```javascript filename="app/api/copilot/route.ts"
+    import { Copilot } from 'monacopilot';
+
+    const copilot = new Copilot(process.env.GROQ_API_KEY);
+
+    export async function POST(req: Request) {
+      const body = await req.json();
+      const completion = await copilot.complete(body);
+
+      return Response.json(completion, { status: 200 });
+    }
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab title="Pages Router">
+    ```javascript filename="pages/api/copilot.ts"
+    import { NextApiRequest, NextApiResponse } from 'next';
+    import { Copilot } from 'monacopilot';
+
+    const copilot = new Copilot(process.env.GROQ_API_KEY);
+
+    export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+      const completion = await copilot.complete(req.body);
+
+      res.status(200).json(completion);
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Integrating Copilot with the Editor
+
+Install a wrapper for the Monaco Editor. In this example, we'll use `@monaco-editor/react`.
+
+```tsx
+'use client';
+
+import { useEffect, useState } from 'react';
+import { Editor } from '@monaco-editor/react';
+import { registerCopilot, type Monaco, type StandaloneCodeEditor } from 'monacopilot';
+
+export default function CodeEditor() {
+  const [monaco, setMonaco] = useState<Monaco | null>(null);
+  const [editor, setEditor] = useState<StandaloneCodeEditor | null>(null);
+
+  useEffect(() => {
+    if (monaco && editor) {
+      return registerCopilot(monaco, editor, {
+        endpoint: '/api/copilot',
+        language: 'javascript',
+      });
+    }
+  }, [monaco, editor]);
+
+  return (
+    <Editor
+      language="javascript"
+      onMount={(editor, monaco) => {
+        setMonaco(monaco);
+        setEditor(editor);
+      }}
+    />
+  );
+}
+```
+
+Provide the `endpoint` with the path to the API handler.
+
+<Callout type="info">
+  The `language` in `registerCopilot` is required to enable auto-completion for the specified language.
+</Callout>
+
+### Additional Options
+
+For more advanced customization, refer to the [Copilot Options](/docs/copilot-options) guide.
+
+---
+
+You have now successfully configured AI auto-completion in your Next.js project. Start coding in the editor to experience the auto-completion functionality.
