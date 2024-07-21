@@ -4,12 +4,7 @@ import type {
 } from 'groq-sdk/resources/chat/completions';
 
 import {Endpoint, ExternalContext, Filename, Technologies} from './copilot';
-import {
-  EditorCancellationToken,
-  EditorModel,
-  EditorPosition,
-  EditorRange,
-} from './editor';
+import {EditorModel, EditorPosition, EditorRange} from './editor';
 
 export type CompletionModel = 'llama';
 
@@ -53,7 +48,6 @@ export interface FetchCompletionItemParams {
   externalContext?: ExternalContext;
   model: EditorModel;
   position: EditorPosition;
-  token: EditorCancellationToken;
 }
 
 export type CompletionCache = {

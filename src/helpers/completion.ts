@@ -25,15 +25,7 @@ export const fetchCompletionItem = async ({
   externalContext,
   model,
   position,
-  token,
 }: FetchCompletionItemParams): Promise<string | null> => {
-  const controller = new AbortController();
-
-  if (token.isCancellationRequested) {
-    controller.abort();
-    return null;
-  }
-
   try {
     const {completion} = await HTTP.POST<CompletionResponse, CompletionRequest>(
       endpoint,
@@ -50,7 +42,6 @@ export const fetchCompletionItem = async ({
       {
         headers: {'Content-Type': CONTENT_TYPE_JSON},
         error: 'Error while fetching completion item',
-        signal: controller.signal,
       },
     );
 

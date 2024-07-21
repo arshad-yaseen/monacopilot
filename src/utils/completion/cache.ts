@@ -25,14 +25,18 @@ export const getCompletionCache = (
     );
 
     return (
-      (currentTextBeforeCursorInLine === cache.textBeforeCursorInLine &&
-        cache.range.startLineNumber === position.lineNumber &&
+      // Check if the current text before cursor in line starts with the cached text before cursor
+      currentTextBeforeCursorInLine.startsWith(cache.textBeforeCursorInLine) &&
+      // Ensure crsor is at the start of the cached range
+      ((cache.range.startLineNumber === position.lineNumber &&
         position.column === cache.range.startColumn) ||
-      (cache.completion.startsWith(currentValueInRange) &&
-        cache.range.startLineNumber === position.lineNumber &&
-        position.column >=
-          cache.range.startColumn - currentValueInRange.length &&
-        position.column <= cache.range.endColumn)
+        // Ensure cached completion starts with the current value in cached range
+        (cache.completion.startsWith(currentValueInRange) &&
+          // Ensure the cursor is within the cached range
+          cache.range.startLineNumber === position.lineNumber &&
+          position.column >=
+            cache.range.startColumn - currentValueInRange.length &&
+          position.column <= cache.range.endColumn))
     );
   });
 

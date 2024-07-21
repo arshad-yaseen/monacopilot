@@ -14,7 +14,7 @@ import {
   getCompletionCache,
 } from '../utils/completion';
 
-const DEBOUNCE_DELAY = 200;
+const DEBOUNCE_DELAY = 250;
 
 const debouncedFetchCompletionItem = debounce(
   fetchCompletionItem,
@@ -83,7 +83,6 @@ const handleInlineCompletions = async ({
       text,
       model,
       position,
-      token,
     });
 
     if (completion) {
