@@ -18,7 +18,7 @@ export const registerCopilot = (
   monaco: Monaco,
   editor: StandaloneCodeEditor,
   options: RegisterCopilotOptions,
-): (() => void) | undefined => {
+): (() => void) => {
   try {
     const inlineCompletionsProvider =
       monaco.languages.registerInlineCompletionsProvider(options.language, {
@@ -57,5 +57,8 @@ export const registerCopilot = (
     };
   } catch (error) {
     err(error).editorError('Error while registering Copilot');
+    return () => {
+      clearCompletionCache();
+    };
   }
 };
