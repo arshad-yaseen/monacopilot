@@ -1,11 +1,6 @@
 import {Monaco} from './common';
 import type {CompletionModel} from './completion';
-import {
-  EditorCancellationToken,
-  EditorInlineCompletionContext,
-  EditorModel,
-  EditorPosition,
-} from './editor';
+import {EditorCancellationToken, EditorModel, EditorPosition} from './editor';
 
 export interface CopilotOptions {
   model: CompletionModel | undefined;
@@ -67,7 +62,6 @@ export interface InlineCompletionHandlerParams {
   monaco: Monaco;
   model: EditorModel;
   position: EditorPosition;
-  context: EditorInlineCompletionContext;
   token: EditorCancellationToken;
 
   hasCompletionBeenAccepted: boolean;

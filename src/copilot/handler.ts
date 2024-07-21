@@ -37,8 +37,6 @@ const handleInlineCompletions = async ({
   monaco,
   model,
   position,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  context: _, // Unused
   token,
   hasCompletionBeenAccepted,
   onShowCompletion,
