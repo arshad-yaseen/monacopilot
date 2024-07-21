@@ -12,16 +12,12 @@ const CodeEditor = () => {
   const [editor, setEditor] = useState<StandaloneCodeEditor | null>(null);
 
   useEffect(() => {
-    if (!monaco || !editor) return;
-
-    const unregister = registerCopilot(monaco, editor, {
-      endpoint: '/api/copilot',
-      language: 'javascript',
-    });
-
-    return () => {
-      unregister();
-    };
+    if (monaco && editor) {
+      return registerCopilot(monaco, editor, {
+        endpoint: '/api/copilot',
+        language: 'javascript',
+      });
+    }
   }, [monaco, editor]);
 
   return (
@@ -35,6 +31,16 @@ const CodeEditor = () => {
       theme="vs-dark"
       options={{
         padding: {top: 16},
+        scrollBeyondLastColumn: 0,
+        codeLens: false,
+        minimap: {enabled: false},
+        quickSuggestions: false,
+        folding: false,
+        links: false,
+        fontSize: 14,
+        wordWrap: 'on',
+        automaticLayout: true,
+        formatOnPaste: true,
       }}
     />
   );
