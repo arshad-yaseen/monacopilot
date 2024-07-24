@@ -2,7 +2,7 @@
 
 import {useEffect, useState} from 'react';
 
-import {Editor} from '@monaco-editor/react';
+import Editor from '@monaco-editor/react';
 import {
   registerCopilot,
   type Monaco,
@@ -14,12 +14,16 @@ export default function Home() {
   const [editor, setEditor] = useState<StandaloneCodeEditor | null>(null);
 
   useEffect(() => {
-    if (monaco && editor) {
-      return registerCopilot(monaco, editor, {
-        endpoint: '/api/copilot',
-        language: 'javascript',
-      });
-    }
+    if (!monaco || !editor) return;
+
+    const copilot = registerCopilot(monaco, editor, {
+      endpoint: '/api/copilot',
+      language: 'javascript',
+    });
+
+    return () => {
+      copilot.unregister();
+    };
   }, [monaco, editor]);
 
   return (

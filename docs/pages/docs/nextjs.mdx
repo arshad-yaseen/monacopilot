@@ -62,7 +62,7 @@ Install a wrapper for the Monaco Editor. In this example, we'll use `@monaco-edi
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Editor } from '@monaco-editor/react';
+import Editor from '@monaco-editor/react';
 import { registerCopilot, type Monaco, type StandaloneCodeEditor } from 'monacopilot';
 
 export default function CodeEditor() {
@@ -70,12 +70,16 @@ export default function CodeEditor() {
   const [editor, setEditor] = useState<StandaloneCodeEditor | null>(null);
 
   useEffect(() => {
-    if (monaco && editor) {
-      return registerCopilot(monaco, editor, {
-        endpoint: '/api/copilot',
-        language: 'javascript',
-      });
-    }
+    if (!monaco || !editor) return;
+
+    const copilot = registerCopilot(monaco, editor, {
+      endpoint: '/api/copilot',
+      language: 'javascript',
+    });
+
+    return () => {
+      copilot.unregister();
+    };
   }, [monaco, editor]);
 
   return (

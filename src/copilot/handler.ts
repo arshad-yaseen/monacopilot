@@ -38,7 +38,7 @@ const handleInlineCompletions = async ({
   model,
   position,
   token,
-  hasCompletionBeenAccepted,
+  isCompletionAccepted,
   onShowCompletion,
   options,
 }: InlineCompletionHandlerParams): Promise<EditorInlineCompletionsResult> => {
@@ -71,7 +71,7 @@ const handleInlineCompletions = async ({
 
   // If user accepted the completion, return empty completions
   // This is to prevent immediate unnecessary fetching of new completion from Groq API after user accepts the completion
-  if (hasCompletionBeenAccepted) {
+  if (isCompletionAccepted) {
     return createInlineCompletionResult([]);
   }
 

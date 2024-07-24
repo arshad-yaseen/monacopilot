@@ -1,9 +1,15 @@
 import {err} from '../error';
-import {Monaco, RegisterCopilotOptions, StandaloneCodeEditor} from '../types';
+import {
+  CopilotRegistration,
+  Monaco,
+  RegisterCopilotOptions,
+  StandaloneCodeEditor,
+} from '../types';
+import {noop} from '../utils';
 import {clearCompletionCache} from '../utils/completion';
 import handleInlineCompletions from './handler';
 
-let hasCompletionBeenAccepted = false;
+let isCompletionAccepted = false;
 let isCompletionVisible = false;
 
 /**
@@ -11,14 +17,13 @@ let isCompletionVisible = false;
  * @param monaco The Monaco instance.
  * @param editor The editor instance.
  * @param options The options for the Copilot.
- *
- * @returns A function to unregister the Copilot. Use this to clean up the Copilot.
+ * @returns CopilotRegistration object with an unregister method.
  */
 export const registerCopilot = (
   monaco: Monaco,
   editor: StandaloneCodeEditor,
   options: RegisterCopilotOptions,
-): (() => void) => {
+): CopilotRegistration => {
   try {
     const inlineCompletionsProvider =
       monaco.languages.registerInlineCompletionsProvider(options.language, {
@@ -28,12 +33,11 @@ export const registerCopilot = (
             model,
             position,
             token,
-
-            hasCompletionBeenAccepted,
+            isCompletionAccepted,
             onShowCompletion: () => (isCompletionVisible = true),
             options,
           }),
-        freeInlineCompletions: () => {},
+        freeInlineCompletions: noop,
       });
 
     editor.onKeyDown(event => {
@@ -43,21 +47,21 @@ export const registerCopilot = (
         (event.keyCode === monaco.KeyCode.Tab ||
           (event.keyCode === monaco.KeyCode.RightArrow && event.metaKey))
       ) {
-        hasCompletionBeenAccepted = true;
+        isCompletionAccepted = true;
         isCompletionVisible = false;
       } else {
-        hasCompletionBeenAccepted = false;
+        isCompletionAccepted = false;
       }
     });
 
-    return () => {
+    const unregister = () => {
       inlineCompletionsProvider.dispose();
       clearCompletionCache();
     };
+
+    return {unregister};
   } catch (error) {
     err(error).editorError('Error while registering Copilot');
-    return () => {
-      clearCompletionCache();
-    };
+    return {unregister: noop};
   }
 };

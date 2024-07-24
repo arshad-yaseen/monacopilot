@@ -1,4 +1,9 @@
 /**
+ * A function that does nothing.
+ */
+export const noop = (): void => {};
+
+/**
  * Debounces a function that returns a Promise.
  *
  * @param func - The function to debounce. This should be a function that returns a Promise.

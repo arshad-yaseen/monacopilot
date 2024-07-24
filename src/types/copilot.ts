@@ -58,13 +58,21 @@ export interface RegisterCopilotOptions {
   externalContext?: ExternalContext;
 }
 
+export interface CopilotRegistration {
+  /**
+   * Unregisters the Copilot from the Monaco editor.
+   * This should be called when the Copilot is no longer needed.
+   */
+  unregister: () => void;
+}
+
 export interface InlineCompletionHandlerParams {
   monaco: Monaco;
   model: EditorModel;
   position: EditorPosition;
   token: EditorCancellationToken;
 
-  hasCompletionBeenAccepted: boolean;
+  isCompletionAccepted: boolean;
   onShowCompletion: () => void;
   options: RegisterCopilotOptions;
 }
