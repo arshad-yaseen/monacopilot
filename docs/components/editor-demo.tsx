@@ -49,12 +49,16 @@ const EditorDemo = () => {
   const theme: Theme = resolvedTheme === 'dark' ? 'vs-dark' : 'light';
 
   useEffect(() => {
-    if (monaco && editor) {
-      return registerCopilot(monaco, editor, {
-        endpoint: '/api/copilot',
-        language: 'javascript',
-      });
-    }
+    if (!monaco || !editor) return;
+
+    const copilot = registerCopilot(monaco, editor, {
+      endpoint: '/api/copilot',
+      language: 'javascript',
+    });
+
+    return () => {
+      copilot.unregister();
+    };
   }, [monaco, editor]);
 
   return (
