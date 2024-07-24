@@ -1,7 +1,7 @@
 import {CompletionModel} from '../types';
 
 export const COMPLETION_MODEL_IDS: Record<CompletionModel, string> = {
-  llama: 'llama3-70b-8192',
+  llama: 'llama-3.1-70b-versatile',
 };
 
 export const DEFAULT_COMPLETION_MODEL: CompletionModel = 'llama';
