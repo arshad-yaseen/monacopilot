@@ -13,8 +13,6 @@ const getDescriptionForMode = (mode: CompletionMode): string => {
       return 'filling in the middle of the code';
     case 'completion':
       return 'completing the code';
-    default:
-      return 'completing the code';
   }
 };
 
