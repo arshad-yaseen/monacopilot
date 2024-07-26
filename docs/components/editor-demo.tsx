@@ -18,7 +18,7 @@ const EDITOR_DEFAULTS = {
     overviewRulerLanes: 0,
     scrollBeyondLastLine: false,
     fontFamily: 'var(--font-mono)',
-    fontSize: 15,
+    fontSize: 16,
     scrollbar: {alwaysConsumeMouseWheel: false},
     scrollBeyondLastColumn: 0,
     codeLens: false,
