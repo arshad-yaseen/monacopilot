@@ -62,7 +62,7 @@ const Hero = () => {
         animate={{opacity: 1, y: 0}}
         transition={{duration: 0.4, delay: 0.2}}
         className="text-muted-foreground mt-4 mb-6 text-center">
-        Extended Monaco Editor with AI auto-completion and new themes.
+        AI auto-completion plugin for Monaco Editor, inspired by GitHub Copilot.
       </motion.p>
       <motion.div
         initial={{opacity: 0, y: 6}}
