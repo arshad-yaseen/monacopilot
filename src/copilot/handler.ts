@@ -14,7 +14,7 @@ import {
   getCompletionCache,
 } from '../utils/completion';
 
-const DEBOUNCE_DELAY = 300;
+const DEBOUNCE_DELAY = 350;
 
 const debouncedFetchCompletionItem = debounce(
   fetchCompletionItem,

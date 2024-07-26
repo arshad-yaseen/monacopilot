@@ -9,6 +9,10 @@ import {EditorModel, EditorPosition, EditorRange} from './editor';
 export type CompletionModel = 'llama';
 
 export type GroqCompletionCreateParams = ChatCompletionCreateParamsBase;
+export type GroqCompletionCreateParamsExcludingModelAndMessages = Omit<
+  GroqCompletionCreateParams,
+  'model' | 'messages'
+>;
 export type GroqCompletion = ChatCompletion & {error?: string};
 
 export type LocalPredictionSnippets = Record<string, string>;

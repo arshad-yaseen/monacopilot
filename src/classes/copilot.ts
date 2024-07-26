@@ -1,11 +1,13 @@
 import {
   COMPLETION_MODEL_IDS,
+  DEFAULT_COMPLETION_CREATE_PARAMS,
   DEFAULT_COMPLETION_MODEL,
-  GROQ_API_ENDPOINT,
+  GROQ_COMPLETION_API_ENDPOINT,
 } from '../constants';
 import {err} from '../error';
 import {generateSystemPrompt, generateUserPrompt} from '../helpers';
 import {
+  CompletionMetadata,
   CompletionRequest,
   CompletionResponse,
   CopilotOptions,
@@ -52,7 +54,7 @@ export class Copilot {
       const completion = await HTTP.POST<
         GroqCompletion,
         GroqCompletionCreateParams
-      >(GROQ_API_ENDPOINT, body, {headers});
+      >(GROQ_COMPLETION_API_ENDPOINT, body, {headers});
 
       if (!completion.choices || completion.choices.length === 0) {
         throw new Error('No completion choices received from API');
@@ -70,10 +72,11 @@ export class Copilot {
   }
 
   private createRequestBody(
-    completionMetadata: any,
+    completionMetadata: CompletionMetadata,
     model: string,
   ): GroqCompletionCreateParams {
     return {
+      ...DEFAULT_COMPLETION_CREATE_PARAMS,
       model: COMPLETION_MODEL_IDS[model],
       messages: [
         {role: 'system', content: generateSystemPrompt(completionMetadata)},
