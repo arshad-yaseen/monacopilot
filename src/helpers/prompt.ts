@@ -1,7 +1,7 @@
 import {CompletionMetadata, CompletionMode, Technologies} from '../types';
 import {joinWithAnd} from '../utils';
 
-const CURSOR_PLACEHOLDER = '<cursor>';
+const CURSOR_PLACEHOLDER = '<<CURSOR>>';
 
 /**
  * Gets the proper display name for a programming language.
