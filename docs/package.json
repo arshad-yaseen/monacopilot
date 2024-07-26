@@ -19,7 +19,7 @@
     "copy-to-clipboard": "^3.3.3",
     "framer-motion": "^11.1.7",
     "lucide-react": "^0.376.0",
-    "monacopilot": "^0.9.7",
+    "monacopilot": "^0.9.8",
     "next": "14.2.3",
     "next-themes": "^0.3.0",
     "nextra": "^2.13.4",
