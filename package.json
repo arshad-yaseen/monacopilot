@@ -49,6 +49,13 @@
     "type": "git",
     "url": "https://github.com/arshad-yaseen/monacopilot"
   },
+  "maintainers": [
+    {
+      "name": "Arshad Yaseen",
+      "email": "m@arshadyaseen.com",
+      "url": "https://arshadyaseen.com"
+    }
+  ],
   "license": "MIT",
   "author": "Arshad Yaseen <m@arshadyaseen.com>"
 }
