@@ -1,5 +1,5 @@
 import {CompletionValidator} from '../classes';
-import {err} from '../error';
+import {ErrorContext, handleError} from '../error';
 import {fetchCompletionItem} from '../helpers';
 import {
   EditorInlineCompletionsResult,
@@ -23,14 +23,7 @@ const debouncedFetchCompletionItem = debounce(
 
 /**
  * Handles inline completions for the editor
- * @param monaco - Monaco editor instance
- * @param model - Current editor model
- * @param position - Current cursor position
- * @param context - Inline completion context (unused)
- * @param token - Cancellation token
- * @param hasCompletionBeenAccepted - Whether the completion was accepted
- * @param onShowCompletion - Callback on showing completion
- * @param options - Additional options for completion
+ * @param params - Inline completion handler parameters
  * @returns Promise resolving to EditorInlineCompletionsResult
  */
 const handleInlineCompletions = async ({
@@ -42,49 +35,42 @@ const handleInlineCompletions = async ({
   onShowCompletion,
   options,
 }: InlineCompletionHandlerParams): Promise<EditorInlineCompletionsResult> => {
-  const text = model.getValue();
-  const range = new monaco.Range(
-    position.lineNumber,
-    position.column,
-    position.lineNumber,
-    position.column,
-  );
-
-  // Validate if completions should be provided
   if (!new CompletionValidator(position, model).shouldProvideCompletions()) {
     return createInlineCompletionResult([]);
   }
 
-  // Check if there are cached completions for the context
   const cachedCompletions = getCompletionCache(position, model).map(cache => ({
     insertText: cache.completion,
     range: cache.range,
   }));
+
   if (cachedCompletions.length) {
     onShowCompletion();
     return createInlineCompletionResult(cachedCompletions);
   }
 
-  if (token.isCancellationRequested) {
-    return createInlineCompletionResult([]);
-  }
-
-  // If user accepted the completion, return empty completions
-  // This is to prevent immediate unnecessary fetching of new completion from Groq API after user accepts the completion
-  if (isCompletionAccepted) {
+  // If the token is cancelled or the completion was accepted, return an empty result
+  // This is to prevent immediate completion after the completion was accepted
+  if (token.isCancellationRequested || isCompletionAccepted) {
     return createInlineCompletionResult([]);
   }
 
   try {
     const completion = await debouncedFetchCompletionItem({
       ...options,
-      text,
+      text: model.getValue(),
       model,
       position,
     });
 
     if (completion) {
       const formattedCompletion = formatCompletion(model, position, completion);
+      const range = new monaco.Range(
+        position.lineNumber,
+        position.column,
+        position.lineNumber,
+        position.column,
+      );
       const completionInsertRange = computeCompletionInsertRange(
         formattedCompletion,
         range,
@@ -103,8 +89,8 @@ const handleInlineCompletions = async ({
         {insertText: formattedCompletion, range: completionInsertRange},
       ]);
     }
-  } catch (error) {
-    err(error).completionError('Failed to fetch completion item');
+  } catch (_err) {
+    handleError(_err, ErrorContext.FETCH_COMPLETION_ITEM);
   }
 
   return createInlineCompletionResult([]);

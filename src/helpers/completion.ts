@@ -1,4 +1,4 @@
-import {err} from '../error';
+import {ErrorContext, handleError} from '../error';
 import {
   CompletionMetadata,
   CompletionMode,
@@ -46,8 +46,8 @@ export const fetchCompletionItem = async ({
     );
 
     return completion || null;
-  } catch (error) {
-    err(error).completionError('Error while fetching completion item');
+  } catch (_err) {
+    handleError(_err, ErrorContext.FETCH_COMPLETION_ITEM);
     return null;
   }
 };

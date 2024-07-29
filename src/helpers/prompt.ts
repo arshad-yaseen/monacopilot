@@ -47,13 +47,6 @@ export const generateSystemPrompt = (metadata: CompletionMetadata): string => {
   - If multiple valid completions exist, choose the most likely and idiomatic one.
   - If you cannot provide a meaningful completion, return an empty string.
 
-  ### Formatting Rules:
-  - Do not include any markdown or code block syntax.
-  - Insert newlines after opening brackets ({, [, () and before closing brackets (}, ], )).
-  - Add newlines after commas in multi-line structures.
-  - Do not suggest newlines after spaces or existing newlines.
-  - Match the indentation level of the current line for new lines.
-
   Remember, your role is to act as an extension of the developer's thought process, providing intelligent and contextually appropriate code completions.`;
 };
 

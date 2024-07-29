@@ -1,4 +1,4 @@
-import {err} from '../error';
+import {ErrorContext, handleError} from '../error';
 import {
   CopilotRegistration,
   Disposable,
@@ -69,8 +69,8 @@ export const registerCopilot = (
         isCompletionVisible = false;
       },
     };
-  } catch (error) {
-    err(error).editorError('Error while registering Copilot');
+  } catch (_err) {
+    handleError(_err, ErrorContext.REGISTER_COPILOT);
     return {
       deregister: () => disposables.forEach(disposable => disposable.dispose()),
     };
