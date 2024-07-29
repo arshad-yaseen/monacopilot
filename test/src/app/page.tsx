@@ -22,7 +22,7 @@ export default function Home() {
     });
 
     return () => {
-      copilot.unregister();
+      copilot.deregister();
     };
   }, [monaco, editor]);
 

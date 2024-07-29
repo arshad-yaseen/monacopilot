@@ -78,7 +78,7 @@ export default function CodeEditor() {
     });
 
     return () => {
-      copilot.unregister();
+      copilot.deregister();
     };
   }, [monaco, editor]);
 

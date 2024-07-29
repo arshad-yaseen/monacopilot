@@ -60,10 +60,10 @@ export interface RegisterCopilotOptions {
 
 export interface CopilotRegistration {
   /**
-   * Unregisters the Copilot from the Monaco editor.
+   * Deregisters the Copilot from the Monaco editor.
    * This should be called when the Copilot is no longer needed.
    */
-  unregister: () => void;
+  deregister: () => void;
 }
 
 export interface InlineCompletionHandlerParams {

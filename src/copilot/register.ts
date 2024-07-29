@@ -17,7 +17,7 @@ let isCompletionVisible = false;
  * @param monaco The Monaco instance.
  * @param editor The editor instance.
  * @param options The options for the Copilot.
- * @returns CopilotRegistration object with an unregister method.
+ * @returns CopilotRegistration object with an deregister method.
  */
 export const registerCopilot = (
   monaco: Monaco,
@@ -54,14 +54,14 @@ export const registerCopilot = (
       }
     });
 
-    const unregister = () => {
+    const deregister = () => {
       inlineCompletionsProvider.dispose();
       clearCompletionCache();
     };
 
-    return {unregister};
+    return {deregister};
   } catch (error) {
     err(error).editorError('Error while registering Copilot');
-    return {unregister: noop};
+    return {deregister: noop};
   }
 };

@@ -57,7 +57,7 @@ const EditorDemo = () => {
     });
 
     return () => {
-      copilot.unregister();
+      copilot.deregister();
     };
   }, [monaco, editor]);
 
