@@ -4,11 +4,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {FileIcon, LightningBoltIcon, ShadowIcon} from '@radix-ui/react-icons';
+import {FileIcon, LightningBoltIcon, RocketIcon} from '@radix-ui/react-icons';
 
 const FEATURES = [
   {
-    icon: LightningBoltIcon,
+    icon: RocketIcon,
     title: 'Frameworks Specific Completions',
     description:
       'Get completions based on the frameworks or libraries you are using.',
@@ -20,10 +20,9 @@ const FEATURES = [
       "You can provide other files' code or content and get completions that are relevant to that context.",
   },
   {
-    icon: ShadowIcon,
-    title: '20+ Popular Themes',
-    description:
-      'Choose from a wide range of themes to customize your editor easily.',
+    icon: LightningBoltIcon,
+    title: 'Fast completions',
+    description: 'Get fast completions as you type, acheived by using Groq.',
   },
 ];
 

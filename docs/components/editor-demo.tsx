@@ -65,7 +65,7 @@ const EditorDemo = () => {
     <motion.div
       initial={{opacity: 0, y: 6}}
       animate={{opacity: 1, y: 0}}
-      transition={{duration: 0.4, delay: 0.6}}
+      transition={{duration: 0.4, delay: 0.4}}
       className="rounded-xl my-8 overflow-hidden bg-background border shadow-md shadow-neutral-50 dark:shadow-neutral-900 md:w-[700px] w-full h-[400px]">
       <Editor
         language={EDITOR_DEFAULTS.language}

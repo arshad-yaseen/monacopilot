@@ -6,7 +6,7 @@ import ThemeProvider from "../components/theme-provider.tsx";
 export default function App({ Component, pageProps }) {
   return (
     <ThemeProvider>
-      <main className={cn(font.sans.variable, font.mono.variable, "font-sans")}>
+      <main className={cn(font.mono.variable, "font-sans")}>
         <Component {...pageProps} />
       </main>
     </ThemeProvider>

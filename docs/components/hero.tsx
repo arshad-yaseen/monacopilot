@@ -15,18 +15,18 @@ const Hero = () => {
   const [isAcceptedVisible, setAcceptedVisible] = useState(false);
   const [isCursorHidden, setCursorHidden] = useState(false);
 
-  const githubCopilot = useTypewriter('GitHub Copilot', 100, {
+  const githubCopilot = useTypewriter('AI auto-completion', 100, {
     onComplete: () => {
       const timeouts: ReturnType<typeof setTimeout>[] = [];
 
-      timeouts.push(setTimeout(() => setGhostVisible(true), 100));
+      timeouts.push(setTimeout(() => setGhostVisible(true), 150));
       timeouts.push(
         setTimeout(() => {
           setGhostVisible(false);
           setAcceptedVisible(true);
-        }, 700),
+        }, 500),
       );
-      timeouts.push(setTimeout(() => setCursorHidden(true), 1300));
+      timeouts.push(setTimeout(() => setCursorHidden(true), 1500));
 
       return () => timeouts.forEach(clearTimeout);
     },
@@ -34,40 +34,36 @@ const Hero = () => {
 
   return (
     <section className="w-full flex flex-col items-center container">
-      <motion.h1
-        initial={{opacity: 0}}
-        animate={{opacity: 1}}
-        transition={{duration: 1}}
-        className="md:text-6xl text-5xl font-semibold tracking-tighter text-center relative">
+      <h1 className="md:text-5xl text-5xl font-semibold tracking-tighter text-center relative">
         {githubCopilot}
         {!isAcceptedVisible && <Cursor />}
-        <br />
         {isGhostVisible || isAcceptedVisible ? (
           <motion.span
             initial={{opacity: 0}}
             animate={{opacity: 1}}
             transition={{duration: 0.05}}
             className={cn('text-neutral-950 dark:text-neutral-50', {
-              'text-neutral-400 dark:text-neutral-500': isGhostVisible,
+              'text-neutral-300 dark:text-neutral-400': isGhostVisible,
             })}>
+            {' '}
             for Monaco Editor
           </motion.span>
         ) : (
-          <span className="invisible">for Monaco Editor</span>
+          <span className="invisible"> for Monaco Editor</span>
         )}
         {isAcceptedVisible && !isCursorHidden && <Cursor />}
-      </motion.h1>
+      </h1>
       <motion.p
         initial={{opacity: 0, y: 6}}
         animate={{opacity: 1, y: 0}}
-        transition={{duration: 0.4, delay: 0.2}}
+        transition={{duration: 0.4}}
         className="text-muted-foreground mt-4 mb-6 text-center">
-        AI auto-completion plugin for Monaco Editor, inspired by GitHub Copilot.
+        AI auto-completion plugin for Monaco Editor, inspired by GitHub Copilot
       </motion.p>
       <motion.div
         initial={{opacity: 0, y: 6}}
         animate={{opacity: 1, y: 0}}
-        transition={{duration: 0.4, delay: 0.4}}
+        transition={{duration: 0.4, delay: 0.2}}
         className="flex gap-2">
         <Link
           href="/docs"
@@ -89,7 +85,7 @@ const Hero = () => {
       <motion.div
         initial={{opacity: 0, y: 6}}
         animate={{opacity: 1, y: 0}}
-        transition={{duration: 0.4, delay: 0.8}}
+        transition={{duration: 0.4, delay: 0.6}}
         className="w-full flex items-center justify-center">
         <Snippet value="npm install monacopilot" className="sm:w-fit w-full" />
       </motion.div>
@@ -97,6 +93,6 @@ const Hero = () => {
   );
 };
 
-const Cursor = () => <span className="absolute">|</span>;
+const Cursor = () => <span className="animate-blink absolute">|</span>;
 
 export default Hero;

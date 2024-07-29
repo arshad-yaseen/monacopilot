@@ -78,7 +78,7 @@ const config = {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        blink: 'blink 1s step-start infinite',
+        blink: 'blink 0.9s step-start infinite',
       },
     },
   },
