@@ -11,3 +11,4 @@ export type EditorInlineCompletionContext =
   monaco.languages.InlineCompletionContext;
 export type EditorInlineCompletionsResult =
   monaco.languages.InlineCompletions<monaco.languages.InlineCompletion>;
+export type Disposable = monaco.IDisposable;
