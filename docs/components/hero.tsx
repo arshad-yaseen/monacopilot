@@ -24,7 +24,7 @@ const Hero = () => {
         setTimeout(() => {
           setGhostVisible(false);
           setAcceptedVisible(true);
-        }, 500),
+        }, 800),
       );
       timeouts.push(setTimeout(() => setCursorHidden(true), 1500));
 
@@ -34,16 +34,17 @@ const Hero = () => {
 
   return (
     <section className="w-full flex flex-col items-center container">
-      <h1 className="md:text-5xl text-5xl font-semibold tracking-tighter text-center relative">
+      <h1 className="md:text-6xl text-5xl font-semibold tracking-tighter text-center relative">
         {githubCopilot}
         {!isAcceptedVisible && <Cursor />}
+        <br />
         {isGhostVisible || isAcceptedVisible ? (
           <motion.span
             initial={{opacity: 0}}
             animate={{opacity: 1}}
             transition={{duration: 0.05}}
             className={cn('text-neutral-950 dark:text-neutral-50', {
-              'text-neutral-300 dark:text-neutral-400': isGhostVisible,
+              'text-neutral-400 dark:text-neutral-500': isGhostVisible,
             })}>
             {' '}
             for Monaco Editor
@@ -93,6 +94,6 @@ const Hero = () => {
   );
 };
 
-const Cursor = () => <span className="animate-blink absolute">|</span>;
+const Cursor = () => <span className="absolute">|</span>;
 
 export default Hero;
