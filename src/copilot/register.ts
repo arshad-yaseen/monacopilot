@@ -30,7 +30,7 @@ export const registerCopilot = (
   try {
     const inlineCompletionsProvider =
       monaco.languages.registerInlineCompletionsProvider(options.language, {
-        provideInlineCompletions: async (model, position, _, token) =>
+        provideInlineCompletions: (model, position, _, token) =>
           handleInlineCompletions({
             monaco,
             model,
