@@ -43,7 +43,7 @@ export interface RegisterCopilotOptions {
   /**
    * The technologies (libraries, frameworks, etc.) you want to use for the completion.
    * This can provide technology-specific completions.
-   * If you don't specify a technology, the completion will be specific to the language (provided as the `language` prop).
+   * If you don't specify a technology, the completion will be specific to the language (provided as the `language`).
    *
    * @example
    * ['react', 'nextjs', 'tailwindcss', 'tanstack/react-query']
