@@ -1,6 +1,5 @@
 export const NAME = 'Monacopilot';
-export const DESCRIPTION =
-  'Extended Monaco Editor with AI auto-completion and new themes for React.';
+export const DESCRIPTION = 'AI auto-completion for Monaco Editor.';
 export const GITHUB_REPO_URL = 'https://github.com/arshad-yaseen/monacopilot';
 export const GITHUB_REPO_NAME = 'arshad-yaseen/monacopilot';
 export const DOCS_REPO_BASE_URL =

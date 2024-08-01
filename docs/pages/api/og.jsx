@@ -4,9 +4,9 @@ export const config = {
   runtime: 'edge',
 };
 
-const font = fetch(
-  new URL('./SpaceGrotesk-SemiBold.ttf', import.meta.url),
-).then(res => res.arrayBuffer());
+const font = fetch(new URL('./Mona-Sans.woff2', import.meta.url)).then(res =>
+  res.arrayBuffer(),
+);
 
 export default async function (req) {
   const inter = await font;
