@@ -58,41 +58,97 @@ Set up an API handler to manage auto-completion requests.
 
 Install a wrapper for the Monaco Editor. In this example, we'll use `@monaco-editor/react`.
 
-```tsx
+<Tabs items={["Method 1", "Method 2"]}>
+  <Tabs.Tab title="Method 1">
+```jsx
 'use client';
 
-import { useEffect, useState } from 'react';
-import Editor from '@monaco-editor/react';
-import { registerCopilot, type Monaco, type StandaloneCodeEditor } from 'monacopilot';
+import {useEffect, useState} from 'react';
 
-export default function CodeEditor() {
-  const [monaco, setMonaco] = useState<Monaco | null>(null);
-  const [editor, setEditor] = useState<StandaloneCodeEditor | null>(null);
+import MonacoEditor from '@monaco-editor/react';
+import {
+  registerCopilot,
+  type Monaco,
+  type StandaloneCodeEditor,
+} from 'monacopilot';
+
+const LANGUAGE = 'javascript';
+const COPILOT_ENDPOINT = '/api/copilot';
+
+export default function JavaScriptEditor() {
+  const [editorInstance, setEditorInstance] = useState<StandaloneCodeEditor | null>(null);
+  const [monacoInstance, setMonacoInstance] = useState<Monaco | null>(null);
 
   useEffect(() => {
-    if (!monaco || !editor) return;
+    if (!monacoInstance || !editorInstance) return;
 
-    const copilot = registerCopilot(monaco, editor, {
-      endpoint: '/api/copilot',
-      language: 'javascript',
-    });
+    const copilotRegistration = registerCopilot(
+      monacoInstance,
+      editorInstance,
+      {
+        endpoint: COPILOT_ENDPOINT,
+        language: LANGUAGE,
+      },
+    );
 
     return () => {
-      copilot.deregister();
+      copilotRegistration.deregister();
     };
-  }, [monaco, editor]);
+  }, [monacoInstance, editorInstance]);
 
   return (
-    <Editor
-      language="javascript"
+    <MonacoEditor
+      language={LANGUAGE}
       onMount={(editor, monaco) => {
-        setMonaco(monaco);
-        setEditor(editor);
+        setEditorInstance(editor);
+        setMonacoInstance(monaco);
       }}
     />
   );
 }
 ```
+  </Tabs.Tab>
+  <Tabs.Tab title="Method 2">
+```tsx
+'use client';
+
+import {useCallback, useEffect, useRef} from 'react';
+
+import MonacoEditor from '@monaco-editor/react';
+import {
+  registerCopilot,
+  type CopilotRegistration,
+  type Monaco,
+  type StandaloneCodeEditor,
+} from 'monacopilot';
+
+const LANGUAGE = 'javascript';
+const COPILOT_ENDPOINT = '/api/copilot';
+
+export default function JavaScriptEditor() {
+  const copilotRegistration = useRef<CopilotRegistration | null>(null);
+
+  const onEditorMount = useCallback(
+    (editor: StandaloneCodeEditor, monaco: Monaco) => {
+      copilotRegistration.current = registerCopilot(monaco, editor, {
+        endpoint: COPILOT_ENDPOINT,
+        language: LANGUAGE,
+      });
+    },
+    [],
+  );
+
+  useEffect(() => {
+    return () => {
+      copilotRegistration.current?.deregister();
+    };
+  }, []);
+
+  return <MonacoEditor language={LANGUAGE} onMount={onEditorMount} />;
+}
+```
+  </Tabs.Tab>
+</Tabs>
 
 Provide the `endpoint` with the path to the API handler.
 

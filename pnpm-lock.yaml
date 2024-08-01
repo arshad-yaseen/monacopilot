@@ -56,9 +56,6 @@ importers:
 
   docs:
     dependencies:
-      '@monaco-editor/react':
-        specifier: ^4.6.0
-        version: 4.6.0(monaco-editor@0.50.0)(react-dom@18.3.1)(react@18.3.1)
       '@radix-ui/react-icons':
         specifier: ^1.3.0
         version: 1.3.0(react@18.3.1)
@@ -83,12 +80,9 @@ importers:
       lucide-react:
         specifier: ^0.376.0
         version: 0.376.0(react@18.3.1)
-      monacopilot:
-        specifier: ^0.9.10
-        version: link:..
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.4)(react-dom@18.3.1)(react@18.3.1)
+        version: 14.2.3(react-dom@18.3.1)(react@18.3.1)
       next-themes:
         specifier: ^0.3.0
         version: 0.3.0(react-dom@18.3.1)(react@18.3.1)
@@ -151,6 +145,9 @@ importers:
         specifier: ^18
         version: 18.3.1(react@18.3.1)
     devDependencies:
+      '@shikijs/monaco':
+        specifier: ^1.12.0
+        version: 1.12.0
       '@types/node':
         specifier: ^20
         version: 20.12.7
@@ -172,6 +169,9 @@ importers:
       postcss:
         specifier: ^8
         version: 8.4.38
+      shiki:
+        specifier: ^1.12.0
+        version: 1.12.0
       tailwindcss:
         specifier: ^3.3.0
         version: 3.4.3
@@ -1749,6 +1749,18 @@ packages:
     resolution: {integrity: sha512-hw437iINopmQuxWPSUEvqE56NCPsiU8N4AYtfHmJFckclktzK9YQJieD3XkDCDH4OjL+C7zgPUh73R/nrcHrqw==}
     dev: true
 
+  /@shikijs/core@1.12.0:
+    resolution: {integrity: sha512-mc1cLbm6UQ8RxLc0dZES7v5rkH+99LxQp/ZvTqV3NLyYsO/fD6JhEflP1H5b2SDq9gI0+0G36AVZWxvounfR9w==}
+    dependencies:
+      '@types/hast': 3.0.4
+    dev: true
+
+  /@shikijs/monaco@1.12.0:
+    resolution: {integrity: sha512-kePwWf3h4qbVFqF2Mc9t66VDZE1/PFvTjD0moWpRySXCSnKcOKgqFx3wPcOqa7OOy6nxCxR/pOXRSbDnd3ZY+A==}
+    dependencies:
+      '@shikijs/core': 1.12.0
+    dev: true
+
   /@sindresorhus/is@5.6.0:
     resolution: {integrity: sha512-TV7t8GKYaJWsn00tFDqBw8+Uqmr8A0fRU1tvTQhyZzGv0sJCGRQL3JGMI3ucuKo3XIZdUP+Lx7/gh2t3lewy7g==}
     engines: {node: '>=14.16'}
@@ -1866,7 +1878,6 @@ packages:
     resolution: {integrity: sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ==}
     dependencies:
       '@types/unist': 3.0.2
-    dev: false
 
   /@types/http-cache-semantics@4.0.4:
     resolution: {integrity: sha512-1m0bIFVc7eJWyve9S0RnuRgcQqF/Xd5QsUZAZeQFr1Q3/p9JWoQQEqmVy+DPTNpGXwhgIetAoYF8JSc33q29QA==}
@@ -1951,7 +1962,6 @@ packages:
 
   /@types/unist@3.0.2:
     resolution: {integrity: sha512-dqId9J8K/vGi5Zr7oo212BGii5m3q5Hxlkwy3WpYuKPklmBEvsbMYYyLxAQpSffdLl/gdW0XUpKWFvYmyoWCoQ==}
-    dev: false
 
   /@typescript-eslint/eslint-plugin@7.7.1(@typescript-eslint/parser@7.13.1)(eslint@8.57.0)(typescript@5.4.5):
     resolution: {integrity: sha512-KwfdWXJBOviaBVhxO3p5TJiLpNuh2iyXyjmWN0f1nU87pwyvfS0EmjC6ukQVYVFJd/K1+0NWGPDXiyEyQorn0Q==}
@@ -6375,7 +6385,7 @@ packages:
       react: '>=16.0.0'
       react-dom: '>=16.0.0'
     dependencies:
-      next: 14.2.3(@babel/core@7.24.4)(react-dom@18.3.1)(react@18.3.1)
+      next: 14.2.3(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
     dev: false
@@ -6387,7 +6397,7 @@ packages:
       react: '*'
       react-dom: '*'
     dependencies:
-      next: 14.2.3(@babel/core@7.24.4)(react-dom@18.3.1)(react@18.3.1)
+      next: 14.2.3(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
     dev: false
@@ -6441,7 +6451,7 @@ packages:
       - babel-plugin-macros
     dev: false
 
-  /next@14.2.3(@babel/core@7.24.4)(react-dom@18.3.1)(react@18.3.1):
+  /next@14.2.3(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-dowFkFTR8v79NPJO4QsBUtxv0g9BrS/phluVpMAt2ku7H+cbcBJlopXjkWlwxrk/xGqMemr7JkGPGemPrLLX7A==}
     engines: {node: '>=18.17.0'}
     hasBin: true
@@ -6467,7 +6477,7 @@ packages:
       postcss: 8.4.31
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      styled-jsx: 5.1.1(@babel/core@7.24.4)(react@18.3.1)
+      styled-jsx: 5.1.1(react@18.3.1)
     optionalDependencies:
       '@next/swc-darwin-arm64': 14.2.3
       '@next/swc-darwin-x64': 14.2.3
@@ -6500,7 +6510,7 @@ packages:
       git-url-parse: 13.1.1
       intersection-observer: 0.12.2
       match-sorter: 6.3.4
-      next: 14.2.3(@babel/core@7.24.4)(react-dom@18.3.1)(react@18.3.1)
+      next: 14.2.3(react-dom@18.3.1)(react@18.3.1)
       next-seo: 6.5.0(next@14.2.3)(react-dom@18.3.1)(react@18.3.1)
       next-themes: 0.2.1(next@14.2.3)(react-dom@18.3.1)(react@18.3.1)
       nextra: 2.13.4(next@14.2.3)(react-dom@18.3.1)(react@18.3.1)
@@ -6530,7 +6540,7 @@ packages:
       gray-matter: 4.0.3
       katex: 0.16.10
       lodash.get: 4.4.2
-      next: 14.2.3(@babel/core@7.24.4)(react-dom@18.3.1)(react@18.3.1)
+      next: 14.2.3(react-dom@18.3.1)(react@18.3.1)
       next-mdx-remote: 4.4.1(react-dom@18.3.1)(react@18.3.1)
       p-limit: 3.1.0
       react: 18.3.1
@@ -7670,6 +7680,13 @@ packages:
       vscode-textmate: 8.0.0
     dev: false
 
+  /shiki@1.12.0:
+    resolution: {integrity: sha512-BuAxWOm5JhRcbSOl7XCei8wGjgJJonnV0oipUupPY58iULxUGyHhW5CF+9FRMuM1pcJ5cGEJGll1LusX6FwpPA==}
+    dependencies:
+      '@shikijs/core': 1.12.0
+      '@types/hast': 3.0.4
+    dev: true
+
   /side-channel@1.0.6:
     resolution: {integrity: sha512-fDW/EZ6Q9RiO8eFG8Hj+7u/oW+XrPTIChwCOM2+th2A6OblDtYYIpve9m+KvI9Z4C9qSEXlaGR6bTEYHReuglA==}
     engines: {node: '>= 0.4'}
@@ -7933,6 +7950,23 @@ packages:
         optional: true
     dependencies:
       '@babel/core': 7.24.4
+      client-only: 0.0.1
+      react: 18.3.1
+    dev: false
+
+  /styled-jsx@5.1.1(react@18.3.1):
+    resolution: {integrity: sha512-pW7uC1l4mBZ8ugbiZrcIsiIvVx1UmTfw7UkC3Um2tmfUq9Bhk8IiyEIPl6F8agHgjzku6j0xQEZbfA5uSgSaCw==}
+    engines: {node: '>= 12.0.0'}
+    peerDependencies:
+      '@babel/core': '*'
+      babel-plugin-macros: '*'
+      react: '>= 16.8.0 || 17.x.x || ^18.0.0-0'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      babel-plugin-macros:
+        optional: true
+    dependencies:
       client-only: 0.0.1
       react: 18.3.1
     dev: false
