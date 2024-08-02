@@ -2,8 +2,6 @@
 
 [Monaco Editor](https://microsoft.github.io/monaco-editor/) with AI auto-completion, inspired by [GitHub Copilot](https://github.com/features/copilot/).
 
-https://github.com/user-attachments/assets/42956a0f-1fbf-4701-b240-db79b6e7f174
-
 ## Documentation
 
 [https://monacopilot.vercel.app/docs](https://monacopilot.vercel.app/docs)
