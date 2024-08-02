@@ -5,7 +5,7 @@ const EditorDemo = () => {
         autoPlay
         loop
         muted
-        className="w-fit h-full rounded-xl border dark:border-neutral-800 shadow-lg">
+        className="h-full rounded-xl border dark:border-neutral-800">
         <source src="/monacopilot-demo.mp4" type="video/mp4" />
       </video>
     </div>

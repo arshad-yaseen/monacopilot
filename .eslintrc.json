@@ -7,11 +7,8 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:react/jsx-runtime",
-    "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:react-hooks/recommended"
+    "plugin:@typescript-eslint/eslint-recommended"
   ],
   "parserOptions": {
     "ecmaFeatures": {
@@ -26,19 +23,12 @@
     "build/",
     "/tsup.config.ts",
     "test/",
-    "docs/",
-    "themes/"
+    "docs/"
   ],
   "plugins": ["@typescript-eslint"],
   "rules": {
     "@typescript-eslint/no-unused-vars": "warn",
-    "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
     "@typescript-eslint/no-explicit-any": "off"
-  },
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
   }
 }
