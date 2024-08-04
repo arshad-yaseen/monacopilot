@@ -75,15 +75,15 @@ import {
 const LANGUAGE = 'javascript';
 
 export default function JavaScriptEditor() {
-  const [editorInstance, setEditorInstance] = useState<StandaloneCodeEditor | null>(null);
-  const [monacoInstance, setMonacoInstance] = useState<Monaco | null>(null);
+  const [editor, setEditor] = useState<StandaloneCodeEditor | null>(null);
+  const [monaco, setMonaco] = useState<Monaco | null>(null);
 
   useEffect(() => {
-    if (!monacoInstance || !editorInstance) return;
+    if (!monaco || !editor) return;
 
     const copilot = registerCopilot(
-      monacoInstance,
-      editorInstance,
+      monaco,
+      editor,
       {
         endpoint: '/api/copilot',
         language: LANGUAGE,
@@ -93,14 +93,14 @@ export default function JavaScriptEditor() {
     return () => {
       copilot.deregister();
     };
-  }, [monacoInstance, editorInstance]);
+  }, [monaco, editor]);
 
   return (
     <MonacoEditor
       language={LANGUAGE}
       onMount={(editor, monaco) => {
-        setEditorInstance(editor);
-        setMonacoInstance(monaco);
+        setEditor(editor);
+        setMonaco(monaco);
       }}
     />
   );
@@ -122,15 +122,14 @@ import {
 } from 'monacopilot';
 
 const LANGUAGE = 'javascript';
-const COPILOT_ENDPOINT = '/api/copilot';
 
 export default function JavaScriptEditor() {
-  const copilotRegistration = useRef<CopilotRegistration | null>(null);
+  const copilotRef = useRef<CopilotRegistration | null>(null);
 
   const onEditorMount = useCallback(
     (editor: StandaloneCodeEditor, monaco: Monaco) => {
-      copilotRegistration.current = registerCopilot(monaco, editor, {
-        endpoint: COPILOT_ENDPOINT,
+      copilotRef.current = registerCopilot(monaco, editor, {
+        endpoint: '/api/copilot',
         language: LANGUAGE,
       });
     },
@@ -139,7 +138,7 @@ export default function JavaScriptEditor() {
 
   useEffect(() => {
     return () => {
-      copilotRegistration.current?.deregister();
+      copilotRef.current?.deregister();
     };
   }, []);
 
