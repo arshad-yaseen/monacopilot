@@ -34,7 +34,7 @@ const Features = () => {
           Features
         </h2>
       </div>
-      <div className="w-full absolute top-[10rem] h-44 bg-background blur-2xl" />
+      <div className="w-full absolute top-[10rem] h-44 bg-background dark:bg-neutral-900 blur-2xl" />
       <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 container relative -mt-16">
         {FEATURES.map((feature, index) => (
           <Card key={index} className="rounded-xl h-full">
