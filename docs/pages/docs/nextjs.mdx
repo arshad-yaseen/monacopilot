@@ -73,7 +73,6 @@ import {
 } from 'monacopilot';
 
 const LANGUAGE = 'javascript';
-const COPILOT_ENDPOINT = '/api/copilot';
 
 export default function JavaScriptEditor() {
   const [editorInstance, setEditorInstance] = useState<StandaloneCodeEditor | null>(null);
@@ -82,17 +81,17 @@ export default function JavaScriptEditor() {
   useEffect(() => {
     if (!monacoInstance || !editorInstance) return;
 
-    const copilotRegistration = registerCopilot(
+    const copilot = registerCopilot(
       monacoInstance,
       editorInstance,
       {
-        endpoint: COPILOT_ENDPOINT,
+        endpoint: '/api/copilot',
         language: LANGUAGE,
       },
     );
 
     return () => {
-      copilotRegistration.deregister();
+      copilot.deregister();
     };
   }, [monacoInstance, editorInstance]);
 
