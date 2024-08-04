@@ -1,6 +1,6 @@
 const EditorDemo = () => {
   return (
-    <div className="aspect-video h-[500px] p-10 flex items-center justify-center">
+    <div className="aspect-video lg:h-[500px] lg:p-10 sm:py-10 py-6 flex items-center justify-center">
       <video
         autoPlay
         loop
