@@ -31,23 +31,7 @@ export const generateSystemPrompt = (metadata: CompletionMetadata): string => {
     metadata.editorState.completionMode,
   );
   const langText = language ? ` ${language}` : '';
-  return `You are an advanced AI coding assistant with expertise in ${description} for${langText} programming. Your goal is to provide accurate, efficient, and context-aware code completions.
-
-  ### Instructions:
-  - Provide only the requested code completion without any additional explanations or markdown.
-  - Ensure your suggestions seamlessly integrate with the existing code structure and style.
-  - Maintain consistent indentation and formatting with the surrounding code.
-  - Start your completion exactly at the cursor position (${CURSOR_PLACEHOLDER}).
-  - Do not repeat any existing code before or after the cursor.
-  - Respect the project's coding conventions, naming styles, and design patterns.
-  - Consider the broader context of the file and project when making suggestions.
-  - Optimize for readability, maintainability, and performance where applicable.
-  - Handle potential errors and edge cases in your completions when appropriate.
-  - Utilize modern language features and best practices specific to${langText}.
-  - If multiple valid completions exist, choose the most likely and idiomatic one.
-  - If you cannot provide a meaningful completion, return an empty string.
-
-  Remember, your role is to act as an extension of the developer's thought process, providing intelligent and contextually appropriate code completions.`;
+  return `You are an advanced AI coding assistant with expertise in ${description} for${langText} programming. Your goal is to provide accurate, efficient, and context-aware code completions. Remember, your role is to act as an extension of the developer's thought process, providing intelligent and contextually appropriate code completions.`;
 };
 
 /**
@@ -74,37 +58,33 @@ export const generateUserPrompt = (metadata: CompletionMetadata): string => {
     filename,
     language,
     technologies,
-    editorState,
+    editorState: {completionMode},
     textBeforeCursor,
     textAfterCursor,
     externalContext,
   } = metadata;
-  const modeDescription = getDescriptionForMode(editorState.completionMode);
+  const modeDescription = getDescriptionForMode(completionMode);
   const fileNameText = filename
     ? `the file named "${filename}"`
     : 'a larger project';
 
-  let prompt = `You are tasked with ${modeDescription} for a code snippet. The code is part of ${fileNameText}.
+  let prompt = `You are tasked with ${modeDescription} for a code snippet. The code is part of ${fileNameText}.\n\n`;
 
-  Your objective is to:
-  1. Analyze the provided code snippet and its context.
-  2. Generate a completion that seamlessly integrates with the existing code.
-  3. Ensure your completion is syntactically correct and semantically meaningful.
-  4. Adhere to the project's coding style and conventions.
-  5. Consider the broader context of the file and any provided external context.
+  prompt += formatTechnology(technologies, language);
 
-  ${formatTechnology(technologies, language)}
-
-  Specific instructions:
+  prompt += `\n\nHere are the details about how the completion should be generated:
   - The cursor position is marked with '${CURSOR_PLACEHOLDER}'.
   - Your completion must start exactly at the cursor position.
   - Do not repeat any code that appears before or after the cursor.
-  - Ensure your completion does not introduce any syntactical or logical errors.
-  - If filling in the middle, replace '${CURSOR_PLACEHOLDER}' entirely with your completion.
-  - If completing the code, start from '${CURSOR_PLACEHOLDER}' and provide a logical continuation.
-  - Consider any imports, function definitions, or class structures in the surrounding code.
-  - If applicable, use appropriate error handling and follow language-specific best practices.
-  - Optimize for readability and performance where possible.
+  - Ensure your completion does not introduce any syntactical or logical errors.\n`;
+
+  if (completionMode === 'fill-in-the-middle') {
+    prompt += `  - If filling in the middle, replace '${CURSOR_PLACEHOLDER}' entirely with your completion.\n`;
+  } else if (completionMode === 'completion') {
+    prompt += `  - If completing the code, start from '${CURSOR_PLACEHOLDER}' and provide a logical continuation.\n`;
+  }
+
+  prompt += `  - Optimize for readability and performance where possible.
 
   Remember, output only the necessary completion code without any additional explanations or content.
 
