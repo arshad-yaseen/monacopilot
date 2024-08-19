@@ -8,4 +8,3 @@ export const WEBSITE_URL = 'https://monacopilot.vercel.app';
 export const WEBSITE_DOMAIN = 'monacopilot.vercel.app';
 export const CREATOR_NAME = 'Arshad Yaseen';
 export const CREATOR_TWITTER_URL = 'https://twitter.com/arshadyaseeen';
-export const GROQ_HOMEPAGE_URL = 'https://groq.com';

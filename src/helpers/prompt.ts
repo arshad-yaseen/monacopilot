@@ -86,7 +86,7 @@ export const generateUserPrompt = (metadata: CompletionMetadata): string => {
 
   prompt += `  - Optimize for readability and performance where possible.
 
-  Remember, output only the necessary completion code without any additional explanations or content.
+  Remember to output only the completion code without any additional explanation, and do not wrap it in markdown code syntax, such as three backticks (\`\`\`).
 
   Here's the code snippet for completion:
 

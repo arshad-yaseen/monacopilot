@@ -13,7 +13,7 @@ import {getTextAfterCursor, getTextBeforeCursor, HTTP} from '../utils';
 const CONTENT_TYPE_JSON = 'application/json';
 
 /**
- * Fetches a completion item from the groq API.
+ * Fetches a completion item from the API.
  * @param {FetchCompletionItemParams} params - The parameters for fetching the completion item.
  * @returns {Promise<string | null>} The completion item or null if an error occurs or the request is aborted.
  */
@@ -25,7 +25,6 @@ export const fetchCompletionItem = async ({
   externalContext,
   model,
   position,
-  abortSignal,
 }: FetchCompletionItemParams): Promise<string | null> => {
   try {
     const {completion} = await HTTP.POST<CompletionResponse, CompletionRequest>(
@@ -43,7 +42,6 @@ export const fetchCompletionItem = async ({
       {
         headers: {'Content-Type': CONTENT_TYPE_JSON},
         error: 'Error while fetching completion item',
-        signal: abortSignal,
       },
     );
 

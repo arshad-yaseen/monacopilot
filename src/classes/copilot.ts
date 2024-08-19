@@ -22,7 +22,7 @@ import {
 import {HTTP, joinWithAnd} from '../utils';
 
 /**
- * Copilot class for handling completions using the Groq API.
+ * Copilot class for handling completions using the API.
  */
 export class Copilot {
   private readonly apiKey: string;
@@ -31,22 +31,25 @@ export class Copilot {
 
   /**
    * Initializes the Copilot with an API key and optional configuration.
-   * @param {string} apiKey - The Groq API key.
+   * @param {string} apiKey - The API key.
    * @param {CopilotOptions<CompletionProvider>} [options] - Optional parameters to configure the completion model.
    * @throws {Error} If the API key is not provided.
    */
   constructor(apiKey: string, options?: CopilotOptions) {
+    const model = options?.model || DEFAULT_COMPLETION_MODEL;
+    const provider = options?.provider || DEFAULT_COMPLETION_PROVIDER;
+
     if (!apiKey) {
-      throw new Error('Groq API key is required to initialize Copilot.');
+      throw new Error(`Please provide ${provider} API key.`);
     }
 
     this.apiKey = apiKey;
-    this.model = options?.model || DEFAULT_COMPLETION_MODEL;
-    this.provider = options?.provider || DEFAULT_COMPLETION_PROVIDER;
+    this.model = model;
+    this.provider = provider;
   }
 
   /**
-   * Sends a completion request to Groq API and returns the completion.
+   * Sends a completion request to API and returns the completion.
    * @param {CompletionRequest} params - The metadata required to generate the completion.
    * @returns {Promise<CompletionResponse>} The completed text snippet or an error.
    */
@@ -70,8 +73,11 @@ export class Copilot {
 
       return {completion: completion.choices[0].message.content};
     } catch (_err) {
-      handleError(_err, ErrorContext.COPILOT_COMPLETION_FETCH);
-      return {error: 'Failed to fetch completion', completion: null};
+      const errorDetails = handleError(
+        _err,
+        ErrorContext.COPILOT_COMPLETION_FETCH,
+      );
+      return {error: errorDetails.message, completion: null};
     }
   }
 

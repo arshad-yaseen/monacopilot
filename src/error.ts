@@ -5,10 +5,12 @@ export class ErrorHandler {
     return ErrorHandler.instance;
   }
 
-  public handleError(error: unknown, context: ErrorContext): void {
+  public handleError(error: unknown, context: ErrorContext): ErrorDetails {
     const errorDetails = this.getErrorDetails(error);
 
     this.logError(context, errorDetails);
+
+    return errorDetails;
   }
 
   private getErrorDetails(error: unknown): ErrorDetails {
@@ -89,6 +91,9 @@ interface ErrorDetails {
   context?: any;
 }
 
-export const handleError = (error: unknown, context: ErrorContext): void => {
-  ErrorHandler.getInstance().handleError(error, context);
+export const handleError = (
+  error: unknown,
+  context: ErrorContext,
+): ErrorDetails => {
+  return ErrorHandler.getInstance().handleError(error, context);
 };

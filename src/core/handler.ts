@@ -13,7 +13,7 @@ import {
   formatCompletion,
 } from '../utils/completion';
 
-const DEBOUNCE_DELAY = 350;
+const DEBOUNCE_DELAY = 300;
 
 const debouncedFetchCompletionItem = debounce(
   fetchCompletionItem,
@@ -57,17 +57,15 @@ const handleInlineCompletions = async ({
   }
 
   try {
-    const abortController = new AbortController();
-    token.onCancellationRequested(() => {
-      abortController.abort();
-    });
-
     const completionPromise = debouncedFetchCompletionItem({
       ...options,
       text: model.getValue(),
       model,
       position,
-      abortSignal: abortController.signal,
+    });
+
+    token.onCancellationRequested(() => {
+      debouncedFetchCompletionItem.cancel();
     });
 
     const completion = await completionPromise;

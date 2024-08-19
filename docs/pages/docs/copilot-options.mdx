@@ -35,17 +35,23 @@ By providing external context, Copilot can offer more intelligent suggestions. F
   Note: Including more external context may slightly increase completion costs.
 </Callout>
 
-### Changing the Default Model
+### Changing the Provider and Model
 
-You can specify a different model for completions by setting the `model` parameter in the `Copilot` constructor.
+You can specify a different provider and model for completions by setting the `provider` and `model` parameters in the `Copilot` constructor.
 
 ```javascript
-const copilot = new Copilot(process.env.GROQ_API_KEY, { 
-    model: 'falcon' 
+const copilot = new Copilot(process.env.OPENAI_API_KEY, { 
+    provider: 'openai',
+    model: 'gpt-4o'
 });
 ```
 
-The default model is `llama` if not specified.
+The default provider is `groq` and the default model is `llama-3-70b` if not specified.
+
+| Provider | Model       | Description                                        | Average Response Time  |
+|----------|-------------|----------------------------------------------------|------------------------|
+| Groq     | llama-3-70b | Fast and efficient, suitable for most tasks        | < 0.5 second           |
+| OpenAI   | gpt-4o      | Highly intelligent, ideal for complex completions  | 1-2 seconds            |
 
 ### Filename
 

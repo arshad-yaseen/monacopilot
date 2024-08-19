@@ -73,9 +73,6 @@ export const registerCopilot = (
     return {
       deregister: () => {
         disposables.forEach(disposable => disposable.dispose());
-        console.warn(
-          'Copilot deregistered due to an error during registration.',
-        );
       },
     };
   }

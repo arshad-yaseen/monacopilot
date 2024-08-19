@@ -44,6 +44,7 @@ export function formatCompletion(
     .removeDuplicatesFromStartOfCompletion()
     .preventDuplicateLines()
     .removeInvalidLineBreaks()
+    .removeMarkdownCodeSyntax()
     .trimStart()
     .build();
 }

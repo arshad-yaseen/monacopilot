@@ -12,6 +12,8 @@ This guide walks you through integrating AI auto-completion into your Next.js pr
 <Steps>
 ###  Setting Up the API Key
 
+In this example, we use Groq as the provider.
+
 Start by obtaining an API key from the [Groq console](https://console.groq.com/keys). Once you have your API key, define it as an environment variable in your project:
 
 ```bash filename=".env.local"
@@ -53,7 +55,7 @@ Set up an API handler to manage auto-completion requests.
   </Tabs.Tab>
 </Tabs>
 
-Monacopilot use this API endpoint to fetch completions for the editor.
+The default provider is `Groq` and the default model is `llama-3-70b`. See the [Changing the Provider and Model](/docs/copilot-options#changing-the-provider-and-model) guide for more details.
 
 ### Install Monaco Editor
 

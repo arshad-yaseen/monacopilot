@@ -91,6 +91,17 @@ export class CompletionFormatter {
     return this;
   }
 
+  public removeMarkdownCodeSyntax(): CompletionFormatter {
+    const markdownCodeRegex = /^```[\s\S]*?\n([\s\S]*?)\n```$/;
+    const match = this.formattedCompletion.match(markdownCodeRegex);
+
+    if (match) {
+      this.formattedCompletion = match[1].trim();
+    }
+
+    return this;
+  }
+
   public trimStart(): CompletionFormatter {
     const firstNonSpaceIndex = this.formattedCompletion.search(/\S/);
     if (firstNonSpaceIndex > this.cursorPosition.column - 1) {

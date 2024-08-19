@@ -10,12 +10,13 @@ import {
 import {Endpoint, ExternalContext, Filename, Technologies} from './copilot';
 import {EditorModel, EditorPosition, EditorRange} from './monaco';
 
-export type CompletionModel = 'llama' | 'gpt-4o-mini';
+export type CompletionModel = 'llama-3-70b' | 'gpt-4o';
 export type CompletionProvider = 'openai' | 'groq';
 
-export type CompletionCreateParams =
-  | OpenAIChatCompletionCreateParamsBase
-  | GroqChatCompletionCreateParamsBase;
+export type CompletionCreateParams = Omit<
+  OpenAIChatCompletionCreateParamsBase | GroqChatCompletionCreateParamsBase,
+  'frequence_penalty'
+>;
 export type Completion = OpenAIChatCompletion | GroqChatCompletion;
 
 export type CompletionCreateParamsExcludingModelAndMessages = Omit<
@@ -60,7 +61,6 @@ export interface FetchCompletionItemParams {
   externalContext?: ExternalContext;
   model: EditorModel;
   position: EditorPosition;
-  abortSignal: AbortSignal;
 }
 
 export type CompletionCacheItem = {
