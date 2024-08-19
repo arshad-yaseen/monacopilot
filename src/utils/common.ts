@@ -8,30 +8,45 @@ export const noop = (): void => {};
  *
  * @param func - The function to debounce. This should be a function that returns a Promise.
  * @param delay - The delay in milliseconds to wait before considering that typing has stopped.
- * @returns A debounced version of the function.
+ * @returns A debounced function with a cancel method.
  */
-export const debounce = <T extends (...args: any[]) => Promise<any>>(
+export function debounce<T extends (...args: any[]) => any>(
   func: T,
-  delay: number = 1000,
-): ((...funcArgs: Parameters<T>) => Promise<ReturnType<T>>) => {
-  let timerRef: ReturnType<typeof setTimeout> | null = null;
+  wait: number,
+): {
+  (...args: Parameters<T>): Promise<ReturnType<T>>;
+  cancel: () => void;
+} {
+  let timeout: NodeJS.Timeout | null = null;
+  let reject: ((reason?: any) => void) | null = null;
 
   const debouncedFunc = (...args: Parameters<T>): Promise<ReturnType<T>> => {
-    if (timerRef) {
-      clearTimeout(timerRef);
-    }
+    return new Promise((resolve, rejectPromise) => {
+      if (timeout) {
+        clearTimeout(timeout);
+        if (reject) reject('Cancelled');
+      }
 
-    return new Promise<ReturnType<T>>((resolve, reject) => {
-      timerRef = setTimeout(() => {
-        func(...args)
-          .then(resolve)
-          .catch(reject);
-      }, delay);
+      reject = rejectPromise;
+
+      timeout = setTimeout(() => {
+        resolve(func(...args));
+        reject = null;
+      }, wait);
     });
   };
 
+  debouncedFunc.cancel = () => {
+    if (timeout) {
+      clearTimeout(timeout);
+      if (reject) reject('Cancelled');
+      timeout = null;
+      reject = null;
+    }
+  };
+
   return debouncedFunc;
-};
+}
 
 /**
  * Joins an array of strings with commas and 'and' for the last element.

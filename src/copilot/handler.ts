@@ -49,19 +49,23 @@ const handleInlineCompletions = async ({
     return createInlineCompletionResult(cachedCompletions);
   }
 
-  // If the token is cancelled or the completion was accepted, return an empty result
-  // This is to prevent immediate completion after the completion was accepted
   if (token.isCancellationRequested || isCompletionAccepted) {
     return createInlineCompletionResult([]);
   }
 
   try {
-    const completion = await debouncedFetchCompletionItem({
+    const completionPromise = debouncedFetchCompletionItem({
       ...options,
       text: model.getValue(),
       model,
       position,
     });
+
+    token.onCancellationRequested(() => {
+      debouncedFetchCompletionItem.cancel();
+    });
+
+    const completion = await completionPromise;
 
     if (completion) {
       const formattedCompletion = formatCompletion(model, position, completion);
@@ -89,8 +93,10 @@ const handleInlineCompletions = async ({
         {insertText: formattedCompletion, range: completionInsertRange},
       ]);
     }
-  } catch (_err) {
-    handleError(_err, ErrorContext.FETCH_COMPLETION_ITEM);
+  } catch (err) {
+    if (err !== 'Cancelled') {
+      handleError(err, ErrorContext.FETCH_COMPLETION_ITEM);
+    }
   }
 
   return createInlineCompletionResult([]);
