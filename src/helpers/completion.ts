@@ -25,6 +25,7 @@ export const fetchCompletionItem = async ({
   externalContext,
   model,
   position,
+  abortSignal,
 }: FetchCompletionItemParams): Promise<string | null> => {
   try {
     const {completion} = await HTTP.POST<CompletionResponse, CompletionRequest>(
@@ -42,12 +43,20 @@ export const fetchCompletionItem = async ({
       {
         headers: {'Content-Type': CONTENT_TYPE_JSON},
         error: 'Error while fetching completion item',
+        signal: abortSignal,
       },
     );
 
-    return completion || null;
-  } catch (_err) {
-    handleError(_err, ErrorContext.FETCH_COMPLETION_ITEM);
+    return completion;
+  } catch (err) {
+    if (
+      err instanceof Error &&
+      (err.message === 'Cancelled' || err.name === 'AbortError')
+    )
+      return null;
+
+    handleError(err, ErrorContext.FETCH_COMPLETION_ITEM);
+
     return null;
   }
 };
@@ -64,7 +73,7 @@ export const constructCompletionMetadata = ({
   externalContext,
 }: Omit<
   FetchCompletionItemParams,
-  'text' | 'endpoint' | 'token'
+  'text' | 'endpoint' | 'token' | 'abortSignal'
 >): CompletionMetadata => {
   const completionMode = determineCompletionMode(position, model);
 

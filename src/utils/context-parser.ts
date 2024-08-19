@@ -1,11 +1,10 @@
-// Import constants and types
-import {PUNCTUATIONS} from '../../constants';
-import {EditorModel, EditorPosition} from '../../types';
+import {PUNCTUATIONS} from '../constants';
+import {EditorModel, EditorPosition} from '../types';
 import {
   getCharAfterCursor,
   getTextAfterCursorInLine,
   getTextBeforeCursorInLine,
-} from '../editor';
+} from './editor';
 
 /**
  * Checks if there is whitespace after the cursor.

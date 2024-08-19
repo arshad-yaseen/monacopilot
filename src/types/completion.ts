@@ -1,19 +1,27 @@
 import type {
-  ChatCompletion,
-  ChatCompletionCreateParamsBase,
+  ChatCompletion as GroqChatCompletion,
+  ChatCompletionCreateParamsBase as GroqChatCompletionCreateParamsBase,
 } from 'groq-sdk/resources/chat/completions';
+import {
+  ChatCompletion as OpenAIChatCompletion,
+  ChatCompletionCreateParamsBase as OpenAIChatCompletionCreateParamsBase,
+} from 'openai/resources/chat/completions';
 
 import {Endpoint, ExternalContext, Filename, Technologies} from './copilot';
-import {EditorModel, EditorPosition, EditorRange} from './editor';
+import {EditorModel, EditorPosition, EditorRange} from './monaco';
 
-export type CompletionModel = 'llama';
+export type CompletionModel = 'llama' | 'gpt-4o-mini';
+export type CompletionProvider = 'openai' | 'groq';
 
-export type GroqCompletionCreateParams = ChatCompletionCreateParamsBase;
-export type GroqCompletionCreateParamsExcludingModelAndMessages = Omit<
-  GroqCompletionCreateParams,
+export type CompletionCreateParams =
+  | OpenAIChatCompletionCreateParamsBase
+  | GroqChatCompletionCreateParamsBase;
+export type Completion = OpenAIChatCompletion | GroqChatCompletion;
+
+export type CompletionCreateParamsExcludingModelAndMessages = Omit<
+  CompletionCreateParams,
   'model' | 'messages'
 >;
-export type GroqCompletion = ChatCompletion & {error?: string};
 
 export type LocalPredictionSnippets = Record<string, string>;
 export interface LocalPrediction {
@@ -25,7 +33,7 @@ export interface CompletionRequest {
   completionMetadata: CompletionMetadata;
 }
 export interface CompletionResponse {
-  completion?: string;
+  completion: string | null;
   error?: string;
 }
 
@@ -52,9 +60,10 @@ export interface FetchCompletionItemParams {
   externalContext?: ExternalContext;
   model: EditorModel;
   position: EditorPosition;
+  abortSignal: AbortSignal;
 }
 
-export type CompletionCache = {
+export type CompletionCacheItem = {
   completion: string;
   range: EditorRange;
   textBeforeCursorInLine: string;

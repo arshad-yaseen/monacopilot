@@ -1,9 +1,14 @@
-import {Monaco} from './common';
-import type {CompletionModel} from './completion';
-import {EditorCancellationToken, EditorModel, EditorPosition} from './editor';
+import type {CompletionModel, CompletionProvider} from './completion';
+import {
+  EditorCancellationToken,
+  EditorModel,
+  EditorPosition,
+  Monaco,
+} from './monaco';
 
 export interface CopilotOptions {
-  model: CompletionModel | undefined;
+  provider?: CompletionProvider;
+  model?: CompletionModel;
 }
 
 export type Endpoint = string;
@@ -57,7 +62,6 @@ export interface RegisterCopilotOptions {
    */
   externalContext?: ExternalContext;
 }
-
 export interface CopilotRegistration {
   /**
    * Deregisters the Copilot from the Monaco editor.

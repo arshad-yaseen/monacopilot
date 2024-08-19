@@ -10,13 +10,13 @@ export const noop = (): void => {};
  * @param delay - The delay in milliseconds to wait before considering that typing has stopped.
  * @returns A debounced function with a cancel method.
  */
-export function debounce<T extends (...args: any[]) => any>(
+export const debounce = <T extends (...args: any[]) => any>(
   func: T,
   wait: number,
 ): {
   (...args: Parameters<T>): Promise<ReturnType<T>>;
   cancel: () => void;
-} {
+} => {
   let timeout: NodeJS.Timeout | null = null;
   let reject: ((reason?: any) => void) | null = null;
 
@@ -46,7 +46,7 @@ export function debounce<T extends (...args: any[]) => any>(
   };
 
   return debouncedFunc;
-}
+};
 
 /**
  * Joins an array of strings with commas and 'and' for the last element.

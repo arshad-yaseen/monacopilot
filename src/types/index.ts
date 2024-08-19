@@ -1,4 +1,3 @@
-export * from './common';
-export * from './editor';
+export * from './monaco';
 export * from './completion';
 export * from './copilot';

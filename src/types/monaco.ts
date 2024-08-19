@@ -1,5 +1,7 @@
 import * as monaco from 'monaco-editor';
 
+export type Monaco = typeof monaco;
+
 export type StandaloneCodeEditor = monaco.editor.IStandaloneCodeEditor;
 export type EditorModel = monaco.editor.ITextModel;
 export type EditorPosition = monaco.IPosition;

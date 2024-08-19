@@ -7,8 +7,7 @@ import {
   StandaloneCodeEditor,
 } from '../types';
 import {noop} from '../utils';
-import {clearCompletionCache} from '../utils/completion';
-import handleInlineCompletions from './handler';
+import handleInlineCompletions, {completionCache} from './handler';
 
 let isCompletionAccepted = false;
 let isCompletionVisible = false;
@@ -64,15 +63,20 @@ export const registerCopilot = (
     return {
       deregister: () => {
         disposables.forEach(disposable => disposable.dispose());
-        clearCompletionCache();
+        completionCache.clearCompletionCache();
         isCompletionAccepted = false;
         isCompletionVisible = false;
       },
     };
-  } catch (_err) {
-    handleError(_err, ErrorContext.REGISTER_COPILOT);
+  } catch (err) {
+    handleError(err, ErrorContext.REGISTER_COPILOT);
     return {
-      deregister: () => disposables.forEach(disposable => disposable.dispose()),
+      deregister: () => {
+        disposables.forEach(disposable => disposable.dispose());
+        console.warn(
+          'Copilot deregistered due to an error during registration.',
+        );
+      },
     };
   }
 };

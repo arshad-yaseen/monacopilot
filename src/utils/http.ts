@@ -65,7 +65,6 @@ const POST = <ResponseType, BodyType>(
 
 /**
  * HTTP utility functions for making GET and POST requests.
- * @module HTTP
  * @example
  * import {HTTP} from './utils/http';
  *

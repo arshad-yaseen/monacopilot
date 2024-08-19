@@ -1,14 +1,5 @@
 import {Copilot} from './classes';
-import {registerCopilot} from './copilot/register';
-import type {
-  CompletionRequest,
-  CompletionResponse,
-  CopilotOptions,
-  CopilotRegistration,
-  Monaco,
-  RegisterCopilotOptions,
-  StandaloneCodeEditor,
-} from './types';
+import {registerCopilot} from './core/register';
 
 export {registerCopilot, Copilot};
 
@@ -20,4 +11,4 @@ export type {
   CopilotOptions,
   CompletionRequest,
   CompletionResponse,
-};
+} from './types';

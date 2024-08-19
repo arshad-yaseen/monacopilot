@@ -1,25 +1,38 @@
-import {EditorModel, EditorPosition} from '../../types';
-import {getTextBeforeCursor} from '../../utils';
+import {EditorModel, EditorPosition} from '../types';
+import {getTextBeforeCursor} from '../utils';
 
 /**
  * This class is responsible for formatting code completions
  * to ensure that they are displayed correctly in the editor.
  */
 export class CompletionFormatter {
-  private formattedCompletion = '';
-  private originalCompletion = '';
-  private readonly model: EditorModel;
-  private readonly cursorPosition: EditorPosition;
-  private readonly lineCount: number;
+  private readonly model: Readonly<EditorModel>;
+  private readonly cursorPosition: Readonly<EditorPosition>;
+  private originalCompletion: string = '';
+  private formattedCompletion: string = '';
 
-  constructor(model: EditorModel, position: EditorPosition) {
+  private constructor(
+    model: Readonly<EditorModel>,
+    position: Readonly<EditorPosition>,
+  ) {
     this.model = model;
     this.cursorPosition = position;
-    this.lineCount = model.getLineCount();
   }
 
-  // Remove blank lines from the completion
-  private ignoreBlankLines(): this {
+  public static create(
+    model: Readonly<EditorModel>,
+    position: Readonly<EditorPosition>,
+  ): CompletionFormatter {
+    return new CompletionFormatter(model, position);
+  }
+
+  public setCompletion(completion: string): CompletionFormatter {
+    this.originalCompletion = completion;
+    this.formattedCompletion = completion;
+    return this;
+  }
+
+  public ignoreBlankLines(): CompletionFormatter {
     if (
       this.formattedCompletion.trimStart() === '' &&
       this.originalCompletion !== '\n'
@@ -29,17 +42,14 @@ export class CompletionFormatter {
     return this;
   }
 
-  // Normalize code or text by trimming whitespace
   private normalise(text: string): string {
     return text?.trim() ?? '';
   }
 
-  // Remove duplicates from the start of the completion
-  private removeDuplicatesFromStartOfCompletion(): this {
+  public removeDuplicatesFromStartOfCompletion(): CompletionFormatter {
     const before = getTextBeforeCursor(this.cursorPosition, this.model).trim();
     const completion = this.normalise(this.formattedCompletion);
 
-    // Handle start duplicates
     let startOverlapLength = 0;
     const maxStartLength = Math.min(completion.length, before.length);
     for (let length = 1; length <= maxStartLength; length++) {
@@ -52,7 +62,6 @@ export class CompletionFormatter {
       }
     }
 
-    // Apply the trimming
     if (startOverlapLength > 0) {
       this.formattedCompletion =
         this.formattedCompletion.slice(startOverlapLength);
@@ -61,12 +70,11 @@ export class CompletionFormatter {
     return this;
   }
 
-  // Prevent suggesting completions that duplicate existing lines
-  private preventDuplicateLines(): this {
+  public preventDuplicateLines(): CompletionFormatter {
     for (
       let nextLineIndex = this.cursorPosition.lineNumber + 1;
       nextLineIndex < this.cursorPosition.lineNumber + 3 &&
-      nextLineIndex < this.lineCount;
+      nextLineIndex < this.model.getLineCount();
       nextLineIndex++
     ) {
       const line = this.model.getLineContent(nextLineIndex);
@@ -78,14 +86,12 @@ export class CompletionFormatter {
     return this;
   }
 
-  // Remove any trailing line breaks
-  public removeInvalidLineBreaks(): this {
+  public removeInvalidLineBreaks(): CompletionFormatter {
     this.formattedCompletion = this.formattedCompletion.trimEnd();
     return this;
   }
 
-  // Remove leading whitespace that would push the completion past the cursor position
-  private trimStart(): this {
+  public trimStart(): CompletionFormatter {
     const firstNonSpaceIndex = this.formattedCompletion.search(/\S/);
     if (firstNonSpaceIndex > this.cursorPosition.column - 1) {
       this.formattedCompletion =
@@ -94,17 +100,7 @@ export class CompletionFormatter {
     return this;
   }
 
-  // Apply all formatting rules to the completion
-  public format(completion: string): string {
-    this.originalCompletion = completion;
-    this.formattedCompletion = completion;
-
-    this.ignoreBlankLines()
-      .removeDuplicatesFromStartOfCompletion()
-      .preventDuplicateLines()
-      .removeInvalidLineBreaks()
-      .trimStart();
-
+  public build(): string {
     return this.formattedCompletion;
   }
 }

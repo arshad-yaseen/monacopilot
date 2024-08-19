@@ -1,4 +1,5 @@
 import {CompletionValidator} from '../classes';
+import {CompletionCache} from '../classes/completion-cache';
 import {ErrorContext, handleError} from '../error';
 import {fetchCompletionItem} from '../helpers';
 import {
@@ -7,11 +8,9 @@ import {
 } from '../types';
 import {debounce, getTextBeforeCursorInLine} from '../utils';
 import {
-  addCompletionCache,
   computeCompletionInsertRange,
   createInlineCompletionResult,
   formatCompletion,
-  getCompletionCache,
 } from '../utils/completion';
 
 const DEBOUNCE_DELAY = 350;
@@ -20,6 +19,8 @@ const debouncedFetchCompletionItem = debounce(
   fetchCompletionItem,
   DEBOUNCE_DELAY,
 );
+
+export const completionCache = new CompletionCache();
 
 /**
  * Handles inline completions for the editor
@@ -39,10 +40,12 @@ const handleInlineCompletions = async ({
     return createInlineCompletionResult([]);
   }
 
-  const cachedCompletions = getCompletionCache(position, model).map(cache => ({
-    insertText: cache.completion,
-    range: cache.range,
-  }));
+  const cachedCompletions = completionCache
+    .getCompletionCache(position, model)
+    .map(cache => ({
+      insertText: cache.completion,
+      range: cache.range,
+    }));
 
   if (cachedCompletions.length) {
     onShowCompletion();
@@ -54,15 +57,17 @@ const handleInlineCompletions = async ({
   }
 
   try {
+    const abortController = new AbortController();
+    token.onCancellationRequested(() => {
+      abortController.abort();
+    });
+
     const completionPromise = debouncedFetchCompletionItem({
       ...options,
       text: model.getValue(),
       model,
       position,
-    });
-
-    token.onCancellationRequested(() => {
-      debouncedFetchCompletionItem.cancel();
+      abortSignal: abortController.signal,
     });
 
     const completion = await completionPromise;
@@ -82,7 +87,7 @@ const handleInlineCompletions = async ({
         model,
       );
 
-      addCompletionCache({
+      completionCache.addCompletionCache({
         completion: formattedCompletion,
         range: completionInsertRange,
         textBeforeCursorInLine: getTextBeforeCursorInLine(position, model),
@@ -94,9 +99,13 @@ const handleInlineCompletions = async ({
       ]);
     }
   } catch (err) {
-    if (err !== 'Cancelled') {
-      handleError(err, ErrorContext.FETCH_COMPLETION_ITEM);
+    if (
+      err instanceof Error &&
+      (err.message === 'Cancelled' || err.name === 'AbortError')
+    ) {
+      return createInlineCompletionResult([]);
     }
+    handleError(err, ErrorContext.FETCH_COMPLETION_ITEM);
   }
 
   return createInlineCompletionResult([]);

@@ -27,6 +27,7 @@
     "eslint": "^8.57.0",
     "groq-sdk": "^0.3.2",
     "monaco-editor": "^0.50.0",
+    "openai": "^4.56.0",
     "prettier": "^3.2.5",
     "release-it": "^17.2.1",
     "tsup": "^8.0.2",

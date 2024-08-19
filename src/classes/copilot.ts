@@ -1,21 +1,25 @@
 import {
+  COMPLETION_API_ENDPOINT,
   COMPLETION_MODEL_IDS,
+  COMPLETION_PROVIDER_MODEL_MAP,
   DEFAULT_COMPLETION_CREATE_PARAMS,
   DEFAULT_COMPLETION_MODEL,
-  GROQ_COMPLETION_API_ENDPOINT,
+  DEFAULT_COMPLETION_PROVIDER,
 } from '../constants';
 import {ErrorContext, handleError} from '../error';
 import {generateSystemPrompt, generateUserPrompt} from '../helpers';
 import {
+  Completion,
+  CompletionCreateParams,
   CompletionMetadata,
   CompletionModel,
+  CompletionProvider,
   CompletionRequest,
   CompletionResponse,
   CopilotOptions,
-  GroqCompletion,
-  GroqCompletionCreateParams,
+  Endpoint,
 } from '../types';
-import {HTTP} from '../utils';
+import {HTTP, joinWithAnd} from '../utils';
 
 /**
  * Copilot class for handling completions using the Groq API.
@@ -23,11 +27,12 @@ import {HTTP} from '../utils';
 export class Copilot {
   private readonly apiKey: string;
   private readonly model: CompletionModel;
+  private readonly provider: CompletionProvider;
 
   /**
    * Initializes the Copilot with an API key and optional configuration.
    * @param {string} apiKey - The Groq API key.
-   * @param {CopilotOptions} [options] - Optional parameters to configure the completion model.
+   * @param {CopilotOptions<CompletionProvider>} [options] - Optional parameters to configure the completion model.
    * @throws {Error} If the API key is not provided.
    */
   constructor(apiKey: string, options?: CopilotOptions) {
@@ -37,6 +42,7 @@ export class Copilot {
 
     this.apiKey = apiKey;
     this.model = options?.model || DEFAULT_COMPLETION_MODEL;
+    this.provider = options?.provider || DEFAULT_COMPLETION_PROVIDER;
   }
 
   /**
@@ -50,11 +56,13 @@ export class Copilot {
     try {
       const body = this.createRequestBody(completionMetadata);
       const headers = this.createHeaders();
+      const endpoint = this.getEndpoint();
 
-      const completion = await HTTP.POST<
-        GroqCompletion,
-        GroqCompletionCreateParams
-      >(GROQ_COMPLETION_API_ENDPOINT, body, {headers});
+      const completion = await HTTP.POST<Completion, CompletionCreateParams>(
+        endpoint,
+        body,
+        {headers},
+      );
 
       if (!completion.choices?.length) {
         throw new Error('No completion choices received from API');
@@ -63,16 +71,29 @@ export class Copilot {
       return {completion: completion.choices[0].message.content};
     } catch (_err) {
       handleError(_err, ErrorContext.COPILOT_COMPLETION_FETCH);
-      return {error: 'Failed to generate completion'};
+      return {error: 'Failed to fetch completion', completion: null};
     }
+  }
+
+  private getEndpoint(): Endpoint {
+    return COMPLETION_API_ENDPOINT[this.provider];
+  }
+
+  private getModelId(): string {
+    if (!COMPLETION_PROVIDER_MODEL_MAP[this.provider].includes(this.model)) {
+      throw new Error(
+        `Model ${this.model} is not supported by ${this.provider} provider. Supported models: ${joinWithAnd(COMPLETION_PROVIDER_MODEL_MAP[this.provider])}`,
+      );
+    }
+    return COMPLETION_MODEL_IDS[this.model];
   }
 
   private createRequestBody(
     completionMetadata: CompletionMetadata,
-  ): GroqCompletionCreateParams {
+  ): CompletionCreateParams {
     return {
       ...DEFAULT_COMPLETION_CREATE_PARAMS,
-      model: COMPLETION_MODEL_IDS[this.model],
+      model: this.getModelId(),
       messages: [
         {role: 'system', content: generateSystemPrompt(completionMetadata)},
         {role: 'user', content: generateUserPrompt(completionMetadata)},

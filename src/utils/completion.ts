@@ -1,15 +1,12 @@
-import {CompletionFormatter} from '../../classes';
+import {CompletionFormatter} from '../classes';
 import {
   EditorInlineCompletion,
   EditorInlineCompletionsResult,
   EditorModel,
   EditorPosition,
   EditorRange,
-} from '../../types';
-import {getCharAfterCursor, getLastLineColumnCount} from '../editor';
-
-export * from './cache';
-export * from './context-parser';
+} from '../types';
+import {getCharAfterCursor, getLastLineColumnCount} from './editor';
 
 /**
  * Computes the range to insert the completion in the editor.
@@ -36,14 +33,20 @@ export const computeCompletionInsertRange = (
   };
 };
 
-export const formatCompletion = (
+export function formatCompletion(
   model: EditorModel,
   position: EditorPosition,
   completion: string,
-): string => {
-  const formatter = new CompletionFormatter(model, position);
-  return formatter.format(completion);
-};
+): string {
+  return CompletionFormatter.create(model, position)
+    .setCompletion(completion)
+    .ignoreBlankLines()
+    .removeDuplicatesFromStartOfCompletion()
+    .preventDuplicateLines()
+    .removeInvalidLineBreaks()
+    .trimStart()
+    .build();
+}
 
 export const createInlineCompletionResult = (
   items: EditorInlineCompletion[],

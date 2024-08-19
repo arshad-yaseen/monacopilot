@@ -1,12 +1,5 @@
-import {getLogger, Logger} from './logger';
-
 export class ErrorHandler {
   private static readonly instance: ErrorHandler = new ErrorHandler();
-  private readonly logger: Logger;
-
-  private constructor() {
-    this.logger = getLogger();
-  }
 
   public static getInstance(): ErrorHandler {
     return ErrorHandler.instance;
@@ -14,7 +7,8 @@ export class ErrorHandler {
 
   public handleError(error: unknown, context: ErrorContext): void {
     const errorDetails = this.getErrorDetails(error);
-    this.logger.error(`${context}: ${errorDetails.message}`, errorDetails);
+
+    this.logError(context, errorDetails);
   }
 
   private getErrorDetails(error: unknown): ErrorDetails {
@@ -23,12 +17,61 @@ export class ErrorHandler {
         message: error.message,
         name: error.name,
         stack: error.stack,
+        context: (error as any).context,
       };
     }
     return {
       message: String(error),
       name: 'UnknownError',
     };
+  }
+
+  private styleMessage(message: string, context: ErrorContext): string {
+    const timestamp = this.getTimestamp();
+    const githubMessage =
+      'Please create an issue on GitHub if the issue persists.';
+    const boxWidth = 80;
+    const horizontalLine = '─'.repeat(boxWidth - 2);
+    const topBorder = `┌${horizontalLine}┐`;
+    const bottomBorder = `└${horizontalLine}┘`;
+
+    const wrapText = (text: string, maxWidth: number): string[] => {
+      const words = text.split(' ');
+      const lines: string[] = [];
+      let currentLine = '';
+
+      words.forEach(word => {
+        if ((currentLine + word).length > maxWidth) {
+          lines.push(currentLine.trim());
+          currentLine = '';
+        }
+        currentLine += word + ' ';
+      });
+
+      if (currentLine.trim()) {
+        lines.push(currentLine.trim());
+      }
+
+      return lines;
+    };
+
+    const wrappedMessage = wrapText(message, boxWidth - 4);
+
+    const messageBox = [
+      topBorder,
+      ...wrappedMessage.map(line => `│ ${line.padEnd(boxWidth - 4)} │`),
+      bottomBorder,
+    ].join('\n');
+
+    return `\n\x1b[1m\x1b[37m[${timestamp}]\x1b[0m \x1b[31m[${context}]\x1b[0m \x1b[2m${githubMessage}\x1b[0m\n${messageBox}\n`;
+  }
+
+  private logError(context: ErrorContext, details: ErrorDetails): void {
+    console.error(this.styleMessage(details.message, context));
+  }
+
+  private getTimestamp(): string {
+    return new Date().toISOString();
   }
 }
 
@@ -43,6 +86,7 @@ interface ErrorDetails {
   message: string;
   stack?: string;
   name: string;
+  context?: any;
 }
 
 export const handleError = (error: unknown, context: ErrorContext): void => {
