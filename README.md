@@ -1,4 +1,4 @@
-![Hero Image]([https://i.postimg.cc/FFfTy7Tv/Frame-1.png](https://i.postimg.cc/PrsQ1KLb/Frame-1.png))
+![Hero Image](https://i.postimg.cc/PrsQ1KLb/Frame-1.png)
 
 ## Table of Contents
 
