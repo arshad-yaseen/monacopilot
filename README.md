@@ -129,6 +129,8 @@ registerCopilot(monaco, editor, {
 });
 ```
 
+Now, the completions will be more relevant to utilities.
+
 ### Completions for Specific Technologies
 
 Enable completions tailored to specific technologies by using the `technologies` option.
@@ -140,6 +142,7 @@ registerCopilot(monaco, editor, {
 });
 ```
 
+This configuration will provide completions relevant to React, Next.js, and Tailwind CSS.
 
 ## Guides
 
