@@ -27,13 +27,3 @@ Then, run:
 ```bash
 pnpm dev:test
 ```
-
-#### Contributing to the Documentation
-
-If you wish to contribute to the documentation, use the following command:
-
-```bash
-pnpm dev:docs
-```
-
-Edit the `.mdx` files in the docs directory, and the documentation will refresh instantly, reflecting your changes.
