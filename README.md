@@ -6,6 +6,7 @@
 
 ## Table of Contents
 
+- [Demo](#demo)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Configuration Options](#configuration-options)
@@ -18,6 +19,10 @@
 - [Cost Overview](#cost-overview)
 - [FAQ](#faq)
 - [Contributing](#contributing)
+
+## Demo
+
+https://github.com/user-attachments/assets/4af4e24a-1b05-4bee-84aa-1521ad7098cd
 
 ## Installation
 
