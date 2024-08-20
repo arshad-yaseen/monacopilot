@@ -6,7 +6,7 @@ import {
   EditorInlineCompletionsResult,
   InlineCompletionHandlerParams,
 } from '../types';
-import {debounce, getTextBeforeCursorInLine} from '../utils';
+import {asyncDebounce, getTextBeforeCursorInLine} from '../utils';
 import {
   computeCompletionInsertRange,
   createInlineCompletionResult,
@@ -15,7 +15,7 @@ import {
 
 const DEBOUNCE_DELAY = 300;
 
-const debouncedFetchCompletionItem = debounce(
+const debouncedFetchCompletionItem = asyncDebounce(
   fetchCompletionItem,
   DEBOUNCE_DELAY,
 );

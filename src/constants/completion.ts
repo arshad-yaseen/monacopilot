@@ -7,6 +7,7 @@ import {
 export const COMPLETION_MODEL_IDS: Record<CompletionModel, string> = {
   'llama-3-70b': 'llama3-70b-8192',
   'gpt-4o': 'gpt-4o-2024-08-06',
+  'gpt-4o-mini': 'gpt-4o-mini',
 };
 
 export const COMPLETION_PROVIDER_MODEL_MAP: Record<
@@ -14,7 +15,7 @@ export const COMPLETION_PROVIDER_MODEL_MAP: Record<
   CompletionModel[]
 > = {
   groq: ['llama-3-70b'],
-  openai: ['gpt-4o'],
+  openai: ['gpt-4o', 'gpt-4o-mini'],
 };
 
 export const DEFAULT_COMPLETION_MODEL: CompletionModel = 'llama-3-70b';

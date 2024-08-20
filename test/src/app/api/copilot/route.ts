@@ -1,8 +1,8 @@
 import {Copilot} from 'monacopilot';
 
-const copilot = new Copilot(process.env.OPENAI_API_KEY, {
+const copilot = new Copilot(process.env.OPENAI_API_KEY!, {
   provider: 'openai',
-  model: 'gpt-4o',
+  model: 'gpt-4o-mini',
 });
 
 export async function POST(req: Request) {

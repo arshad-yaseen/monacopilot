@@ -4,13 +4,16 @@
 export const noop = (): void => {};
 
 /**
- * Debounces a function that returns a Promise.
+ * Creates a debounced version of an asynchronous function.
  *
- * @param func - The function to debounce. This should be a function that returns a Promise.
- * @param delay - The delay in milliseconds to wait before considering that typing has stopped.
- * @returns A debounced function with a cancel method.
+ * @template T - The type of the function to be debounced
+ * @param {T} func - The function to debounce
+ * @param {number} wait - The number of milliseconds to delay
+ * @returns {Object} An object containing the debounced function and a cancel method
+ * @property {(...args: Parameters<T>) => Promise<ReturnType<T>>} - The debounced function
+ * @property {() => void} cancel - A method to cancel the pending execution
  */
-export const debounce = <T extends (...args: any[]) => any>(
+export const asyncDebounce = <T extends (...args: any[]) => any>(
   func: T,
   wait: number,
 ): {
