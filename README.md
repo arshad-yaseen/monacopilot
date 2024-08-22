@@ -6,6 +6,7 @@
 
 ## Table of Contents
 
+- [Examples](#examples)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Configuration Options](#configuration-options)
@@ -13,7 +14,6 @@
   - [Changing the Provider and Model](#changing-the-provider-and-model)
   - [Filename](#filename)
   - [Completions for Specific Technologies](#completions-for-specific-technologies)
-- [Examples](#examples)
 - [Cost Overview](#cost-overview)
 - [FAQ](#faq)
 - [Contributing](#contributing)
@@ -21,6 +21,13 @@
 ## Demo
 
 https://github.com/user-attachments/assets/4af4e24a-1b05-4bee-84aa-1521ad7098cd
+
+## Examples
+
+Here are some examples of how to use Monacopilot in different project setups:
+
+- [Next.js App Router](examples/nextjs/app-router)
+- [Next.js Pages Router](examples/nextjs/pages-router)
 
 ## Installation
 
@@ -146,11 +153,6 @@ registerCopilot(monaco, editor, {
 ```
 
 This configuration will provide completions relevant to React, Next.js, and Tailwind CSS.
-
-## Examples
-
-- [Next.js App Router](examples/nextjs/app-router)
-- [Next.js Pages Router](examples/nextjs/pages-router)
 
 ## Cost Overview
 
