@@ -26,8 +26,8 @@ https://github.com/user-attachments/assets/4af4e24a-1b05-4bee-84aa-1521ad7098cd
 
 Here are some examples of how to use Monacopilot in different project setups:
 
-- [Next.js App Router](examples/nextjs/app-router)
-- [Next.js Pages Router](examples/nextjs/pages-router)
+- [Next.js App Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/app-router)
+- [Next.js Pages Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/pages-router)
 
 ## Installation
 
