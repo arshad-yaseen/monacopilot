@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import {useEffect, useState} from 'react';
 
-import MonacoEditor from "@monaco-editor/react";
+import MonacoEditor from '@monaco-editor/react';
 import {
   registerCopilot,
   type Monaco,
   type StandaloneCodeEditor,
-} from "monacopilot";
+} from 'monacopilot';
 
 export default function Home() {
   const [editor, setEditor] = useState<StandaloneCodeEditor | null>(null);
@@ -17,8 +17,8 @@ export default function Home() {
     if (!monaco || !editor) return;
 
     const copilot = registerCopilot(monaco, editor, {
-      endpoint: "/api/copilot",
-      language: "javascript",
+      endpoint: '/api/copilot',
+      language: 'javascript',
     });
 
     return () => {
@@ -30,8 +30,8 @@ export default function Home() {
     <main>
       <MonacoEditor
         language="javascript"
-        height={"100vh"}
-        width={"100%"}
+        height={'100vh'}
+        width={'100%'}
         onMount={(editor, monaco) => {
           setEditor(editor);
           setMonaco(monaco);
