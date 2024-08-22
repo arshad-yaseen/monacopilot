@@ -23,7 +23,8 @@
     "build/",
     "/tsup.config.ts",
     "test/",
-    "docs/"
+    "docs/",
+    "examples/"
   ],
   "plugins": ["@typescript-eslint"],
   "rules": {
