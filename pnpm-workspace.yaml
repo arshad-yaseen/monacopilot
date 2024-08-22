@@ -1,4 +1,5 @@
 packages:
   - 'test'
   - 'docs'
+  - 'examples'
   - '.'
