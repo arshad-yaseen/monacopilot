@@ -1,5 +1,5 @@
 import {PUNCTUATIONS} from '../constants';
-import {EditorModel, EditorPosition} from '../types';
+import {CursorPosition, EditorModel} from '../types';
 import {
   getCharAfterCursor,
   getTextAfterCursorInLine,
@@ -11,7 +11,7 @@ import {
  * @returns {boolean} True if there is whitespace after the cursor, false otherwise.
  */
 export const hasWhitespaceAfterCursor = (
-  position: EditorPosition,
+  position: CursorPosition,
   model: EditorModel,
 ): boolean => getCharAfterCursor(position, model) === ' ';
 
@@ -19,8 +19,8 @@ export const hasWhitespaceAfterCursor = (
  * Checks if the character after the cursor is not a punctuation and is not empty.
  * @returns {boolean} True if the character after the cursor is not a punctuation and is not empty, false otherwise.
  */
-export const isCharAfterCursor = (
-  position: EditorPosition,
+export const isNonPunctuationCharAfterCursor = (
+  position: CursorPosition,
   model: EditorModel,
 ): boolean => {
   const charAfterCursor = getCharAfterCursor(position, model);
@@ -32,7 +32,7 @@ export const isCharAfterCursor = (
  * @returns {boolean} True if the cursor is at the start of the line with text around it, false otherwise.
  */
 export const isCursorAtStartWithTextAround = (
-  position: EditorPosition,
+  position: CursorPosition,
   model: EditorModel,
 ): boolean => {
   const textAfterCursorInCurrentLine = getTextAfterCursorInLine(

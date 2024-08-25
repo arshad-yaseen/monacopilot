@@ -1,8 +1,11 @@
-import {EditorModel, EditorPosition} from '../types';
-import {isCharAfterCursor, isCursorAtStartWithTextAround} from '../utils';
+import {CursorPosition, EditorModel} from '../types';
+import {
+  isCursorAtStartWithTextAround,
+  isNonPunctuationCharAfterCursor,
+} from '../utils';
 
 export class CompletionValidator {
-  private cursorPosition: EditorPosition;
+  private cursorPosition: CursorPosition;
   private model: EditorModel;
 
   /**
@@ -11,7 +14,7 @@ export class CompletionValidator {
    * @param model - The editor model.
    * @param language - The language of the editor.
    */
-  constructor(cursorPosition: EditorPosition, model: EditorModel) {
+  constructor(cursorPosition: CursorPosition, model: EditorModel) {
     this.cursorPosition = cursorPosition;
     this.model = model;
   }
@@ -22,7 +25,7 @@ export class CompletionValidator {
    */
   public shouldProvideCompletions(): boolean {
     return (
-      !isCharAfterCursor(this.cursorPosition, this.model) &&
+      !isNonPunctuationCharAfterCursor(this.cursorPosition, this.model) &&
       //
       !isCursorAtStartWithTextAround(this.cursorPosition, this.model)
     );

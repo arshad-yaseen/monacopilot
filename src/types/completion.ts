@@ -8,7 +8,7 @@ import {
 } from 'openai/resources/chat/completions';
 
 import {Endpoint, ExternalContext, Filename, Technologies} from './copilot';
-import {EditorModel, EditorPosition, EditorRange} from './monaco';
+import {CursorPosition, EditorModel, EditorRange} from './monaco';
 
 export type CompletionModel = 'llama-3-70b' | 'gpt-4o' | 'gpt-4o-mini';
 export type CompletionProvider = 'openai' | 'groq';
@@ -60,11 +60,11 @@ export interface FetchCompletionItemParams {
   technologies?: Technologies;
   externalContext?: ExternalContext;
   model: EditorModel;
-  position: EditorPosition;
+  position: CursorPosition;
 }
 
-export type CompletionCacheItem = {
+export interface CompletionCacheItem {
   completion: string;
   range: EditorRange;
   textBeforeCursorInLine: string;
-};
+}

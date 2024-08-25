@@ -1,7 +1,7 @@
 {
   "name": "monacopilot",
   "version": "0.9.16",
-  "description": "AI auto-completion for Monaco Editor",
+  "description": "AI auto-completion plugin for Monaco Editor",
   "main": "./build/index.js",
   "module": "./build/index.mjs",
   "types": "./build/index.d.ts",
@@ -11,12 +11,13 @@
   "scripts": {
     "build": "tsup src/index.ts",
     "dev": "tsup src/index.ts --watch",
-    "dev:test": "pnpm -C test dev",
+    "test": "vitest",
+    "dev:test-ui": "pnpm -C tests/ui dev",
     "type-check": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx --fix",
-    "lint:test": "pnpm -C test lint",
+    "lint:test-ui": "pnpm -C tests/ui lint",
     "format": "prettier --write .",
-    "pre-commit": "pnpm type-check && pnpm lint && pnpm lint:test",
+    "pre-commit": "pnpm format && pnpm type-check && pnpm lint && pnpm lint:test-ui",
     "release": "release-it"
   },
   "devDependencies": {
@@ -30,7 +31,8 @@
     "prettier": "^3.2.5",
     "release-it": "^17.2.1",
     "tsup": "^8.0.2",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.3",
+    "vitest": "^2.0.5"
   },
   "keywords": [
     "monaco-editor",

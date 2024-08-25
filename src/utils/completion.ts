@@ -1,9 +1,9 @@
 import {CompletionFormatter} from '../classes';
 import {
+  CursorPosition,
   EditorInlineCompletion,
   EditorInlineCompletionsResult,
   EditorModel,
-  EditorPosition,
   EditorRange,
 } from '../types';
 import {getCharAfterCursor, getLastLineColumnCount} from './editor';
@@ -14,7 +14,7 @@ import {getCharAfterCursor, getLastLineColumnCount} from './editor';
 export const computeCompletionInsertRange = (
   completion: string,
   range: EditorRange,
-  position: EditorPosition,
+  position: CursorPosition,
   model: EditorModel,
 ): EditorRange => {
   const newLineCount = (completion.match(/\n/g) || []).length;
@@ -22,30 +22,26 @@ export const computeCompletionInsertRange = (
   const charAfterCursor = getCharAfterCursor(position, model);
 
   return {
+    // Start line is always the current cursor position's line
     startLineNumber: position.lineNumber,
+    // Start column is always the current cursor position's column
     startColumn: position.column,
+    // End line is calculated by adding the number of new lines in the completion
     endLineNumber: position.lineNumber + newLineCount,
+    // End column calculation is more complex:
     endColumn: !completion.includes(charAfterCursor)
-      ? position.column
+      ? position.column // If the completion doesn't include the char after cursor, end at current position
       : position.lineNumber === range.startLineNumber && newLineCount === 0
-        ? position.column + lastLineColumnCount
-        : lastLineColumnCount,
+        ? position.column + (lastLineColumnCount - 1) // If on same line and no new lines, add last line column count
+        : lastLineColumnCount, // Otherwise, use the last line column count of the completion
   };
 };
 
-export function formatCompletion(
-  model: EditorModel,
-  position: EditorPosition,
-  completion: string,
-): string {
-  return CompletionFormatter.create(model, position)
-    .setCompletion(completion)
-    .ignoreBlankLines()
-    .removeDuplicatesFromStartOfCompletion()
-    .preventDuplicateLines()
-    .removeInvalidLineBreaks()
+export function formatCompletion(completion: string): string {
+  return CompletionFormatter.create(completion)
     .removeMarkdownCodeSyntax()
-    .trimStart()
+    .removeExcessiveNewlines()
+    .removeInvalidLineBreaks()
     .build();
 }
 

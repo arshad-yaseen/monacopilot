@@ -71,7 +71,7 @@ const handleInlineCompletions = async ({
     const completion = await completionPromise;
 
     if (completion) {
-      const formattedCompletion = formatCompletion(model, position, completion);
+      const formattedCompletion = formatCompletion(completion);
       const range = new monaco.Range(
         position.lineNumber,
         position.column,

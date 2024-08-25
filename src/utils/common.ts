@@ -1,9 +1,4 @@
 /**
- * A function that does nothing.
- */
-export const noop = (): void => {};
-
-/**
  * Creates a debounced version of an asynchronous function.
  *
  * @template T - The type of the function to be debounced

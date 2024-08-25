@@ -1,8 +1,8 @@
 import type {CompletionModel, CompletionProvider} from './completion';
 import {
+  CursorPosition,
   EditorCancellationToken,
   EditorModel,
-  EditorPosition,
   Monaco,
 } from './monaco';
 
@@ -73,7 +73,7 @@ export interface CopilotRegistration {
 export interface InlineCompletionHandlerParams {
   monaco: Monaco;
   model: EditorModel;
-  position: EditorPosition;
+  position: CursorPosition;
   token: EditorCancellationToken;
 
   isCompletionAccepted: boolean;

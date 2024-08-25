@@ -4,8 +4,8 @@ import {
   CompletionMode,
   CompletionRequest,
   CompletionResponse,
+  CursorPosition,
   EditorModel,
-  EditorPosition,
   FetchCompletionItemParams,
 } from '../types';
 import {getTextAfterCursor, getTextBeforeCursor, HTTP} from '../utils';
@@ -91,12 +91,12 @@ export const constructCompletionMetadata = ({
 
 /**
  * Determines the completion mode based on the cursor position and editor model.
- * @param {EditorPosition} position - The cursor position in the editor.
+ * @param {CursorPosition} position - The cursor position in the editor.
  * @param {EditorModel} model - The editor model.
  * @returns {CompletionMode} The determined completion mode.
  */
 const determineCompletionMode = (
-  position: EditorPosition,
+  position: CursorPosition,
   model: EditorModel,
 ): CompletionMode => {
   const textBeforeCursor = getTextBeforeCursor(position, model);

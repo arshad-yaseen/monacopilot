@@ -6,7 +6,6 @@ import {
   RegisterCopilotOptions,
   StandaloneCodeEditor,
 } from '../types';
-import {noop} from '../utils';
 import handleInlineCompletions, {completionCache} from './handler';
 
 let isCompletionAccepted = false;
@@ -39,7 +38,7 @@ export const registerCopilot = (
             onShowCompletion: () => (isCompletionVisible = true),
             options,
           }),
-        freeInlineCompletions: noop,
+        freeInlineCompletions: () => {},
       });
 
     disposables.push(inlineCompletionsProvider);

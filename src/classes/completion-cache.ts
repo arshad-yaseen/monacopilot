@@ -1,4 +1,4 @@
-import {CompletionCacheItem, EditorModel, EditorPosition} from '../types';
+import {CompletionCacheItem, CursorPosition, EditorModel} from '../types';
 import {getTextBeforeCursorInLine} from '../utils/editor';
 
 /**
@@ -8,12 +8,12 @@ import {getTextBeforeCursorInLine} from '../utils/editor';
  */
 export class CompletionCache {
   private static readonly MAX_CACHE_SIZE = 10;
-  private cache: ReadonlyArray<CompletionCacheItem> = [];
+  private cache: readonly CompletionCacheItem[] = [];
 
   public getCompletionCache(
-    position: Readonly<EditorPosition>,
+    position: Readonly<CursorPosition>,
     model: Readonly<EditorModel>,
-  ): ReadonlyArray<CompletionCacheItem> {
+  ): readonly CompletionCacheItem[] {
     return this.cache.filter(cache =>
       this.isCacheItemValid(cache, position, model),
     );
@@ -32,7 +32,7 @@ export class CompletionCache {
 
   private isCacheItemValid(
     cache: Readonly<CompletionCacheItem>,
-    position: Readonly<EditorPosition>,
+    position: Readonly<CursorPosition>,
     model: Readonly<EditorModel>,
   ): boolean {
     const currentValueInRange = model.getValueInRange(cache.range);
@@ -49,16 +49,21 @@ export class CompletionCache {
 
   private isPositionValid(
     cache: Readonly<CompletionCacheItem>,
-    position: Readonly<EditorPosition>,
+    position: Readonly<CursorPosition>,
     currentValueInRange: string,
   ): boolean {
     return (
+      // Check if the cursor is at the start of the cached range
       (cache.range.startLineNumber === position.lineNumber &&
         position.column === cache.range.startColumn) ||
+      // Check if the current value in range is a prefix of the cached completion
+      // and the cursor is within the valid range for this completion
       (cache.completion.startsWith(currentValueInRange) &&
         cache.range.startLineNumber === position.lineNumber &&
+        // Ensure the cursor is not before the start of the completion
         position.column >=
           cache.range.startColumn - currentValueInRange.length &&
+        // Ensure the cursor is not after the end of the completion
         position.column <= cache.range.endColumn)
     );
   }

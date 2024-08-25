@@ -19,6 +19,6 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["src"],
+  "include": ["src", "tests", "tsup.config.ts"],
   "exclude": ["node_modules", "build"]
 }
