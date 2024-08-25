@@ -3,6 +3,7 @@
     "target": "es2021",
     "module": "esnext",
     "lib": ["es2021", "dom"],
+    "jsx": "react-jsx",
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "strictBindCallApply": true,
