@@ -36,16 +36,30 @@ export class Copilot {
    * @throws {Error} If the API key is not provided.
    */
   constructor(apiKey: string, options?: CopilotOptions) {
-    const model = options?.model || DEFAULT_COMPLETION_MODEL;
-    const provider = options?.provider || DEFAULT_COMPLETION_PROVIDER;
+    const {provider, model} = options || {};
+
+    if (provider && !model) {
+      throw new Error('You must provide a model when setting a provider');
+    }
+
+    if (model && !provider) {
+      throw new Error('You must provide a provider when setting a model');
+    }
+
+    this.model = model || DEFAULT_COMPLETION_MODEL;
+    this.provider = provider || DEFAULT_COMPLETION_PROVIDER;
+
+    if (!COMPLETION_PROVIDER_MODEL_MAP[this.provider].includes(this.model)) {
+      throw new Error(
+        `Model ${this.model} is not supported by ${this.provider} provider. Supported models: ${joinWithAnd(COMPLETION_PROVIDER_MODEL_MAP[this.provider])}`,
+      );
+    }
 
     if (!apiKey) {
-      throw new Error(`Please provide ${provider} API key.`);
+      throw new Error(`Please provide ${this.provider} API key.`);
     }
 
     this.apiKey = apiKey;
-    this.model = model;
-    this.provider = provider;
   }
 
   /**
@@ -86,11 +100,6 @@ export class Copilot {
   }
 
   private getModelId(): string {
-    if (!COMPLETION_PROVIDER_MODEL_MAP[this.provider].includes(this.model)) {
-      throw new Error(
-        `Model ${this.model} is not supported by ${this.provider} provider. Supported models: ${joinWithAnd(COMPLETION_PROVIDER_MODEL_MAP[this.provider])}`,
-      );
-    }
     return COMPLETION_MODEL_IDS[this.model];
   }
 
