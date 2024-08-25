@@ -10,10 +10,10 @@ import {
 } from '../src/constants';
 import * as helpers from '../src/helpers';
 import {HTTP, joinWithAnd} from '../src/utils';
+import {mockApiKey} from './mock';
 
 describe('Copilot', () => {
   let copilot: Copilot;
-  const mockApiKey = 'test-api-key';
 
   beforeEach(() => {
     copilot = new Copilot(mockApiKey);

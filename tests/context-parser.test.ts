@@ -1,14 +1,25 @@
-import {describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 
-import {CursorPosition} from '../src/types';
+import {CursorPosition, EditorModel} from '../src/types';
 import {
   hasWhitespaceAfterCursor,
   isCursorAtStartWithTextAround,
   isNonPunctuationCharAfterCursor,
 } from '../src/utils/context-parser';
-import {model} from './mock';
+import {mockModel} from './mock';
 
 describe('Context Parser Utilities', () => {
+  let model: EditorModel;
+
+  beforeEach(() => {
+    model = mockModel;
+    vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   describe('hasWhitespaceAfterCursor', () => {
     it('should return true if there is a whitespace after the cursor', () => {
       const position: CursorPosition = {lineNumber: 1, column: 4};

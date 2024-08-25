@@ -1,6 +1,6 @@
-import {describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 
-import {CursorPosition} from '../src/types';
+import {CursorPosition, EditorModel} from '../src/types';
 import {
   getCharAfterCursor,
   getCharBeforeCursor,
@@ -9,9 +9,20 @@ import {
   getTextAfterCursorInLine,
   getTextBeforeCursorInLine,
 } from '../src/utils/editor';
-import {model} from './mock';
+import {mockModel} from './mock';
 
 describe('Editor Utilities', () => {
+  let model: EditorModel;
+
+  beforeEach(() => {
+    model = mockModel;
+    vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   describe('getCharBeforeCursor', () => {
     it('should return the character before the cursor', () => {
       const position: CursorPosition = {lineNumber: 1, column: 10};
