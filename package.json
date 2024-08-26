@@ -40,7 +40,6 @@
     "auto-completion",
     "github-copilot"
   ],
-  "homepage": "https://monacopilot.vercel.app",
   "repository": {
     "type": "git",
     "url": "https://github.com/arshad-yaseen/monacopilot"
