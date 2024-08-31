@@ -16,5 +16,5 @@
     "types": ["vitest/globals"]
   },
   "include": ["src", "tests", "tsup.config.ts"],
-  "exclude": ["node_modules", "build"]
+  "exclude": ["node_modules", "build", "examples", "tests/ui"]
 }
