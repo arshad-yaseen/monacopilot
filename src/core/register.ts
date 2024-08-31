@@ -8,8 +8,15 @@ import {
 } from '../types';
 import handleInlineCompletions, {completionCache} from './handler';
 
-let isCompletionAccepted = false;
-let isCompletionVisible = false;
+const editorCompletionState = new WeakMap<
+  StandaloneCodeEditor,
+  {
+    isCompletionAccepted: boolean;
+    isCompletionVisible: boolean;
+  }
+>();
+
+let singletonInstance: CopilotRegistration | null = null;
 
 /**
  * Registers the Copilot with the Monaco editor.
@@ -23,55 +30,75 @@ export const registerCopilot = (
   editor: StandaloneCodeEditor,
   options: RegisterCopilotOptions,
 ): CopilotRegistration => {
+  if (singletonInstance) {
+    singletonInstance.deregister();
+  }
+
   const disposables: Disposable[] = [];
+
+  editorCompletionState.set(editor, {
+    isCompletionAccepted: false,
+    isCompletionVisible: false,
+  });
 
   try {
     const inlineCompletionsProvider =
       monaco.languages.registerInlineCompletionsProvider(options.language, {
-        provideInlineCompletions: (model, position, _, token) =>
-          handleInlineCompletions({
+        provideInlineCompletions: (model, position, _, token) => {
+          const state = editorCompletionState.get(editor)!;
+          return handleInlineCompletions({
             monaco,
             model,
             position,
             token,
-            isCompletionAccepted,
-            onShowCompletion: () => (isCompletionVisible = true),
+            isCompletionAccepted: state.isCompletionAccepted,
+            onShowCompletion: () => {
+              state.isCompletionVisible = true;
+            },
             options,
-          }),
+          });
+        },
         freeInlineCompletions: () => {},
       });
 
     disposables.push(inlineCompletionsProvider);
 
     const keyDownListener = editor.onKeyDown(event => {
+      const state = editorCompletionState.get(editor)!;
       // If the user presses Tab or Cmd + Right Arrow while completion is visible, it means the completion was accepted
       const isTabOrCmdRightArrow =
         event.keyCode === monaco.KeyCode.Tab ||
         (event.keyCode === monaco.KeyCode.RightArrow && event.metaKey);
 
-      if (isCompletionVisible && isTabOrCmdRightArrow) {
-        isCompletionAccepted = true;
-        isCompletionVisible = false;
+      if (state.isCompletionVisible && isTabOrCmdRightArrow) {
+        state.isCompletionAccepted = true;
+        state.isCompletionVisible = false;
       } else {
-        isCompletionAccepted = false;
+        state.isCompletionAccepted = false;
       }
     });
 
     disposables.push(keyDownListener);
 
-    return {
+    const registration: CopilotRegistration = {
       deregister: () => {
         disposables.forEach(disposable => disposable.dispose());
         completionCache.clearCompletionCache();
-        isCompletionAccepted = false;
-        isCompletionVisible = false;
+        editorCompletionState.delete(editor);
+        singletonInstance = null;
       },
     };
+
+    singletonInstance = registration;
+
+    return registration;
   } catch (err) {
     handleError(err, ErrorContext.REGISTER_COPILOT);
     return {
       deregister: () => {
         disposables.forEach(disposable => disposable.dispose());
+        editorCompletionState.delete(editor);
+        singletonInstance = null;
       },
     };
   }
