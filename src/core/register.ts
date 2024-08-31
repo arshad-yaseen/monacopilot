@@ -45,7 +45,10 @@ export const registerCopilot = (
     const inlineCompletionsProvider =
       monaco.languages.registerInlineCompletionsProvider(options.language, {
         provideInlineCompletions: (model, position, _, token) => {
-          const state = editorCompletionState.get(editor)!;
+          const state = editorCompletionState.get(editor);
+          if (!state) {
+            return;
+          }
           return handleInlineCompletions({
             monaco,
             model,
@@ -64,7 +67,10 @@ export const registerCopilot = (
     disposables.push(inlineCompletionsProvider);
 
     const keyDownListener = editor.onKeyDown(event => {
-      const state = editorCompletionState.get(editor)!;
+      const state = editorCompletionState.get(editor);
+      if (!state) {
+        return;
+      }
       // If the user presses Tab or Cmd + Right Arrow while completion is visible, it means the completion was accepted
       const isTabOrCmdRightArrow =
         event.keyCode === monaco.KeyCode.Tab ||
