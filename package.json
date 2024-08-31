@@ -37,6 +37,7 @@
     "monaco-editor",
     "ai",
     "auto-completion",
+    "code-completion",
     "github-copilot"
   ],
   "repository": {
