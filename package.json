@@ -17,7 +17,7 @@
     "lint": "eslint . --ext .ts,.tsx --fix",
     "lint:test-ui": "pnpm -C tests/ui lint",
     "format": "prettier --write .",
-    "pre-commit": "pnpm format && pnpm type-check && pnpm lint && pnpm lint:test-ui",
+    "pre-commit": "pnpm build && pnpm format && pnpm type-check && pnpm lint && pnpm lint:test-ui && pnpm test",
     "release": "release-it"
   },
   "devDependencies": {

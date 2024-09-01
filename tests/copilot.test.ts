@@ -2,13 +2,12 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 
 import {Copilot} from '../src/classes/copilot';
 import {
-  COMPLETION_API_ENDPOINT,
+  CHAT_COMPLETION_ENDPOINT_BY_PROVIDER,
   COMPLETION_MODEL_IDS,
   COMPLETION_PROVIDER_MODEL_MAP,
   DEFAULT_COMPLETION_MODEL,
   DEFAULT_COMPLETION_PROVIDER,
 } from '../src/constants';
-import * as helpers from '../src/helpers';
 import {HTTP, joinWithAnd} from '../src/utils';
 import {mockApiKey} from './mock';
 
@@ -33,13 +32,13 @@ describe('Copilot', () => {
 
     it('should throw an error when provider is set without a model', () => {
       expect(() => new Copilot('test-api-key', {provider: 'openai'})).toThrow(
-        'You must provide a model when setting a provider',
+        'Both provider and model must be specified together',
       );
     });
 
     it('should throw an error when model is set without a provider', () => {
       expect(() => new Copilot('test-api-key', {model: 'gpt-4o'})).toThrow(
-        'You must provide a provider when setting a model',
+        'Both provider and model must be specified together',
       );
     });
 
@@ -94,7 +93,7 @@ describe('Copilot', () => {
 
       expect(result).toEqual({completion: 'Hello, World!'});
       expect(HTTP.POST).toHaveBeenCalledWith(
-        COMPLETION_API_ENDPOINT[DEFAULT_COMPLETION_PROVIDER],
+        CHAT_COMPLETION_ENDPOINT_BY_PROVIDER[DEFAULT_COMPLETION_PROVIDER],
         expect.objectContaining({
           model: COMPLETION_MODEL_IDS[DEFAULT_COMPLETION_MODEL],
           messages: expect.arrayContaining([
@@ -135,7 +134,7 @@ describe('Copilot', () => {
 
       expect(result).toEqual({
         error: expect.stringContaining(
-          'No completion choices received from API',
+          'No completion found in the groq response',
         ),
         completion: null,
       });
@@ -156,64 +155,26 @@ describe('Copilot', () => {
       });
 
       expect(HTTP.POST).toHaveBeenCalledWith(
-        COMPLETION_API_ENDPOINT['openai'],
+        CHAT_COMPLETION_ENDPOINT_BY_PROVIDER['openai'],
         expect.objectContaining({
           model: COMPLETION_MODEL_IDS['gpt-4o'],
         }),
         expect.any(Object),
       );
     });
-  });
 
-  describe('private methods', () => {
-    it('getEndpoint should return the correct endpoint for the provider', () => {
-      expect(copilot['getEndpoint']()).toBe(
-        COMPLETION_API_ENDPOINT[DEFAULT_COMPLETION_PROVIDER],
-      );
-    });
+    it('should handle network errors', async () => {
+      const mockError = new Error('Network error');
+      mockError.name = 'NetworkError';
+      vi.spyOn(HTTP, 'POST').mockRejectedValue(mockError);
 
-    it('getModelId should return the correct model ID', () => {
-      expect(copilot['getModelId']()).toBe(
-        COMPLETION_MODEL_IDS[DEFAULT_COMPLETION_MODEL],
-      );
-    });
+      const result = await copilot.complete({
+        completionMetadata: mockCompletionMetadata,
+      });
 
-    it('createRequestBody should generate the correct request body', () => {
-      const mockMetadata = {
-        language: 'javascript',
-        filename: 'test.js',
-        technologies: ['react'],
-        externalContext: [{path: './utils.js', content: 'function test() {}'}],
-        textAfterCursor: 'console.log(',
-        textBeforeCursor: 'function hello() {',
-        editorState: {
-          completionMode: 'completion' as const,
-        },
-      };
-
-      vi.spyOn(helpers, 'generateSystemPrompt').mockReturnValue(
-        'System prompt',
-      );
-      vi.spyOn(helpers, 'generateUserPrompt').mockReturnValue('User prompt');
-
-      const result = copilot['createRequestBody'](mockMetadata);
-
-      expect(result).toEqual(
-        expect.objectContaining({
-          model: COMPLETION_MODEL_IDS[DEFAULT_COMPLETION_MODEL],
-          messages: [
-            {role: 'system', content: 'System prompt'},
-            {role: 'user', content: 'User prompt'},
-          ],
-        }),
-      );
-    });
-
-    it('createHeaders should generate the correct headers', () => {
-      const headers = copilot['createHeaders']();
-      expect(headers).toEqual({
-        Authorization: `Bearer ${mockApiKey}`,
-        'Content-Type': 'application/json',
+      expect(result).toEqual({
+        error: expect.stringContaining('Network error'),
+        completion: null,
       });
     });
   });

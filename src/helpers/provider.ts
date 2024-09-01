@@ -103,37 +103,37 @@ export const parseProviderChatCompletion = (
   return handler(completion as PickChatCompletion<typeof provider>);
 };
 
-const parseOpenAICompletion = (
+export const parseOpenAICompletion = (
   completion: PickChatCompletion<'openai'>,
 ): CompletionResponse => {
   if (!completion.choices?.length) {
     return {
       completion: null,
-      error: 'No completion choices found in OpenAI response',
+      error: 'No completion found in the openai response',
     };
   }
   return {completion: completion.choices[0].message.content};
 };
 
-const parseGroqCompletion = (
+export const parseGroqCompletion = (
   completion: PickChatCompletion<'groq'>,
 ): CompletionResponse => {
   if (!completion.choices?.length) {
     return {
       completion: null,
-      error: 'No completion choices found in Groq response',
+      error: 'No completion found in the groq response',
     };
   }
   return {completion: completion.choices[0].message.content};
 };
 
-const parseAnthropicCompletion = (
+export const parseAnthropicCompletion = (
   completion: PickChatCompletion<'anthropic'>,
 ): CompletionResponse => {
   if (!completion.content) {
     return {
       completion: null,
-      error: 'No completion content found in Anthropic response',
+      error: 'No completion found in the anthropic response',
     };
   }
   if (typeof completion.content !== 'string') {

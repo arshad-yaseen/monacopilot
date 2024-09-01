@@ -75,9 +75,14 @@ export class Copilot {
     }
   }
 
-  private validateInputs(apiKey: string, options: CopilotOptions): void {
+  private validateInputs(
+    apiKey: string | undefined,
+    options: CopilotOptions,
+  ): void {
     if (!apiKey) {
-      throw new Error('Please provide an API key.');
+      throw new Error(
+        `Please provide ${this.provider ?? DEFAULT_COMPLETION_PROVIDER} API key.`,
+      );
     }
 
     const {provider, model} = options;
