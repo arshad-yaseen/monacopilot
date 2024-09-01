@@ -173,12 +173,6 @@ registerCopilot(monaco, editor, {
 
 This configuration will provide completions relevant to React, Next.js, and Tailwind CSS.
 
-## FAQ
-
-### Is AI Auto Completion Free?
-
-You use your own Groq or OpenAI API key for AI auto-completion. The cost of completions is very affordable, and we implement various methods to minimize these costs as much as possible. Costs vary depending on the model you use; see this [cost overview](#cost-overview) for an idea of the cost.
-
 ## Contributing
 
 For guidelines on contributing, Please read the [contributing guide](https://github.com/arshad-yaseen/monacopilot/blob/main/CONTRIBUTING.md).
