@@ -1,3 +1,7 @@
+import {
+  Message as AnthropicChatCompletion,
+  MessageCreateParams as AnthropicChatCompletionCreateParamsBase,
+} from '@anthropic-ai/sdk/resources';
 import type {
   ChatCompletion as GroqChatCompletion,
   ChatCompletionCreateParamsBase as GroqChatCompletionCreateParamsBase,
@@ -10,19 +14,45 @@ import {
 import {Endpoint, ExternalContext, Filename, Technologies} from './copilot';
 import {CursorPosition, EditorModel, EditorRange} from './monaco';
 
-export type CompletionModel = 'llama-3-70b' | 'gpt-4o' | 'gpt-4o-mini';
-export type CompletionProvider = 'openai' | 'groq';
+export type OpenAIModel = 'gpt-4o' | 'gpt-4o-mini';
+export type GroqModel = 'llama-3-70b';
+export type AnthropicModel =
+  | 'claude-3.5-sonnet'
+  | 'claude-3-opus'
+  | 'claude-3-haiku'
+  | 'claude-3-sonnet';
 
-export type CompletionCreateParams = Omit<
-  OpenAIChatCompletionCreateParamsBase | GroqChatCompletionCreateParamsBase,
-  'frequence_penalty'
->;
-export type Completion = OpenAIChatCompletion | GroqChatCompletion;
+export type CompletionModel = OpenAIModel | GroqModel | AnthropicModel;
 
-export type CompletionCreateParamsExcludingModelAndMessages = Omit<
-  CompletionCreateParams,
-  'model' | 'messages'
->;
+export type CompletionProvider = 'openai' | 'groq' | 'anthropic';
+
+export type ChatCompletionCreateParams =
+  | OpenAIChatCompletionCreateParamsBase
+  | GroqChatCompletionCreateParamsBase
+  | AnthropicChatCompletionCreateParamsBase;
+
+export type ChatCompletion =
+  | OpenAIChatCompletion
+  | GroqChatCompletion
+  | AnthropicChatCompletion;
+
+export type PickChatCompletionCreateParams<T extends CompletionProvider> =
+  T extends 'openai'
+    ? OpenAIChatCompletionCreateParamsBase
+    : T extends 'groq'
+      ? GroqChatCompletionCreateParamsBase
+      : T extends 'anthropic'
+        ? AnthropicChatCompletionCreateParamsBase
+        : never;
+
+export type PickChatCompletion<T extends CompletionProvider> =
+  T extends 'openai'
+    ? OpenAIChatCompletion
+    : T extends 'groq'
+      ? GroqChatCompletion
+      : T extends 'anthropic'
+        ? AnthropicChatCompletion
+        : never;
 
 export type LocalPredictionSnippets = Record<string, string>;
 export interface LocalPrediction {

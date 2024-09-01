@@ -47,12 +47,6 @@ export const fetchCompletionItem = async ({
 
     return completion;
   } catch (err) {
-    if (
-      err instanceof Error &&
-      (err.message === 'Cancelled' || err.name === 'AbortError')
-    )
-      return null;
-
     handleError(err, ErrorContext.FETCH_COMPLETION_ITEM);
 
     return null;

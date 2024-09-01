@@ -21,6 +21,7 @@
     "release": "release-it"
   },
   "devDependencies": {
+    "@anthropic-ai/sdk": "^0.27.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
     "@typescript-eslint/eslint-plugin": "^7.3.1",
     "eslint": "^8.57.0",

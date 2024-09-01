@@ -1,5 +1,12 @@
+import {Logger} from './logger';
+
 export class ErrorHandler {
   private static readonly instance: ErrorHandler = new ErrorHandler();
+  private logger: Logger;
+
+  private constructor() {
+    this.logger = Logger.getInstance();
+  }
 
   public static getInstance(): ErrorHandler {
     return ErrorHandler.instance;
@@ -7,9 +14,7 @@ export class ErrorHandler {
 
   public handleError(error: unknown, context: ErrorContext): ErrorDetails {
     const errorDetails = this.getErrorDetails(error);
-
-    this.logError(context, errorDetails);
-
+    this.logger.error(context, errorDetails);
     return errorDetails;
   }
 
@@ -27,73 +32,39 @@ export class ErrorHandler {
       name: 'UnknownError',
     };
   }
-
-  private styleMessage(message: string, context: ErrorContext): string {
-    const timestamp = this.getTimestamp();
-    const githubMessage =
-      'Please create an issue on GitHub if the issue persists.';
-    const boxWidth = 80;
-    const horizontalLine = '─'.repeat(boxWidth - 2);
-    const topBorder = `┌${horizontalLine}┐`;
-    const bottomBorder = `└${horizontalLine}┘`;
-
-    const wrapText = (text: string, maxWidth: number): string[] => {
-      const words = text.split(' ');
-      const lines: string[] = [];
-      let currentLine = '';
-
-      words.forEach(word => {
-        if ((currentLine + word).length > maxWidth) {
-          lines.push(currentLine.trim());
-          currentLine = '';
-        }
-        currentLine += word + ' ';
-      });
-
-      if (currentLine.trim()) {
-        lines.push(currentLine.trim());
-      }
-
-      return lines;
-    };
-
-    const wrappedMessage = wrapText(message, boxWidth - 4);
-
-    const messageBox = [
-      topBorder,
-      ...wrappedMessage.map(line => `│ ${line.padEnd(boxWidth - 4)} │`),
-      bottomBorder,
-    ].join('\n');
-
-    return `\n\x1b[1m\x1b[37m[${timestamp}]\x1b[0m \x1b[31m[${context}]\x1b[0m \x1b[2m${githubMessage}\x1b[0m\n${messageBox}\n`;
-  }
-
-  private logError(context: ErrorContext, details: ErrorDetails): void {
-    console.error(this.styleMessage(details.message, context));
-  }
-
-  private getTimestamp(): string {
-    return new Date().toISOString();
-  }
 }
 
+/**
+ * Represents the context in which an error occurred.
+ */
 export enum ErrorContext {
+  /** Error occurred while fetching Copilot completion */
   COPILOT_COMPLETION_FETCH = 'COPILOT_COMPLETION_FETCH_ERROR',
+  /** Error occurred while fetching a completion item */
   FETCH_COMPLETION_ITEM = 'FETCH_COMPLETION_ITEM_ERROR',
+  /** Error occurred during Copilot registration */
   REGISTER_COPILOT = 'REGISTER_COPILOT_ERROR',
+  /** Unexpected or uncategorized error */
   UNEXPECTED = 'UNEXPECTED_ERROR',
 }
 
-interface ErrorDetails {
+export interface ErrorDetails {
   message: string;
   stack?: string;
   name: string;
   context?: any;
 }
 
+/**
+ * Handles an error by logging it and returning the error details.
+ * @param error - The error to be handled.
+ * @param context - The context in which the error occurred.
+ * @returns The details of the handled error.
+ */
 export const handleError = (
   error: unknown,
   context: ErrorContext,
 ): ErrorDetails => {
-  return ErrorHandler.getInstance().handleError(error, context);
+  const errorHandler = ErrorHandler.getInstance();
+  return errorHandler.handleError(error, context);
 };

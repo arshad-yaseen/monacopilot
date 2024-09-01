@@ -98,8 +98,10 @@ const handleInlineCompletions = async ({
     }
   } catch (err) {
     if (
-      err instanceof Error &&
-      (err.message === 'Cancelled' || err.name === 'AbortError')
+      (typeof err === 'string' &&
+        (err === 'Cancelled' || err === 'AbortError')) ||
+      (err instanceof Error &&
+        (err.message === 'Cancelled' || err.name === 'AbortError'))
     ) {
       return createInlineCompletionResult([]);
     }

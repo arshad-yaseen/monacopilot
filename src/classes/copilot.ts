@@ -1,125 +1,103 @@
 import {
-  COMPLETION_API_ENDPOINT,
-  COMPLETION_MODEL_IDS,
   COMPLETION_PROVIDER_MODEL_MAP,
-  DEFAULT_COMPLETION_CREATE_PARAMS,
   DEFAULT_COMPLETION_MODEL,
   DEFAULT_COMPLETION_PROVIDER,
 } from '../constants';
 import {ErrorContext, handleError} from '../error';
-import {generateSystemPrompt, generateUserPrompt} from '../helpers';
 import {
-  Completion,
-  CompletionCreateParams,
-  CompletionMetadata,
+  createHeaders,
+  createRequestBody,
+  getProviderCompletionEndpoint,
+  parseProviderChatCompletion,
+} from '../helpers/provider';
+import {
+  ChatCompletion,
+  ChatCompletionCreateParams,
   CompletionModel,
   CompletionProvider,
   CompletionRequest,
   CompletionResponse,
   CopilotOptions,
-  Endpoint,
 } from '../types';
 import {HTTP, joinWithAnd} from '../utils';
 
 /**
- * Copilot class for handling completions using the API.
+ * Copilot class for handling completions using various AI providers.
  */
 export class Copilot {
   private readonly apiKey: string;
-  private readonly model: CompletionModel;
   private readonly provider: CompletionProvider;
+  private readonly model: CompletionModel;
 
   /**
    * Initializes the Copilot with an API key and optional configuration.
-   * @param {string} apiKey - The API key.
-   * @param {CopilotOptions<CompletionProvider>} [options] - Optional parameters to configure the completion model.
-   * @throws {Error} If the API key is not provided.
+   * @param apiKey - The API key for the chosen provider.
+   * @param options - Optional parameters to configure the completion model.
+   * @throws {Error} If the API key is not provided or if there's a mismatch between provider and model.
    */
-  constructor(apiKey: string, options?: CopilotOptions) {
-    const {provider, model} = options || {};
-
-    if (provider && !model) {
-      throw new Error('You must provide a model when setting a provider');
-    }
-
-    if (model && !provider) {
-      throw new Error('You must provide a provider when setting a model');
-    }
-
-    this.model = model || DEFAULT_COMPLETION_MODEL;
-    this.provider = provider || DEFAULT_COMPLETION_PROVIDER;
-
-    if (!COMPLETION_PROVIDER_MODEL_MAP[this.provider].includes(this.model)) {
-      throw new Error(
-        `Model ${this.model} is not supported by ${this.provider} provider. Supported models: ${joinWithAnd(COMPLETION_PROVIDER_MODEL_MAP[this.provider])}`,
-      );
-    }
-
-    if (!apiKey) {
-      throw new Error(`Please provide ${this.provider} API key.`);
-    }
+  constructor(apiKey: string, options: CopilotOptions = {}) {
+    this.validateInputs(apiKey, options);
 
     this.apiKey = apiKey;
+    this.provider = options.provider ?? DEFAULT_COMPLETION_PROVIDER;
+    this.model = options.model ?? DEFAULT_COMPLETION_MODEL;
   }
 
   /**
-   * Sends a completion request to API and returns the completion.
-   * @param {CompletionRequest} params - The metadata required to generate the completion.
-   * @returns {Promise<CompletionResponse>} The completed text snippet or an error.
+   * Sends a completion request to the API and returns the completion.
+   * @param params - The metadata required to generate the completion.
+   * @returns A promise resolving to the completed text snippet or an error.
    */
   public async complete({
     completionMetadata,
   }: CompletionRequest): Promise<CompletionResponse> {
     try {
-      const body = this.createRequestBody(completionMetadata);
-      const headers = this.createHeaders();
-      const endpoint = this.getEndpoint();
-
-      const completion = await HTTP.POST<Completion, CompletionCreateParams>(
-        endpoint,
-        body,
-        {headers},
+      const body = createRequestBody(
+        completionMetadata,
+        this.model,
+        this.provider,
       );
+      const headers = createHeaders(this.apiKey, this.provider);
+      const endpoint = getProviderCompletionEndpoint(this.provider);
 
-      if (!completion.choices?.length) {
-        throw new Error('No completion choices received from API');
-      }
+      const chatCompletion = await HTTP.POST<
+        ChatCompletion,
+        ChatCompletionCreateParams
+      >(endpoint, body, {headers});
 
-      return {completion: completion.choices[0].message.content};
-    } catch (_err) {
-      const errorDetails = handleError(
-        _err,
+      return parseProviderChatCompletion(chatCompletion, this.provider);
+    } catch (error) {
+      const _details = handleError(
+        error,
         ErrorContext.COPILOT_COMPLETION_FETCH,
       );
-      return {error: errorDetails.message, completion: null};
+      return {error: _details.message, completion: null};
     }
   }
 
-  private getEndpoint(): Endpoint {
-    return COMPLETION_API_ENDPOINT[this.provider];
-  }
+  private validateInputs(apiKey: string, options: CopilotOptions): void {
+    if (!apiKey) {
+      throw new Error('Please provide an API key.');
+    }
 
-  private getModelId(): string {
-    return COMPLETION_MODEL_IDS[this.model];
-  }
+    const {provider, model} = options;
 
-  private createRequestBody(
-    completionMetadata: CompletionMetadata,
-  ): CompletionCreateParams {
-    return {
-      ...DEFAULT_COMPLETION_CREATE_PARAMS,
-      model: this.getModelId(),
-      messages: [
-        {role: 'system', content: generateSystemPrompt(completionMetadata)},
-        {role: 'user', content: generateUserPrompt(completionMetadata)},
-      ],
-    };
-  }
+    if ((provider && !model) || (!provider && model)) {
+      throw new Error('Both provider and model must be specified together');
+    }
 
-  private createHeaders(): Record<string, string> {
-    return {
-      Authorization: `Bearer ${this.apiKey}`,
-      'Content-Type': 'application/json',
-    };
+    const selectedProvider = provider ?? DEFAULT_COMPLETION_PROVIDER;
+    const selectedModel = model ?? DEFAULT_COMPLETION_MODEL;
+
+    if (
+      !COMPLETION_PROVIDER_MODEL_MAP[selectedProvider].includes(selectedModel)
+    ) {
+      const supportedModels = joinWithAnd(
+        COMPLETION_PROVIDER_MODEL_MAP[selectedProvider],
+      );
+      throw new Error(
+        `Model ${selectedModel} is not supported by ${selectedProvider} provider. Supported models: ${supportedModels}`,
+      );
+    }
   }
 }
