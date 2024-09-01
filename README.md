@@ -118,7 +118,7 @@ The default provider is `groq` and the default model is `llama-3-70b`.
 
 ### Custom Headers
 
-You can add custom headers to all API requests made by Monacopilot.
+You can add custom headers to the provider's completion requests. For example, if you select `OpenAI` as your provider, you can add a custom header to the OpenAI chat completion requests made by Monacopilot.
 
 ```javascript
 const copilot = new Copilot(process.env.API_KEY, {

@@ -24,8 +24,7 @@ export interface CopilotOptions {
   model?: CompletionModel;
 
   /**
-   * Additional headers to include in all Copilot API requests.
-   * This can be used to pass custom authentication or other provider-specific headers.
+   * Additional headers to include in the completion requests.
    */
   headers?: Record<string, string>;
 }
