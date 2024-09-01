@@ -10,6 +10,8 @@
 - [Installation](#installation)
 - [Usage](#usage)
 - [Copilot Instance Options](#copilot-instance-options)
+  - [Changing the Provider and Model](#changing-the-provider-and-model)
+  - [Custom Headers](#custom-headers)
 - [Configuration Options](#configuration-options)
   - [External Context](#external-context)
   - [Filename](#filename)
