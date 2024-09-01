@@ -62,7 +62,7 @@ export const createRequestBody = (
 /**
  * Creates headers for different completion providers.
  */
-export const createHeaders = (
+export const createProviderHeaders = (
   apiKey: string,
   provider: CompletionProvider,
 ): Record<string, string> => {

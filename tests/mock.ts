@@ -1,6 +1,6 @@
 import {vi} from 'vitest';
 
-import {EditorModel} from '../src/types';
+import {CompletionMetadata, EditorModel} from '../src/types';
 
 export const mockModel = {
   getLineContent: vi.fn(),
@@ -10,3 +10,15 @@ export const mockModel = {
 } as unknown as EditorModel;
 
 export const mockApiKey = 'test-api-key';
+
+export const mockCompletionMetadata: CompletionMetadata = {
+  language: 'javascript',
+  filename: 'test.js',
+  technologies: ['react'],
+  externalContext: [{path: './utils.js', content: 'function test() {}'}],
+  textAfterCursor: 'console.log(',
+  textBeforeCursor: 'function hello() {',
+  editorState: {
+    completionMode: 'completion',
+  },
+};

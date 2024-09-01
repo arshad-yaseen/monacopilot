@@ -6,9 +6,28 @@ import {
   Monaco,
 } from './monaco';
 
+/**
+ * Options for configuring the Copilot instance.
+ */
 export interface CopilotOptions {
+  /**
+   * The completion provider to use (e.g., 'openai', 'anthropic', 'groq').
+   * If not specified, a default provider will be used.
+   */
   provider?: CompletionProvider;
+
+  /**
+   * The specific model to use for completions.
+   * Must be compatible with the chosen provider.
+   * If not specified, a default model will be used.
+   */
   model?: CompletionModel;
+
+  /**
+   * Additional headers to include in all Copilot API requests.
+   * This can be used to pass custom authentication or other provider-specific headers.
+   */
+  headers?: Record<string, string>;
 }
 
 export type Endpoint = string;

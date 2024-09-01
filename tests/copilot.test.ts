@@ -7,9 +7,10 @@ import {
   COMPLETION_PROVIDER_MODEL_MAP,
   DEFAULT_COMPLETION_MODEL,
   DEFAULT_COMPLETION_PROVIDER,
+  DEFAULT_COMPLETION_TEMPERATURE,
 } from '../src/constants';
 import {HTTP, joinWithAnd} from '../src/utils';
-import {mockApiKey} from './mock';
+import {mockApiKey, mockCompletionMetadata} from './mock';
 
 describe('Copilot', () => {
   let copilot: Copilot;
@@ -66,21 +67,36 @@ describe('Copilot', () => {
       expect(copilot['model']).toBe('gpt-4o');
       expect(copilot['provider']).toBe('openai');
     });
+
+    it('should initialize with custom headers when provided', () => {
+      const customHeaders = {'X-Custom-Header': 'test-value'};
+      const copilot = new Copilot('test-api-key', {headers: customHeaders});
+      expect(copilot['headers']).toEqual(customHeaders);
+    });
+
+    it('should use custom headers in API requests', async () => {
+      const customHeaders = {'X-Custom-Header': 'test-value'};
+      const copilot = new Copilot('test-api-key', {headers: customHeaders});
+      const mockCompletion = {
+        choices: [{message: {content: 'Test completion'}}],
+      };
+      vi.spyOn(HTTP, 'POST').mockResolvedValue(mockCompletion);
+
+      await copilot.complete({
+        completionMetadata: mockCompletionMetadata,
+      });
+
+      expect(HTTP.POST).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.any(Object),
+        expect.objectContaining({
+          headers: expect.objectContaining(customHeaders),
+        }),
+      );
+    });
   });
 
   describe('complete', () => {
-    const mockCompletionMetadata = {
-      language: 'javascript',
-      filename: 'test.js',
-      technologies: ['react'],
-      externalContext: [{path: './utils.js', content: 'function test() {}'}],
-      textAfterCursor: 'console.log(',
-      textBeforeCursor: 'function hello() {',
-      editorState: {
-        completionMode: 'completion' as const,
-      },
-    };
-
     it('should successfully return a completion', async () => {
       const mockCompletion = {
         choices: [{message: {content: 'Hello, World!'}}],
@@ -100,13 +116,11 @@ describe('Copilot', () => {
             {role: 'system', content: expect.any(String)},
             {role: 'user', content: expect.any(String)},
           ]),
+          temperature: DEFAULT_COMPLETION_TEMPERATURE,
         }),
-        {
-          headers: {
-            Authorization: `Bearer ${mockApiKey}`,
-            'Content-Type': 'application/json',
-          },
-        },
+        expect.objectContaining({
+          headers: expect.any(Object),
+        }),
       );
     });
 

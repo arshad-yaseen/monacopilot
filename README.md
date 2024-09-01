@@ -9,9 +9,9 @@
 - [Examples](#examples)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Copilot Instance Options](#copilot-instance-options)
 - [Configuration Options](#configuration-options)
   - [External Context](#external-context)
-  - [Changing the Provider and Model](#changing-the-provider-and-model)
   - [Filename](#filename)
   - [Completions for Specific Technologies](#completions-for-specific-technologies)
 - [Cost Overview](#cost-overview)
@@ -39,6 +39,8 @@ npm install monacopilot
 ## Usage
 
 #### Setting Up the API Key
+
+In this example, we'll use Groq as our provider.
 
 Start by obtaining an API key from the [Groq console](https://console.groq.com/keys). Once you have your API key, define it as an environment variable in your project:
 
@@ -87,6 +89,43 @@ registerCopilot(monaco, editor, {
 });
 ```
 
+## Copilot Instance Options
+
+### Changing the Provider and Model
+
+You can specify a different provider and model for completions by setting the `provider` and `model` parameters in the `Copilot` instance.
+
+```javascript
+const copilot = new Copilot(process.env.OPENAI_API_KEY, {
+  provider: 'openai',
+  model: 'gpt-4o',
+});
+```
+
+The default provider is `groq` and the default model is `llama-3-70b`.
+
+| Provider  | Model             | Description                                                                                                   |
+| --------- | ----------------- | ------------------------------------------------------------------------------------------------------------- |
+| Groq      | llama-3-70b       | Ultra-fast inference (<0.5s response time), balancing speed and quality for a wide range of coding tasks      |
+| OpenAI    | gpt-4o-mini       | Compact version of gpt-4o, offering cost-effective completions with good performance                          |
+| OpenAI    | gpt-4o            | State-of-the-art model, excelling in complex reasoning and generating high-quality, context-aware completions |
+| Anthropic | Claude-3.5-Sonnet | Advanced AI with broad knowledge, ideal for diverse coding scenarios and natural language understanding       |
+| Anthropic | Claude-3-Opus     | Top-tier AI model, exceptional at handling intricate tasks and providing detailed, nuanced completions        |
+| Anthropic | Claude-3-Sonnet   | Versatile and powerful, offering a great balance between performance and efficiency for various coding needs  |
+| Anthropic | Claude-3-Haiku    | Streamlined model optimized for speed, perfect for quick completions and real-time coding assistance          |
+
+### Custom Headers
+
+You can add custom headers to all API requests made by Monacopilot.
+
+```javascript
+const copilot = new Copilot(process.env.API_KEY, {
+  headers: {
+    'X-Custom-Header': 'custom-value',
+  },
+});
+```
+
 ## Configuration Options
 
 ### External Context
@@ -107,25 +146,6 @@ registerCopilot(monaco, editor, {
 ```
 
 By providing external context, Copilot can offer more intelligent suggestions. For example, if you start typing `const isPalindrome = `, Copilot may suggest using the `reverse` function from `utils.js`.
-
-### Changing the Provider and Model
-
-You can specify a different provider and model for completions by setting the `provider` and `model` parameters in the `Copilot` instance.
-
-```javascript
-const copilot = new Copilot(process.env.OPENAI_API_KEY, {
-  provider: 'openai',
-  model: 'gpt-4o',
-});
-```
-
-The default provider is `groq` and the default model is `llama-3-70b`.
-
-| Provider | Model       | Description                                       | Avg. Response Time |
-| -------- | ----------- | ------------------------------------------------- | ------------------ |
-| Groq     | llama-3-70b | Fast and efficient, suitable for most tasks       | <0.5s              |
-| OpenAI   | gpt-4o-mini | Mini version of gpt-4o, cheaper                   | 1.5-3s             |
-| OpenAI   | gpt-4o      | Highly intelligent, ideal for complex completions | 1-2s               |
 
 ### Filename
 
@@ -152,18 +172,6 @@ registerCopilot(monaco, editor, {
 ```
 
 This configuration will provide completions relevant to React, Next.js, and Tailwind CSS.
-
-## Cost Overview
-
-The cost of completions is very affordable. See the table below for an estimate of the costs you will need to pay for completions.
-
-| Provider | Model       | Avg. Cost per 1000 Code Completions |
-| -------- | ----------- | ----------------------------------- |
-| Groq     | llama-3-70b | $0.939                              |
-| OpenAI   | gpt-4o-mini | $0.821                              |
-| OpenAI   | gpt-4o      | $3.46                               |
-
-> **Note:** Currently, Groq does not implement billing, allowing free usage of their API. During this free period, you will experience minimal rate limiting and some latency in completions. You can opt for Groq's enterprise plan to benefit from increased rate limits and get quick completions without visible latency.
 
 ## FAQ
 

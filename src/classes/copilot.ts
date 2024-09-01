@@ -5,7 +5,7 @@ import {
 } from '../constants';
 import {ErrorContext, handleError} from '../error';
 import {
-  createHeaders,
+  createProviderHeaders,
   createRequestBody,
   getProviderCompletionEndpoint,
   parseProviderChatCompletion,
@@ -28,12 +28,12 @@ export class Copilot {
   private readonly apiKey: string;
   private readonly provider: CompletionProvider;
   private readonly model: CompletionModel;
+  private readonly headers: Record<string, string>;
 
   /**
    * Initializes the Copilot with an API key and optional configuration.
    * @param apiKey - The API key for the chosen provider.
-   * @param options - Optional parameters to configure the completion model.
-   * @throws {Error} If the API key is not provided or if there's a mismatch between provider and model.
+   * @param options - Options for configuring the Copilot instance.
    */
   constructor(apiKey: string, options: CopilotOptions = {}) {
     this.validateInputs(apiKey, options);
@@ -41,6 +41,7 @@ export class Copilot {
     this.apiKey = apiKey;
     this.provider = options.provider ?? DEFAULT_COMPLETION_PROVIDER;
     this.model = options.model ?? DEFAULT_COMPLETION_MODEL;
+    this.headers = options.headers ?? {};
   }
 
   /**
@@ -57,13 +58,15 @@ export class Copilot {
         this.model,
         this.provider,
       );
-      const headers = createHeaders(this.apiKey, this.provider);
       const endpoint = getProviderCompletionEndpoint(this.provider);
+      const providerHeaders = createProviderHeaders(this.apiKey, this.provider);
 
       const chatCompletion = await HTTP.POST<
         ChatCompletion,
         ChatCompletionCreateParams
-      >(endpoint, body, {headers});
+      >(endpoint, body, {
+        headers: {...this.headers, ...providerHeaders},
+      });
 
       return parseProviderChatCompletion(chatCompletion, this.provider);
     } catch (error) {
