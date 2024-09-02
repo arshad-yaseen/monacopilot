@@ -9,7 +9,7 @@
 - [Examples](#examples)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Copilot Instance Options](#copilot-instance-options)
+- [Copilot Options](#copilot-options)
   - [Changing the Provider and Model](#changing-the-provider-and-model)
   - [Custom Headers](#custom-headers)
 - [Configuration Options](#configuration-options)
@@ -91,7 +91,7 @@ registerCopilot(monaco, editor, {
 });
 ```
 
-## Copilot Instance Options
+## Copilot Options
 
 ### Changing the Provider and Model
 
@@ -118,7 +118,7 @@ The default provider is `groq` and the default model is `llama-3-70b`.
 
 ### Custom Headers
 
-You can add custom headers to the provider's completion requests. For example, if you select `OpenAI` as your provider, you can add a custom header to the OpenAI chat completion requests made by Monacopilot.
+You can add custom headers to the provider's completion requests. For example, if you select `OpenAI` as your provider, you can add a custom header to the OpenAI completion requests made by Monacopilot.
 
 ```javascript
 const copilot = new Copilot(process.env.API_KEY, {
