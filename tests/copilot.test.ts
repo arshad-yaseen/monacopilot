@@ -67,33 +67,6 @@ describe('Copilot', () => {
       expect(copilot['model']).toBe('gpt-4o');
       expect(copilot['provider']).toBe('openai');
     });
-
-    it('should initialize with custom headers when provided', () => {
-      const customHeaders = {'X-Custom-Header': 'test-value'};
-      const copilot = new Copilot('test-api-key', {headers: customHeaders});
-      expect(copilot['headers']).toEqual(customHeaders);
-    });
-
-    it('should use custom headers in API requests', async () => {
-      const customHeaders = {'X-Custom-Header': 'test-value'};
-      const copilot = new Copilot('test-api-key', {headers: customHeaders});
-      const mockCompletion = {
-        choices: [{message: {content: 'Test completion'}}],
-      };
-      vi.spyOn(HTTP, 'POST').mockResolvedValue(mockCompletion);
-
-      await copilot.complete({
-        completionMetadata: mockCompletionMetadata,
-      });
-
-      expect(HTTP.POST).toHaveBeenCalledWith(
-        expect.any(String),
-        expect.any(Object),
-        expect.objectContaining({
-          headers: expect.objectContaining(customHeaders),
-        }),
-      );
-    });
   });
 
   describe('complete', () => {
@@ -104,7 +77,9 @@ describe('Copilot', () => {
       vi.spyOn(HTTP, 'POST').mockResolvedValue(mockCompletion);
 
       const result = await copilot.complete({
-        completionMetadata: mockCompletionMetadata,
+        body: {
+          completionMetadata: mockCompletionMetadata,
+        },
       });
 
       expect(result).toEqual({completion: 'Hello, World!'});
@@ -129,7 +104,9 @@ describe('Copilot', () => {
       vi.spyOn(HTTP, 'POST').mockRejectedValue(mockError);
 
       const result = await copilot.complete({
-        completionMetadata: mockCompletionMetadata,
+        body: {
+          completionMetadata: mockCompletionMetadata,
+        },
       });
 
       expect(result).toEqual({
@@ -143,7 +120,9 @@ describe('Copilot', () => {
       vi.spyOn(HTTP, 'POST').mockResolvedValue(mockEmptyCompletion);
 
       const result = await copilot.complete({
-        completionMetadata: mockCompletionMetadata,
+        body: {
+          completionMetadata: mockCompletionMetadata,
+        },
       });
 
       expect(result).toEqual({
@@ -165,7 +144,9 @@ describe('Copilot', () => {
       vi.spyOn(HTTP, 'POST').mockResolvedValue(mockCompletion);
 
       await customCopilot.complete({
-        completionMetadata: mockCompletionMetadata,
+        body: {
+          completionMetadata: mockCompletionMetadata,
+        },
       });
 
       expect(HTTP.POST).toHaveBeenCalledWith(
@@ -183,13 +164,40 @@ describe('Copilot', () => {
       vi.spyOn(HTTP, 'POST').mockRejectedValue(mockError);
 
       const result = await copilot.complete({
-        completionMetadata: mockCompletionMetadata,
+        body: {
+          completionMetadata: mockCompletionMetadata,
+        },
       });
 
       expect(result).toEqual({
         error: expect.stringContaining('Network error'),
         completion: null,
       });
+    });
+
+    it('should use custom headers in API requests', async () => {
+      const customHeaders = {'X-Custom-Header': 'test-value'};
+      const mockCompletion = {
+        choices: [{message: {content: 'Test completion'}}],
+      };
+      vi.spyOn(HTTP, 'POST').mockResolvedValue(mockCompletion);
+
+      await copilot.complete({
+        body: {
+          completionMetadata: mockCompletionMetadata,
+        },
+        options: {
+          headers: customHeaders,
+        },
+      });
+
+      expect(HTTP.POST).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.any(Object),
+        expect.objectContaining({
+          headers: expect.objectContaining(customHeaders),
+        }),
+      );
     });
   });
 });
