@@ -28,7 +28,6 @@ export class Copilot {
   private readonly apiKey: string;
   private readonly provider: CompletionProvider;
   private readonly model: CompletionModel;
-  private readonly headers: Record<string, string>;
 
   /**
    * Initializes the Copilot with an API key and optional configuration.
@@ -41,7 +40,6 @@ export class Copilot {
     this.apiKey = apiKey;
     this.provider = options.provider ?? DEFAULT_COMPLETION_PROVIDER;
     this.model = options.model ?? DEFAULT_COMPLETION_MODEL;
-    this.headers = options.headers ?? {};
   }
 
   /**
@@ -50,31 +48,35 @@ export class Copilot {
    * @returns A promise resolving to the completed text snippet or an error.
    */
   public async complete({
-    completionMetadata,
+    body,
+    options,
   }: CompletionRequest): Promise<CompletionResponse> {
+    const {completionMetadata} = body;
+    const {headers: customHeaders = {}} = options ?? {};
+
     try {
-      const body = createRequestBody(
+      const requestBody = createRequestBody(
         completionMetadata,
         this.model,
         this.provider,
       );
+
       const endpoint = getProviderCompletionEndpoint(this.provider);
       const providerHeaders = createProviderHeaders(this.apiKey, this.provider);
+      const mergedHeaders = {...customHeaders, ...providerHeaders};
 
       const chatCompletion = await HTTP.POST<
         ChatCompletion,
         ChatCompletionCreateParams
-      >(endpoint, body, {
-        headers: {...this.headers, ...providerHeaders},
-      });
+      >(endpoint, requestBody, {headers: mergedHeaders});
 
       return parseProviderChatCompletion(chatCompletion, this.provider);
     } catch (error) {
-      const _details = handleError(
+      const errorDetails = handleError(
         error,
         ErrorContext.COPILOT_COMPLETION_FETCH,
       );
-      return {error: _details.message, completion: null};
+      return {error: errorDetails.message, completion: null};
     }
   }
 

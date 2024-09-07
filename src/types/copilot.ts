@@ -22,11 +22,6 @@ export interface CopilotOptions {
    * If not specified, a default model will be used.
    */
   model?: CompletionModel;
-
-  /**
-   * Additional headers to include in the completion requests.
-   */
-  headers?: Record<string, string>;
 }
 
 export type Endpoint = string;

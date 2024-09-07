@@ -11,6 +11,7 @@
 - [Usage](#usage)
 - [Copilot Options](#copilot-options)
   - [Changing the Provider and Model](#changing-the-provider-and-model)
+- [Copilot Completion Request Options](#copilot-completion-request-options)
   - [Custom Headers](#custom-headers)
 - [Configuration Options](#configuration-options)
   - [External Context](#external-context)
@@ -67,16 +68,22 @@ const copilot = new Copilot(process.env.GROQ_API_KEY);
 app.use(express.json());
 
 app.post('/copilot', async (req, res) => {
-  const completion = await copilot.complete(req.body);
+  const completion = await copilot.complete({
+    body: req.body,
+  });
   res.status(200).json(completion);
 });
 
 app.listen(port);
 ```
 
+Great! Now Monacopilot is all set up to send completion requests to the `/copilot` endpoint and get those completions back. It's like a high-five between your code and the AI!
+
+The `copilot.complete` method processes the request body sent by Monacopilot and returns the corresponding completion.
+
 #### Register Copilot with the Monaco Editor
 
-Next, register Copilot with the Monaco editor.
+Now, let's integrate Copilot with the Monaco editor. Here's how you can do it:
 
 ```javascript
 import * as monaco from 'monaco-editor';
@@ -91,6 +98,9 @@ registerCopilot(monaco, editor, {
   language: 'javascript',
 });
 ```
+
+- `endpoint`: The URL of the API endpoint that we created in the previous step.
+- `language`: The language of the editor.
 
 ## Copilot Options
 
@@ -117,14 +127,20 @@ The default provider is `groq` and the default model is `llama-3-70b`.
 | Anthropic | Claude-3-Sonnet   | Versatile and powerful, offering a great balance between performance and efficiency for various coding needs  |
 | Anthropic | Claude-3-Haiku    | Streamlined model optimized for speed, perfect for quick completions and real-time coding assistance          |
 
+## Copilot Completion Request Options
+
 ### Custom Headers
 
 You can add custom headers to the provider's completion requests. For example, if you select `OpenAI` as your provider, you can add a custom header to the OpenAI completion requests made by Monacopilot.
 
 ```javascript
-const copilot = new Copilot(process.env.API_KEY, {
-  headers: {
-    'X-Custom-Header': 'custom-value',
+copilot.complete({
+  body,
+  options: {
+    // ...other options
+    headers: {
+      'X-Custom-Header': 'custom-value',
+    },
   },
 });
 ```

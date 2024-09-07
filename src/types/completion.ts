@@ -61,8 +61,30 @@ export interface LocalPrediction {
 }
 
 export interface CompletionRequest {
+  /**
+   * The body of the completion request.
+   */
+  body: CompletionRequestBody;
+  /**
+   * Additional options to include in the completion request.
+   */
+  options?: CompletionRequestOptions;
+}
+
+export interface CompletionRequestBody {
+  /**
+   * The metadata required to generate the completion.
+   */
   completionMetadata: CompletionMetadata;
 }
+
+export interface CompletionRequestOptions {
+  /**
+   * Additional headers to include in the provider's completion requests.
+   */
+  headers?: Record<string, string>;
+}
+
 export interface CompletionResponse {
   completion: string | null;
   error?: string;
