@@ -15,7 +15,7 @@
     "@remix-run/react": "^2.11.2",
     "@remix-run/serve": "^2.11.2",
     "isbot": "^4.4.0",
-    "monacopilot": "^0.9.20",
+    "monacopilot": "^0.9.22",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
