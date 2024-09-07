@@ -10,5 +10,9 @@ export type {
   CopilotRegistration,
   CopilotOptions,
   CompletionRequest,
+  CompletionRequestBody,
+  CompletionRequestOptions,
+  CompletionProvider,
+  CompletionModel,
   CompletionResponse,
 } from './types';
