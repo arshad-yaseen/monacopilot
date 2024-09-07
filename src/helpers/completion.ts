@@ -30,14 +30,16 @@ export const fetchCompletionItem = async ({
     const {completion} = await HTTP.POST<CompletionResponse, CompletionRequest>(
       endpoint,
       {
-        completionMetadata: constructCompletionMetadata({
-          filename,
-          position,
-          model,
-          language,
-          technologies,
-          externalContext,
-        }),
+        body: {
+          completionMetadata: constructCompletionMetadata({
+            filename,
+            position,
+            model,
+            language,
+            technologies,
+            externalContext,
+          }),
+        },
       },
       {
         headers: {'Content-Type': CONTENT_TYPE_JSON},
