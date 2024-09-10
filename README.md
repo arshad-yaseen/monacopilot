@@ -170,24 +170,30 @@ copilot.complete({
 
 The `customPrompt` function receives a `completionMetadata` object with the following properties:
 
-- `language`: The programming language of the code (string).
-- `cursorPosition`: The current cursor position in the editor (object with `lineNumber` and `column` properties).
-- `filename`: The name of the file being edited (string | undefined). Only available if you have provided the `filename` option in the `registerCopilot` function.
-- `technologies`: An array of technologies used in the project (string[] | undefined). Only available if you have provided the `technologies` option in the `registerCopilot` function.
-- `externalContext`: Additional context from related files (object | undefined). Only available if you have provided the `externalContext` option in the `registerCopilot` function.
-- `textAfterCursor`: The text that appears after the cursor (string).
-- `textBeforeCursor`: The text that appears before the cursor (string).
-- `editorState`: An object containing:
-  - `completionMode`: The current completion mode, which can be either:
-    - `'fill-in-the-middle'`: Indicates that the cursor is positioned within the existing text. In this mode, the AI will generate content to be inserted at the cursor position, effectively filling in the middle of the text.
-    - `'completion'`: Indicates that the cursor is at the end of the existing text. In this mode, the AI will generate content to continue or complete the text from the cursor position onwards.
+| Property         | Type                                 | Description                                                                                                                                    |
+| ---------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| language         | string                               | The programming language of the code                                                                                                           |
+| cursorPosition   | {lineNumber: number, column: number} | The current cursor position in the editor                                                                                                      |
+| filename         | string \| undefined                  | The name of the file being edited. Only available if you have provided the `filename` option in the `registerCopilot` function.                |
+| technologies     | string[] \| undefined                | An array of technologies used in the project. Only available if you have provided the `technologies` option in the `registerCopilot` function. |
+| externalContext  | object \| undefined                  | Additional context from related files. Only available if you have provided the `externalContext` option in the `registerCopilot` function.     |
+| textAfterCursor  | string                               | The text that appears after the cursor                                                                                                         |
+| textBeforeCursor | string                               | The text that appears before the cursor                                                                                                        |
+| editorState      | object                               | An object containing the `completionMode` property                                                                                             |
 
-Each property provides specific information to help generate more accurate and context-aware completions.
+The `editorState.completionMode` can be one of the following:
+
+| Mode               | Description                                                                                                                                                         |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| fill-in-the-middle | Indicates that the cursor is positioned within the existing text. In this mode, the AI will generate content to be inserted at the cursor position.                 |
+| completion         | Indicates that the cursor is at the end of the existing text. In this mode, the AI will generate content to continue or complete the text from the cursor position. |
 
 The customPrompt function should return an object with two properties:
 
-- `system`: A string representing the system prompt for the AI model
-- `user`: A string representing the user prompt for the AI model
+| Property | Type   | Description                                        |
+| -------- | ------ | -------------------------------------------------- |
+| system   | string | A string representing the system prompt for the AI |
+| user     | string | A string representing the user prompt for the AI   |
 
 #### Example
 

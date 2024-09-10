@@ -141,8 +141,8 @@ export interface CompletionMetadata {
   editorState: {
     /**
      * The mode of the completion.
-     * - `fill-in-the-middle`: The cursor is in the middle of the code, So the AI should fill in the middle of the code.
-     * - `completion`: The cursor is at the end of the code, So the AI should complete the code.
+     * - `fill-in-the-middle`: Indicates that the cursor is positioned within the existing text. In this mode, the AI will generate content to be inserted at the cursor position.
+     * - `completion`: Indicates that the cursor is at the end of the existing text. In this mode, the AI will generate content to continue or complete the text from the cursor position.
      */
     completionMode: CompletionMode;
   };
