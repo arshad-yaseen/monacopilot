@@ -11,7 +11,15 @@ import {
   DEFAULT_COMPLETION_TEMPERATURE,
 } from '../src/constants';
 import {HTTP, joinWithAnd} from '../src/utils';
-import {mockApiKey, mockCompletionMetadata} from './mock';
+import {
+  MOCK_COMPLETION_CONTENT,
+  mockApiKey,
+  mockCompletion,
+  mockCompletionMetadata,
+  mockEmptyCompletion,
+  mockError,
+  mockNetworkError,
+} from './mock';
 
 describe('Copilot', () => {
   let copilot: Copilot;
@@ -72,9 +80,6 @@ describe('Copilot', () => {
 
   describe('complete', () => {
     it('should successfully return a completion', async () => {
-      const mockCompletion = {
-        choices: [{message: {content: 'Hello, World!'}}],
-      };
       vi.spyOn(HTTP, 'POST').mockResolvedValue(mockCompletion);
 
       const result = await copilot.complete({
@@ -83,7 +88,7 @@ describe('Copilot', () => {
         },
       });
 
-      expect(result).toEqual({completion: 'Hello, World!'});
+      expect(result).toEqual({completion: MOCK_COMPLETION_CONTENT});
       expect(HTTP.POST).toHaveBeenCalledWith(
         CHAT_COMPLETION_ENDPOINT_BY_PROVIDER[DEFAULT_COMPLETION_PROVIDER],
         expect.objectContaining({
@@ -101,7 +106,6 @@ describe('Copilot', () => {
     });
 
     it('should handle API errors and return an error response', async () => {
-      const mockError = new Error('API Error');
       vi.spyOn(HTTP, 'POST').mockRejectedValue(mockError);
 
       const result = await copilot.complete({
@@ -117,7 +121,6 @@ describe('Copilot', () => {
     });
 
     it('should throw an error when no completion choices are received', async () => {
-      const mockEmptyCompletion = {choices: []};
       vi.spyOn(HTTP, 'POST').mockResolvedValue(mockEmptyCompletion);
 
       const result = await copilot.complete({
@@ -139,9 +142,6 @@ describe('Copilot', () => {
         provider: 'openai',
         model: 'gpt-4o',
       });
-      const mockCompletion = {
-        choices: [{message: {content: 'Custom completion'}}],
-      };
       vi.spyOn(HTTP, 'POST').mockResolvedValue(mockCompletion);
 
       await customCopilot.complete({
@@ -160,9 +160,8 @@ describe('Copilot', () => {
     });
 
     it('should handle network errors', async () => {
-      const mockError = new Error('Network error');
       mockError.name = 'NetworkError';
-      vi.spyOn(HTTP, 'POST').mockRejectedValue(mockError);
+      vi.spyOn(HTTP, 'POST').mockRejectedValue(mockNetworkError);
 
       const result = await copilot.complete({
         body: {
@@ -178,9 +177,6 @@ describe('Copilot', () => {
 
     it('should use custom headers in API requests', async () => {
       const customHeaders = {'X-Custom-Header': 'test-value'};
-      const mockCompletion = {
-        choices: [{message: {content: 'Test completion'}}],
-      };
       vi.spyOn(HTTP, 'POST').mockResolvedValue(mockCompletion);
 
       await copilot.complete({
@@ -206,9 +202,6 @@ describe('Copilot', () => {
         system: 'Custom system prompt',
         user: `Custom user prompt: ${metadata.textBeforeCursor}`,
       });
-      const mockCompletion = {
-        choices: [{message: {content: 'Test completion'}}],
-      };
       vi.spyOn(HTTP, 'POST').mockResolvedValue(mockCompletion);
 
       await copilot.complete({
@@ -236,9 +229,6 @@ describe('Copilot', () => {
     });
 
     it('should use default prompt when custom prompt is not provided', async () => {
-      const mockCompletion = {
-        choices: [{message: {content: 'Test completion'}}],
-      };
       vi.spyOn(HTTP, 'POST').mockResolvedValue(mockCompletion);
 
       await copilot.complete({
@@ -252,6 +242,37 @@ describe('Copilot', () => {
         expect.objectContaining({
           messages: [
             {role: 'system', content: expect.any(String)},
+            {role: 'user', content: expect.any(String)},
+          ],
+        }),
+        expect.any(Object),
+      );
+    });
+
+    it('should use custom system prompt while retaining default user prompt', async () => {
+      vi.spyOn(HTTP, 'POST').mockResolvedValue(mockCompletion);
+
+      await copilot.complete({
+        body: {
+          completionMetadata: mockCompletionMetadata,
+        },
+        options: {
+          customPrompt: () => ({
+            system:
+              'You are an AI assistant specialized in writing React components.',
+          }),
+        },
+      });
+
+      expect(HTTP.POST).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          messages: [
+            {
+              role: 'system',
+              content:
+                'You are an AI assistant specialized in writing React components.',
+            },
             {role: 'user', content: expect.any(String)},
           ],
         }),

@@ -23,3 +23,14 @@ export const mockCompletionMetadata: CompletionMetadata = {
     completionMode: 'completion',
   },
 };
+
+export const MOCK_COMPLETION_CONTENT = 'Test completion';
+
+export const mockCompletion = {
+  choices: [{message: {content: MOCK_COMPLETION_CONTENT}}],
+};
+
+export const mockEmptyCompletion = {choices: []};
+
+export const mockError = new Error('API Error');
+export const mockNetworkError = new Error('Network error');
