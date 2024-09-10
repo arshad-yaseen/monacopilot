@@ -11,10 +11,11 @@ import {
   CompletionModel,
   CompletionProvider,
   CompletionResponse,
+  CustomPrompt,
   PickChatCompletion,
   PickChatCompletionCreateParams,
 } from '../types';
-import {generateSystemPrompt, generateUserPrompt} from './prompt';
+import generatePrompt from './prompt';
 
 /**
  * Creates a request body for different completion providers.
@@ -23,29 +24,25 @@ export const createRequestBody = (
   completionMetadata: CompletionMetadata,
   model: CompletionModel,
   provider: CompletionProvider,
+  customPrompt: CustomPrompt | undefined,
 ): PickChatCompletionCreateParams<CompletionProvider> => {
-  const systemPrompt = generateSystemPrompt(completionMetadata);
-  const userPrompt = generateUserPrompt(completionMetadata);
-  const modelId = getModelId(model);
+  const {system: systemPrompt, user: userPrompt} = customPrompt
+    ? customPrompt(completionMetadata)
+    : generatePrompt(completionMetadata);
 
   const commonParams = {
-    model: modelId,
+    model: getModelId(model),
     temperature: DEFAULT_COMPLETION_TEMPERATURE,
   };
 
+  const messages = [
+    {role: 'system', content: systemPrompt},
+    {role: 'user', content: userPrompt},
+  ];
+
   const providerSpecificParams = {
-    openai: {
-      messages: [
-        {role: 'system', content: systemPrompt},
-        {role: 'user', content: userPrompt},
-      ],
-    },
-    groq: {
-      messages: [
-        {role: 'system', content: systemPrompt},
-        {role: 'user', content: userPrompt},
-      ],
-    },
+    openai: {messages},
+    groq: {messages},
     anthropic: {
       system: systemPrompt,
       messages: [{role: 'user', content: userPrompt}],

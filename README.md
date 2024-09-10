@@ -13,6 +13,7 @@
   - [Changing the Provider and Model](#changing-the-provider-and-model)
 - [Copilot Completion Request Options](#copilot-completion-request-options)
   - [Custom Headers](#custom-headers)
+  - [Custom Prompt](#custom-prompt)
 - [Configuration Options](#configuration-options)
   - [External Context](#external-context)
   - [Filename](#filename)
@@ -39,6 +40,8 @@ To install Monacopilot, run:
 ```bash
 npm install monacopilot
 ```
+
+For TypeScript users, You can import most of the types from `monacopilot` package.
 
 ## Usage
 
@@ -144,6 +147,80 @@ copilot.complete({
   },
 });
 ```
+
+### Custom Prompt
+
+You can customize the prompt used for generating completions by providing a `customPrompt` function in the options parameter of the `copilot.complete` method. This allows you to tailor the AI's behavior to your specific needs.
+
+#### Usage
+
+```javascript
+copilot.complete({
+  body,
+  options: {
+    customPrompt: metadata => ({
+      system: 'Your custom system prompt here',
+      user: 'Your custom user prompt here',
+    }),
+  },
+});
+```
+
+#### Parameters
+
+The `customPrompt` function receives a `completionMetadata` object with the following properties:
+
+| Property         | Type                                 | Description                                                                                                                                    |
+| ---------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| language         | string                               | The programming language of the code                                                                                                           |
+| cursorPosition   | {lineNumber: number, column: number} | The current cursor position in the editor                                                                                                      |
+| filename         | string \| undefined                  | The name of the file being edited. Only available if you have provided the `filename` option in the `registerCopilot` function.                |
+| technologies     | string[] \| undefined                | An array of technologies used in the project. Only available if you have provided the `technologies` option in the `registerCopilot` function. |
+| externalContext  | object \| undefined                  | Additional context from related files. Only available if you have provided the `externalContext` option in the `registerCopilot` function.     |
+| textAfterCursor  | string                               | The text that appears after the cursor                                                                                                         |
+| textBeforeCursor | string                               | The text that appears before the cursor                                                                                                        |
+| editorState      | object                               | An object containing the `completionMode` property                                                                                             |
+
+The `editorState.completionMode` can be one of the following:
+
+| Mode               | Description                                                                                                                                                         |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| fill-in-the-middle | Indicates that the cursor is positioned within the existing text. In this mode, the AI will generate content to be inserted at the cursor position.                 |
+| completion         | Indicates that the cursor is at the end of the existing text. In this mode, the AI will generate content to continue or complete the text from the cursor position. |
+
+For additional `completionMetadata` needs, please [open an issue](https://github.com/arshad-yaseen/monacopilot/issues/new).
+
+The `customPrompt` function should return an object with two properties:
+
+| Property | Type   | Description                                           |
+| -------- | ------ | ----------------------------------------------------- |
+| system   | string | A string representing the system prompt for the model |
+| user     | string | A string representing the user prompt for the model   |
+
+#### Example
+
+Here's an example of a custom prompt that focuses on generating React component code:
+
+```javascript
+const customPrompt = ({textBeforeCursor, textAfterCursor}) => ({
+  system:
+    'You are an AI assistant specialized in writing React components. Focus on creating clean, reusable, and well-structured components.',
+  user: `Please complete the following React component:
+
+${textBeforeCursor}
+// Cursor position
+${textAfterCursor}
+
+Use modern React practices and hooks where appropriate. If you're adding new props, make sure to include proper TypeScript types. Please provide only the finished code without additional comments or explanations.`,
+});
+
+copilot.complete({
+  body,
+  options: {customPrompt},
+});
+```
+
+By using a custom prompt, you can guide the model to generate completions that better fit your coding style, project requirements, or specific technologies you're working with.
 
 ## Configuration Options
 
