@@ -279,5 +279,21 @@ describe('Copilot', () => {
         expect.any(Object),
       );
     });
+
+    it('should pass complete CompletionMetadata to customPrompt and handle optional properties correctly', () => {
+      const customPrompt = (metadata: CompletionMetadata) => ({
+        system: 'Custom system prompt',
+        user: `Custom user prompt: ${metadata.textBeforeCursor}`,
+      });
+
+      const prompt = customPrompt(mockCompletionMetadata);
+
+      expect(prompt.system).toBe('Custom system prompt');
+      expect(prompt.user).toBe('Custom user prompt: function hello() {');
+      expect(prompt.system).toBeDefined();
+      expect(prompt.user).toBeDefined();
+      expect(prompt.system).not.toBeUndefined();
+      expect(prompt.user).not.toBeUndefined();
+    });
   });
 });
