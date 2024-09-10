@@ -41,7 +41,7 @@ To install Monacopilot, run:
 npm install monacopilot
 ```
 
-For TypeScript users, You can import most of the types from `monacopilot` package.
+🧩 For TypeScript users, You can import most of the types from `monacopilot` package.
 
 ## Usage
 
@@ -170,16 +170,16 @@ copilot.complete({
 
 The `customPrompt` function receives a `completionMetadata` object with the following properties:
 
-| Property         | Type                                 | Description                                                                                                                                    |
-| ---------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| language         | string                               | The programming language of the code                                                                                                           |
-| cursorPosition   | {lineNumber: number, column: number} | The current cursor position in the editor                                                                                                      |
-| filename         | string \| undefined                  | The name of the file being edited. Only available if you have provided the `filename` option in the `registerCopilot` function.                |
-| technologies     | string[] \| undefined                | An array of technologies used in the project. Only available if you have provided the `technologies` option in the `registerCopilot` function. |
-| externalContext  | object \| undefined                  | Additional context from related files. Only available if you have provided the `externalContext` option in the `registerCopilot` function.     |
-| textAfterCursor  | string                               | The text that appears after the cursor                                                                                                         |
-| textBeforeCursor | string                               | The text that appears before the cursor                                                                                                        |
-| editorState      | object                               | An object containing the `completionMode` property                                                                                             |
+| Property         | Type                                   | Description                                                                                                                                    |
+| ---------------- | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| language         | `string`                               | The programming language of the code                                                                                                           |
+| cursorPosition   | `{lineNumber: number, column: number}` | The current cursor position in the editor                                                                                                      |
+| filename         | `string \| undefined`                  | The name of the file being edited. Only available if you have provided the `filename` option in the `registerCopilot` function.                |
+| technologies     | `string[] \| undefined`                | An array of technologies used in the project. Only available if you have provided the `technologies` option in the `registerCopilot` function. |
+| externalContext  | `object \| undefined`                  | Additional context from related files. Only available if you have provided the `externalContext` option in the `registerCopilot` function.     |
+| textAfterCursor  | `string`                               | The text that appears after the cursor                                                                                                         |
+| textBeforeCursor | `string`                               | The text that appears before the cursor                                                                                                        |
+| editorState      | `object`                               | An object containing the `completionMode` property                                                                                             |
 
 The `editorState.completionMode` can be one of the following:
 
