@@ -188,12 +188,14 @@ The `editorState.completionMode` can be one of the following:
 | fill-in-the-middle | Indicates that the cursor is positioned within the existing text. In this mode, the AI will generate content to be inserted at the cursor position.                 |
 | completion         | Indicates that the cursor is at the end of the existing text. In this mode, the AI will generate content to continue or complete the text from the cursor position. |
 
-The customPrompt function should return an object with two properties:
+The `customPrompt` function should return an object with two properties:
 
 | Property | Type   | Description                                           |
 | -------- | ------ | ----------------------------------------------------- |
 | system   | string | A string representing the system prompt for the model |
 | user     | string | A string representing the user prompt for the model   |
+
+For additional `completionMetadata` needs, please [open an issue](https://github.com/arshad-yaseen/monacopilot/issues/new).
 
 #### Example
 
