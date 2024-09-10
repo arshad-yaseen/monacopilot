@@ -166,6 +166,20 @@ copilot.complete({
 });
 ```
 
+The `system` and `user` prompts in the `customPrompt` function are optional. Omitting either uses the default prompt for that field. Example of customizing only the system prompt:
+
+```javascript
+copilot.complete({
+  body,
+  options: {
+    customPrompt: metadata => ({
+      system:
+        'You are an AI assistant specialized in writing React components, focusing on creating clean...',
+    }),
+  },
+});
+```
+
 #### Parameters
 
 The `customPrompt` function receives a `completionMetadata` object with the following properties:
