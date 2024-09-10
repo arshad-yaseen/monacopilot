@@ -95,8 +95,8 @@ export interface CompletionRequestOptions {
 }
 
 export type CustomPrompt = (completionMetadata: CompletionMetadata) => {
-  system: string;
-  user: string;
+  system?: string;
+  user?: string;
 };
 
 export interface CompletionResponse {

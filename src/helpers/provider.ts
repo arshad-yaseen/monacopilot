@@ -26,9 +26,11 @@ export const createRequestBody = (
   provider: CompletionProvider,
   customPrompt: CustomPrompt | undefined,
 ): PickChatCompletionCreateParams<CompletionProvider> => {
-  const {system: systemPrompt, user: userPrompt} = customPrompt
-    ? customPrompt(completionMetadata)
-    : generatePrompt(completionMetadata);
+  const defaultPrompts = generatePrompt(completionMetadata);
+  const customPrompts = customPrompt ? customPrompt(completionMetadata) : {};
+
+  const systemPrompt = customPrompts.system ?? defaultPrompts.system;
+  const userPrompt = customPrompts.user ?? defaultPrompts.user;
 
   const commonParams = {
     model: getModelId(model),
