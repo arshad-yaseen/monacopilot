@@ -1,5 +1,6 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 
+import {CompletionMetadata} from '../src';
 import {Copilot} from '../src/classes/copilot';
 import {
   CHAT_COMPLETION_ENDPOINT_BY_PROVIDER,
@@ -197,6 +198,64 @@ describe('Copilot', () => {
         expect.objectContaining({
           headers: expect.objectContaining(customHeaders),
         }),
+      );
+    });
+
+    it('should use custom prompt when provided', async () => {
+      const customPrompt = (metadata: CompletionMetadata) => ({
+        system: 'Custom system prompt',
+        user: `Custom user prompt: ${metadata.textBeforeCursor}`,
+      });
+      const mockCompletion = {
+        choices: [{message: {content: 'Test completion'}}],
+      };
+      vi.spyOn(HTTP, 'POST').mockResolvedValue(mockCompletion);
+
+      await copilot.complete({
+        body: {
+          completionMetadata: mockCompletionMetadata,
+        },
+        options: {
+          customPrompt,
+        },
+      });
+
+      expect(HTTP.POST).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          messages: [
+            {role: 'system', content: 'Custom system prompt'},
+            {
+              role: 'user',
+              content: expect.stringContaining('Custom user prompt'),
+            },
+          ],
+        }),
+        expect.any(Object),
+      );
+    });
+
+    it('should use default prompt when custom prompt is not provided', async () => {
+      const mockCompletion = {
+        choices: [{message: {content: 'Test completion'}}],
+      };
+      vi.spyOn(HTTP, 'POST').mockResolvedValue(mockCompletion);
+
+      await copilot.complete({
+        body: {
+          completionMetadata: mockCompletionMetadata,
+        },
+      });
+
+      expect(HTTP.POST).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          messages: [
+            {role: 'system', content: expect.any(String)},
+            {role: 'user', content: expect.any(String)},
+          ],
+        }),
+        expect.any(Object),
       );
     });
   });

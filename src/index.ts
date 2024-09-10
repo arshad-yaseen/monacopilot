@@ -9,6 +9,7 @@ export type {
   RegisterCopilotOptions,
   CopilotRegistration,
   CopilotOptions,
+  CompletionMetadata,
   CompletionRequest,
   CompletionRequestBody,
   CompletionRequestOptions,

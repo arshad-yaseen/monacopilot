@@ -52,13 +52,14 @@ export class Copilot {
     options,
   }: CompletionRequest): Promise<CompletionResponse> {
     const {completionMetadata} = body;
-    const {headers: customHeaders = {}} = options ?? {};
+    const {headers: customHeaders = {}, customPrompt} = options ?? {};
 
     try {
       const requestBody = createRequestBody(
         completionMetadata,
         this.model,
         this.provider,
+        customPrompt,
       );
 
       const endpoint = getProviderCompletionEndpoint(this.provider);

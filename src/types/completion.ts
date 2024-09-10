@@ -83,7 +83,21 @@ export interface CompletionRequestOptions {
    * Additional headers to include in the provider's completion requests.
    */
   headers?: Record<string, string>;
+  /**
+   * Custom prompt generator function for the completion request.
+   * This function allows you to override the default system and user prompts
+   * used in the completion request, providing more control over the AI's context and behavior.
+   *
+   * @param completionMetadata - Metadata about the current completion context
+   * @returns An object containing custom 'system' and 'user' prompts
+   */
+  customPrompt?: CustomPrompt;
 }
+
+export type CustomPrompt = (completionMetadata: CompletionMetadata) => {
+  system: string;
+  user: string;
+};
 
 export interface CompletionResponse {
   completion: string | null;
@@ -93,13 +107,43 @@ export interface CompletionResponse {
 export type CompletionMode = 'fill-in-the-middle' | 'completion';
 
 export interface CompletionMetadata {
+  /**
+   * The programming language of the code.
+   */
   language: string | undefined;
+  /**
+   * The name of the file being edited.
+   */
   filename: Filename | undefined;
+  /**
+   * The technologies used in the completion.
+   */
   technologies: Technologies | undefined;
+  /**
+   * Additional context from related files.
+   */
   externalContext: ExternalContext | undefined;
+  /**
+   * The text that appears after the cursor.
+   */
   textAfterCursor: string;
+  /**
+   * The text that appears before the cursor.
+   */
   textBeforeCursor: string;
+  /**
+   * The current cursor position.
+   */
+  cursorPosition: CursorPosition | undefined;
+  /**
+   * The current state of the editor.
+   */
   editorState: {
+    /**
+     * The mode of the completion.
+     * - `fill-in-the-middle`: The cursor is in the middle of the code, So the AI should fill in the middle of the code.
+     * - `completion`: The cursor is at the end of the code, So the AI should complete the code.
+     */
     completionMode: CompletionMode;
   };
 }

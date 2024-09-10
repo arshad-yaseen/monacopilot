@@ -25,7 +25,7 @@ const getDescriptionForMode = (mode: CompletionMode): string => {
 /**
  * Generates the system prompt for the AI model.
  */
-export const generateSystemPrompt = (metadata: CompletionMetadata): string => {
+const generateSystemPrompt = (metadata: CompletionMetadata): string => {
   const language = getProperLanguageName(metadata.language);
   const description = getDescriptionForMode(
     metadata.editorState.completionMode,
@@ -53,7 +53,7 @@ const formatTechnology = (
 /**
  * Generates the user prompt for the AI model.
  */
-export const generateUserPrompt = (metadata: CompletionMetadata): string => {
+const generateUserPrompt = (metadata: CompletionMetadata): string => {
   const {
     filename,
     language,
@@ -103,3 +103,16 @@ export const generateUserPrompt = (metadata: CompletionMetadata): string => {
 
   return prompt.endsWith('.') ? prompt : `${prompt}.`;
 };
+
+/**
+ * Generates the system and user prompts for the AI model.
+ */
+export default function generatePrompt(metadata: CompletionMetadata): {
+  system: string;
+  user: string;
+} {
+  return {
+    system: generateSystemPrompt(metadata),
+    user: generateUserPrompt(metadata),
+  };
+}

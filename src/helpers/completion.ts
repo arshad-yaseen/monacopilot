@@ -2,7 +2,7 @@ import {ErrorContext, handleError} from '../error';
 import {
   CompletionMetadata,
   CompletionMode,
-  CompletionRequest,
+  CompletionRequestBody,
   CompletionResponse,
   CursorPosition,
   EditorModel,
@@ -27,19 +27,20 @@ export const fetchCompletionItem = async ({
   position,
 }: FetchCompletionItemParams): Promise<string | null> => {
   try {
-    const {completion} = await HTTP.POST<CompletionResponse, CompletionRequest>(
+    const {completion} = await HTTP.POST<
+      CompletionResponse,
+      CompletionRequestBody
+    >(
       endpoint,
       {
-        body: {
-          completionMetadata: constructCompletionMetadata({
-            filename,
-            position,
-            model,
-            language,
-            technologies,
-            externalContext,
-          }),
-        },
+        completionMetadata: constructCompletionMetadata({
+          filename,
+          position,
+          model,
+          language,
+          technologies,
+          externalContext,
+        }),
       },
       {
         headers: {'Content-Type': CONTENT_TYPE_JSON},
@@ -81,6 +82,7 @@ export const constructCompletionMetadata = ({
     externalContext,
     textBeforeCursor,
     textAfterCursor,
+    cursorPosition: position,
     editorState: {completionMode},
   };
 };
