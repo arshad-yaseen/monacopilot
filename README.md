@@ -122,11 +122,11 @@ The default provider is `groq` and the default model is `llama-3-70b`.
 
 There are other providers and models available. Here is a list:
 
-| Provider  | Models                                                            |
-| --------- | ----------------------------------------------------------------- |
-| Groq      | llama-3-70b                                                       |
-| OpenAI    | gpt-4o, gpt-4o-mini, o1-preview, o1-mini                          |
-| Anthropic | Claude-3.5-Sonnet, Claude-3-Opus, Claude-3-Sonnet, Claude-3-Haiku |
+| Provider  | Models                                                                    |
+| --------- | ------------------------------------------------------------------------- |
+| Groq      | `llama-3-70b`                                                             |
+| OpenAI    | `gpt-4o`, `gpt-4o-mini`, `o1-preview`, `o1-mini`                          |
+| Anthropic | `Claude-3.5-Sonnet`, `Claude-3-Opus`, `Claude-3-Sonnet`, `Claude-3-Haiku` |
 
 ## Completion Request Options
 
