@@ -14,7 +14,7 @@ import {
 import {Endpoint, ExternalContext, Filename, Technologies} from './copilot';
 import {CursorPosition, EditorModel, EditorRange} from './monaco';
 
-export type OpenAIModel = 'gpt-4o' | 'gpt-4o-mini';
+export type OpenAIModel = 'gpt-4o' | 'gpt-4o-mini' | 'o1-preview' | 'o1-mini';
 export type GroqModel = 'llama-3-70b';
 export type AnthropicModel =
   | 'claude-3.5-sonnet'

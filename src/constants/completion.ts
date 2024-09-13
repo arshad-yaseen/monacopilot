@@ -8,6 +8,8 @@ export const COMPLETION_MODEL_IDS: Record<CompletionModel, string> = {
   'claude-3-opus': 'claude-3-opus-20240229',
   'claude-3-sonnet': 'claude-3-sonnet-20240229',
   'claude-3-haiku': 'claude-3-haiku-20240307',
+  'o1-preview': 'o1-preview',
+  'o1-mini': 'o1-mini',
 } as const;
 
 export const COMPLETION_PROVIDER_MODEL_MAP: Record<
@@ -15,7 +17,7 @@ export const COMPLETION_PROVIDER_MODEL_MAP: Record<
   CompletionModel[]
 > = {
   groq: ['llama-3-70b'],
-  openai: ['gpt-4o', 'gpt-4o-mini'],
+  openai: ['gpt-4o', 'gpt-4o-mini', 'o1-preview', 'o1-mini'],
   anthropic: [
     'claude-3.5-sonnet',
     'claude-3-opus',
