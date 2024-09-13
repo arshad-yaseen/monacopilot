@@ -73,13 +73,13 @@ export const createProviderHeaders = (
     'Content-Type': 'application/json',
   };
 
-  const providerSpecificHeaders = {
+  const providerHeaders = {
     openai: {Authorization: `Bearer ${apiKey}`},
     groq: {Authorization: `Bearer ${apiKey}`},
     anthropic: {'x-api-key': apiKey, 'anthropic-version': '2023-06-01'},
   };
 
-  return {...commonHeaders, ...providerSpecificHeaders[provider]};
+  return {...commonHeaders, ...providerHeaders[provider]};
 };
 
 /**
