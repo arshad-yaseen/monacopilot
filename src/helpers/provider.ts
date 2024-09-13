@@ -24,25 +24,29 @@ export const createRequestBody = (
   completionMetadata: CompletionMetadata,
   model: CompletionModel,
   provider: CompletionProvider,
-  customPrompt: CustomPrompt | undefined,
+  customPrompt?: CustomPrompt,
 ): PickChatCompletionCreateParams<CompletionProvider> => {
-  const defaultPrompts = generatePrompt(completionMetadata);
-  const customPrompts = customPrompt ? customPrompt(completionMetadata) : {};
-
-  const systemPrompt = customPrompts.system ?? defaultPrompts.system;
-  const userPrompt = customPrompts.user ?? defaultPrompts.user;
+  const {system: systemPrompt, user: userPrompt} = {
+    ...generatePrompt(completionMetadata),
+    ...customPrompt?.(completionMetadata),
+  };
 
   const commonParams = {
     model: getModelId(model),
     temperature: DEFAULT_COMPLETION_TEMPERATURE,
   };
 
-  const messages = [
-    {role: 'system', content: systemPrompt},
-    {role: 'user', content: userPrompt},
-  ];
+  const isO1Model = model === 'o1-preview' || model === 'o1-mini';
 
-  const providerSpecificParams = {
+  const messages = isO1Model
+    ? // OpenAI o1 series models do not support system messages
+      [{role: 'user', content: userPrompt}]
+    : [
+        {role: 'system', content: systemPrompt},
+        {role: 'user', content: userPrompt},
+      ];
+
+  const providerParams = {
     openai: {messages},
     groq: {messages},
     anthropic: {
@@ -54,7 +58,7 @@ export const createRequestBody = (
 
   return {
     ...commonParams,
-    ...providerSpecificParams[provider],
+    ...providerParams[provider],
   } as PickChatCompletionCreateParams<CompletionProvider>;
 };
 

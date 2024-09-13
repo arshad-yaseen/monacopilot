@@ -8,8 +8,8 @@ importers:
   .:
     devDependencies:
       '@anthropic-ai/sdk':
-        specifier: ^0.27.1
-        version: 0.27.1
+        specifier: ^0.27.3
+        version: 0.27.3
       '@ianvs/prettier-plugin-sort-imports':
         specifier: ^4.2.1
         version: 4.3.1(prettier@3.3.3)
@@ -26,8 +26,8 @@ importers:
         specifier: ^0.50.0
         version: 0.50.0
       openai:
-        specifier: ^4.56.0
-        version: 4.56.0
+        specifier: ^4.60.1
+        version: 4.60.1
       prettier:
         specifier: ^3.2.5
         version: 3.3.3
@@ -36,7 +36,7 @@ importers:
         version: 17.6.0(typescript@5.5.4)
       tsup:
         specifier: ^8.0.2
-        version: 8.2.4(postcss@8.4.41)(typescript@5.5.4)
+        version: 8.2.4(jiti@1.21.6)(postcss@8.4.45)(typescript@5.5.4)(yaml@2.5.1)
       typescript:
         specifier: ^5.4.3
         version: 5.5.4
@@ -201,10 +201,10 @@ packages:
       }
     engines: {node: '>=6.0.0'}
 
-  '@anthropic-ai/sdk@0.27.1':
+  '@anthropic-ai/sdk@0.27.3':
     resolution:
       {
-        integrity: sha512-AKFd/E8HO26+DOVPiZpEked3Pm2feA5d4gcX2FcJXr9veDkXbKO90hr2C7N2TL7mPIMwm040ldXlsIZQ416dHg==,
+        integrity: sha512-IjLt0gd3L4jlOfilxVXTifn42FnVffMgDC04RJK1KDZpmkBWLv0XC92MVVmkxrFZNS/7l3xWgP/I3nqtX1sQHw==,
       }
 
   '@babel/code-frame@7.24.7':
@@ -1931,6 +1931,12 @@ packages:
     resolution:
       {
         integrity: sha512-5zvhXYtRNRluoE/jAp4GVsSduVUzNWKkOZrCDBWYtE7biZywwdC2AcEzg+cSMLFRfVgeAFqpfNabiPjxFddV1Q==,
+      }
+
+  '@types/qs@6.9.15':
+    resolution:
+      {
+        integrity: sha512-uXHQKES6DQKKCLh441Xv/dwxOq1TVS3JPUMlEqoEglvlhR6Mxnlew/Xq/LRVHpLyk7iK3zODe1qYHIMltO7XGg==,
       }
 
   '@types/react-dom@18.3.0':
@@ -5441,10 +5447,10 @@ packages:
       }
     engines: {node: '>=18'}
 
-  openai@4.56.0:
+  openai@4.60.1:
     resolution:
       {
-        integrity: sha512-zcag97+3bG890MNNa0DQD9dGmmTWL8unJdNkulZzWRXrl+QeD+YkBI4H58rJcwErxqGK6a0jVPZ4ReJjhDGcmw==,
+        integrity: sha512-j7aZOpgN0MtflPgNaBlSnOyok4jwto0GVOxVC5g0jCfa0lvywYx+LhlFim/dXzPtyi8MjKozyLshSj93617vNQ==,
       }
     hasBin: true
     peerDependencies:
@@ -7597,7 +7603,7 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@anthropic-ai/sdk@0.27.1':
+  '@anthropic-ai/sdk@0.27.3':
     dependencies:
       '@types/node': 18.19.45
       '@types/node-fetch': 2.6.11
@@ -8596,6 +8602,8 @@ snapshots:
       undici-types: 6.19.8
 
   '@types/prop-types@15.7.12': {}
+
+  '@types/qs@6.9.15': {}
 
   '@types/react-dom@18.3.0':
     dependencies:
@@ -10876,15 +10884,17 @@ snapshots:
       is-inside-container: 1.0.0
       is-wsl: 3.1.0
 
-  openai@4.56.0:
+  openai@4.60.1:
     dependencies:
       '@types/node': 18.19.45
       '@types/node-fetch': 2.6.11
+      '@types/qs': 6.9.15
       abort-controller: 3.0.0
       agentkeepalive: 4.5.0
       form-data-encoder: 1.7.2
       formdata-node: 4.4.1
       node-fetch: 2.7.0
+      qs: 6.11.0
     transitivePeerDependencies:
       - encoding
 
@@ -11085,11 +11095,13 @@ snapshots:
     optionalDependencies:
       postcss: 8.4.41
 
-  postcss-load-config@6.0.1(postcss@8.4.41):
+  postcss-load-config@6.0.1(jiti@1.21.6)(postcss@8.4.45)(yaml@2.5.1):
     dependencies:
       lilconfig: 3.1.2
     optionalDependencies:
-      postcss: 8.4.41
+      jiti: 1.21.6
+      postcss: 8.4.45
+      yaml: 2.5.1
 
   postcss-modules-extract-imports@3.1.0(postcss@8.4.41):
     dependencies:
@@ -11817,7 +11829,7 @@ snapshots:
 
   tslib@2.7.0: {}
 
-  tsup@8.2.4(postcss@8.4.41)(typescript@5.5.4):
+  tsup@8.2.4(jiti@1.21.6)(postcss@8.4.45)(typescript@5.5.4)(yaml@2.5.1):
     dependencies:
       bundle-require: 5.0.0(esbuild@0.23.1)
       cac: 6.7.14
@@ -11829,14 +11841,14 @@ snapshots:
       globby: 11.1.0
       joycon: 3.1.1
       picocolors: 1.0.1
-      postcss-load-config: 6.0.1(postcss@8.4.41)
+      postcss-load-config: 6.0.1(jiti@1.21.6)(postcss@8.4.45)(yaml@2.5.1)
       resolve-from: 5.0.0
       rollup: 4.21.0
       source-map: 0.8.0-beta.0
       sucrase: 3.35.0
       tree-kill: 1.2.2
     optionalDependencies:
-      postcss: 8.4.41
+      postcss: 8.4.45
       typescript: 5.5.4
     transitivePeerDependencies:
       - jiti
