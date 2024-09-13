@@ -21,13 +21,13 @@
     "release": "release-it"
   },
   "devDependencies": {
-    "@anthropic-ai/sdk": "^0.27.1",
+    "@anthropic-ai/sdk": "^0.27.3",
     "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
     "@typescript-eslint/eslint-plugin": "^7.3.1",
     "eslint": "^8.57.0",
     "groq-sdk": "^0.3.2",
     "monaco-editor": "^0.50.0",
-    "openai": "^4.56.0",
+    "openai": "^4.60.1",
     "prettier": "^3.2.5",
     "release-it": "^17.2.1",
     "tsup": "^8.0.2",
