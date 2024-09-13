@@ -120,17 +120,13 @@ const copilot = new Copilot(process.env.OPENAI_API_KEY, {
 
 The default provider is `groq` and the default model is `llama-3-70b`.
 
-| Provider  | Model             | Description                                                                                                        |
-| --------- | ----------------- | ------------------------------------------------------------------------------------------------------------------ |
-| Groq      | llama-3-70b       | Ultra-fast inference (<0.5s response time), balancing speed and quality for a wide range of coding tasks           |
-| OpenAI    | gpt-4o            | State-of-the-art model excelling in high-quality, context-aware completions                                        |
-| OpenAI    | gpt-4o-mini       | Compact version of gpt-4o, offering cost-effective completions with good performance                               |
-| OpenAI    | o1-preview        | Think and reason before providing completions, great for complex reasoning and generating high-quality completions |
-| OpenAI    | o1-mini           | Fastest at reasoning and generating completions, providing low-latency completions with reasoning                  |
-| Anthropic | Claude-3.5-Sonnet | Advanced AI with broad knowledge, ideal for diverse coding scenarios and natural language understanding            |
-| Anthropic | Claude-3-Opus     | Top-tier AI model, exceptional at handling intricate tasks and providing detailed, nuanced completions             |
-| Anthropic | Claude-3-Sonnet   | Versatile and powerful, offering a great balance between performance and efficiency for various coding needs       |
-| Anthropic | Claude-3-Haiku    | Streamlined model optimized for speed, perfect for quick completions and real-time coding assistance               |
+There are other providers and models available. Here is a list:
+
+| Provider  | Models                                                            |
+| --------- | ----------------------------------------------------------------- |
+| Groq      | llama-3-70b                                                       |
+| OpenAI    | gpt-4o, gpt-4o-mini, o1-preview, o1-mini                          |
+| Anthropic | Claude-3.5-Sonnet, Claude-3-Opus, Claude-3-Sonnet, Claude-3-Haiku |
 
 ## Copilot Completion Request Options
 
