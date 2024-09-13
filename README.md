@@ -11,7 +11,7 @@
 - [Usage](#usage)
 - [Copilot Options](#copilot-options)
   - [Changing the Provider and Model](#changing-the-provider-and-model)
-- [Copilot Completion Request Options](#copilot-completion-request-options)
+- [Completion Request Options](#completion-request-options)
   - [Custom Headers](#custom-headers)
   - [Custom Prompt](#custom-prompt)
 - [Configuration Options](#configuration-options)
@@ -128,7 +128,7 @@ There are other providers and models available. Here is a list:
 | OpenAI    | gpt-4o, gpt-4o-mini, o1-preview, o1-mini                          |
 | Anthropic | Claude-3.5-Sonnet, Claude-3-Opus, Claude-3-Sonnet, Claude-3-Haiku |
 
-## Copilot Completion Request Options
+## Completion Request Options
 
 ### Custom Headers
 
