@@ -24,6 +24,15 @@ export type AnthropicModel =
 
 export type CompletionModel = OpenAIModel | GroqModel | AnthropicModel;
 
+export type PickCompletionModel<T extends CompletionProvider> =
+  T extends 'openai'
+    ? OpenAIModel
+    : T extends 'groq'
+      ? GroqModel
+      : T extends 'anthropic'
+        ? AnthropicModel
+        : never;
+
 export type CompletionProvider = 'openai' | 'groq' | 'anthropic';
 
 export type ChatCompletionCreateParams =
@@ -53,6 +62,11 @@ export type PickChatCompletion<T extends CompletionProvider> =
       : T extends 'anthropic'
         ? AnthropicChatCompletion
         : never;
+
+export type PromptData = {
+  system: string;
+  user: string;
+};
 
 export type LocalPredictionSnippets = Record<string, string>;
 export interface LocalPrediction {
@@ -94,10 +108,9 @@ export interface CompletionRequestOptions {
   customPrompt?: CustomPrompt;
 }
 
-export type CustomPrompt = (completionMetadata: CompletionMetadata) => {
-  system?: string;
-  user?: string;
-};
+export type CustomPrompt = (
+  completionMetadata: CompletionMetadata,
+) => Partial<PromptData>;
 
 export interface CompletionResponse {
   completion: string | null;

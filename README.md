@@ -126,7 +126,7 @@ There are other providers and models available. Here is a list:
 | --------- | ------------------------------------------------------------------------- |
 | Groq      | `llama-3-70b`                                                             |
 | OpenAI    | `gpt-4o`, `gpt-4o-mini`, `o1-preview`, `o1-mini`                          |
-| Anthropic | `Claude-3.5-Sonnet`, `Claude-3-Opus`, `Claude-3-Sonnet`, `Claude-3-Haiku` |
+| Anthropic | `claude-3.5-Sonnet`, `claude-3-opus`, `claude-3-sonnet`, `claude-3-haiku` |
 
 ## Completion Request Options
 

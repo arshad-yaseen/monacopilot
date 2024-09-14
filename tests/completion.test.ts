@@ -83,7 +83,7 @@ describe('Completion', () => {
 
     expect(result).toEqual({
       error: expect.stringContaining(
-        'No completion found in the groq response',
+        'No completion found in the Groq response',
       ),
       completion: null,
     });

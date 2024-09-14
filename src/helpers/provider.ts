@@ -7,59 +7,126 @@ import {MAX_TOKENS_BY_ANTHROPIC_MODEL} from '../constants/provider/anthropic';
 import {
   AnthropicModel,
   ChatCompletion,
-  CompletionMetadata,
   CompletionModel,
   CompletionProvider,
   CompletionResponse,
-  CustomPrompt,
-  PickChatCompletion,
   PickChatCompletionCreateParams,
+  ProviderHandler,
 } from '../types';
-import generatePrompt from './prompt';
+
+const openaiHandler: ProviderHandler<'openai'> = {
+  createRequestBody: (model, prompt) => {
+    const isO1Model = model === 'o1-preview' || model === 'o1-mini';
+    const messages = isO1Model
+      ? [{role: 'user' as const, content: prompt.user}]
+      : [
+          {role: 'system' as const, content: prompt.system},
+          {role: 'user' as const, content: prompt.user},
+        ];
+
+    return {
+      model: getModelId(model),
+      temperature: DEFAULT_COMPLETION_TEMPERATURE,
+      messages,
+    };
+  },
+
+  createHeaders: apiKey => ({
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${apiKey}`,
+  }),
+
+  parseCompletion: completion => {
+    if (!completion.choices?.length) {
+      return {
+        completion: null,
+        error: 'No completion found in the OpenAI response',
+      };
+    }
+    return {completion: completion.choices[0].message.content};
+  },
+};
+
+const groqHandler: ProviderHandler<'groq'> = {
+  createRequestBody: (model, prompt) => ({
+    model: getModelId(model),
+    temperature: DEFAULT_COMPLETION_TEMPERATURE,
+    messages: [
+      {role: 'system' as const, content: prompt.system},
+      {role: 'user' as const, content: prompt.user},
+    ],
+  }),
+
+  createHeaders: apiKey => ({
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${apiKey}`,
+  }),
+
+  parseCompletion: completion => {
+    if (!completion.choices?.length) {
+      return {
+        completion: null,
+        error: 'No completion found in the Groq response',
+      };
+    }
+    return {completion: completion.choices[0].message.content};
+  },
+};
+
+const anthropicHandler: ProviderHandler<'anthropic'> = {
+  createRequestBody: (model, prompt) => ({
+    model: getModelId(model),
+    temperature: DEFAULT_COMPLETION_TEMPERATURE,
+    system: prompt.system,
+    messages: [{role: 'user' as const, content: prompt.user}],
+    max_tokens: computeAnthropicMaxTokens(model as AnthropicModel),
+  }),
+
+  createHeaders: apiKey => ({
+    'Content-Type': 'application/json',
+    'x-api-key': apiKey,
+    'anthropic-version': '2023-06-01',
+  }),
+
+  parseCompletion: completion => {
+    if (!completion.content) {
+      return {
+        completion: null,
+        error: 'No completion found in the Anthropic response',
+      };
+    }
+    if (typeof completion.content !== 'string') {
+      return {
+        completion: null,
+        error: 'Completion content is not a string',
+      };
+    }
+    return {completion: completion.content};
+  },
+};
+
+const providerHandlers: Record<
+  CompletionProvider,
+  ProviderHandler<CompletionProvider>
+> = {
+  openai: openaiHandler,
+  groq: groqHandler,
+  anthropic: anthropicHandler,
+};
 
 /**
  * Creates a request body for different completion providers.
  */
 export const createRequestBody = (
-  completionMetadata: CompletionMetadata,
   model: CompletionModel,
   provider: CompletionProvider,
-  customPrompt?: CustomPrompt,
+  prompt: {system: string; user: string},
 ): PickChatCompletionCreateParams<CompletionProvider> => {
-  const {system: systemPrompt, user: userPrompt} = {
-    ...generatePrompt(completionMetadata),
-    ...customPrompt?.(completionMetadata),
-  };
-
-  const commonParams = {
-    model: getModelId(model),
-    temperature: DEFAULT_COMPLETION_TEMPERATURE,
-  };
-
-  const isO1Model = model === 'o1-preview' || model === 'o1-mini';
-
-  const messages = isO1Model
-    ? // OpenAI o1 series models do not support system messages
-      [{role: 'user', content: userPrompt}]
-    : [
-        {role: 'system', content: systemPrompt},
-        {role: 'user', content: userPrompt},
-      ];
-
-  const providerParams = {
-    openai: {messages},
-    groq: {messages},
-    anthropic: {
-      system: systemPrompt,
-      messages: [{role: 'user', content: userPrompt}],
-      max_tokens: computeAnthropicMaxTokens(model as AnthropicModel),
-    },
-  };
-
-  return {
-    ...commonParams,
-    ...providerParams[provider],
-  } as PickChatCompletionCreateParams<CompletionProvider>;
+  const handler = providerHandlers[provider];
+  if (!handler) {
+    throw new Error(`Unsupported provider: ${provider}`);
+  }
+  return handler.createRequestBody(model, prompt);
 };
 
 /**
@@ -69,17 +136,11 @@ export const createProviderHeaders = (
   apiKey: string,
   provider: CompletionProvider,
 ): Record<string, string> => {
-  const commonHeaders = {
-    'Content-Type': 'application/json',
-  };
-
-  const providerHeaders = {
-    openai: {Authorization: `Bearer ${apiKey}`},
-    groq: {Authorization: `Bearer ${apiKey}`},
-    anthropic: {'x-api-key': apiKey, 'anthropic-version': '2023-06-01'},
-  };
-
-  return {...commonHeaders, ...providerHeaders[provider]};
+  const handler = providerHandlers[provider];
+  if (!handler) {
+    throw new Error(`Unsupported provider: ${provider}`);
+  }
+  return handler.createHeaders(apiKey);
 };
 
 /**
@@ -89,60 +150,11 @@ export const parseProviderChatCompletion = (
   completion: ChatCompletion,
   provider: CompletionProvider,
 ): CompletionResponse => {
-  const handlers: Record<
-    CompletionProvider,
-    (comp: any) => CompletionResponse
-  > = {
-    openai: parseOpenAICompletion,
-    groq: parseGroqCompletion,
-    anthropic: parseAnthropicCompletion,
-  };
-
-  const handler = handlers[provider];
+  const handler = providerHandlers[provider];
   if (!handler) {
     throw new Error(`Unsupported provider: ${provider}`);
   }
-
-  return handler(completion as PickChatCompletion<typeof provider>);
-};
-
-export const parseOpenAICompletion = (
-  completion: PickChatCompletion<'openai'>,
-): CompletionResponse => {
-  if (!completion.choices?.length) {
-    return {
-      completion: null,
-      error: 'No completion found in the openai response',
-    };
-  }
-  return {completion: completion.choices[0].message.content};
-};
-
-export const parseGroqCompletion = (
-  completion: PickChatCompletion<'groq'>,
-): CompletionResponse => {
-  if (!completion.choices?.length) {
-    return {
-      completion: null,
-      error: 'No completion found in the groq response',
-    };
-  }
-  return {completion: completion.choices[0].message.content};
-};
-
-export const parseAnthropicCompletion = (
-  completion: PickChatCompletion<'anthropic'>,
-): CompletionResponse => {
-  if (!completion.content) {
-    return {
-      completion: null,
-      error: 'No completion found in the anthropic response',
-    };
-  }
-  if (typeof completion.content !== 'string') {
-    return {completion: null, error: 'Completion content is not a string'};
-  }
-  return {completion: completion.content};
+  return handler.parseCompletion(completion);
 };
 
 /**

@@ -15,32 +15,18 @@ describe('Copilot', () => {
     expect(copilot['provider']).toBe(DEFAULT_COMPLETION_PROVIDER);
   });
 
-  it('should throw an error when provider is set without a model', () => {
-    expect(() => new Copilot('test-api-key', {provider: 'openai'})).toThrow(
-      'Both provider and model must be specified together',
-    );
-  });
-
-  it('should throw an error when model is set without a provider', () => {
-    expect(() => new Copilot('test-api-key', {model: 'gpt-4o'})).toThrow(
-      'Both provider and model must be specified together',
-    );
-  });
-
   it('should throw an error when an unsupported model is provided for a provider', () => {
     expect(
       () => new Copilot('test-api-key', {provider: 'groq', model: 'gpt-4o'}),
     ).toThrow(
-      `Model gpt-4o is not supported by groq provider. Supported models: ${joinWithAnd(
+      `Model "gpt-4o" is not supported by the "groq" provider. Supported models: ${joinWithAnd(
         COMPLETION_PROVIDER_MODEL_MAP['groq'],
       )}`,
     );
   });
 
   it('should throw an error when no API key is provided', () => {
-    expect(() => new Copilot('')).toThrow(
-      `Please provide ${DEFAULT_COMPLETION_PROVIDER} API key.`,
-    );
+    expect(() => new Copilot('')).toThrow(`Please provide an API key.`);
   });
 
   it('should initialize correctly with valid provider and model', () => {

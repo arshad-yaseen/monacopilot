@@ -4,6 +4,7 @@ import {
   DEFAULT_COMPLETION_PROVIDER,
 } from '../constants';
 import {ErrorContext, handleError} from '../error';
+import generatePrompt from '../helpers/prompt';
 import {
   createProviderHeaders,
   createRequestBody,
@@ -18,6 +19,7 @@ import {
   CompletionRequest,
   CompletionResponse,
   CopilotOptions,
+  CustomModel,
 } from '../types';
 import {HTTP, joinWithAnd} from '../utils';
 
@@ -28,6 +30,7 @@ export class Copilot {
   private readonly apiKey: string;
   private readonly provider: CompletionProvider;
   private readonly model: CompletionModel;
+  private readonly customModel?: CustomModel;
 
   /**
    * Initializes the Copilot with an API key and optional configuration.
@@ -35,41 +38,71 @@ export class Copilot {
    * @param options - Options for configuring the Copilot instance.
    */
   constructor(apiKey: string, options: CopilotOptions = {}) {
-    this.validateInputs(apiKey, options);
+    if (!apiKey) {
+      throw new Error('Please provide an API key.');
+    }
 
     this.apiKey = apiKey;
     this.provider = options.provider ?? DEFAULT_COMPLETION_PROVIDER;
     this.model = options.model ?? DEFAULT_COMPLETION_MODEL;
+    this.customModel = options.customModel;
+
+    this.validateInputs();
+  }
+
+  /**
+   * Validates the inputs provided to the constructor.
+   */
+  private validateInputs(): void {
+    if (!COMPLETION_PROVIDER_MODEL_MAP[this.provider].includes(this.model)) {
+      const supportedModels = joinWithAnd(
+        COMPLETION_PROVIDER_MODEL_MAP[this.provider],
+      );
+      throw new Error(
+        `Model "${this.model}" is not supported by the "${this.provider}" provider. Supported models: ${supportedModels}`,
+      );
+    }
   }
 
   /**
    * Sends a completion request to the API and returns the completion.
-   * @param params - The metadata required to generate the completion.
-   * @returns A promise resolving to the completed text snippet or an error.
+   * @param request - The completion request containing the body and options.
+   * @returns A promise resolving to the completion response or an error.
    */
-  public async complete({
-    body,
-    options,
-  }: CompletionRequest): Promise<CompletionResponse> {
+  public async complete(
+    request: CompletionRequest,
+  ): Promise<CompletionResponse> {
+    const {body, options} = request;
     const {completionMetadata} = body;
     const {headers: customHeaders = {}, customPrompt} = options ?? {};
 
+    const basePrompt = generatePrompt(completionMetadata);
+    const prompt = customPrompt
+      ? {...basePrompt, ...customPrompt(completionMetadata)}
+      : basePrompt;
+
+    let endpoint = getProviderCompletionEndpoint(this.provider);
+    let requestBody = createRequestBody(this.model, this.provider, prompt);
+    let headers = createProviderHeaders(this.apiKey, this.provider);
+
+    if (this.customModel) {
+      const customModelData = this.customModel(this.apiKey, prompt);
+      endpoint = customModelData.endpoint ?? endpoint;
+      requestBody =
+        (customModelData.body as unknown as ChatCompletionCreateParams) ??
+        requestBody;
+      headers = {...headers, ...customModelData.headers};
+    }
+
+    const mergedHeaders = {...headers, ...customHeaders};
+
     try {
-      const requestBody = createRequestBody(
-        completionMetadata,
-        this.model,
-        this.provider,
-        customPrompt,
-      );
-
-      const endpoint = getProviderCompletionEndpoint(this.provider);
-      const providerHeaders = createProviderHeaders(this.apiKey, this.provider);
-      const mergedHeaders = {...customHeaders, ...providerHeaders};
-
       const chatCompletion = await HTTP.POST<
         ChatCompletion,
         ChatCompletionCreateParams
-      >(endpoint, requestBody, {headers: mergedHeaders});
+      >(endpoint, requestBody as ChatCompletionCreateParams, {
+        headers: mergedHeaders,
+      });
 
       return parseProviderChatCompletion(chatCompletion, this.provider);
     } catch (error) {
@@ -78,37 +111,6 @@ export class Copilot {
         ErrorContext.COPILOT_COMPLETION_FETCH,
       );
       return {error: errorDetails.message, completion: null};
-    }
-  }
-
-  private validateInputs(
-    apiKey: string | undefined,
-    options: CopilotOptions,
-  ): void {
-    if (!apiKey) {
-      throw new Error(
-        `Please provide ${this.provider ?? DEFAULT_COMPLETION_PROVIDER} API key.`,
-      );
-    }
-
-    const {provider, model} = options;
-
-    if ((provider && !model) || (!provider && model)) {
-      throw new Error('Both provider and model must be specified together');
-    }
-
-    const selectedProvider = provider ?? DEFAULT_COMPLETION_PROVIDER;
-    const selectedModel = model ?? DEFAULT_COMPLETION_MODEL;
-
-    if (
-      !COMPLETION_PROVIDER_MODEL_MAP[selectedProvider].includes(selectedModel)
-    ) {
-      const supportedModels = joinWithAnd(
-        COMPLETION_PROVIDER_MODEL_MAP[selectedProvider],
-      );
-      throw new Error(
-        `Model ${selectedModel} is not supported by ${selectedProvider} provider. Supported models: ${supportedModels}`,
-      );
     }
   }
 }
