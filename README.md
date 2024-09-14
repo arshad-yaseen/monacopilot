@@ -29,7 +29,9 @@
 
 Here are some examples of how to use Monacopilot in different project setups:
 
-- Next.js ([app](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/app) | [pages](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/pages))
+- Next.js
+  - [App Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/app)
+  - [Pages Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/pages)
 - [Remix](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/remix)
 
 ## Installation
