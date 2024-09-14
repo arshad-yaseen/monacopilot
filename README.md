@@ -11,6 +11,7 @@
 - [Usage](#usage)
 - [Copilot Options](#copilot-options)
   - [Changing the Provider and Model](#changing-the-provider-and-model)
+  - [Custom Model](#custom-model)
 - [Completion Request Options](#completion-request-options)
   - [Custom Headers](#custom-headers)
   - [Custom Prompt](#custom-prompt)
@@ -127,6 +128,54 @@ There are other providers and models available. Here is a list:
 | Groq      | `llama-3-70b`                                                             |
 | OpenAI    | `gpt-4o`, `gpt-4o-mini`, `o1-preview`, `o1-mini`                          |
 | Anthropic | `claude-3.5-Sonnet`, `claude-3-opus`, `claude-3-sonnet`, `claude-3-haiku` |
+
+### Custom Model
+
+You can use a custom AI model that isn't built into Monacopilot by setting up a `model` when you create a new Copilot. This feature lets you connect to AI models from other services or your own custom-built models.
+
+#### Example
+
+```javascript
+const copilot = new Copilot(process.env.HUGGINGFACE_API_KEY, {
+  model: {
+    config: (apiKey, prompt) => ({
+      endpoint:
+        'https://api-inference.huggingface.co/models/openai-community/gpt2',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: {
+        inputs: prompt.user,
+        parameters: {
+          max_length: 100,
+          num_return_sequences: 1,
+          temperature: 0.7,
+        },
+      },
+    }),
+    transformResponse: response => ({
+      completion: response[0].generated_text,
+    }),
+  },
+});
+```
+
+#### Configuration
+
+The `model` option accepts an object with two functions:
+
+1. `config`: A function that receives the API key and prompt data, and returns the configuration for the custom model API request.
+
+   - `endpoint`: The URL for the custom model's API (required)
+   - `body`: The request body data for the custom model API (optional)
+   - `headers`: Additional HTTP headers for the API request (optional)
+
+2. `transformResponse`: A function that takes the raw response from the custom model API and converts it into an object with the following structure:
+   - `completion`: A string containing the generated text from the model to be used as the completion.
+   - `error`: A string describing any error that occurred during the completion process (optional)
+
+This structure allows for easy integration of the custom model's output with the rest of the Monacopilot system, providing either the generated completion text or an error message if something went wrong.
 
 ## Completion Request Options
 

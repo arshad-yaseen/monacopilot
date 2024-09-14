@@ -21,19 +21,15 @@ export interface CopilotOptions {
   provider?: CompletionProvider;
 
   /**
-   * The specific model to use for completions.
-   * Must be compatible with the chosen provider.
+   * The model to use for generating completions.
+   * This can be either:
+   * 1. A predefined model name (e.g. 'claude-3-opus'): Use this option if you want to use a model that is built into Monacopilot.
+   *    If you choose this option, also set the `provider` property to the corresponding provider of the model.
+   * 2. A custom model configuration object: Use this option if you want to use a AI model from a third-party service or your own custom model.
+   *
    * If not specified, a default model will be used.
    */
-  model?: CompletionModel;
-  /**
-   * Configuration for a custom model to be used for completions.
-   * This allows integration of custom or third-party models not directly supported by the main providers.
-   *
-   * @property {function} config - A function that configures the custom model.
-   * @property {function} response - A function that transforms the custom model's response.
-   */
-  customModel?: CustomModel;
+  model?: CompletionModel | CustomModel;
 }
 
 export type CustomModel = {
@@ -62,7 +58,7 @@ export type CustomModel = {
    *          text to be inserted or used as the completion, without
    *          any metadata or additional structure.
    */
-  response: CustomModelResponse;
+  transformResponse: CustomModelResponse;
 };
 
 export type CustomModelConfig = (

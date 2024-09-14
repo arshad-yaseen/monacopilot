@@ -4,7 +4,7 @@ import {Copilot} from '../src';
 import {HTTP} from '../src/utils';
 import {mockApiKey, mockCompletion, mockCompletionMetadata} from './mock';
 
-describe('Copilot with customModel', () => {
+describe('Copilot with model', () => {
   let copilot: Copilot;
 
   beforeEach(() => {
@@ -26,9 +26,9 @@ describe('Copilot with customModel', () => {
       .mockReturnValue({completion: 'Custom response'});
 
     copilot = new Copilot(mockApiKey, {
-      customModel: {
+      model: {
         config: customConfig,
-        response: customResponse,
+        transformResponse: customResponse,
       },
     });
 
@@ -61,9 +61,9 @@ describe('Copilot with customModel', () => {
     });
 
     copilot = new Copilot(mockApiKey, {
-      customModel: {
+      model: {
         config: customConfig,
-        response: customResponse,
+        transformResponse: customResponse,
       },
     });
 
@@ -81,7 +81,7 @@ describe('Copilot with customModel', () => {
     });
   });
 
-  it('should use default provider when customModel is not provided', async () => {
+  it('should use default provider when model is not provided', async () => {
     copilot = new Copilot(mockApiKey);
 
     vi.spyOn(HTTP, 'POST').mockResolvedValue(mockCompletion);
@@ -108,9 +108,9 @@ describe('Copilot with customModel', () => {
       .mockReturnValue({completion: 'Custom response'});
 
     copilot = new Copilot(mockApiKey, {
-      customModel: {
+      model: {
         config: customConfig,
-        response: customResponse,
+        transformResponse: customResponse,
       },
     });
 
