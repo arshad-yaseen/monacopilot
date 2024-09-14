@@ -23,9 +23,7 @@
 - [FAQ](#faq)
 - [Contributing](#contributing)
 
-## Demo
-
-https://github.com/user-attachments/assets/4af4e24a-1b05-4bee-84aa-1521ad7098cd
+[Demo Video](https://github.com/user-attachments/assets/4af4e24a-1b05-4bee-84aa-1521ad7098cd)
 
 ## Examples
 
@@ -105,6 +103,8 @@ registerCopilot(monaco, editor, {
 
 - `endpoint`: The URL of the API endpoint that we created in the previous step.
 - `language`: The language of the editor.
+
+Hurray! Monacopilot is now connected to the Monaco Editor. Start typing and see completions in the editor.
 
 ## Copilot Options
 
