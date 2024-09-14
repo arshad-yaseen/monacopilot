@@ -106,7 +106,7 @@ registerCopilot(monaco, editor, {
 - `endpoint`: The URL of the API endpoint that we created in the previous step.
 - `language`: The language of the editor.
 
-Hurray! Monacopilot is now connected to the Monaco Editor. Start typing and see completions in the editor.
+🎉 Hurray! Monacopilot is now connected to the Monaco Editor. Start typing and see completions in the editor.
 
 ## Copilot Options
 
