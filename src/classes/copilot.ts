@@ -76,6 +76,8 @@ export class Copilot {
     const {completionMetadata} = body;
     const {headers: customHeaders = {}, customPrompt} = options ?? {};
 
+    const customModel = this.customModel;
+
     const basePrompt = generatePrompt(completionMetadata);
     const prompt = customPrompt
       ? {...basePrompt, ...customPrompt(completionMetadata)}
@@ -85,13 +87,13 @@ export class Copilot {
     let requestBody = createRequestBody(this.model, this.provider, prompt);
     let headers = createProviderHeaders(this.apiKey, this.provider);
 
-    if (this.customModel) {
-      const customModelData = this.customModel(this.apiKey, prompt);
-      endpoint = customModelData.endpoint ?? endpoint;
+    if (customModel) {
+      const customModelConfig = customModel.config(this.apiKey, prompt);
+      endpoint = customModelConfig.endpoint ?? endpoint;
       requestBody =
-        (customModelData.body as unknown as ChatCompletionCreateParams) ??
+        (customModelConfig.body as unknown as ChatCompletionCreateParams) ??
         requestBody;
-      headers = {...headers, ...customModelData.headers};
+      headers = {...headers, ...customModelConfig.headers};
     }
 
     const mergedHeaders = {...headers, ...customHeaders};
@@ -104,7 +106,9 @@ export class Copilot {
         headers: mergedHeaders,
       });
 
-      return parseProviderChatCompletion(chatCompletion, this.provider);
+      return customModel
+        ? customModel.response(chatCompletion)
+        : parseProviderChatCompletion(chatCompletion, this.provider);
     } catch (error) {
       const errorDetails = handleError(
         error,
