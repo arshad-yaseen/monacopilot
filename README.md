@@ -169,13 +169,13 @@ The `model` option accepts an object with two functions:
 
 1. `config`: A function that receives the API key and prompt data, and returns the configuration for the custom model API request.
 
-   - `endpoint`: The URL for the custom model's API (required)
-   - `body`: The request body data for the custom model API (optional)
-   - `headers`: Additional HTTP headers for the API request (optional)
+   - `endpoint`: The URL for the custom model's API.
+   - `body`: (optional) The request body data for the custom model API.
+   - `headers`: (optional) Additional HTTP headers for the API request.
 
 2. `transformResponse`: A function that takes the raw response from the custom model API and converts it into an object with the following structure:
    - `completion`: A string containing the generated text from the model to be used as the completion.
-   - `error`: A string describing any error that occurred during the completion process (optional)
+   - `error`: (optional) A string describing any error that occurred during the completion process.
 
 This structure allows for easy integration of the custom model's output with the rest of the Monacopilot system, providing either the generated completion text or an error message if something went wrong.
 
