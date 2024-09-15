@@ -58,7 +58,7 @@ export type CustomModel = {
    *          text to be inserted or used as the completion, without
    *          any metadata or additional structure.
    */
-  transformResponse: CustomModelResponse;
+  transformResponse: CustomModelTransformResponse;
 };
 
 export type CustomModelConfig = (
@@ -85,7 +85,9 @@ export type CustomModelConfig = (
   body?: Record<string, unknown>;
 };
 
-export type CustomModelResponse = (response: unknown) => CompletionResponse;
+export type CustomModelTransformResponse = (
+  response: unknown,
+) => CompletionResponse;
 
 export type Endpoint = string;
 export type Filename = string;
