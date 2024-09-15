@@ -103,8 +103,10 @@ registerCopilot(monaco, editor, {
 });
 ```
 
-- `endpoint`: The URL of the API endpoint that we created in the previous step.
-- `language`: The language of the editor.
+| Parameter  | Type     | Description                                                       |
+| ---------- | -------- | ----------------------------------------------------------------- |
+| `endpoint` | `string` | The URL of the API endpoint that we created in the previous step. |
+| `language` | `string` | The language of the editor.                                       |
 
 🎉 Hurray! Monacopilot is now connected to the Monaco Editor. Start typing and see completions in the editor.
 
@@ -167,15 +169,25 @@ const copilot = new Copilot(process.env.HUGGINGFACE_API_KEY, {
 
 The `model` option accepts an object with two functions:
 
-1. `config`: A function that receives the API key and prompt data, and returns the configuration for the custom model API request.
+| Function            | Description                                                                                                                   | Type                                                                                                                |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `config`            | A function that receives the API key and prompt data, and returns the configuration for the custom model API request.         | `(apiKey: string, prompt: {system: string, user: string}) => { endpoint: string, body?: object, headers?: object }` |
+| `transformResponse` | A function that takes the raw response from the custom model API and converts it into an object with the following structure: | `(response: unknown) => { completion: string \| null, error?: string }`                                             |
 
-   - `endpoint`: The URL for the custom model's API.
-   - `body`: (optional) The request body data for the custom model API.
-   - `headers`: (optional) Additional HTTP headers for the API request.
+The `config` function must return an object with the following properties:
 
-2. `transformResponse`: A function that takes the raw response from the custom model API and converts it into an object with the following structure:
-   - `completion`: A string containing the generated text from the model to be used as the completion.
-   - `error`: (optional) A string describing any error that occurred during the completion process.
+| Property   | Type     | Description                                  |
+| ---------- | -------- | -------------------------------------------- |
+| `endpoint` | `string` | The URL of the custom model API endpoint.    |
+| `body`     | `object` | The body of the custom model API request.    |
+| `headers`  | `object` | The headers of the custom model API request. |
+
+The `transformResponse` function must return an object with the following structure:
+
+| Property     | Type     | Description                                                 |
+| ------------ | -------- | ----------------------------------------------------------- |
+| `completion` | `string` | The generated completion text to be inserted in the editor. |
+| `error`      | `string` | An error message if something went wrong.                   |
 
 This structure allows for easy integration of the custom model's output with the rest of the Monacopilot system, providing either the generated completion text or an error message if something went wrong.
 
@@ -255,10 +267,10 @@ For additional `completionMetadata` needs, please [open an issue](https://github
 
 The `customPrompt` function should return an object with two properties:
 
-| Property | Type   | Description                                           |
-| -------- | ------ | ----------------------------------------------------- |
-| system   | string | A string representing the system prompt for the model |
-| user     | string | A string representing the user prompt for the model   |
+| Property | Type     | Description                                           |
+| -------- | -------- | ----------------------------------------------------- |
+| system   | `string` | A string representing the system prompt for the model |
+| user     | `string` | A string representing the user prompt for the model   |
 
 #### Example
 
