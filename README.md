@@ -141,6 +141,7 @@ You can use a custom AI model that isn't built into Monacopilot by setting up a 
 
 ```javascript
 const copilot = new Copilot(process.env.HUGGINGFACE_API_KEY, {
+  // provider: 'huggingface', You don't need to set the provider if you are using a custom model.
   model: {
     config: (apiKey, prompt) => ({
       endpoint:
@@ -158,9 +159,18 @@ const copilot = new Copilot(process.env.HUGGINGFACE_API_KEY, {
         },
       },
     }),
-    transformResponse: response => ({
-      completion: response[0].generated_text,
-    }),
+    transformResponse: response => {
+      if (response.error) {
+        return {
+          completion: null,
+          error: response.error,
+        };
+      }
+
+      return {
+        completion: response[0].generated_text,
+      };
+    },
   },
 });
 ```
@@ -169,10 +179,10 @@ const copilot = new Copilot(process.env.HUGGINGFACE_API_KEY, {
 
 The `model` option accepts an object with two functions:
 
-| Function            | Description                                                                                                                   | Type                                                                                                                |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `config`            | A function that receives the API key and prompt data, and returns the configuration for the custom model API request.         | `(apiKey: string, prompt: {system: string, user: string}) => { endpoint: string, body?: object, headers?: object }` |
-| `transformResponse` | A function that takes the raw response from the custom model API and converts it into an object with the following structure: | `(response: unknown) => { completion: string \| null, error?: string }`                                             |
+| Function            | Description                                                                                                                          | Type                                                                                                                |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| `config`            | A function that receives the API key and prompt data, and returns the configuration for the custom model API request.                | `(apiKey: string, prompt: {system: string, user: string}) => { endpoint: string, body?: object, headers?: object }` |
+| `transformResponse` | A function that takes the raw/parsed response from the custom model API and converts it into an object with the following structure: | `(response: unknown) => { completion: string \| null, error?: string }`                                             |
 
 The `config` function must return an object with the following properties:
 
