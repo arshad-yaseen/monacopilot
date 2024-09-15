@@ -267,10 +267,10 @@ For additional `completionMetadata` needs, please [open an issue](https://github
 
 The `customPrompt` function should return an object with two properties:
 
-| Property | Type     | Description                                           |
-| -------- | -------- | ----------------------------------------------------- |
-| system   | `string` | A string representing the system prompt for the model |
-| user     | `string` | A string representing the user prompt for the model   |
+| Property | Type                  | Description                                           |
+| -------- | --------------------- | ----------------------------------------------------- |
+| system   | `string \| undefined` | A string representing the system prompt for the model |
+| user     | `string \| undefined` | A string representing the user prompt for the model   |
 
 #### Example
 
