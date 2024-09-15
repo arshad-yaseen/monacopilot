@@ -1,5 +1,6 @@
 import {
   COMPLETION_PROVIDER_MODEL_MAP,
+  COMPLETION_PROVIDERS,
   DEFAULT_COMPLETION_MODEL,
   DEFAULT_COMPLETION_PROVIDER,
 } from '../constants';
@@ -50,6 +51,14 @@ export class Copilot {
    * Ensures the selected model is supported by the provider.
    */
   private validateInputs(): void {
+    if (!COMPLETION_PROVIDERS.includes(this.provider)) {
+      throw new Error(
+        `The provider "${this.provider}" is not supported. Please choose a supported provider: ${joinWithAnd(
+          COMPLETION_PROVIDERS,
+        )}. If you're using a custom model, you don't need to specify a provider.`,
+      );
+    }
+
     if (
       typeof this.model === 'string' &&
       !COMPLETION_PROVIDER_MODEL_MAP[this.provider].includes(this.model)

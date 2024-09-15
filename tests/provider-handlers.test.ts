@@ -37,16 +37,6 @@ describe('Provider Handler Functions', () => {
       );
       expect(result).toEqual({completion: 'Anthropic response'});
     });
-
-    it('should throw an error for an unsupported provider', () => {
-      const mockCompletion = {} as unknown as ChatCompletion;
-      expect(() =>
-        parseProviderChatCompletion(
-          mockCompletion as ChatCompletion,
-          'unsupported' as CompletionProvider,
-        ),
-      ).toThrow('Unsupported provider: unsupported');
-    });
   });
 
   describe('parseOpenAICompletion', () => {

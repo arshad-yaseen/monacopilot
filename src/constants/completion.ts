@@ -1,5 +1,7 @@
 import {CompletionModel, CompletionProvider} from '../types';
 
+export const COMPLETION_PROVIDERS = ['groq', 'openai', 'anthropic'] as const;
+
 export const COMPLETION_MODEL_IDS: Record<CompletionModel, string> = {
   'llama-3-70b': 'llama3-70b-8192',
   'gpt-4o': 'gpt-4o-2024-08-06',

@@ -52,7 +52,9 @@ export const asyncDebounce = <T extends (...args: any[]) => any>(
  * @param arr - The array of strings to join
  * @returns The joined string
  */
-export const joinWithAnd = (arr: string[] | undefined): string => {
+export const joinWithAnd = (
+  arr: string[] | readonly string[] | undefined,
+): string => {
   if (!arr || arr.length === 0) {
     return '';
   }

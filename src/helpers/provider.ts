@@ -123,9 +123,6 @@ export const createRequestBody = (
   prompt: {system: string; user: string},
 ): PickChatCompletionCreateParams<CompletionProvider> => {
   const handler = providerHandlers[provider];
-  if (!handler) {
-    throw new Error(`Unsupported provider: ${provider}`);
-  }
   return handler.createRequestBody(model, prompt);
 };
 
@@ -137,9 +134,6 @@ export const createProviderHeaders = (
   provider: CompletionProvider,
 ): Record<string, string> => {
   const handler = providerHandlers[provider];
-  if (!handler) {
-    throw new Error(`Unsupported provider: ${provider}`);
-  }
   return handler.createHeaders(apiKey);
 };
 
@@ -151,9 +145,6 @@ export const parseProviderChatCompletion = (
   provider: CompletionProvider,
 ): CompletionResponse => {
   const handler = providerHandlers[provider];
-  if (!handler) {
-    throw new Error(`Unsupported provider: ${provider}`);
-  }
   return handler.parseCompletion(completion);
 };
 
