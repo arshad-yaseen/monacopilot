@@ -176,18 +176,18 @@ The `model` option accepts an object with two functions:
 
 The `config` function must return an object with the following properties:
 
-| Property   | Type     | Description                                  |
-| ---------- | -------- | -------------------------------------------- |
-| `endpoint` | `string` | The URL of the custom model API endpoint.    |
-| `body`     | `object` | The body of the custom model API request.    |
-| `headers`  | `object` | The headers of the custom model API request. |
+| Property   | Type                  | Description                                  |
+| ---------- | --------------------- | -------------------------------------------- |
+| `endpoint` | `string`              | The URL of the custom model API endpoint.    |
+| `body`     | `object \| undefined` | The body of the custom model API request.    |
+| `headers`  | `object \| undefined` | The headers of the custom model API request. |
 
 The `transformResponse` function must return an object with the following structure:
 
-| Property     | Type     | Description                                                 |
-| ------------ | -------- | ----------------------------------------------------------- |
-| `completion` | `string` | The generated completion text to be inserted in the editor. |
-| `error`      | `string` | An error message if something went wrong.                   |
+| Property     | Type                  | Description                                                 |
+| ------------ | --------------------- | ----------------------------------------------------------- |
+| `completion` | `string \| null`      | The generated completion text to be inserted in the editor. |
+| `error`      | `string \| undefined` | An error message if something went wrong.                   |
 
 This structure allows for easy integration of the custom model's output with the rest of the Monacopilot system, providing either the generated completion text or an error message if something went wrong.
 
