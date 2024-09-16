@@ -322,10 +322,10 @@ registerCopilot(monaco, editor, {
 });
 ```
 
-| Trigger Option | Description                                                 | Notes                                                                                                                                               |
-| -------------- | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `'onTyping'`   | Copilot provides completions in real-time as you type.      | - Best suited for models with low response latency (e.g., Groq).<br>- May initiate additional background requests to deliver real-time suggestions. |
-| `'onIdle'`     | Copilot provides completions after a brief pause in typing. |                                                                                                                                                     |
+| Trigger Option | Description                                                 | Notes                                                                                                                                                                                          |
+| -------------- | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `'onTyping'`   | Copilot provides completions in real-time as you type.      | This approach is best suited for models with low response latency, such as Groq. Please note that this trigger mode initiates additional background requests to deliver real-time suggestions. |
+| `'onIdle'`     | Copilot provides completions after a brief pause in typing. |                                                                                                                                                                                                |
 
 If you prefer real-time completions, you can set the `trigger` option to `'onTyping'`. This is ideal for those who need immediate or fast completion experiences.
 
