@@ -5,6 +5,7 @@ import {fetchCompletionItem} from '../helpers';
 import {
   EditorInlineCompletionsResult,
   InlineCompletionHandlerParams,
+  TriggerType,
 } from '../types';
 import {asyncDebounce, getTextBeforeCursorInLine} from '../utils';
 import {
@@ -13,19 +14,26 @@ import {
   formatCompletion,
 } from '../utils/completion';
 
-const DEBOUNCE_DELAY = 300;
+const ON_TYPING_DEBOUNCE_DELAY = 300;
+const ON_IDLE_DEBOUNCE_DELAY = 600;
 
-const debouncedFetchCompletionItem = asyncDebounce(
-  fetchCompletionItem,
-  DEBOUNCE_DELAY,
-);
+const debouncedFetchCompletionItem = {
+  [TriggerType.OnTyping]: asyncDebounce(
+    fetchCompletionItem,
+    ON_TYPING_DEBOUNCE_DELAY,
+  ),
+  [TriggerType.OnIdle]: asyncDebounce(
+    fetchCompletionItem,
+    ON_IDLE_DEBOUNCE_DELAY,
+  ),
+};
 
 export const completionCache = new CompletionCache();
 
 /**
- * Handles inline completions for the editor
- * @param params - Inline completion handler parameters
- * @returns Promise resolving to EditorInlineCompletionsResult
+ * Handles inline completions for the editor.
+ * @param params - Inline completion handler parameters.
+ * @returns A promise resolving to EditorInlineCompletionsResult.
  */
 const handleInlineCompletions = async ({
   monaco,
@@ -36,6 +44,8 @@ const handleInlineCompletions = async ({
   onShowCompletion,
   options,
 }: InlineCompletionHandlerParams): Promise<EditorInlineCompletionsResult> => {
+  const {trigger = TriggerType.OnIdle, ...restOptions} = options;
+
   if (!new CompletionValidator(position, model).shouldProvideCompletions()) {
     return createInlineCompletionResult([]);
   }
@@ -47,7 +57,7 @@ const handleInlineCompletions = async ({
       range: cache.range,
     }));
 
-  if (cachedCompletions.length) {
+  if (cachedCompletions.length > 0) {
     onShowCompletion();
     return createInlineCompletionResult(cachedCompletions);
   }
@@ -57,18 +67,23 @@ const handleInlineCompletions = async ({
   }
 
   try {
-    const completionPromise = debouncedFetchCompletionItem({
-      ...options,
+    const triggerType =
+      trigger === TriggerType.OnTyping
+        ? TriggerType.OnTyping
+        : TriggerType.OnIdle;
+
+    const fetchCompletion = debouncedFetchCompletionItem[triggerType];
+
+    token.onCancellationRequested(() => {
+      fetchCompletion.cancel();
+    });
+
+    const completion = await fetchCompletion({
+      ...restOptions,
       text: model.getValue(),
       model,
       position,
     });
-
-    token.onCancellationRequested(() => {
-      debouncedFetchCompletionItem.cancel();
-    });
-
-    const completion = await completionPromise;
 
     if (completion) {
       const formattedCompletion = formatCompletion(completion);
@@ -97,18 +112,22 @@ const handleInlineCompletions = async ({
       ]);
     }
   } catch (err) {
-    if (
-      (typeof err === 'string' &&
-        (err === 'Cancelled' || err === 'AbortError')) ||
-      (err instanceof Error &&
-        (err.message === 'Cancelled' || err.name === 'AbortError'))
-    ) {
+    if (isCancellationError(err)) {
       return createInlineCompletionResult([]);
     }
     handleError(err, ErrorContext.FETCH_COMPLETION_ITEM);
   }
 
   return createInlineCompletionResult([]);
+};
+
+export const isCancellationError = (err: any): boolean => {
+  return (
+    (typeof err === 'string' &&
+      (err === 'Cancelled' || err === 'AbortError')) ||
+    (err instanceof Error &&
+      (err.message === 'Cancelled' || err.name === 'AbortError'))
+  );
 };
 
 export default handleInlineCompletions;

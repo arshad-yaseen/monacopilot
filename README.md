@@ -16,11 +16,11 @@
   - [Custom Headers](#custom-headers)
   - [Custom Prompt](#custom-prompt)
 - [Configuration Options](#configuration-options)
+  - [Get Completions in Real-Time](#get-completions-in-real-time)
   - [External Context](#external-context)
   - [Filename](#filename)
   - [Completions for Specific Technologies](#completions-for-specific-technologies)
 - [Cost Overview](#cost-overview)
-- [FAQ](#faq)
 - [Contributing](#contributing)
 
 [Demo Video](https://github.com/user-attachments/assets/4af4e24a-1b05-4bee-84aa-1521ad7098cd)
@@ -310,6 +310,26 @@ copilot.complete({
 By using a custom prompt, you can guide the model to generate completions that better fit your coding style, project requirements, or specific technologies you're working with.
 
 ## Configuration Options
+
+### Get Completions in Real-Time
+
+The `trigger` option determines when Copilot provides code completions. You can choose between receiving suggestions in real-time as you type or after a brief pause.
+
+```javascript
+registerCopilot(monaco, editor, {
+  // ...other options
+  trigger: 'onTyping',
+});
+```
+
+| Trigger              | Description                                                 | Notes                                                                                                                                                                                          |
+| -------------------- | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `'onIdle'` (default) | Copilot provides completions after a brief pause in typing. | This approach is less resource-intensive, as it only initiates a request when the editor is idle. However, compared to `onTyping` it may result in a bit reduced experience with completions.  |
+| `'onTyping'`         | Copilot provides completions in real-time as you type.      | This approach is best suited for models with low response latency, such as Groq. Please note that this trigger mode initiates additional background requests to deliver real-time suggestions. |
+
+[OnTyping Demo](https://github.com/user-attachments/assets/22c2ce44-334c-4963-b853-01b890b8e39f)
+
+If you prefer real-time completions, you can set the `trigger` option to `'onTyping'`. This is ideal for those who need immediate or fast completion experiences.
 
 ### External Context
 
