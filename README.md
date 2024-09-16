@@ -175,6 +175,8 @@ const copilot = new Copilot(process.env.HUGGINGFACE_API_KEY, {
 });
 ```
 
+> Please make sure you are using a better model, especially for coding tasks, to get the best and most accurate completions. Otherwise, you may experience poor performance or inaccurate completions.
+
 #### Configuration
 
 The `model` option accepts an object with two functions:
