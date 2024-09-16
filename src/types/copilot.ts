@@ -119,6 +119,18 @@ export interface RegisterCopilotOptions {
    */
   endpoint: Endpoint;
   /**
+   * Specifies when Copilot should provide code completions.
+   *
+   * Options:
+   * - `'onIdle'`: Copilot provides completions after a brief pause in typing.
+   * - `'onTyping'`: Copilot offers completions in real-time as you type.
+   *   - *Note:* Best suited for models with low response latency (e.g., Groq).
+   *   - *Consideration:* May initiate additional background requests to deliver real-time suggestions.
+   *
+   * @default 'onIdle'
+   */
+  trigger?: 'onTyping' | 'onIdle';
+  /**
    * The name of the file you are editing. This is used to provide more relevant completions based on the file's purpose.
    * For example, if you are editing a file named `utils.js`, the completions will be more relevant to utility functions.
    */
@@ -140,6 +152,12 @@ export interface RegisterCopilotOptions {
    */
   externalContext?: ExternalContext;
 }
+
+export enum TriggerType {
+  OnTyping = 'onTyping',
+  OnIdle = 'onIdle',
+}
+
 export interface CopilotRegistration {
   /**
    * Deregisters the Copilot from the Monaco editor.

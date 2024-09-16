@@ -311,6 +311,24 @@ By using a custom prompt, you can guide the model to generate completions that b
 
 ## Configuration Options
 
+### When Should Copilot Suggest Completions?
+
+The `trigger` option determines when Copilot provides code completions. You can choose between receiving suggestions in real-time as you type or after a brief pause.
+
+```javascript
+registerCopilot(monaco, editor, {
+  // ...other options
+  trigger: 'onIdle',
+});
+```
+
+| Trigger Option | Description                                                 | Notes                                                                                                                                               |
+| -------------- | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `'onTyping'`   | Copilot provides completions in real-time as you type.      | - Best suited for models with low response latency (e.g., Groq).<br>- May initiate additional background requests to deliver real-time suggestions. |
+| `'onIdle'`     | Copilot provides completions after a brief pause in typing. |                                                                                                                                                     |
+
+If you prefer real-time completions, you can set the `trigger` option to `'onTyping'`. This is ideal for those who need immediate or fast completion experiences.
+
 ### External Context
 
 Enhance the accuracy and relevance of Copilot's completions by providing additional code context from your workspace.
