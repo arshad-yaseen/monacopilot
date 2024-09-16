@@ -16,7 +16,7 @@
   - [Custom Headers](#custom-headers)
   - [Custom Prompt](#custom-prompt)
 - [Configuration Options](#configuration-options)
-  - [When Should Copilot Suggest Completions?](#when-should-copilot-suggest-completions)
+  - [Get Completions in Real-Time](#get-completions-in-real-time)
   - [External Context](#external-context)
   - [Filename](#filename)
   - [Completions for Specific Technologies](#completions-for-specific-technologies)
