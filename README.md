@@ -327,6 +327,8 @@ registerCopilot(monaco, editor, {
 | `'onIdle'` (default) | Copilot provides completions after a brief pause in typing. | This approach is less resource-intensive, as it only initiates a request when the editor is idle. However, compared to `onTyping` it may result in a bit reduced experience with completions.  |
 | `'onTyping'`         | Copilot provides completions in real-time as you type.      | This approach is best suited for models with low response latency, such as Groq. Please note that this trigger mode initiates additional background requests to deliver real-time suggestions. |
 
+[OnTyping Demo](https://github.com/user-attachments/assets/22c2ce44-334c-4963-b853-01b890b8e39f)
+
 If you prefer real-time completions, you can set the `trigger` option to `'onTyping'`. This is ideal for those who need immediate or fast completion experiences.
 
 ### External Context
