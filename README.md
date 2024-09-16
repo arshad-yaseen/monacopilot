@@ -16,11 +16,11 @@
   - [Custom Headers](#custom-headers)
   - [Custom Prompt](#custom-prompt)
 - [Configuration Options](#configuration-options)
+  - [When Should Copilot Suggest Completions?](#when-should-copilot-suggest-completions)
   - [External Context](#external-context)
   - [Filename](#filename)
   - [Completions for Specific Technologies](#completions-for-specific-technologies)
 - [Cost Overview](#cost-overview)
-- [FAQ](#faq)
 - [Contributing](#contributing)
 
 [Demo Video](https://github.com/user-attachments/assets/4af4e24a-1b05-4bee-84aa-1521ad7098cd)
