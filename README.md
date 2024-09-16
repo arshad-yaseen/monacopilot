@@ -1,4 +1,4 @@
-![Hero Image](https://i.postimg.cc/PrsQ1KLb/Frame-1.png)
+![Hero Image](https://i.postimg.cc/GhpGVjVG/monacopilot-banner.png)
 
 # Monacopilot
 
