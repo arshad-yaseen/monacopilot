@@ -44,7 +44,7 @@ const handleInlineCompletions = async ({
   onShowCompletion,
   options,
 }: InlineCompletionHandlerParams): Promise<EditorInlineCompletionsResult> => {
-  const {trigger = TriggerType.OnTyping, ...restOptions} = options;
+  const {trigger = TriggerType.OnIdle, ...restOptions} = options;
 
   if (!new CompletionValidator(position, model).shouldProvideCompletions()) {
     return createInlineCompletionResult([]);

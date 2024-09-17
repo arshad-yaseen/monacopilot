@@ -127,7 +127,7 @@ export interface RegisterCopilotOptions {
    *   - *Note:* Best suited for models with low response latency (e.g., Groq).
    *   - *Consideration:* May initiate additional background requests to deliver real-time suggestions.
    *
-   * @default 'onTyping'
+   * @default 'onIdle'
    */
   trigger?: 'onTyping' | 'onIdle';
   /**
