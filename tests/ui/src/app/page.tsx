@@ -17,23 +17,19 @@ export default function Home() {
   useEffect(() => {
     if (!monaco || !editor) return;
 
-    const copilots: CopilotRegistration[] = [];
-    for (let i = 0; i < 10; i++) {
-      const copilot = registerCopilot(monaco, editor, {
-        endpoint: '/api/copilot',
-        language: 'javascript',
-      });
-      copilots.push(copilot);
-    }
+    const copilot = registerCopilot(monaco, editor, {
+      endpoint: '/api/copilot',
+      language: 'python',
+    });
 
     return () => {
-      copilots.forEach(copilot => copilot.deregister());
+      copilot.deregister();
     };
   }, [monaco, editor]);
 
   return (
     <Editor
-      language="javascript"
+      language="python"
       onMount={(editor, monaco) => {
         setMonaco(monaco);
         setEditor(editor);
