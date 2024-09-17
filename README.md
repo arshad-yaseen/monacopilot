@@ -329,7 +329,7 @@ registerCopilot(monaco, editor, {
 
 [OnTyping Demo](https://github.com/user-attachments/assets/22c2ce44-334c-4963-b853-01b890b8e39f)
 
-If you prefer real-time completions, you can set the `trigger` option to `'onTyping'`. This is ideal for those who need immediate or fast completion experiences.
+> **Note:** If you prefer real-time completions, you can set the `trigger` option to `'onTyping'`. This may increase the number of requests made to the provider and the cost. This is not too costly since most small models are very inexpensive.
 
 ### External Context
 
