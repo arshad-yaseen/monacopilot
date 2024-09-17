@@ -137,6 +137,8 @@ There are other providers and models available. Here is a list:
 
 You can use a custom AI model that isn't built into Monacopilot by setting up a `model` when you create a new Copilot. This feature lets you connect to AI models from other services or your own custom-built models.
 
+Please make sure you are using a better model, especially for coding tasks, to get the best and most accurate completions. Also, use a model with very low response latency (I suggest at least under 1.5 s) to enjoy a great experience or utilize the full power of Monacopilot. Otherwise, you may experience poor performance or inaccurate completions.
+
 #### Example
 
 ```javascript
@@ -174,8 +176,6 @@ const copilot = new Copilot(process.env.HUGGINGFACE_API_KEY, {
   },
 });
 ```
-
-> Please make sure you are using a better model, especially for coding tasks, to get the best and most accurate completions. Otherwise, you may experience poor performance or inaccurate completions.
 
 #### Configuration
 
