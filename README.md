@@ -7,8 +7,8 @@
 ## Table of Contents
 
 - [Examples](#examples)
-- [Installation](#installation)
 - [Inline Completions](#inline-completions)
+  - [Installation](#installation)
   - [Usage](#usage)
     - [API Handler](#api-handler)
     - [Register Completion with the Monaco Editor](#register-completion-with-the-monaco-editor)
@@ -35,17 +35,19 @@ Here are some examples of how to integrate Monacopilot into your project:
   - [Pages Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/pages)
 - [Remix](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/remix)
 
-## Installation
+## Inline Completions
+
+AI suggestions appear inline as you type.
+
+[Inline Completions Demo Video](https://github.com/user-attachments/assets/f2ec4ae1-f658-4002-af9c-c6b1bbad70d9)
+
+### Installation
 
 To install Monacopilot, run:
 
 ```bash
 npm install monacopilot
 ```
-
-## Inline Completions
-
-[Inline Completions Demo Video](https://github.com/user-attachments/assets/f2ec4ae1-f658-4002-af9c-c6b1bbad70d9)
 
 ### Usage
 
