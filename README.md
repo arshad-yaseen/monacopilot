@@ -351,7 +351,7 @@ By using a custom prompt, you can guide the model to generate completions that b
 
 Select and Edit is a feature that allows you to select code from the editor and edit it inline with AI assistance in the Monaco Editor.
 
-<img width="871" alt="select-and-edit-example" src="https://github.com/user-attachments/assets/87c6245a-7827-47f3-8b59-1f59eec9d2ef">
+<img width="871" alt="select-and-edit-example" src="https://i.postimg.cc/Pxn94Tss/Screenshot-2024-09-19-at-2-44-57-AM.png">
 
 This feature is coming soon.
 
