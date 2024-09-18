@@ -1,19 +1,18 @@
 import {
-  CompletionProvider,
-  CompletionResponse,
+  CopilotProvider,
   PickChatCompletion,
   PickChatCompletionCreateParams,
-  PickCompletionModel,
+  PickCopilotModel,
   PromptData,
-} from './completion';
+} from './copilot';
 
-export interface ProviderHandler<T extends CompletionProvider> {
+export interface ProviderHandler<T extends CopilotProvider> {
   createRequestBody(
-    model: PickCompletionModel<T>,
+    model: PickCopilotModel<T>,
     prompt: PromptData,
   ): PickChatCompletionCreateParams<T>;
 
   createHeaders(apiKey: string): Record<string, string>;
 
-  parseCompletion(completion: PickChatCompletion<T>): CompletionResponse;
+  parseCompletion(completion: PickChatCompletion<T>): string | null;
 }

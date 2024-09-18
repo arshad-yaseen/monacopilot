@@ -1,11 +1,11 @@
-import {ErrorContext, handleError} from '../error';
+import {ErrorContext, handleError} from '../../error';
 import {
-  CopilotRegistration,
+  CompletionRegistration,
   Disposable,
   Monaco,
-  RegisterCopilotOptions,
+  RegisterCompletionOptions,
   StandaloneCodeEditor,
-} from '../types';
+} from '../../types';
 import handleInlineCompletions, {completionCache} from './handler';
 
 const editorCompletionState = new WeakMap<
@@ -16,20 +16,20 @@ const editorCompletionState = new WeakMap<
   }
 >();
 
-let singletonInstance: CopilotRegistration | null = null;
+let singletonInstance: CompletionRegistration | null = null;
 
 /**
- * Registers the Copilot with the Monaco editor.
+ * Registers the completion with the Monaco editor.
  * @param monaco The Monaco instance.
  * @param editor The editor instance.
- * @param options The options for the Copilot.
- * @returns CopilotRegistration object with a deregister method.
+ * @param options The options for the completion.
+ * @returns CompletionRegistration object with a deregister method.
  */
-export const registerCopilot = (
+export const registerCompletion = (
   monaco: Monaco,
   editor: StandaloneCodeEditor,
-  options: RegisterCopilotOptions,
-): CopilotRegistration => {
+  options: RegisterCompletionOptions,
+): CompletionRegistration => {
   if (singletonInstance) {
     singletonInstance.deregister();
   }
@@ -86,7 +86,7 @@ export const registerCopilot = (
 
     disposables.push(keyDownListener);
 
-    const registration: CopilotRegistration = {
+    const registration: CompletionRegistration = {
       deregister: () => {
         disposables.forEach(disposable => disposable.dispose());
         completionCache.clearCompletionCache();
@@ -99,7 +99,7 @@ export const registerCopilot = (
 
     return registration;
   } catch (err) {
-    handleError(err, ErrorContext.REGISTER_COPILOT);
+    handleError(err, ErrorContext.REGISTER_COMPLETION);
     return {
       deregister: () => {
         disposables.forEach(disposable => disposable.dispose());
@@ -109,3 +109,8 @@ export const registerCopilot = (
     };
   }
 };
+
+/**
+ * @deprecated Use `registerCompletion` instead. This function will be removed in a future version.
+ */
+export const registerCopilot = registerCompletion;

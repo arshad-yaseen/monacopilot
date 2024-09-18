@@ -1,27 +1,80 @@
-import type {
-  CompletionModel,
-  CompletionProvider,
-  CompletionResponse,
-} from './completion';
 import {
-  CursorPosition,
-  EditorCancellationToken,
-  EditorModel,
-  Monaco,
-} from './monaco';
+  Message as AnthropicChatCompletion,
+  MessageCreateParams as AnthropicChatCompletionCreateParamsBase,
+} from '@anthropic-ai/sdk/resources';
+import type {
+  ChatCompletion as GroqChatCompletion,
+  ChatCompletionCreateParamsBase as GroqChatCompletionCreateParamsBase,
+} from 'groq-sdk/resources/chat/completions';
+import {
+  ChatCompletion as OpenAIChatCompletion,
+  ChatCompletionCreateParamsBase as OpenAIChatCompletionCreateParamsBase,
+} from 'openai/resources/chat/completions';
+
+export type OpenAIModel = 'gpt-4o' | 'gpt-4o-mini' | 'o1-preview' | 'o1-mini';
+export type GroqModel = 'llama-3-70b';
+export type AnthropicModel =
+  | 'claude-3.5-sonnet'
+  | 'claude-3-opus'
+  | 'claude-3-haiku'
+  | 'claude-3-sonnet';
+
+export type CopilotModel = OpenAIModel | GroqModel | AnthropicModel;
+
+export type PickCopilotModel<T extends CopilotProvider> = T extends 'openai'
+  ? OpenAIModel
+  : T extends 'groq'
+    ? GroqModel
+    : T extends 'anthropic'
+      ? AnthropicModel
+      : never;
+
+export type CopilotProvider = 'openai' | 'groq' | 'anthropic';
+
+export type ChatCompletionCreateParams =
+  | OpenAIChatCompletionCreateParamsBase
+  | GroqChatCompletionCreateParamsBase
+  | AnthropicChatCompletionCreateParamsBase;
+
+export type ChatCompletion =
+  | OpenAIChatCompletion
+  | GroqChatCompletion
+  | AnthropicChatCompletion;
+
+export type PickChatCompletionCreateParams<T extends CopilotProvider> =
+  T extends 'openai'
+    ? OpenAIChatCompletionCreateParamsBase
+    : T extends 'groq'
+      ? GroqChatCompletionCreateParamsBase
+      : T extends 'anthropic'
+        ? AnthropicChatCompletionCreateParamsBase
+        : never;
+
+export type PickChatCompletion<T extends CopilotProvider> = T extends 'openai'
+  ? OpenAIChatCompletion
+  : T extends 'groq'
+    ? GroqChatCompletion
+    : T extends 'anthropic'
+      ? AnthropicChatCompletion
+      : never;
+
+export type PromptData = {
+  system: string;
+  user: string;
+};
 
 /**
  * Options for configuring the Copilot instance.
  */
 export interface CopilotOptions {
   /**
-   * The completion provider to use (e.g., 'openai', 'anthropic', 'groq').
+   * The provider to use (e.g., 'openai', 'anthropic', 'groq').
    * If not specified, a default provider will be used.
    */
-  provider?: CompletionProvider;
+  provider?: CopilotProvider;
 
   /**
-   * The model to use for generating completions.
+   * The model to use for copilot AI requests.
    * This can be either:
    * 1. A predefined model name (e.g. 'claude-3-opus'): Use this option if you want to use a model that is built into Monacopilot.
    *    If you choose this option, also set the `provider` property to the corresponding provider of the model.
@@ -29,10 +82,10 @@ export interface CopilotOptions {
    *
    * If not specified, a default model will be used.
    */
-  model?: CompletionModel | CustomModel;
+  model?: CopilotModel | CustomCopilotModel;
 }
 
-export type CustomModel = {
+export type CustomCopilotModel = {
   /**
    * A function to configure the custom model.
    * This function takes the API key and the prompt data and returns the configuration for the custom model.
@@ -44,24 +97,21 @@ export type CustomModel = {
    *   - headers: Additional HTTP headers for the API request (optional)
    *   - body: The request body data for the custom model API (optional)
    */
-  config: CustomModelConfig;
+  config: CustomCopilotModelConfig;
   /**
    * A function to transform the response from the custom model.
    * This function takes the raw response from the custom model API
-   * and converts it into a CompletionResponse object.
+   * and returns the model generated text or null.
    *
    * @param response - The raw response from the custom model API.
    *                   The type is 'unknown' because different APIs
    *                   may return responses in different formats.
-   * @returns A CompletionResponse object containing the completion text
-   *          or an error message. The completion should be the actual
-   *          text to be inserted or used as the completion, without
-   *          any metadata or additional structure.
+   * @returns The model generated text or null if no valid text could be extracted.
    */
-  transformResponse: CustomModelTransformResponse;
+  transformResponse: CustomCopilotModelTransformResponse;
 };
 
-export type CustomModelConfig = (
+export type CustomCopilotModelConfig = (
   apiKey: string,
   prompt: {
     system: string;
@@ -70,9 +120,8 @@ export type CustomModelConfig = (
 ) => {
   /**
    * The URL endpoint for the custom model's API.
-   * This is where the completion request will be sent.
    */
-  endpoint: Endpoint;
+  endpoint: string;
   /**
    * Additional HTTP headers to include with the API request.
    * Use this to add any necessary authentication or custom headers.
@@ -80,99 +129,10 @@ export type CustomModelConfig = (
   headers?: Record<string, string>;
   /**
    * The data to be sent in the request body to the custom model API.
-   * This should contain all necessary parameters for generating a completion.
    */
   body?: Record<string, unknown>;
 };
 
-export type CustomModelTransformResponse = (
+export type CustomCopilotModelTransformResponse = (
   response: unknown,
-) => CompletionResponse;
-
-export type Endpoint = string;
-export type Filename = string;
-export type Technologies = string[];
-export type ExternalContext = {
-  /**
-   * The relative path from the current editing code in the editor to an external file.
-   *
-   * Examples:
-   * - To include a file `utils.js` in the same directory, set as `./utils.js`.
-   * - To include a file `utils.js` in the parent directory, set as `../utils.js`.
-   * - To include a file `utils.js` in the child directory, set as `./child/utils.js`.
-   */
-  path: string;
-
-  /**
-   * The content of the external file as a string.
-   */
-  content: string;
-}[];
-
-export interface RegisterCopilotOptions {
-  /**
-   * Language of the current model
-   */
-  language: string;
-  /**
-   * The API endpoint where you started the completion service.
-   */
-  endpoint: Endpoint;
-  /**
-   * Specifies when Copilot should provide code completions.
-   *
-   * Options:
-   * - `'onIdle'`: Copilot provides completions after a brief pause in typing.
-   * - `'onTyping'`: Copilot offers completions in real-time as you type.
-   *   - *Note:* Best suited for models with low response latency (e.g., Groq).
-   *   - *Consideration:* May initiate additional background requests to deliver real-time suggestions.
-   *
-   * @default 'onIdle'
-   */
-  trigger?: 'onTyping' | 'onIdle';
-  /**
-   * The name of the file you are editing. This is used to provide more relevant completions based on the file's purpose.
-   * For example, if you are editing a file named `utils.js`, the completions will be more relevant to utility functions.
-   */
-  filename?: Filename;
-  /**
-   * The technologies (libraries, frameworks, etc.) you want to use for the completion.
-   * This can provide technology-specific completions.
-   * If you don't specify a technology, the completion will be specific to the language (provided as the `language`).
-   *
-   * @example
-   * ['react', 'nextjs', 'tailwindcss', 'tanstack/react-query']
-   * ['tensorflow', 'keras', 'numpy', 'pandas']
-   * etc.
-   */
-  technologies?: Technologies;
-  /**
-   * Helps to give more relevant completions based on the full context.
-   * You can include things like the contents/codes of other files in the same workspace.
-   */
-  externalContext?: ExternalContext;
-}
-
-export enum TriggerType {
-  OnTyping = 'onTyping',
-  OnIdle = 'onIdle',
-}
-
-export interface CopilotRegistration {
-  /**
-   * Deregisters the Copilot from the Monaco editor.
-   * This should be called when the Copilot is no longer needed.
-   */
-  deregister: () => void;
-}
-
-export interface InlineCompletionHandlerParams {
-  monaco: Monaco;
-  model: EditorModel;
-  position: CursorPosition;
-  token: EditorCancellationToken;
-
-  isCompletionAccepted: boolean;
-  onShowCompletion: () => void;
-  options: RegisterCopilotOptions;
-}
+) => string | null;

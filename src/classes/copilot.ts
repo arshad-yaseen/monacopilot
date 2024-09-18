@@ -1,33 +1,33 @@
 import {
-  COMPLETION_PROVIDER_MODEL_MAP,
-  COMPLETION_PROVIDERS,
-  DEFAULT_COMPLETION_MODEL,
-  DEFAULT_COMPLETION_PROVIDER,
+  COPILOT_PROVIDER_MODEL_MAP,
+  COPILOT_PROVIDERS,
+  DEFAULT_COPILOT_MODEL,
+  DEFAULT_COPILOT_PROVIDER,
 } from '../constants';
 import {ErrorContext, handleError} from '../error';
-import generatePrompt from '../helpers/prompt';
+import generatePrompt from '../helpers/completion/prompt';
 import {
   createProviderHeaders,
   createRequestBody,
-  getProviderCompletionEndpoint,
+  getCopilotProviderEndpoint,
   parseProviderChatCompletion,
 } from '../helpers/provider';
 import {
   ChatCompletion,
   ChatCompletionCreateParams,
-  CompletionModel,
-  CompletionProvider,
   CompletionRequest,
   CompletionResponse,
+  CopilotModel,
   CopilotOptions,
-  CustomModel,
+  CopilotProvider,
+  CustomCopilotModel,
 } from '../types';
 import {HTTP, joinWithAnd} from '../utils';
 
 export class Copilot {
   private readonly apiKey: string;
-  private readonly provider: CompletionProvider;
-  private readonly model: CompletionModel | CustomModel;
+  private readonly provider: CopilotProvider;
+  private readonly model: CopilotModel | CustomCopilotModel;
 
   /**
    * Initializes the Copilot instance with an API key and optional configuration.
@@ -40,8 +40,8 @@ export class Copilot {
     }
 
     this.apiKey = apiKey;
-    this.provider = options.provider ?? DEFAULT_COMPLETION_PROVIDER;
-    this.model = options.model ?? DEFAULT_COMPLETION_MODEL;
+    this.provider = options.provider ?? DEFAULT_COPILOT_PROVIDER;
+    this.model = options.model ?? DEFAULT_COPILOT_MODEL;
 
     this.validateInputs();
   }
@@ -51,77 +51,25 @@ export class Copilot {
    * Ensures the selected model is supported by the provider.
    */
   private validateInputs(): void {
-    if (!COMPLETION_PROVIDERS.includes(this.provider)) {
+    if (!COPILOT_PROVIDERS.includes(this.provider)) {
       throw new Error(
         `The provider "${this.provider}" is not supported. Please choose a supported provider: ${joinWithAnd(
-          COMPLETION_PROVIDERS,
+          COPILOT_PROVIDERS,
         )}. If you're using a custom model, you don't need to specify a provider.`,
       );
     }
 
     if (
       typeof this.model === 'string' &&
-      !COMPLETION_PROVIDER_MODEL_MAP[this.provider].includes(this.model)
+      !COPILOT_PROVIDER_MODEL_MAP[this.provider].includes(this.model)
     ) {
       const supportedModels = joinWithAnd(
-        COMPLETION_PROVIDER_MODEL_MAP[this.provider],
+        COPILOT_PROVIDER_MODEL_MAP[this.provider],
       );
       throw new Error(
         `Model "${this.model}" is not supported by the "${this.provider}" provider. Supported models: ${supportedModels}`,
       );
     }
-  }
-
-  /**
-   * Generates the prompt based on the completion metadata and any custom prompt function.
-   * @param completionMetadata - The metadata for the completion.
-   * @param customPrompt - An optional custom prompt function.
-   * @returns The generated prompt.
-   */
-  private generatePrompt(
-    completionMetadata: any,
-    customPrompt?: (metadata: any) => any,
-  ): any {
-    const basePrompt = generatePrompt(completionMetadata);
-    return customPrompt
-      ? {...basePrompt, ...customPrompt(completionMetadata)}
-      : basePrompt;
-  }
-
-  /**
-   * Prepares the request details including endpoint, request body, and headers.
-   * @param prompt - The generated prompt.
-   * @param customHeaders - Any custom headers to include.
-   * @returns An object containing the endpoint, request body, and headers.
-   */
-  private prepareRequest(
-    prompt: any,
-    customHeaders: Record<string, string>,
-  ): {
-    endpoint: string;
-    requestBody: ChatCompletionCreateParams;
-    headers: Record<string, string>;
-  } {
-    let endpoint = getProviderCompletionEndpoint(this.provider);
-    let requestBody: ChatCompletionCreateParams;
-    let headers = createProviderHeaders(this.apiKey, this.provider);
-
-    if (typeof this.model === 'object' && 'config' in this.model) {
-      const customModelConfig = this.model.config(this.apiKey, prompt);
-      endpoint = customModelConfig.endpoint ?? endpoint;
-      requestBody =
-        (customModelConfig.body as unknown as ChatCompletionCreateParams) ?? {};
-      headers = {...headers, ...customModelConfig.headers};
-    } else {
-      requestBody = createRequestBody(
-        this.model as CompletionModel,
-        this.provider,
-        prompt,
-      );
-    }
-
-    const mergedHeaders = {...headers, ...customHeaders};
-    return {endpoint, requestBody, headers: mergedHeaders};
   }
 
   /**
@@ -137,13 +85,32 @@ export class Copilot {
     const {headers: customHeaders = {}, customPrompt} = options ?? {};
 
     // Generate the prompt
-    const prompt = this.generatePrompt(completionMetadata, customPrompt);
+    const basePrompt = generatePrompt(completionMetadata);
+    const prompt = customPrompt
+      ? {...basePrompt, ...customPrompt(completionMetadata)}
+      : basePrompt;
 
     // Prepare the request details
-    const {endpoint, requestBody, headers} = this.prepareRequest(
-      prompt,
-      customHeaders,
-    );
+    let endpoint = getCopilotProviderEndpoint(this.provider);
+    let requestBody: ChatCompletionCreateParams;
+    let headers = createProviderHeaders(this.apiKey, this.provider);
+
+    if (typeof this.model === 'object' && 'config' in this.model) {
+      const customConfig = this.model.config(this.apiKey, prompt);
+      endpoint = customConfig.endpoint ?? endpoint;
+      requestBody =
+        (customConfig.body as unknown as ChatCompletionCreateParams) ?? {};
+      headers = {...headers, ...customConfig.headers};
+    } else {
+      requestBody = createRequestBody(
+        this.model as CopilotModel,
+        this.provider,
+        prompt,
+      );
+    }
+
+    // Merge custom headers
+    headers = {...headers, ...customHeaders};
 
     try {
       // Send the completion request
@@ -152,14 +119,22 @@ export class Copilot {
         ChatCompletionCreateParams
       >(endpoint, requestBody, {headers});
 
-      // Return the parsed completion response
+      let completionResponse: CompletionResponse;
+
       if (typeof this.model === 'object' && 'transformResponse' in this.model) {
-        return this.model.transformResponse(chatCompletion);
+        const transformedResponse =
+          this.model.transformResponse(chatCompletion);
+        completionResponse = {completion: transformedResponse};
       } else {
-        return parseProviderChatCompletion(chatCompletion, this.provider);
+        const parsedCompletion = parseProviderChatCompletion(
+          chatCompletion,
+          this.provider,
+        );
+        completionResponse = {completion: parsedCompletion};
       }
+
+      return completionResponse;
     } catch (error) {
-      // Handle any errors that occur during the request
       const errorDetails = handleError(
         error,
         ErrorContext.COPILOT_COMPLETION_FETCH,

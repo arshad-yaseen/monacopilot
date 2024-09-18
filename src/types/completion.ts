@@ -1,72 +1,99 @@
+import {PromptData} from './copilot';
 import {
-  Message as AnthropicChatCompletion,
-  MessageCreateParams as AnthropicChatCompletionCreateParamsBase,
-} from '@anthropic-ai/sdk/resources';
-import type {
-  ChatCompletion as GroqChatCompletion,
-  ChatCompletionCreateParamsBase as GroqChatCompletionCreateParamsBase,
-} from 'groq-sdk/resources/chat/completions';
-import {
-  ChatCompletion as OpenAIChatCompletion,
-  ChatCompletionCreateParamsBase as OpenAIChatCompletionCreateParamsBase,
-} from 'openai/resources/chat/completions';
+  CursorPosition,
+  EditorCancellationToken,
+  EditorModel,
+  EditorRange,
+  Monaco,
+} from './monaco';
 
-import {Endpoint, ExternalContext, Filename, Technologies} from './copilot';
-import {CursorPosition, EditorModel, EditorRange} from './monaco';
+export type Endpoint = string;
+export type Filename = string;
+export type Technologies = string[];
+export type ExternalContext = {
+  /**
+   * The relative path from the current editing code in the editor to an external file.
+   *
+   * Examples:
+   * - To include a file `utils.js` in the same directory, set as `./utils.js`.
+   * - To include a file `utils.js` in the parent directory, set as `../utils.js`.
+   * - To include a file `utils.js` in the child directory, set as `./child/utils.js`.
+   */
+  path: string;
 
-export type OpenAIModel = 'gpt-4o' | 'gpt-4o-mini' | 'o1-preview' | 'o1-mini';
-export type GroqModel = 'llama-3-70b';
-export type AnthropicModel =
-  | 'claude-3.5-sonnet'
-  | 'claude-3-opus'
-  | 'claude-3-haiku'
-  | 'claude-3-sonnet';
+  /**
+   * The content of the external file as a string.
+   */
+  content: string;
+}[];
 
-export type CompletionModel = OpenAIModel | GroqModel | AnthropicModel;
+export interface RegisterCompletionOptions {
+  /**
+   * Language of the current model
+   */
+  language: string;
+  /**
+   * The API endpoint where you started the completion service.
+   */
+  endpoint: Endpoint;
+  /**
+   * Specifies when the completion service should provide code completions.
+   *
+   * Options:
+   * - `'onIdle'`: The completion service provides completions after a brief pause in typing.
+   * - `'onTyping'`: The completion service offers completions in real-time as you type.
+   *   - *Note:* Best suited for models with low response latency (e.g., Groq).
+   *   - *Consideration:* May initiate additional background requests to deliver real-time suggestions.
+   *
+   * @default 'onIdle'
+   */
+  trigger?: 'onTyping' | 'onIdle';
+  /**
+   * The name of the file you are editing. This is used to provide more relevant completions based on the file's purpose.
+   * For example, if you are editing a file named `utils.js`, the completions will be more relevant to utility functions.
+   */
+  filename?: Filename;
+  /**
+   * The technologies (libraries, frameworks, etc.) you want to use for the completion.
+   * This can provide technology-specific completions.
+   * If you don't specify a technology, the completion will be specific to the language (provided as the `language`).
+   *
+   * @example
+   * ['react', 'nextjs', 'tailwindcss', 'tanstack/react-query']
+   * ['tensorflow', 'keras', 'numpy', 'pandas']
+   * etc.
+   */
+  technologies?: Technologies;
+  /**
+   * Helps to give more relevant completions based on the full context.
+   * You can include things like the contents/codes of other files in the same workspace.
+   */
+  externalContext?: ExternalContext;
+}
 
-export type PickCompletionModel<T extends CompletionProvider> =
-  T extends 'openai'
-    ? OpenAIModel
-    : T extends 'groq'
-      ? GroqModel
-      : T extends 'anthropic'
-        ? AnthropicModel
-        : never;
+export enum TriggerType {
+  OnTyping = 'onTyping',
+  OnIdle = 'onIdle',
+}
 
-export type CompletionProvider = 'openai' | 'groq' | 'anthropic';
+export interface CompletionRegistration {
+  /**
+   * Deregisters the completion from the Monaco editor.
+   * This should be called when the completion is no longer needed.
+   */
+  deregister: () => void;
+}
 
-export type ChatCompletionCreateParams =
-  | OpenAIChatCompletionCreateParamsBase
-  | GroqChatCompletionCreateParamsBase
-  | AnthropicChatCompletionCreateParamsBase;
+export interface InlineCompletionHandlerParams {
+  monaco: Monaco;
+  model: EditorModel;
+  position: CursorPosition;
+  token: EditorCancellationToken;
 
-export type ChatCompletion =
-  | OpenAIChatCompletion
-  | GroqChatCompletion
-  | AnthropicChatCompletion;
-
-export type PickChatCompletionCreateParams<T extends CompletionProvider> =
-  T extends 'openai'
-    ? OpenAIChatCompletionCreateParamsBase
-    : T extends 'groq'
-      ? GroqChatCompletionCreateParamsBase
-      : T extends 'anthropic'
-        ? AnthropicChatCompletionCreateParamsBase
-        : never;
-
-export type PickChatCompletion<T extends CompletionProvider> =
-  T extends 'openai'
-    ? OpenAIChatCompletion
-    : T extends 'groq'
-      ? GroqChatCompletion
-      : T extends 'anthropic'
-        ? AnthropicChatCompletion
-        : never;
-
-export type PromptData = {
-  system: string;
-  user: string;
-};
+  isCompletionAccepted: boolean;
+  onShowCompletion: () => void;
+  options: RegisterCompletionOptions;
+}
 
 export type LocalPredictionSnippets = Record<string, string>;
 export interface LocalPrediction {

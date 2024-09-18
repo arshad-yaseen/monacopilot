@@ -1,15 +1,14 @@
 import {
-  CHAT_COMPLETION_ENDPOINT_BY_PROVIDER,
-  COMPLETION_MODEL_IDS,
-  DEFAULT_COMPLETION_TEMPERATURE,
+  COPILOT_MODEL_IDS,
+  COPILOT_PROVIDER_ENDPOINT_MAP,
+  DEFAULT_COPILOT_TEMPERATURE,
 } from '../constants';
 import {MAX_TOKENS_BY_ANTHROPIC_MODEL} from '../constants/provider/anthropic';
 import {
   AnthropicModel,
   ChatCompletion,
-  CompletionModel,
-  CompletionProvider,
-  CompletionResponse,
+  CopilotModel,
+  CopilotProvider,
   PickChatCompletionCreateParams,
   ProviderHandler,
 } from '../types';
@@ -26,7 +25,7 @@ const openaiHandler: ProviderHandler<'openai'> = {
 
     return {
       model: getModelId(model),
-      temperature: DEFAULT_COMPLETION_TEMPERATURE,
+      temperature: DEFAULT_COPILOT_TEMPERATURE,
       messages,
     };
   },
@@ -38,19 +37,17 @@ const openaiHandler: ProviderHandler<'openai'> = {
 
   parseCompletion: completion => {
     if (!completion.choices?.length) {
-      return {
-        completion: null,
-        error: 'No completion found in the OpenAI response',
-      };
+      return null;
     }
-    return {completion: completion.choices[0].message.content};
+
+    return completion.choices[0].message.content;
   },
 };
 
 const groqHandler: ProviderHandler<'groq'> = {
   createRequestBody: (model, prompt) => ({
     model: getModelId(model),
-    temperature: DEFAULT_COMPLETION_TEMPERATURE,
+    temperature: DEFAULT_COPILOT_TEMPERATURE,
     messages: [
       {role: 'system' as const, content: prompt.system},
       {role: 'user' as const, content: prompt.user},
@@ -64,19 +61,16 @@ const groqHandler: ProviderHandler<'groq'> = {
 
   parseCompletion: completion => {
     if (!completion.choices?.length) {
-      return {
-        completion: null,
-        error: 'No completion found in the Groq response',
-      };
+      return null;
     }
-    return {completion: completion.choices[0].message.content};
+    return completion.choices[0].message.content;
   },
 };
 
 const anthropicHandler: ProviderHandler<'anthropic'> = {
   createRequestBody: (model, prompt) => ({
     model: getModelId(model),
-    temperature: DEFAULT_COMPLETION_TEMPERATURE,
+    temperature: DEFAULT_COPILOT_TEMPERATURE,
     system: prompt.system,
     messages: [{role: 'user' as const, content: prompt.user}],
     max_tokens: computeAnthropicMaxTokens(model as AnthropicModel),
@@ -89,25 +83,16 @@ const anthropicHandler: ProviderHandler<'anthropic'> = {
   }),
 
   parseCompletion: completion => {
-    if (!completion.content) {
-      return {
-        completion: null,
-        error: 'No completion found in the Anthropic response',
-      };
+    if (!completion.content || typeof completion.content !== 'string') {
+      return null;
     }
-    if (typeof completion.content !== 'string') {
-      return {
-        completion: null,
-        error: 'Completion content is not a string',
-      };
-    }
-    return {completion: completion.content};
+    return completion.content;
   },
 };
 
 const providerHandlers: Record<
-  CompletionProvider,
-  ProviderHandler<CompletionProvider>
+  CopilotProvider,
+  ProviderHandler<CopilotProvider>
 > = {
   openai: openaiHandler,
   groq: groqHandler,
@@ -115,51 +100,49 @@ const providerHandlers: Record<
 };
 
 /**
- * Creates a request body for different completion providers.
+ * Creates a request body for different copilot providers.
  */
 export const createRequestBody = (
-  model: CompletionModel,
-  provider: CompletionProvider,
+  model: CopilotModel,
+  provider: CopilotProvider,
   prompt: {system: string; user: string},
-): PickChatCompletionCreateParams<CompletionProvider> => {
+): PickChatCompletionCreateParams<CopilotProvider> => {
   const handler = providerHandlers[provider];
   return handler.createRequestBody(model, prompt);
 };
 
 /**
- * Creates headers for different completion providers.
+ * Creates headers for different copilot providers.
  */
 export const createProviderHeaders = (
   apiKey: string,
-  provider: CompletionProvider,
+  provider: CopilotProvider,
 ): Record<string, string> => {
   const handler = providerHandlers[provider];
   return handler.createHeaders(apiKey);
 };
 
 /**
- * Parses the completion response from different providers.
+ * Parses the chat completion response from different providers.
  */
 export const parseProviderChatCompletion = (
   completion: ChatCompletion,
-  provider: CompletionProvider,
-): CompletionResponse => {
+  provider: CopilotProvider,
+): string | null => {
   const handler = providerHandlers[provider];
   return handler.parseCompletion(completion);
 };
 
 /**
- * Gets the model ID for a given completion model name to be used in the API request.
+ * Gets the model ID for a given copilot model name to be used in the API request.
  */
-const getModelId = (model: CompletionModel): string =>
-  COMPLETION_MODEL_IDS[model];
+const getModelId = (model: CopilotModel): string => COPILOT_MODEL_IDS[model];
 
 /**
- * Gets the chat completion endpoint for a given provider.
+ * Gets the copilot endpoint for a given provider.
  */
-export const getProviderCompletionEndpoint = (
-  provider: CompletionProvider,
-): string => CHAT_COMPLETION_ENDPOINT_BY_PROVIDER[provider];
+export const getCopilotProviderEndpoint = (provider: CopilotProvider): string =>
+  COPILOT_PROVIDER_ENDPOINT_MAP[provider];
 
 /**
  * Computes the maximum number of tokens for Anthropic models.
