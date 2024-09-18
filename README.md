@@ -45,7 +45,7 @@ npm install monacopilot
 
 ## Inline Completions
 
-Inline completions are AI-generated suggestions that appear directly within your code as you type.
+AI-generated suggestions that appear directly within your code as you type.
 
 [Inline Completions Demo Video](https://github.com/user-attachments/assets/f2ec4ae1-f658-4002-af9c-c6b1bbad70d9)
 
