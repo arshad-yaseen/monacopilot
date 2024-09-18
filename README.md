@@ -20,7 +20,6 @@
   - [External Context](#external-context)
   - [Filename](#filename)
   - [Completions for Specific Technologies](#completions-for-specific-technologies)
-- [Cost Overview](#cost-overview)
 - [Contributing](#contributing)
 
 [Demo Video](https://github.com/user-attachments/assets/4af4e24a-1b05-4bee-84aa-1521ad7098cd)
