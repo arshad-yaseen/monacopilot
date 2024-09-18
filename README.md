@@ -175,7 +175,7 @@ registerCompletion(monaco, editor, {
 
 ### Changing the Provider and Model
 
-You can specify a different provider and model for completions by setting the `provider` and `model` parameters in the `Copilot` instance.
+You can specify a different provider and model by setting the `provider` and `model` parameters in the `Copilot` instance.
 
 ```javascript
 const copilot = new Copilot(process.env.OPENAI_API_KEY, {
@@ -232,10 +232,10 @@ const copilot = new Copilot(process.env.HUGGINGFACE_API_KEY, {
 
 The `model` option accepts an object with two functions:
 
-| Function            | Description                                                                                                           | Type                                                                                                                  |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `config`            | A function that receives the API key and prompt data, and returns the configuration for the custom model API request. | `(apiKey: string, prompt: { system: string; user: string }) => { endpoint: string; body?: object; headers?: object }` |
-| `transformResponse` | A function that takes the raw/parsed response from the custom model API and returns the model-generated text.         | `(response: unknown) => string`                                                                                       |
+| Function            | Description                                                                                                                                        | Type                                                                                                                  |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `config`            | A function that receives the API key and prompt data, and returns the configuration for the custom model API request.                              | `(apiKey: string, prompt: { system: string; user: string }) => { endpoint: string; body?: object; headers?: object }` |
+| `transformResponse` | A function that takes the raw/parsed response from the custom model API and returns the model-generated text or null if the response is not valid. | `(response: unknown) => string \| null`                                                                               |
 
 The `config` function must return an object with the following properties:
 
