@@ -37,8 +37,6 @@ Here are some examples of how to integrate Monacopilot into your project:
 
 ## Inline Completions
 
-AI suggestions appear inline as you type.
-
 [Inline Completions Demo Video](https://github.com/user-attachments/assets/f2ec4ae1-f658-4002-af9c-c6b1bbad70d9)
 
 ### Installation
