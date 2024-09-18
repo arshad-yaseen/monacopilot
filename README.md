@@ -6,17 +6,17 @@
 
 ## Table of Contents
 
+- [Examples](#examples)
 - [Installation](#installation)
 - [Inline Completions](#inline-completions)
-  - [Examples](#examples)
   - [Usage](#usage)
     - [API Handler](#api-handler)
     - [Register Completion with the Monaco Editor](#register-completion-with-the-monaco-editor)
   - [Register Completion Options](#register-completion-options)
-    - [Get Completions in Real-Time](#get-completions-in-real-time)
     - [External Context](#external-context)
     - [Filename](#filename)
     - [Completions for Specific Technologies](#completions-for-specific-technologies)
+    - [Get Completions in Real-Time](#get-completions-in-real-time)
 - [Copilot Options](#copilot-options)
   - [Changing the Provider and Model](#changing-the-provider-and-model)
   - [Custom Model](#custom-model)
@@ -26,6 +26,15 @@
 - [Select and Edit](#select-and-edit)
 - [Contributing](#contributing)
 
+### Examples
+
+Here are some examples of how to integrate Monacopilot into your project:
+
+- Next.js
+  - [App Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/app)
+  - [Pages Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/pages)
+- [Remix](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/remix)
+
 ## Installation
 
 To install Monacopilot, run:
@@ -34,22 +43,11 @@ To install Monacopilot, run:
 npm install monacopilot
 ```
 
-🧩 For TypeScript users, you can import most of the types from the `monacopilot` package.
-
 ## Inline Completions
 
 Inline completions are AI-generated suggestions that appear directly within your code as you type.
 
-[Demo Video](https://github.com/user-attachments/assets/4af4e24a-1b05-4bee-84aa-1521ad7098cd)
-
-### Examples
-
-Here are some examples of how to integrate AI auto-completion into your project using Monacopilot:
-
-- Next.js
-  - [App Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/app)
-  - [Pages Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/pages)
-- [Remix](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/remix)
+[Inline Completions Demo Video](https://github.com/user-attachments/assets/f2ec4ae1-f658-4002-af9c-c6b1bbad70d9)
 
 ### Usage
 
@@ -108,26 +106,6 @@ registerCompletion(monaco, editor, {
 
 ## Register Completion Options
 
-### Get Completions in Real-Time
-
-The `trigger` option determines when the completion service provides code completions. You can choose between receiving suggestions/completions in real-time as you type or after a brief pause.
-
-```javascript
-registerCompletion(monaco, editor, {
-  // ...other options
-  trigger: 'onTyping',
-});
-```
-
-| Trigger              | Description                                                                | Notes                                                                                                                                                                                                                                                        |
-| -------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `'onIdle'` (default) | The completion service provides completions after a brief pause in typing. | This approach is less resource-intensive, as it only initiates a request when the editor is idle. However, compared to `onTyping`, it may result in a slightly reduced experience with completions.                                                          |
-| `'onTyping'`         | The completion service provides completions in real-time as you type.      | This approach is best suited for models with low response latency, such as Groq models. Please note that this trigger mode initiates additional background requests to deliver real-time suggestions. Technically, this method is called predictive caching. |
-
-[OnTyping Demo](https://github.com/user-attachments/assets/22c2ce44-334c-4963-b853-01b890b8e39f)
-
-> **Note:** If you prefer real-time completions, you can set the `trigger` option to `'onTyping'`. This may increase the number of requests made to the provider and the cost. This should not be too costly since most small models are very inexpensive.
-
 ### External Context
 
 Enhance the accuracy and relevance of Copilot's completions by providing additional code context from your workspace.
@@ -172,6 +150,26 @@ registerCompletion(monaco, editor, {
 ```
 
 This configuration will provide completions relevant to React, Next.js, and Tailwind CSS.
+
+### Get Completions in Real-Time
+
+The `trigger` option determines when the completion service provides code completions. You can choose between receiving suggestions/completions in real-time as you type or after a brief pause.
+
+```javascript
+registerCompletion(monaco, editor, {
+  // ...other options
+  trigger: 'onTyping',
+});
+```
+
+| Trigger              | Description                                                                | Notes                                                                                                                                                                                                                                                        |
+| -------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `'onIdle'` (default) | The completion service provides completions after a brief pause in typing. | This approach is less resource-intensive, as it only initiates a request when the editor is idle. However, compared to `onTyping`, it may result in a slightly reduced experience with completions.                                                          |
+| `'onTyping'`         | The completion service provides completions in real-time as you type.      | This approach is best suited for models with low response latency, such as Groq models. Please note that this trigger mode initiates additional background requests to deliver real-time suggestions. Technically, this method is called predictive caching. |
+
+[OnTyping Demo](https://github.com/user-attachments/assets/22c2ce44-334c-4963-b853-01b890b8e39f)
+
+> **Note:** If you prefer real-time completions, you can set the `trigger` option to `'onTyping'`. This may increase the number of requests made to the provider and the cost. This should not be too costly since most small models are very inexpensive.
 
 ## Copilot Options
 
@@ -354,6 +352,8 @@ By using a custom prompt, you can guide the model to generate completions that b
 ## Select and Edit
 
 Select and Edit is a feature that allows you to select code from the editor and edit it inline with AI assistance in the Monaco Editor.
+
+[Select and Edit Example](https://i.postimg.cc/KYsxq7Ht/select-and-edit-example.png)
 
 This feature is coming soon.
 
