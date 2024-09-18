@@ -353,7 +353,7 @@ Select and Edit is a feature that allows you to select code from the editor and 
 
 <img width="871" alt="select-and-edit-example" src="https://i.postimg.cc/Pxn94Tss/Screenshot-2024-09-19-at-2-44-57-AM.png">
 
-This feature is coming soon.
+This feature is coming soon™️.
 
 ## Contributing
 
