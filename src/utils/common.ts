@@ -65,13 +65,3 @@ export const joinWithAnd = (
 
   return `${arr.slice(0, -1).join(', ')} and ${arr.slice(-1)}`;
 };
-
-/**
- * Reverses a string.
- *
- * @param str - The string to reverse
- * @returns The reversed string
- */
-export const reverseString = (str: string): string => {
-  return str.split('').reverse().join('');
-};
