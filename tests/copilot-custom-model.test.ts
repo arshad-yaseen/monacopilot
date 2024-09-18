@@ -21,9 +21,7 @@ describe('Copilot with model', () => {
       headers: {'X-Custom-Header': 'custom-value'},
       body: {custom: 'data'},
     });
-    const customResponse = vi
-      .fn()
-      .mockReturnValue({completion: 'Custom response'});
+    const customResponse = vi.fn().mockReturnValue('Custom response');
 
     copilot = new Copilot(mockApiKey, {
       model: {
@@ -103,9 +101,7 @@ describe('Copilot with model', () => {
     const customConfig = vi.fn().mockReturnValue({
       headers: {'X-Custom-Header': 'custom-value'},
     });
-    const customResponse = vi
-      .fn()
-      .mockReturnValue({completion: 'Custom response'});
+    const customResponse = vi.fn().mockReturnValue('Custom response');
 
     copilot = new Copilot(mockApiKey, {
       model: {

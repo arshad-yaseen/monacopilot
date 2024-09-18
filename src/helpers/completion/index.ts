@@ -1,4 +1,4 @@
-import {ErrorContext, handleError} from '../error';
+import {ErrorContext, handleError} from '../../error';
 import {
   CompletionMetadata,
   CompletionMode,
@@ -7,8 +7,8 @@ import {
   CursorPosition,
   EditorModel,
   FetchCompletionItemParams,
-} from '../types';
-import {getTextAfterCursor, getTextBeforeCursor, HTTP} from '../utils';
+} from '../../types';
+import {getTextAfterCursor, getTextBeforeCursor, HTTP} from '../../utils';
 
 const CONTENT_TYPE_JSON = 'application/json';
 

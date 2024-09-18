@@ -13,7 +13,7 @@ describe('Provider Handler Functions', () => {
         mockCompletion as ChatCompletion,
         'openai',
       );
-      expect(result).toEqual({completion: 'OpenAI response'});
+      expect(result).toEqual('OpenAI response');
     });
 
     it('should call the correct handler for Groq', () => {
@@ -22,7 +22,7 @@ describe('Provider Handler Functions', () => {
         mockCompletion as ChatCompletion,
         'groq',
       );
-      expect(result).toEqual({completion: 'Groq response'});
+      expect(result).toEqual('Groq response');
     });
 
     it('should call the correct handler for Anthropic', () => {
@@ -31,7 +31,7 @@ describe('Provider Handler Functions', () => {
         mockCompletion as unknown as ChatCompletion,
         'anthropic',
       );
-      expect(result).toEqual({completion: 'Anthropic response'});
+      expect(result).toEqual('Anthropic response');
     });
   });
 
@@ -41,7 +41,7 @@ describe('Provider Handler Functions', () => {
         choices: [{message: {content: 'OpenAI response'}}],
       } as unknown as PickChatCompletion<'openai'>;
       const result = parseProviderChatCompletion(mockCompletion, 'openai');
-      expect(result).toEqual({completion: 'OpenAI response'});
+      expect(result).toEqual('OpenAI response');
     });
 
     it('should handle empty choices array', () => {
@@ -49,19 +49,13 @@ describe('Provider Handler Functions', () => {
         choices: [],
       } as unknown as PickChatCompletion<'openai'>;
       const result = parseProviderChatCompletion(mockCompletion, 'openai');
-      expect(result).toEqual({
-        completion: null,
-        error: 'No completion found in the OpenAI response',
-      });
+      expect(result).toEqual(null);
     });
 
     it('should handle undefined choices', () => {
       const mockCompletion = {} as unknown as PickChatCompletion<'openai'>;
       const result = parseProviderChatCompletion(mockCompletion, 'openai');
-      expect(result).toEqual({
-        completion: null,
-        error: 'No completion found in the OpenAI response',
-      });
+      expect(result).toEqual(null);
     });
   });
 
@@ -71,7 +65,7 @@ describe('Provider Handler Functions', () => {
         choices: [{message: {content: 'Groq response'}}],
       } as unknown as PickChatCompletion<'groq'>;
       const result = parseProviderChatCompletion(mockCompletion, 'groq');
-      expect(result).toEqual({completion: 'Groq response'});
+      expect(result).toEqual('Groq response');
     });
 
     it('should handle empty choices array', () => {
@@ -79,19 +73,13 @@ describe('Provider Handler Functions', () => {
         choices: [],
       } as unknown as PickChatCompletion<'groq'>;
       const result = parseProviderChatCompletion(mockCompletion, 'groq');
-      expect(result).toEqual({
-        completion: null,
-        error: 'No completion found in the Groq response',
-      });
+      expect(result).toEqual(null);
     });
 
     it('should handle undefined choices', () => {
       const mockCompletion = {} as unknown as PickChatCompletion<'groq'>;
       const result = parseProviderChatCompletion(mockCompletion, 'groq');
-      expect(result).toEqual({
-        completion: null,
-        error: 'No completion found in the Groq response',
-      });
+      expect(result).toEqual(null);
     });
   });
 
@@ -101,16 +89,13 @@ describe('Provider Handler Functions', () => {
         content: 'Anthropic response',
       } as unknown as PickChatCompletion<'anthropic'>;
       const result = parseProviderChatCompletion(mockCompletion, 'anthropic');
-      expect(result).toEqual({completion: 'Anthropic response'});
+      expect(result).toEqual('Anthropic response');
     });
 
     it('should handle missing content', () => {
       const mockCompletion = {} as unknown as PickChatCompletion<'anthropic'>;
       const result = parseProviderChatCompletion(mockCompletion, 'anthropic');
-      expect(result).toEqual({
-        completion: null,
-        error: 'No completion found in the Anthropic response',
-      });
+      expect(result).toEqual(null);
     });
 
     it('should handle non-string content', () => {
@@ -118,10 +103,7 @@ describe('Provider Handler Functions', () => {
         content: {invalid: 'object'},
       } as unknown as PickChatCompletion<'anthropic'>;
       const result = parseProviderChatCompletion(mockCompletion, 'anthropic');
-      expect(result).toEqual({
-        completion: null,
-        error: 'Completion content is not a string',
-      });
+      expect(result).toEqual(null);
     });
 
     it('should handle empty string content', () => {
@@ -129,10 +111,7 @@ describe('Provider Handler Functions', () => {
         content: '',
       } as unknown as PickChatCompletion<'anthropic'>;
       const result = parseProviderChatCompletion(mockCompletion, 'anthropic');
-      expect(result).toEqual({
-        completion: null,
-        error: 'No completion found in the Anthropic response',
-      });
+      expect(result).toEqual(null);
     });
   });
 });

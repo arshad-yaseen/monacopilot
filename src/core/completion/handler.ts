@@ -1,18 +1,18 @@
-import {CompletionValidator} from '../classes';
-import {CompletionCache} from '../classes/completion-cache';
-import {ErrorContext, handleError} from '../error';
-import {fetchCompletionItem} from '../helpers';
+import {CompletionValidator} from '../../classes';
+import {CompletionCache} from '../../classes/completion-cache';
+import {ErrorContext, handleError} from '../../error';
+import {fetchCompletionItem} from '../../helpers';
 import {
   EditorInlineCompletionsResult,
   InlineCompletionHandlerParams,
   TriggerType,
-} from '../types';
-import {asyncDebounce, getTextBeforeCursorInLine} from '../utils';
+} from '../../types';
+import {asyncDebounce, getTextBeforeCursorInLine} from '../../utils';
 import {
   computeCompletionInsertRange,
   createInlineCompletionResult,
   formatCompletion,
-} from '../utils/completion';
+} from '../../utils/completion';
 
 const ON_TYPING_DEBOUNCE_DELAY = 300;
 const ON_IDLE_DEBOUNCE_DELAY = 600;

@@ -6,32 +6,25 @@
 
 ## Table of Contents
 
-- [Examples](#examples)
 - [Installation](#installation)
-- [Usage](#usage)
+- [Inline Completions](#inline-completions)
+  - [Examples](#examples)
+  - [Usage](#usage)
+    - [API Handler](#api-handler)
+    - [Register Completion with the Monaco Editor](#register-completion-with-the-monaco-editor)
+  - [Register Completion Options](#register-completion-options)
+    - [Get Completions in Real-Time](#get-completions-in-real-time)
+    - [External Context](#external-context)
+    - [Filename](#filename)
+    - [Completions for Specific Technologies](#completions-for-specific-technologies)
 - [Copilot Options](#copilot-options)
   - [Changing the Provider and Model](#changing-the-provider-and-model)
   - [Custom Model](#custom-model)
 - [Completion Request Options](#completion-request-options)
   - [Custom Headers](#custom-headers)
   - [Custom Prompt](#custom-prompt)
-- [Configuration Options](#configuration-options)
-  - [Get Completions in Real-Time](#get-completions-in-real-time)
-  - [External Context](#external-context)
-  - [Filename](#filename)
-  - [Completions for Specific Technologies](#completions-for-specific-technologies)
+- [Select and Edit](#select-and-edit)
 - [Contributing](#contributing)
-
-[Demo Video](https://github.com/user-attachments/assets/4af4e24a-1b05-4bee-84aa-1521ad7098cd)
-
-## Examples
-
-Here are some examples of how to use Monacopilot in different project setups:
-
-- Next.js
-  - [App Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/app)
-  - [Pages Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/pages)
-- [Remix](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/remix)
 
 ## Installation
 
@@ -41,28 +34,32 @@ To install Monacopilot, run:
 npm install monacopilot
 ```
 
-🧩 For TypeScript users, You can import most of the types from `monacopilot` package.
+🧩 For TypeScript users, you can import most of the types from the `monacopilot` package.
 
-## Usage
+## Inline Completions
 
-#### Setting Up the API Key
+Inline completions are AI-generated suggestions that appear directly within your code as you type.
 
-In this example, we'll use Groq as our provider.
+[Demo Video](https://github.com/user-attachments/assets/4af4e24a-1b05-4bee-84aa-1521ad7098cd)
 
-Start by obtaining an API key from the [Groq console](https://console.groq.com/keys). Once you have your API key, define it as an environment variable in your project:
+### Examples
 
-```bash
-# .env.local
-GROQ_API_KEY=your-api-key
-```
+Here are some examples of how to integrate AI auto-completion into your project using Monacopilot:
+
+- Next.js
+  - [App Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/app)
+  - [Pages Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/pages)
+- [Remix](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/remix)
+
+### Usage
 
 #### API Handler
 
 Set up an API handler to manage auto-completion requests. An example using Express.js:
 
 ```javascript
-const express = require('express');
-const {Copilot} = require('monacopilot');
+import express from 'express';
+import {Copilot} from 'monacopilot';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -70,7 +67,7 @@ const copilot = new Copilot(process.env.GROQ_API_KEY);
 
 app.use(express.json());
 
-app.post('/copilot', async (req, res) => {
+app.post('/complete', async (req, res) => {
   const completion = await copilot.complete({
     body: req.body,
   });
@@ -80,24 +77,24 @@ app.post('/copilot', async (req, res) => {
 app.listen(port);
 ```
 
-Great! Now Monacopilot is all set up to send completion requests to the `/copilot` endpoint and get those completions back. It's like a high-five between your code and the AI!
+Now, Monacopilot is set up to send completion requests to the `/complete` endpoint and receive completions in response.
 
 The `copilot.complete` method processes the request body sent by Monacopilot and returns the corresponding completion.
 
-#### Register Copilot with the Monaco Editor
+#### Register Completion with the Monaco Editor
 
-Now, let's integrate Copilot with the Monaco editor. Here's how you can do it:
+Now, let's integrate AI auto-completion into your Monaco editor. Here's how you can do it:
 
 ```javascript
 import * as monaco from 'monaco-editor';
-import {registerCopilot} from 'monacopilot';
+import {registerCompletion} from 'monacopilot';
 
 const editor = monaco.editor.create(document.getElementById('container'), {
   language: 'javascript',
 });
 
-registerCopilot(monaco, editor, {
-  endpoint: 'https://api.example.com/copilot',
+registerCompletion(monaco, editor, {
+  endpoint: 'https://api.example.com/complete',
   language: 'javascript',
 });
 ```
@@ -107,235 +104,36 @@ registerCopilot(monaco, editor, {
 | `endpoint` | `string` | The URL of the API endpoint that we created in the previous step. |
 | `language` | `string` | The language of the editor.                                       |
 
-🎉 Hurray! Monacopilot is now connected to the Monaco Editor. Start typing and see completions in the editor.
+🎉 Congratulations! The AI auto-completion is now connected to the Monaco Editor. Start typing and see completions in the editor.
 
-## Copilot Options
-
-### Changing the Provider and Model
-
-You can specify a different provider and model for completions by setting the `provider` and `model` parameters in the `Copilot` instance.
-
-```javascript
-const copilot = new Copilot(process.env.OPENAI_API_KEY, {
-  provider: 'openai',
-  model: 'gpt-4o',
-});
-```
-
-The default provider is `groq` and the default model is `llama-3-70b`.
-
-There are other providers and models available. Here is a list:
-
-| Provider  | Models                                                                    |
-| --------- | ------------------------------------------------------------------------- |
-| Groq      | `llama-3-70b`                                                             |
-| OpenAI    | `gpt-4o`, `gpt-4o-mini`, `o1-preview`, `o1-mini`                          |
-| Anthropic | `claude-3.5-Sonnet`, `claude-3-opus`, `claude-3-sonnet`, `claude-3-haiku` |
-
-### Custom Model
-
-You can use a custom AI model that isn't built into Monacopilot by setting up a `model` when you create a new Copilot. This feature lets you connect to AI models from other services or your own custom-built models.
-
-Please make sure you are using a better model, especially for coding tasks, to get the best and most accurate completions. Also, use a model with very low response latency (I suggest at least under 1.5 s) to enjoy a great experience or utilize the full power of Monacopilot. Otherwise, you may experience poor performance or inaccurate completions.
-
-#### Example
-
-```javascript
-const copilot = new Copilot(process.env.HUGGINGFACE_API_KEY, {
-  // provider: 'huggingface', You don't need to set the provider if you are using a custom model.
-  model: {
-    config: (apiKey, prompt) => ({
-      endpoint:
-        'https://api-inference.huggingface.co/models/openai-community/gpt2',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: {
-        inputs: prompt.user,
-        parameters: {
-          max_length: 100,
-          num_return_sequences: 1,
-          temperature: 0.7,
-        },
-      },
-    }),
-    transformResponse: response => {
-      if (response.error) {
-        return {
-          completion: null,
-          error: response.error,
-        };
-      }
-
-      return {
-        completion: response[0].generated_text,
-      };
-    },
-  },
-});
-```
-
-#### Configuration
-
-The `model` option accepts an object with two functions:
-
-| Function            | Description                                                                                                                          | Type                                                                                                                |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
-| `config`            | A function that receives the API key and prompt data, and returns the configuration for the custom model API request.                | `(apiKey: string, prompt: {system: string, user: string}) => { endpoint: string, body?: object, headers?: object }` |
-| `transformResponse` | A function that takes the raw/parsed response from the custom model API and converts it into an object with the following structure: | `(response: unknown) => { completion: string \| null, error?: string }`                                             |
-
-The `config` function must return an object with the following properties:
-
-| Property   | Type                  | Description                                  |
-| ---------- | --------------------- | -------------------------------------------- |
-| `endpoint` | `string`              | The URL of the custom model API endpoint.    |
-| `body`     | `object \| undefined` | The body of the custom model API request.    |
-| `headers`  | `object \| undefined` | The headers of the custom model API request. |
-
-The `transformResponse` function must return an object with the following structure:
-
-| Property     | Type                  | Description                                                 |
-| ------------ | --------------------- | ----------------------------------------------------------- |
-| `completion` | `string \| null`      | The generated completion text to be inserted in the editor. |
-| `error`      | `string \| undefined` | An error message if something went wrong.                   |
-
-This structure allows for easy integration of the custom model's output with the rest of the Monacopilot system, providing either the generated completion text or an error message if something went wrong.
-
-## Completion Request Options
-
-### Custom Headers
-
-You can add custom headers to the provider's completion requests. For example, if you select `OpenAI` as your provider, you can add a custom header to the OpenAI completion requests made by Monacopilot.
-
-```javascript
-copilot.complete({
-  body,
-  options: {
-    // ...other options
-    headers: {
-      'X-Custom-Header': 'custom-value',
-    },
-  },
-});
-```
-
-### Custom Prompt
-
-You can customize the prompt used for generating completions by providing a `customPrompt` function in the options parameter of the `copilot.complete` method. This allows you to tailor the AI's behavior to your specific needs.
-
-#### Usage
-
-```javascript
-copilot.complete({
-  body,
-  options: {
-    customPrompt: metadata => ({
-      system: 'Your custom system prompt here',
-      user: 'Your custom user prompt here',
-    }),
-  },
-});
-```
-
-The `system` and `user` prompts in the `customPrompt` function are optional. Omitting either uses the default prompt for that field. Example of customizing only the system prompt:
-
-```javascript
-copilot.complete({
-  body,
-  options: {
-    customPrompt: metadata => ({
-      system:
-        'You are an AI assistant specialized in writing React components, focusing on creating clean...',
-    }),
-  },
-});
-```
-
-#### Parameters
-
-The `customPrompt` function receives a `completionMetadata` object with the following properties:
-
-| Property         | Type                                   | Description                                                                                                                                    |
-| ---------------- | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| language         | `string`                               | The programming language of the code                                                                                                           |
-| cursorPosition   | `{lineNumber: number, column: number}` | The current cursor position in the editor                                                                                                      |
-| filename         | `string \| undefined`                  | The name of the file being edited. Only available if you have provided the `filename` option in the `registerCopilot` function.                |
-| technologies     | `string[] \| undefined`                | An array of technologies used in the project. Only available if you have provided the `technologies` option in the `registerCopilot` function. |
-| externalContext  | `object \| undefined`                  | Additional context from related files. Only available if you have provided the `externalContext` option in the `registerCopilot` function.     |
-| textAfterCursor  | `string`                               | The text that appears after the cursor                                                                                                         |
-| textBeforeCursor | `string`                               | The text that appears before the cursor                                                                                                        |
-| editorState      | `object`                               | An object containing the `completionMode` property                                                                                             |
-
-The `editorState.completionMode` can be one of the following:
-
-| Mode               | Description                                                                                                                                                         |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| fill-in-the-middle | Indicates that the cursor is positioned within the existing text. In this mode, the AI will generate content to be inserted at the cursor position.                 |
-| completion         | Indicates that the cursor is at the end of the existing text. In this mode, the AI will generate content to continue or complete the text from the cursor position. |
-
-For additional `completionMetadata` needs, please [open an issue](https://github.com/arshad-yaseen/monacopilot/issues/new).
-
-The `customPrompt` function should return an object with two properties:
-
-| Property | Type                  | Description                                           |
-| -------- | --------------------- | ----------------------------------------------------- |
-| system   | `string \| undefined` | A string representing the system prompt for the model |
-| user     | `string \| undefined` | A string representing the user prompt for the model   |
-
-#### Example
-
-Here's an example of a custom prompt that focuses on generating React component code:
-
-```javascript
-const customPrompt = ({textBeforeCursor, textAfterCursor}) => ({
-  system:
-    'You are an AI assistant specialized in writing React components. Focus on creating clean, reusable, and well-structured components.',
-  user: `Please complete the following React component:
-
-${textBeforeCursor}
-// Cursor position
-${textAfterCursor}
-
-Use modern React practices and hooks where appropriate. If you're adding new props, make sure to include proper TypeScript types. Please provide only the finished code without additional comments or explanations.`,
-});
-
-copilot.complete({
-  body,
-  options: {customPrompt},
-});
-```
-
-By using a custom prompt, you can guide the model to generate completions that better fit your coding style, project requirements, or specific technologies you're working with.
-
-## Configuration Options
+## Register Completion Options
 
 ### Get Completions in Real-Time
 
-The `trigger` option determines when Copilot provides code completions. You can choose between receiving suggestions in real-time as you type or after a brief pause.
+The `trigger` option determines when the completion service provides code completions. You can choose between receiving suggestions/completions in real-time as you type or after a brief pause.
 
 ```javascript
-registerCopilot(monaco, editor, {
+registerCompletion(monaco, editor, {
   // ...other options
   trigger: 'onTyping',
 });
 ```
 
-| Trigger              | Description                                                 | Notes                                                                                                                                                                                                                                                        |
-| -------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `'onIdle'` (default) | Copilot provides completions after a brief pause in typing. | This approach is less resource-intensive, as it only initiates a request when the editor is idle. However, compared to `onTyping` it may result in a bit reduced experience with completions.                                                                |
-| `'onTyping'`         | Copilot provides completions in real-time as you type.      | This approach is best suited for models with low response latency, such as Groq models. Please note that this trigger mode initiates additional background requests to deliver real-time suggestions. Technically, this method is called predictive caching. |
+| Trigger              | Description                                                                | Notes                                                                                                                                                                                                                                                        |
+| -------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `'onIdle'` (default) | The completion service provides completions after a brief pause in typing. | This approach is less resource-intensive, as it only initiates a request when the editor is idle. However, compared to `onTyping`, it may result in a slightly reduced experience with completions.                                                          |
+| `'onTyping'`         | The completion service provides completions in real-time as you type.      | This approach is best suited for models with low response latency, such as Groq models. Please note that this trigger mode initiates additional background requests to deliver real-time suggestions. Technically, this method is called predictive caching. |
 
 [OnTyping Demo](https://github.com/user-attachments/assets/22c2ce44-334c-4963-b853-01b890b8e39f)
 
-> **Note:** If you prefer real-time completions, you can set the `trigger` option to `'onTyping'`. This may increase the number of requests made to the provider and the cost. This is not too costly since most small models are very inexpensive.
+> **Note:** If you prefer real-time completions, you can set the `trigger` option to `'onTyping'`. This may increase the number of requests made to the provider and the cost. This should not be too costly since most small models are very inexpensive.
 
 ### External Context
 
 Enhance the accuracy and relevance of Copilot's completions by providing additional code context from your workspace.
 
 ```javascript
-registerCopilot(monaco, editor, {
+registerCompletion(monaco, editor, {
   // ...other options
   externalContext: [
     {
@@ -354,20 +152,20 @@ By providing external context, Copilot can offer more intelligent suggestions. F
 Specify the name of the file being edited to receive more contextually relevant completions.
 
 ```javascript
-registerCopilot(monaco, editor, {
+registerCompletion(monaco, editor, {
   // ...other options
   filename: 'utils.js', // e.g., "index.js", "utils/objects.js"
 });
 ```
 
-Now, the completions will be more relevant to utilities.
+Now, the completions will be more relevant to the file's context.
 
 ### Completions for Specific Technologies
 
 Enable completions tailored to specific technologies by using the `technologies` option.
 
 ```javascript
-registerCopilot(monaco, editor, {
+registerCompletion(monaco, editor, {
   // ...other options
   technologies: ['react', 'next.js', 'tailwindcss'],
 });
@@ -375,8 +173,192 @@ registerCopilot(monaco, editor, {
 
 This configuration will provide completions relevant to React, Next.js, and Tailwind CSS.
 
+## Copilot Options
+
+### Changing the Provider and Model
+
+You can specify a different provider and model for completions by setting the `provider` and `model` parameters in the `Copilot` instance.
+
+```javascript
+const copilot = new Copilot(process.env.OPENAI_API_KEY, {
+  provider: 'openai',
+  model: 'gpt-4o',
+});
+```
+
+The default provider is `groq`, and the default model is `llama-3-70b`.
+
+There are other providers and models available. Here is a list:
+
+| Provider  | Models                                                                    |
+| --------- | ------------------------------------------------------------------------- |
+| Groq      | `llama-3-70b`                                                             |
+| OpenAI    | `gpt-4o`, `gpt-4o-mini`, `o1-preview`, `o1-mini`                          |
+| Anthropic | `claude-3.5-Sonnet`, `claude-3-opus`, `claude-3-sonnet`, `claude-3-haiku` |
+
+### Custom Model
+
+You can use a custom AI model that isn't built into Monacopilot by setting up a `model` when you create a new Copilot. This feature lets you connect to AI models from other services or your own custom-built models.
+
+Please ensure you are using a high-quality model, especially for coding tasks, to get the best and most accurate completions. Also, use a model with very low response latency (preferably under 1.5 seconds) to enjoy a great experience and utilize the full power of Monacopilot.
+
+#### Example
+
+```javascript
+const copilot = new Copilot(process.env.HUGGINGFACE_API_KEY, {
+  // You don't need to set the provider if you are using a custom model.
+  // provider: 'huggingface',
+  model: {
+    config: (apiKey, prompt) => ({
+      endpoint:
+        'https://api-inference.huggingface.co/models/openai-community/gpt2',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: {
+        inputs: prompt.user,
+        parameters: {
+          max_length: 100,
+          num_return_sequences: 1,
+          temperature: 0.7,
+        },
+      },
+    }),
+    transformResponse: response => response[0].generated_text,
+  },
+});
+```
+
+#### Configuration
+
+The `model` option accepts an object with two functions:
+
+| Function            | Description                                                                                                           | Type                                                                                                                  |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `config`            | A function that receives the API key and prompt data, and returns the configuration for the custom model API request. | `(apiKey: string, prompt: { system: string; user: string }) => { endpoint: string; body?: object; headers?: object }` |
+| `transformResponse` | A function that takes the raw/parsed response from the custom model API and returns the model-generated text.         | `(response: unknown) => string`                                                                                       |
+
+The `config` function must return an object with the following properties:
+
+| Property   | Type                    | Description                                  |
+| ---------- | ----------------------- | -------------------------------------------- |
+| `endpoint` | `string`                | The URL of the custom model API endpoint.    |
+| `body`     | `object` or `undefined` | The body of the custom model API request.    |
+| `headers`  | `object` or `undefined` | The headers of the custom model API request. |
+
+The `transformResponse` function must return the model-generated text.
+
+## Completion Request Options
+
+### Custom Headers
+
+You can add custom headers to the provider's completion requests. For example, if you select `OpenAI` as your provider, you can add a custom header to the OpenAI completion requests made by Monacopilot.
+
+```javascript
+copilot.complete({
+  options: {
+    // ...other options
+    headers: {
+      'X-Custom-Header': 'custom-value',
+    },
+  },
+});
+```
+
+### Custom Prompt
+
+You can customize the prompt used for generating completions by providing a `customPrompt` function in the options parameter of the `copilot.complete` method. This allows you to tailor the AI's behavior to your specific needs.
+
+#### Usage
+
+```javascript
+copilot.complete({
+  options: {
+    customPrompt: metadata => ({
+      system: 'Your custom system prompt here',
+      user: 'Your custom user prompt here',
+    }),
+  },
+});
+```
+
+The `system` and `user` prompts in the `customPrompt` function are optional. If you omit either the `system` or `user` prompt, the default prompt for that field will be used. Example of customizing only the system prompt:
+
+```javascript
+copilot.complete({
+  options: {
+    customPrompt: metadata => ({
+      system:
+        'You are an AI assistant specialized in writing React components, focusing on creating clean...',
+    }),
+  },
+});
+```
+
+#### Parameters
+
+The `customPrompt` function receives a `completionMetadata` object, which contains information about the current editor state and can be used to tailor the prompt.
+
+| Property           | Type                                     | Description                                                                                                                                       |
+| ------------------ | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `language`         | `string`                                 | The programming language of the code.                                                                                                             |
+| `cursorPosition`   | `{ lineNumber: number; column: number }` | The current cursor position in the editor.                                                                                                        |
+| `filename`         | `string` or `undefined`                  | The name of the file being edited. Only available if you have provided the `filename` option in the `registerCompletion` function.                |
+| `technologies`     | `string[]` or `undefined`                | An array of technologies used in the project. Only available if you have provided the `technologies` option in the `registerCompletion` function. |
+| `externalContext`  | `object` or `undefined`                  | Additional context from related files. Only available if you have provided the `externalContext` option in the `registerCompletion` function.     |
+| `textAfterCursor`  | `string`                                 | The text that appears after the cursor.                                                                                                           |
+| `textBeforeCursor` | `string`                                 | The text that appears before the cursor.                                                                                                          |
+| `editorState`      | `object`                                 | An object containing the `completionMode` property.                                                                                               |
+
+The `editorState.completionMode` can be one of the following:
+
+| Mode                 | Description                                                                                                                                                         |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `fill-in-the-middle` | Indicates that the cursor is positioned within the existing text. In this mode, the AI will generate content to be inserted at the cursor position.                 |
+| `completion`         | Indicates that the cursor is at the end of the existing text. In this mode, the AI will generate content to continue or complete the text from the cursor position. |
+
+For additional `completionMetadata` needs, please [open an issue](https://github.com/arshad-yaseen/monacopilot/issues/new).
+
+The `customPrompt` function should return an object with two properties:
+
+| Property | Type                    | Description                                            |
+| -------- | ----------------------- | ------------------------------------------------------ |
+| `system` | `string` or `undefined` | A string representing the system prompt for the model. |
+| `user`   | `string` or `undefined` | A string representing the user prompt for the model.   |
+
+#### Example
+
+Here's an example of a custom prompt that focuses on generating React component code:
+
+```javascript
+const customPrompt = ({textBeforeCursor, textAfterCursor}) => ({
+  system:
+    'You are an AI assistant specialized in writing React components. Focus on creating clean, reusable, and well-structured components.',
+  user: `Please complete the following React component:
+
+    ${textBeforeCursor}
+    // Cursor position
+    ${textAfterCursor}
+
+    Use modern React practices and hooks where appropriate. If you're adding new props, make sure to include proper TypeScript types. Please provide only the finished code without additional comments or explanations.`,
+});
+
+copilot.complete({
+  options: {customPrompt},
+});
+```
+
+By using a custom prompt, you can guide the model to generate completions that better fit your coding style, project requirements, or specific technologies you're working with.
+
+## Select and Edit
+
+Select and Edit is a feature that allows you to select code from the editor and edit it inline with AI assistance in the Monaco Editor.
+
+This feature is coming soon.
+
 ## Contributing
 
-For guidelines on contributing, Please read the [contributing guide](https://github.com/arshad-yaseen/monacopilot/blob/main/CONTRIBUTING.md).
+For guidelines on contributing, please read the [contributing guide](https://github.com/arshad-yaseen/monacopilot/blob/main/CONTRIBUTING.md).
 
-We welcome contributions from the community to enhance Monacopilot's capabilities and make it even more powerful ❤️
+We welcome contributions from the community to enhance Monacopilot's capabilities and make it even more powerful. ❤️

@@ -30,7 +30,5 @@ export const mockCompletion = {
   choices: [{message: {content: MOCK_COMPLETION_CONTENT}}],
 };
 
-export const mockEmptyCompletion = {choices: []};
-
 export const mockError = new Error('API Error');
 export const mockNetworkError = new Error('Network error');

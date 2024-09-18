@@ -1,12 +1,7 @@
-import {Logger} from './logger';
-
 export class ErrorHandler {
   private static readonly instance: ErrorHandler = new ErrorHandler();
-  private logger: Logger;
 
-  private constructor() {
-    this.logger = Logger.getInstance();
-  }
+  private constructor() {}
 
   public static getInstance(): ErrorHandler {
     return ErrorHandler.instance;
@@ -14,7 +9,8 @@ export class ErrorHandler {
 
   public handleError(error: unknown, context: ErrorContext): ErrorDetails {
     const errorDetails = this.getErrorDetails(error);
-    this.logger.error(context, errorDetails);
+    const styledMessage = `\x1b[31m[${context}]\x1b[0m \x1b[1m${errorDetails.message}\x1b[0m`;
+    console.error(styledMessage);
     return errorDetails;
   }
 
@@ -42,8 +38,8 @@ export enum ErrorContext {
   COPILOT_COMPLETION_FETCH = 'COPILOT_COMPLETION_FETCH_ERROR',
   /** Error occurred while fetching a completion item */
   FETCH_COMPLETION_ITEM = 'FETCH_COMPLETION_ITEM_ERROR',
-  /** Error occurred during Copilot registration */
-  REGISTER_COPILOT = 'REGISTER_COPILOT_ERROR',
+  /** Error occurred during completion registration */
+  REGISTER_COMPLETION = 'REGISTER_COMPLETION_ERROR',
   /** Unexpected or uncategorized error */
   UNEXPECTED = 'UNEXPECTED_ERROR',
 }

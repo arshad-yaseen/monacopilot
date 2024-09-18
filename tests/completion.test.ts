@@ -2,11 +2,11 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 
 import {CompletionMetadata, Copilot} from '../src';
 import {
-  CHAT_COMPLETION_ENDPOINT_BY_PROVIDER,
-  COMPLETION_MODEL_IDS,
-  DEFAULT_COMPLETION_MODEL,
-  DEFAULT_COMPLETION_PROVIDER,
-  DEFAULT_COMPLETION_TEMPERATURE,
+  COPILOT_MODEL_IDS,
+  COPILOT_PROVIDER_ENDPOINT_MAP,
+  DEFAULT_COPILOT_MODEL,
+  DEFAULT_COPILOT_PROVIDER,
+  DEFAULT_COPILOT_TEMPERATURE,
 } from '../src/constants';
 import {HTTP} from '../src/utils';
 import {
@@ -14,7 +14,6 @@ import {
   mockApiKey,
   mockCompletion,
   mockCompletionMetadata,
-  mockEmptyCompletion,
   mockError,
   mockNetworkError,
 } from './mock';
@@ -42,14 +41,14 @@ describe('Completion', () => {
 
     expect(result).toEqual({completion: MOCK_COMPLETION_CONTENT});
     expect(HTTP.POST).toHaveBeenCalledWith(
-      CHAT_COMPLETION_ENDPOINT_BY_PROVIDER[DEFAULT_COMPLETION_PROVIDER],
+      COPILOT_PROVIDER_ENDPOINT_MAP[DEFAULT_COPILOT_PROVIDER],
       expect.objectContaining({
-        model: COMPLETION_MODEL_IDS[DEFAULT_COMPLETION_MODEL],
+        model: COPILOT_MODEL_IDS[DEFAULT_COPILOT_MODEL],
         messages: expect.arrayContaining([
           {role: 'system', content: expect.any(String)},
           {role: 'user', content: expect.any(String)},
         ]),
-        temperature: DEFAULT_COMPLETION_TEMPERATURE,
+        temperature: DEFAULT_COPILOT_TEMPERATURE,
       }),
       expect.objectContaining({
         headers: expect.any(Object),
@@ -72,23 +71,6 @@ describe('Completion', () => {
     });
   });
 
-  it('should throw an error when no completion choices are received', async () => {
-    vi.spyOn(HTTP, 'POST').mockResolvedValue(mockEmptyCompletion);
-
-    const result = await copilot.complete({
-      body: {
-        completionMetadata: mockCompletionMetadata,
-      },
-    });
-
-    expect(result).toEqual({
-      error: expect.stringContaining(
-        'No completion found in the Groq response',
-      ),
-      completion: null,
-    });
-  });
-
   it('should use custom provider and model when specified', async () => {
     const customCopilot = new Copilot(mockApiKey, {
       provider: 'openai',
@@ -103,9 +85,9 @@ describe('Completion', () => {
     });
 
     expect(HTTP.POST).toHaveBeenCalledWith(
-      CHAT_COMPLETION_ENDPOINT_BY_PROVIDER['openai'],
+      COPILOT_PROVIDER_ENDPOINT_MAP['openai'],
       expect.objectContaining({
-        model: COMPLETION_MODEL_IDS['gpt-4o'],
+        model: COPILOT_MODEL_IDS['gpt-4o'],
       }),
       expect.any(Object),
     );
@@ -262,9 +244,9 @@ describe('Completion', () => {
     });
 
     expect(HTTP.POST).toHaveBeenCalledWith(
-      CHAT_COMPLETION_ENDPOINT_BY_PROVIDER['openai'],
+      COPILOT_PROVIDER_ENDPOINT_MAP['openai'],
       expect.objectContaining({
-        model: COMPLETION_MODEL_IDS['o1-preview'],
+        model: COPILOT_MODEL_IDS['o1-preview'],
         messages: expect.arrayContaining([
           {role: 'user', content: expect.any(String)},
         ]),
@@ -297,9 +279,9 @@ describe('Completion', () => {
     });
 
     expect(HTTP.POST).toHaveBeenCalledWith(
-      CHAT_COMPLETION_ENDPOINT_BY_PROVIDER['openai'],
+      COPILOT_PROVIDER_ENDPOINT_MAP['openai'],
       expect.objectContaining({
-        model: COMPLETION_MODEL_IDS['o1-mini'],
+        model: COPILOT_MODEL_IDS['o1-mini'],
         messages: expect.arrayContaining([
           {role: 'user', content: expect.any(String)},
         ]),
@@ -332,9 +314,9 @@ describe('Completion', () => {
     });
 
     expect(HTTP.POST).toHaveBeenCalledWith(
-      CHAT_COMPLETION_ENDPOINT_BY_PROVIDER['openai'],
+      COPILOT_PROVIDER_ENDPOINT_MAP['openai'],
       expect.objectContaining({
-        model: COMPLETION_MODEL_IDS['gpt-4o'],
+        model: COPILOT_MODEL_IDS['gpt-4o'],
         messages: expect.arrayContaining([
           {role: 'system', content: expect.any(String)},
           {role: 'user', content: expect.any(String)},

@@ -1,22 +1,21 @@
 import {Copilot} from './classes';
-import {registerCopilot} from './core/register';
+import {registerCompletion, registerCopilot} from './core/completion/register';
 
-export {registerCopilot, Copilot};
+export {registerCopilot, registerCompletion, Copilot};
 
 export type {
   Monaco,
   StandaloneCodeEditor,
-  RegisterCopilotOptions,
-  CopilotRegistration,
+  RegisterCompletionOptions,
+  CompletionRegistration,
   CopilotOptions,
-  CustomModel,
-  CustomModelConfig,
-  CustomModelTransformResponse,
+  CustomCopilotModel,
+  CustomCopilotModelConfig,
+  CustomCopilotModelTransformResponse,
   CompletionMetadata,
   CompletionRequest,
   CompletionRequestBody,
   CompletionRequestOptions,
-  CompletionProvider,
-  CompletionModel,
-  CompletionResponse,
+  CopilotProvider,
+  CopilotModel,
 } from './types';
