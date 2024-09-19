@@ -124,7 +124,10 @@ export class Copilot {
       if (typeof this.model === 'object' && 'transformResponse' in this.model) {
         const transformedResponse =
           this.model.transformResponse(chatCompletion);
-        completionResponse = {completion: transformedResponse};
+        completionResponse = {
+          completion:
+            transformedResponse.text ?? transformedResponse.completion,
+        };
       } else {
         const parsedCompletion = parseProviderChatCompletion(
           chatCompletion,

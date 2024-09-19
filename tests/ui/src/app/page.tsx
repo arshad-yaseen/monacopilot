@@ -4,7 +4,7 @@ import {useEffect, useState} from 'react';
 
 import Editor from '@monaco-editor/react';
 import {
-  registerCopilot,
+  registerCompletion,
   type Monaco,
   type StandaloneCodeEditor,
 } from 'monacopilot';
@@ -16,9 +16,10 @@ export default function Home() {
   useEffect(() => {
     if (!monaco || !editor) return;
 
-    const copilot = registerCopilot(monaco, editor, {
+    const copilot = registerCompletion(monaco, editor, {
       endpoint: '/api/copilot',
-      language: 'python',
+      language: 'javascript',
+      trigger: 'onTyping',
     });
 
     return () => {
@@ -28,7 +29,7 @@ export default function Home() {
 
   return (
     <Editor
-      language="python"
+      language="javascript"
       onMount={(editor, monaco) => {
         setMonaco(monaco);
         setEditor(editor);
