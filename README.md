@@ -221,7 +221,7 @@ const copilot = new Copilot(process.env.HUGGINGFACE_API_KEY, {
         },
       },
     }),
-    transformResponse: response => response[0].generated_text,
+    transformResponse: response => ({text: response[0].generated_text}),
   },
 });
 ```
