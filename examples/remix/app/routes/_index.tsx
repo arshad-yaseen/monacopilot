@@ -4,7 +4,7 @@ import {Editor} from '@monaco-editor/react';
 import type {MetaFunction} from '@remix-run/node';
 import {
   Monaco,
-  type registerCopilot,
+  registerCompletion,
   type StandaloneCodeEditor,
 } from 'monacopilot';
 
@@ -22,8 +22,8 @@ export default function Index() {
   useEffect(() => {
     if (!monaco || !editor) return;
 
-    const copilot = registerCopilot(monaco, editor, {
-      endpoint: '/copilot',
+    const copilot = registerCompletion(monaco, editor, {
+      endpoint: '/complete',
       language: 'javascript',
     });
 
