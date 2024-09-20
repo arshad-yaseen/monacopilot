@@ -4,7 +4,11 @@
 
 **Monacopilot** integrates AI auto-completion into the Monaco Editor, inspired by GitHub Copilot.
 
-## Table of Contents
+### Motivation
+
+![Monacopilot Motivation](https://i.postimg.cc/c4GM7q3Z/motivation.png)
+
+### Table of Contents
 
 - [Examples](#examples)
 - [Inline Completions](#inline-completions)
