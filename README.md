@@ -99,7 +99,7 @@ const editor = monaco.editor.create(document.getElementById('container'), {
 registerCompletion(monaco, editor, {
   endpoint: 'https://api.example.com/complete',
   language: 'javascript',
-  // If you are using Groq as your provider, it's recommended to set `maxContextLines` to `60`.
+  // If you are using Groq as your provider, it's recommended to set optional `maxContextLines` to `60` or less.
   // This is because Groq has low rate limits and doesn't offer pay-as-you-go pricing.
   maxContextLines: 60,
 });
