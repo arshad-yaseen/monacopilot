@@ -183,7 +183,7 @@ registerCompletion(monaco, editor, {
 
 To manage potentially lengthy code in your editor, you can limit the number of lines included in the completion request using the `maxContextLines` option.
 
-For example, if there's a chance that the code in your editor may exceed 500+ lines, you don't need to provide 1000 lines to the model. This would increase costs due to the huge number of input tokens. Instead, you can set `maxContextLines` to maybe `80` or `150`, depending on how accurate you want the completions to be and how much you're willing to pay for the model.
+For example, if there's a chance that the code in your editor may exceed `500+ lines`, you don't need to provide `500 lines` to the model. This would increase costs due to the huge number of input tokens. Instead, you can set `maxContextLines` to maybe `80` or `150`, depending on how accurate you want the completions to be and how much you're willing to pay for the model.
 
 ```javascript
 registerCompletion(monaco, editor, {
