@@ -21,6 +21,7 @@
     - [Filename](#filename)
     - [Completions for Specific Technologies](#completions-for-specific-technologies)
     - [Get Completions in Real-Time](#get-completions-in-real-time)
+    - [Max Context Lines](#max-context-lines)
 - [Copilot Options](#copilot-options)
   - [Changing the Provider and Model](#changing-the-provider-and-model)
   - [Custom Model](#custom-model)
@@ -98,6 +99,8 @@ const editor = monaco.editor.create(document.getElementById('container'), {
 registerCompletion(monaco, editor, {
   endpoint: 'https://api.example.com/complete',
   language: 'javascript',
+  // If you are using Groq as your provider, it's recommended to set `maxContextLines` to `60`.
+  maxContextLines: 60,
 });
 ```
 
@@ -174,6 +177,25 @@ registerCompletion(monaco, editor, {
 [OnTyping Demo](https://github.com/user-attachments/assets/22c2ce44-334c-4963-b853-01b890b8e39f)
 
 > **Note:** If you prefer real-time completions, you can set the `trigger` option to `'onTyping'`. This may increase the number of requests made to the provider and the cost. This should not be too costly since most small models are very inexpensive.
+
+### Max Context Lines
+
+To manage potentially lengthy code in your editor, you can limit the number of lines included in the completion request using the `maxContextLines` option. This feature serves several purposes:
+
+1. Prevents excessively large completion requests
+2. Helps avoid `429 Too Many Requests` errors
+3. Reduces the cost of input tokens for model API calls
+
+This option is particularly useful when working with providers that have rate limits or don't offer pay-as-you-go pricing. For example, if you're using `Groq` as your provider, it's recommended to set `maxContextLines` to `60` due to its low rate limits and lack of pay-as-you-go pricing. However, `Groq` is expected to offer pay-as-you-go pricing in the near future.
+
+Here's how to implement this option:
+
+```javascript
+registerCompletion(monaco, editor, {
+  // ...other options
+  maxContextLines: 60,
+});
+```
 
 ## Copilot Options
 

@@ -11,19 +11,19 @@ import {
  * @returns {boolean} True if there is whitespace after the cursor, false otherwise.
  */
 export const hasWhitespaceAfterCursor = (
-  position: CursorPosition,
-  model: EditorModel,
-): boolean => getCharAfterCursor(position, model) === ' ';
+  pos: CursorPosition,
+  mdl: EditorModel,
+): boolean => getCharAfterCursor(pos, mdl) === ' ';
 
 /**
  * Checks if the character after the cursor is not a punctuation and is not empty.
  * @returns {boolean} True if the character after the cursor is not a punctuation and is not empty, false otherwise.
  */
 export const isNonPunctuationCharAfterCursor = (
-  position: CursorPosition,
-  model: EditorModel,
+  pos: CursorPosition,
+  mdl: EditorModel,
 ): boolean => {
-  const charAfterCursor = getCharAfterCursor(position, model);
+  const charAfterCursor = getCharAfterCursor(pos, mdl);
   return !!charAfterCursor && !PUNCTUATIONS.has(charAfterCursor);
 };
 
@@ -32,19 +32,19 @@ export const isNonPunctuationCharAfterCursor = (
  * @returns {boolean} True if the cursor is at the start of the line with text around it, false otherwise.
  */
 export const isCursorAtStartWithTextAround = (
-  position: CursorPosition,
-  model: EditorModel,
+  pos: CursorPosition,
+  mdl: EditorModel,
 ): boolean => {
   const textAfterCursorInCurrentLine = getTextAfterCursorInLine(
-    position,
-    model,
+    pos,
+    mdl,
   ).trim();
   const textBeforeCursorInCurrentLine = getTextBeforeCursorInLine(
-    position,
-    model,
+    pos,
+    mdl,
   ).trim();
   return (
-    position.column <= 3 &&
+    pos.column <= 3 &&
     (textAfterCursorInCurrentLine !== '' ||
       textBeforeCursorInCurrentLine !== '')
   );

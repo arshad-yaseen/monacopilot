@@ -14,25 +14,25 @@ import {getCharAfterCursor, getLastLineColumnCount} from './editor';
 export const computeCompletionInsertRange = (
   completion: string,
   range: EditorRange,
-  position: CursorPosition,
-  model: EditorModel,
+  pos: CursorPosition,
+  mdl: EditorModel,
 ): EditorRange => {
   const newLineCount = (completion.match(/\n/g) || []).length;
   const lastLineColumnCount = getLastLineColumnCount(completion);
-  const charAfterCursor = getCharAfterCursor(position, model);
+  const charAfterCursor = getCharAfterCursor(pos, mdl);
 
   return {
     // Start line is always the current cursor position's line
-    startLineNumber: position.lineNumber,
+    startLineNumber: pos.lineNumber,
     // Start column is always the current cursor position's column
-    startColumn: position.column,
+    startColumn: pos.column,
     // End line is calculated by adding the number of new lines in the completion
-    endLineNumber: position.lineNumber + newLineCount,
+    endLineNumber: pos.lineNumber + newLineCount,
     // End column calculation is more complex:
     endColumn: !completion.includes(charAfterCursor)
-      ? position.column // If the completion doesn't include the char after cursor, end at current position
-      : position.lineNumber === range.startLineNumber && newLineCount === 0
-        ? position.column + (lastLineColumnCount - 1) // If on same line and no new lines, add last line column count
+      ? pos.column // If the completion doesn't include the char after cursor, end at current position
+      : pos.lineNumber === range.startLineNumber && newLineCount === 0
+        ? pos.column + (lastLineColumnCount - 1) // If on same line and no new lines, add last line column count
         : lastLineColumnCount, // Otherwise, use the last line column count of the completion
   };
 };

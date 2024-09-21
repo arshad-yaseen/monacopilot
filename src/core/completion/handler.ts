@@ -37,8 +37,8 @@ export const completionCache = new CompletionCache();
  */
 const handleInlineCompletions = async ({
   monaco,
-  model,
-  position,
+  mdl,
+  pos,
   token,
   isCompletionAccepted,
   onShowCompletion,
@@ -46,12 +46,12 @@ const handleInlineCompletions = async ({
 }: InlineCompletionHandlerParams): Promise<EditorInlineCompletionsResult> => {
   const {trigger = TriggerType.OnIdle, ...restOptions} = options;
 
-  if (!new CompletionValidator(position, model).shouldProvideCompletions()) {
+  if (!new CompletionValidator(pos, mdl).shouldProvideCompletions()) {
     return createInlineCompletionResult([]);
   }
 
   const cachedCompletions = completionCache
-    .getCompletionCache(position, model)
+    .getCompletionCache(pos, mdl)
     .map(cache => ({
       insertText: cache.completion,
       range: cache.range,
@@ -80,30 +80,30 @@ const handleInlineCompletions = async ({
 
     const completion = await fetchCompletion({
       ...restOptions,
-      text: model.getValue(),
-      model,
-      position,
+      text: mdl.getValue(),
+      mdl,
+      pos,
     });
 
     if (completion) {
       const formattedCompletion = formatCompletion(completion);
       const range = new monaco.Range(
-        position.lineNumber,
-        position.column,
-        position.lineNumber,
-        position.column,
+        pos.lineNumber,
+        pos.column,
+        pos.lineNumber,
+        pos.column,
       );
       const completionInsertRange = computeCompletionInsertRange(
         formattedCompletion,
         range,
-        position,
-        model,
+        pos,
+        mdl,
       );
 
       completionCache.addCompletionCache({
         completion: formattedCompletion,
         range: completionInsertRange,
-        textBeforeCursorInLine: getTextBeforeCursorInLine(position, model),
+        textBeforeCursorInLine: getTextBeforeCursorInLine(pos, mdl),
       });
 
       onShowCompletion();

@@ -17,9 +17,10 @@ export default function Home() {
     if (!monaco || !editor) return;
 
     const copilot = registerCompletion(monaco, editor, {
-      endpoint: '/api/copilot',
-      language: 'javascript',
-      trigger: 'onTyping',
+      endpoint: '/api/complete',
+      language: 'python',
+      trigger: 'onIdle',
+      maxContextLines: 60,
     });
 
     return () => {
@@ -29,7 +30,7 @@ export default function Home() {
 
   return (
     <Editor
-      language="javascript"
+      language="python"
       onMount={(editor, monaco) => {
         setMonaco(monaco);
         setEditor(editor);

@@ -44,15 +44,15 @@ export const registerCompletion = (
   try {
     const inlineCompletionsProvider =
       monaco.languages.registerInlineCompletionsProvider(options.language, {
-        provideInlineCompletions: (model, position, _, token) => {
+        provideInlineCompletions: (mdl, pos, _, token) => {
           const state = editorCompletionState.get(editor);
           if (!state) {
             return;
           }
           return handleInlineCompletions({
             monaco,
-            model,
-            position,
+            mdl,
+            pos,
             token,
             isCompletionAccepted: state.isCompletionAccepted,
             onShowCompletion: () => {
