@@ -99,7 +99,7 @@ const editor = monaco.editor.create(document.getElementById('container'), {
 registerCompletion(monaco, editor, {
   endpoint: 'https://api.example.com/complete',
   language: 'javascript',
-  // If you are using Groq as your provider, it's recommended to set optional `maxContextLines` to `60` or less.
+  // If you are using Groq as your provider, it's recommended to set `maxContextLines` to `60` or less.
   // This is because Groq has low rate limits and doesn't offer pay-as-you-go pricing.
   maxContextLines: 60,
 });
@@ -186,6 +186,8 @@ To manage potentially lengthy code in your editor, you can limit the number of l
 1. Prevents excessively large completion requests
 2. Helps avoid `429 Too Many Requests` errors
 3. Reduces the cost of input tokens for model API calls
+
+For example, if there's a chance that the code in your editor may exceed 1000+ lines, you don't need to provide 1000 lines to the model. This would increase costs due to the huge number of input tokens. Instead, you can set `maxContextLines` to maybe `200` or `300`, depending on how accurate you want the completions to be and how much you're willing to pay for the model.
 
 This option is particularly useful when working with providers that have rate limits or don't offer pay-as-you-go pricing. For example, if you're using `Groq` as your provider, it's recommended to set `maxContextLines` to `60` or less due to its low rate limits and lack of pay-as-you-go pricing. However, `Groq` is expected to offer pay-as-you-go pricing in the near future.
 
