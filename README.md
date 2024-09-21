@@ -189,14 +189,14 @@ To manage potentially lengthy code in your editor, you can limit the number of l
 
 For example, if there's a chance that the code in your editor may exceed 1000+ lines, you don't need to provide 1000 lines to the model. This would increase costs due to the huge number of input tokens. Instead, you can set `maxContextLines` to maybe `100` or `200`, depending on how accurate you want the completions to be and how much you're willing to pay for the model.
 
-> **Note:** If you're using `Groq` as your provider, it's recommended to set `maxContextLines` to `60` or less due to its low rate limits and lack of pay-as-you-go pricing. However, `Groq` is expected to offer pay-as-you-go pricing in the near future.
-
 ```javascript
 registerCompletion(monaco, editor, {
   // ...other options
   maxContextLines: 60,
 });
 ```
+
+> **Note:** If you're using `Groq` as your provider, it's recommended to set `maxContextLines` to `60` or less due to its low rate limits and lack of pay-as-you-go pricing. However, `Groq` is expected to offer pay-as-you-go pricing in the near future.
 
 ## Copilot Options
 
