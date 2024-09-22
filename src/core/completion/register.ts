@@ -88,7 +88,7 @@ export const registerCompletion = (
     editor.updateOptions({
       inlineSuggest: {
         enabled: true,
-        mode: 'prefix',
+        mode: 'subwordSmart',
       },
     });
 
