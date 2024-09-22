@@ -21,6 +21,7 @@
     - [Filename](#filename)
     - [Completions for Specific Technologies](#completions-for-specific-technologies)
     - [Get Completions in Real-Time](#get-completions-in-real-time)
+    - [Max Context Lines](#max-context-lines)
 - [Copilot Options](#copilot-options)
   - [Changing the Provider and Model](#changing-the-provider-and-model)
   - [Custom Model](#custom-model)
@@ -96,15 +97,18 @@ const editor = monaco.editor.create(document.getElementById('container'), {
 });
 
 registerCompletion(monaco, editor, {
+  // Examples:
+  // - '/api/complete' if you're using the Next.js (API handler) or similar frameworks.
+  // - 'https://api.example.com/complete' for a separate API server
+  // Ensure this can be accessed from the browser.
   endpoint: 'https://api.example.com/complete',
+  // The language of the editor.
   language: 'javascript',
+  // If you are using Groq as your provider, it's recommended to set `maxContextLines` to `60` or less.
+  // This is because Groq has low rate limits and doesn't offer pay-as-you-go pricing.
+  maxContextLines: 60,
 });
 ```
-
-| Parameter  | Type     | Description                                                       |
-| ---------- | -------- | ----------------------------------------------------------------- |
-| `endpoint` | `string` | The URL of the API endpoint that we created in the previous step. |
-| `language` | `string` | The language of the editor.                                       |
 
 🎉 Congratulations! The AI auto-completion is now connected to the Monaco Editor. Start typing and see completions in the editor.
 
@@ -174,6 +178,21 @@ registerCompletion(monaco, editor, {
 [OnTyping Demo](https://github.com/user-attachments/assets/22c2ce44-334c-4963-b853-01b890b8e39f)
 
 > **Note:** If you prefer real-time completions, you can set the `trigger` option to `'onTyping'`. This may increase the number of requests made to the provider and the cost. This should not be too costly since most small models are very inexpensive.
+
+### Max Context Lines
+
+To manage potentially lengthy code in your editor, you can limit the number of lines included in the completion request using the `maxContextLines` option.
+
+For example, if there's a chance that the code in your editor may exceed `500+ lines`, you don't need to provide `500 lines` to the model. This would increase costs due to the huge number of input tokens. Instead, you can set `maxContextLines` to maybe `80` or `100`, depending on how accurate you want the completions to be and how much you're willing to pay for the model.
+
+```javascript
+registerCompletion(monaco, editor, {
+  // ...other options
+  maxContextLines: 80,
+});
+```
+
+> **Note:** If you're using `Groq` as your provider, it's recommended to set `maxContextLines` to `60` or less due to its low rate limits and lack of pay-as-you-go pricing. However, `Groq` is expected to offer pay-as-you-go pricing in the near future.
 
 ## Copilot Options
 
@@ -315,10 +334,11 @@ The `customPrompt` function receives a `completionMetadata` object, which contai
 
 The `editorState.completionMode` can be one of the following:
 
-| Mode                 | Description                                                                                                                                                         |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `fill-in-the-middle` | Indicates that the cursor is positioned within the existing text. In this mode, the AI will generate content to be inserted at the cursor position.                 |
-| `completion`         | Indicates that the cursor is at the end of the existing text. In this mode, the AI will generate content to continue or complete the text from the cursor position. |
+| Mode       | Description                                                                                                                                                         |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `insert`   | Indicates that there is a character immediately after the cursor. In this mode, the AI will generate content to be inserted at the cursor position.                 |
+| `complete` | Indicates that there is a character after the cursor but not immediately. In this mode, the AI will generate content to complete the text from the cursor position. |
+| `continue` | Indicates that there is no character after the cursor. In this mode, the AI will generate content to continue the text from the cursor position.                    |
 
 For additional `completionMetadata` needs, please [open an issue](https://github.com/arshad-yaseen/monacopilot/issues/new).
 

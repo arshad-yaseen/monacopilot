@@ -20,7 +20,7 @@ export const mockCompletionMetadata: CompletionMetadata = {
   textAfterCursor: 'console.log(',
   textBeforeCursor: 'function hello() {',
   editorState: {
-    completionMode: 'completion',
+    completionMode: 'complete',
   },
 };
 

@@ -6,9 +6,17 @@ import {
   CompletionResponse,
   CursorPosition,
   EditorModel,
+  ExternalContext,
   FetchCompletionItemParams,
 } from '../../types';
-import {getTextAfterCursor, getTextBeforeCursor, HTTP} from '../../utils';
+import {
+  getCharAfterCursor,
+  getTextAfterCursor,
+  getTextAfterCursorInLine,
+  getTextBeforeCursor,
+  HTTP,
+  keepNLines,
+} from '../../utils';
 
 const CONTENT_TYPE_JSON = 'application/json';
 
@@ -23,8 +31,9 @@ export const fetchCompletionItem = async ({
   language,
   technologies,
   externalContext,
-  model,
-  position,
+  mdl,
+  pos,
+  maxContextLines,
 }: FetchCompletionItemParams): Promise<string | null> => {
   try {
     const {completion} = await HTTP.POST<
@@ -35,11 +44,12 @@ export const fetchCompletionItem = async ({
       {
         completionMetadata: constructCompletionMetadata({
           filename,
-          position,
-          model,
+          pos,
+          mdl,
           language,
           technologies,
           externalContext,
+          maxContextLines,
         }),
       },
       {
@@ -57,50 +67,103 @@ export const fetchCompletionItem = async ({
 };
 
 /**
- * Constructs the metadata needed for fetching a completion item.
+ * Constructs the metadata required for fetching a completion item.
  */
 export const constructCompletionMetadata = ({
   filename,
-  position,
-  model,
+  pos,
+  mdl,
   language,
   technologies,
   externalContext,
+  maxContextLines,
 }: Omit<
   FetchCompletionItemParams,
   'text' | 'endpoint' | 'token' | 'abortSignal'
 >): CompletionMetadata => {
-  const completionMode = determineCompletionMode(position, model);
+  const completionMode = determineCompletionMode(pos, mdl);
 
-  const textBeforeCursor = getTextBeforeCursor(position, model);
-  const textAfterCursor = getTextAfterCursor(position, model);
+  // Determine the divisor based on the presence of external contexts
+  const hasExternalContext = !!externalContext?.length;
+  const divisor = hasExternalContext ? 3 : 2;
+  const adjustedMaxContextLines = maxContextLines
+    ? Math.floor(maxContextLines / divisor)
+    : undefined;
+
+  const limitText = (
+    getTextFn: (pos: CursorPosition, mdl: EditorModel) => string,
+    maxLines?: number,
+    options?: {from?: 'start' | 'end'},
+  ): string => {
+    const text = getTextFn(pos, mdl);
+    return maxLines ? keepNLines(text, maxLines, options) : text;
+  };
+
+  const processExternalContexts = (
+    contexts?: ExternalContext[],
+    maxLines?: number,
+  ): ExternalContext[] | undefined => {
+    if (!contexts || !maxLines) return contexts;
+
+    return contexts.map(({content, ...rest}) => ({
+      ...rest,
+      content: keepNLines(content, maxLines),
+    }));
+  };
+
+  // Retrieve and limit text around the cursor position
+  const textBeforeCursor = limitText(
+    getTextBeforeCursor,
+    adjustedMaxContextLines,
+    {
+      from: 'end',
+    },
+  );
+  const textAfterCursor = limitText(
+    getTextAfterCursor,
+    adjustedMaxContextLines,
+  );
+
+  // Process external contexts with the adjusted maximum lines
+  const limitedExternalContext = processExternalContexts(
+    externalContext,
+    adjustedMaxContextLines,
+  );
 
   return {
     filename,
     language,
     technologies,
-    externalContext,
+    externalContext: limitedExternalContext,
     textBeforeCursor,
     textAfterCursor,
-    cursorPosition: position,
-    editorState: {completionMode},
+    cursorPosition: pos,
+    editorState: {
+      completionMode,
+    },
   };
 };
 
 /**
  * Determines the completion mode based on the cursor position and editor model.
- * @param {CursorPosition} position - The cursor position in the editor.
- * @param {EditorModel} model - The editor model.
+ * @param {CursorPosition} pos - The cursor position in the editor.
+ * @param {EditorModel} mdl - The editor model.
  * @returns {CompletionMode} The determined completion mode.
  */
 const determineCompletionMode = (
-  position: CursorPosition,
-  model: EditorModel,
+  pos: CursorPosition,
+  mdl: EditorModel,
 ): CompletionMode => {
-  const textBeforeCursor = getTextBeforeCursor(position, model);
-  const textAfterCursor = getTextAfterCursor(position, model);
+  const charAfterCursor = getCharAfterCursor(pos, mdl);
+  const textAfterCursor = getTextAfterCursorInLine(pos, mdl);
 
-  return textBeforeCursor && textAfterCursor
-    ? 'fill-in-the-middle'
-    : 'completion';
+  if (charAfterCursor) {
+    return 'insert';
+  }
+
+  if (textAfterCursor.trim()) {
+    return 'complete';
+  }
+
+  return 'continue';
 };

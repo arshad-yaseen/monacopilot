@@ -6,36 +6,50 @@ import {
   EditorModel,
   EditorRange,
 } from '../types';
-import {getCharAfterCursor, getLastLineColumnCount} from './editor';
 
 /**
- * Computes the range to insert the completion in the editor.
+ * Calculates the range where the completion should be inserted in the editor.
+ *
+ * @param position - The current cursor position in the editor.
+ * @param model - The Monaco editor text model.
+ * @param completion - The text of the completion to be inserted.
+ * @returns The range where the completion should be inserted.
  */
-export const computeCompletionInsertRange = (
+export function computeCompletionInsertionRange(
+  pos: CursorPosition,
+  mdl: EditorModel,
   completion: string,
-  range: EditorRange,
-  position: CursorPosition,
-  model: EditorModel,
-): EditorRange => {
-  const newLineCount = (completion.match(/\n/g) || []).length;
-  const lastLineColumnCount = getLastLineColumnCount(completion);
-  const charAfterCursor = getCharAfterCursor(position, model);
+): EditorRange {
+  // Get the offset in the model where the cursor is currently located.
+  const startOffset = mdl.getOffsetAt(pos);
+
+  // Get the text from the current position to the end of the document.
+  const remainingText = mdl.getValue().slice(startOffset);
+
+  // Compare the completion text with the existing text to find overlap.
+  let overlapLength = 0;
+  const minLength = Math.min(completion.length, remainingText.length);
+  for (let i = 0; i < minLength; i++) {
+    if (completion[i] === remainingText[i]) {
+      overlapLength++;
+    } else {
+      break;
+    }
+  }
+
+  // Calculate the end offset where the overlapping text ends.
+  const endOffset = startOffset + overlapLength;
+
+  // Get the end position in the model corresponding to the end offset.
+  const endPosition = mdl.getPositionAt(endOffset);
 
   return {
-    // Start line is always the current cursor position's line
-    startLineNumber: position.lineNumber,
-    // Start column is always the current cursor position's column
-    startColumn: position.column,
-    // End line is calculated by adding the number of new lines in the completion
-    endLineNumber: position.lineNumber + newLineCount,
-    // End column calculation is more complex:
-    endColumn: !completion.includes(charAfterCursor)
-      ? position.column // If the completion doesn't include the char after cursor, end at current position
-      : position.lineNumber === range.startLineNumber && newLineCount === 0
-        ? position.column + (lastLineColumnCount - 1) // If on same line and no new lines, add last line column count
-        : lastLineColumnCount, // Otherwise, use the last line column count of the completion
+    startLineNumber: pos.lineNumber,
+    startColumn: pos.column,
+    endLineNumber: endPosition.lineNumber,
+    endColumn: endPosition.column,
   };
-};
+}
 
 export function formatCompletion(completion: string): string {
   return CompletionFormatter.create(completion)

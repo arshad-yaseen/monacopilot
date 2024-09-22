@@ -11,12 +11,10 @@ export class CompletionCache {
   private cache: readonly CompletionCacheItem[] = [];
 
   public getCompletionCache(
-    position: Readonly<CursorPosition>,
-    model: Readonly<EditorModel>,
+    pos: Readonly<CursorPosition>,
+    mdl: Readonly<EditorModel>,
   ): readonly CompletionCacheItem[] {
-    return this.cache.filter(cache =>
-      this.isCacheItemValid(cache, position, model),
-    );
+    return this.cache.filter(cache => this.isCacheItemValid(cache, pos, mdl));
   }
 
   public addCompletionCache(cacheItem: Readonly<CompletionCacheItem>): void {
@@ -32,39 +30,35 @@ export class CompletionCache {
 
   private isCacheItemValid(
     cache: Readonly<CompletionCacheItem>,
-    position: Readonly<CursorPosition>,
-    model: Readonly<EditorModel>,
+    pos: Readonly<CursorPosition>,
+    mdl: Readonly<EditorModel>,
   ): boolean {
-    const currentValueInRange = model.getValueInRange(cache.range);
-    const currentTextBeforeCursorInLine = getTextBeforeCursorInLine(
-      position,
-      model,
-    );
+    const currentValueInRange = mdl.getValueInRange(cache.range);
+    const currentTextBeforeCursorInLine = getTextBeforeCursorInLine(pos, mdl);
 
     return (
       currentTextBeforeCursorInLine.startsWith(cache.textBeforeCursorInLine) &&
-      this.isPositionValid(cache, position, currentValueInRange)
+      this.isPositionValid(cache, pos, currentValueInRange)
     );
   }
 
   private isPositionValid(
     cache: Readonly<CompletionCacheItem>,
-    position: Readonly<CursorPosition>,
+    pos: Readonly<CursorPosition>,
     currentValueInRange: string,
   ): boolean {
     return (
       // Check if the cursor is at the start of the cached range
-      (cache.range.startLineNumber === position.lineNumber &&
-        position.column === cache.range.startColumn) ||
+      (cache.range.startLineNumber === pos.lineNumber &&
+        pos.column === cache.range.startColumn) ||
       // Check if the current value in range is a prefix of the cached completion
       // and the cursor is within the valid range for this completion
       (cache.completion.startsWith(currentValueInRange) &&
-        cache.range.startLineNumber === position.lineNumber &&
+        cache.range.startLineNumber === pos.lineNumber &&
         // Ensure the cursor is not before the start of the completion
-        position.column >=
-          cache.range.startColumn - currentValueInRange.length &&
+        pos.column >= cache.range.startColumn - currentValueInRange.length &&
         // Ensure the cursor is not after the end of the completion
-        position.column <= cache.range.endColumn)
+        pos.column <= cache.range.endColumn)
     );
   }
 }

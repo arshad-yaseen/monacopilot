@@ -4,7 +4,6 @@ import {
   EditorCancellationToken,
   EditorModel,
   EditorRange,
-  Monaco,
 } from './monaco';
 
 export type Endpoint = string;
@@ -25,7 +24,7 @@ export type ExternalContext = {
    * The content of the external file as a string.
    */
   content: string;
-}[];
+};
 
 export interface RegisterCompletionOptions {
   /**
@@ -68,7 +67,16 @@ export interface RegisterCompletionOptions {
    * Helps to give more relevant completions based on the full context.
    * You can include things like the contents/codes of other files in the same workspace.
    */
-  externalContext?: ExternalContext;
+  externalContext?: ExternalContext[];
+  /**
+   * The maximum number of lines of code to include in the completion request.
+   * This limits the request size to the model to prevent `429 Too Many Requests` errors
+   * and reduce costs for long code.
+   *
+   * It is recommended to set `maxContextLines` to `60` or less if you are using `Groq` as your provider,
+   * since `Groq` does not implement pay-as-you-go pricing and has only low rate limits.
+   */
+  maxContextLines?: number;
 }
 
 export enum TriggerType {
@@ -85,9 +93,8 @@ export interface CompletionRegistration {
 }
 
 export interface InlineCompletionHandlerParams {
-  monaco: Monaco;
-  model: EditorModel;
-  position: CursorPosition;
+  mdl: EditorModel;
+  pos: CursorPosition;
   token: EditorCancellationToken;
 
   isCompletionAccepted: boolean;
@@ -144,7 +151,7 @@ export interface CompletionResponse {
   error?: string;
 }
 
-export type CompletionMode = 'fill-in-the-middle' | 'completion';
+export type CompletionMode = 'insert' | 'complete' | 'continue';
 
 export interface CompletionMetadata {
   /**
@@ -162,7 +169,7 @@ export interface CompletionMetadata {
   /**
    * Additional context from related files.
    */
-  externalContext: ExternalContext | undefined;
+  externalContext: ExternalContext[] | undefined;
   /**
    * The text that appears after the cursor.
    */
@@ -174,7 +181,7 @@ export interface CompletionMetadata {
   /**
    * The current cursor position.
    */
-  cursorPosition: CursorPosition | undefined;
+  cursorPosition: CursorPosition;
   /**
    * The current state of the editor.
    */
@@ -194,9 +201,10 @@ export interface FetchCompletionItemParams {
   endpoint: Endpoint;
   filename?: Filename;
   technologies?: Technologies;
-  externalContext?: ExternalContext;
-  model: EditorModel;
-  position: CursorPosition;
+  externalContext?: ExternalContext[];
+  maxContextLines?: number;
+  mdl: EditorModel;
+  pos: CursorPosition;
 }
 
 export interface CompletionCacheItem {

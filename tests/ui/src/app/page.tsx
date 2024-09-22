@@ -17,9 +17,10 @@ export default function Home() {
     if (!monaco || !editor) return;
 
     const copilot = registerCompletion(monaco, editor, {
-      endpoint: '/api/copilot',
+      endpoint: '/api/complete',
       language: 'javascript',
       trigger: 'onTyping',
+      maxContextLines: 60,
     });
 
     return () => {
