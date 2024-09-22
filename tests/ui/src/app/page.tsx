@@ -19,8 +19,7 @@ export default function Home() {
     const copilot = registerCompletion(monaco, editor, {
       endpoint: '/api/complete',
       language: 'javascript',
-      trigger: 'onTyping',
-      maxContextLines: 120,
+      maxContextLines: 60,
     });
 
     return () => {

@@ -99,9 +99,9 @@ const editor = monaco.editor.create(document.getElementById('container'), {
 registerCompletion(monaco, editor, {
   endpoint: 'https://api.example.com/complete',
   language: 'javascript',
-  // If you are using Groq as your provider, it's recommended to set `maxContextLines` to `120` or less.
+  // If you are using Groq as your provider, it's recommended to set `maxContextLines` to `60` or less.
   // This is because Groq has low rate limits and doesn't offer pay-as-you-go pricing.
-  maxContextLines: 120,
+  maxContextLines: 60,
 });
 ```
 
@@ -183,7 +183,7 @@ registerCompletion(monaco, editor, {
 
 To manage potentially lengthy code in your editor, you can limit the number of lines included in the completion request using the `maxContextLines` option.
 
-For example, if there's a chance that the code in your editor may exceed `500+ lines`, you don't need to provide `500 lines` to the model. This would increase costs due to the huge number of input tokens. Instead, you can set `maxContextLines` to maybe `80` or `150`, depending on how accurate you want the completions to be and how much you're willing to pay for the model.
+For example, if there's a chance that the code in your editor may exceed `500+ lines`, you don't need to provide `500 lines` to the model. This would increase costs due to the huge number of input tokens. Instead, you can set `maxContextLines` to maybe `80` or `100`, depending on how accurate you want the completions to be and how much you're willing to pay for the model.
 
 ```javascript
 registerCompletion(monaco, editor, {
@@ -192,7 +192,7 @@ registerCompletion(monaco, editor, {
 });
 ```
 
-> **Note:** If you're using `Groq` as your provider, it's recommended to set `maxContextLines` to `120` or less due to its low rate limits and lack of pay-as-you-go pricing. However, `Groq` is expected to offer pay-as-you-go pricing in the near future.
+> **Note:** If you're using `Groq` as your provider, it's recommended to set `maxContextLines` to `60` or less due to its low rate limits and lack of pay-as-you-go pricing. However, `Groq` is expected to offer pay-as-you-go pricing in the near future.
 
 ## Copilot Options
 

@@ -73,7 +73,7 @@ export interface RegisterCompletionOptions {
    * This limits the request size to the model to prevent `429 Too Many Requests` errors
    * and reduce costs for long code.
    *
-   * It is recommended to set `maxContextLines` to `120` or less if you are using `Groq` as your provider,
+   * It is recommended to set `maxContextLines` to `60` or less if you are using `Groq` as your provider,
    * since `Groq` does not implement pay-as-you-go pricing and has only low rate limits.
    */
   maxContextLines?: number;
