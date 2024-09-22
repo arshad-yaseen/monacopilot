@@ -11,26 +11,26 @@ import {
  * Calculates the range where the completion should be inserted in the editor.
  *
  * @param position - The current cursor position in the editor.
- * @param completionText - The text of the completion to be inserted.
  * @param model - The Monaco editor text model.
+ * @param completion - The text of the completion to be inserted.
  * @returns The range where the completion should be inserted.
  */
 export function computeCompletionInsertionRange(
-  position: CursorPosition,
-  completionText: string,
-  model: EditorModel,
+  pos: CursorPosition,
+  mdl: EditorModel,
+  completion: string,
 ): EditorRange {
   // Get the offset in the model where the cursor is currently located.
-  const startOffset = model.getOffsetAt(position);
+  const startOffset = mdl.getOffsetAt(pos);
 
   // Get the text from the current position to the end of the document.
-  const remainingText = model.getValue().slice(startOffset);
+  const remainingText = mdl.getValue().slice(startOffset);
 
   // Compare the completion text with the existing text to find overlap.
   let overlapLength = 0;
-  const minLength = Math.min(completionText.length, remainingText.length);
+  const minLength = Math.min(completion.length, remainingText.length);
   for (let i = 0; i < minLength; i++) {
-    if (completionText[i] === remainingText[i]) {
+    if (completion[i] === remainingText[i]) {
       overlapLength++;
     } else {
       break;
@@ -41,11 +41,11 @@ export function computeCompletionInsertionRange(
   const endOffset = startOffset + overlapLength;
 
   // Get the end position in the model corresponding to the end offset.
-  const endPosition = model.getPositionAt(endOffset);
+  const endPosition = mdl.getPositionAt(endOffset);
 
   return {
-    startLineNumber: position.lineNumber,
-    startColumn: position.column,
+    startLineNumber: pos.lineNumber,
+    startColumn: pos.column,
     endLineNumber: endPosition.lineNumber,
     endColumn: endPosition.column,
   };

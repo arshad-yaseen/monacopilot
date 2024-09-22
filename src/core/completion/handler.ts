@@ -89,8 +89,8 @@ const handleInlineCompletions = async ({
 
       const completionInsertRange = computeCompletionInsertionRange(
         pos,
-        formattedCompletion,
         mdl,
+        formattedCompletion,
       );
 
       completionCache.addCompletionCache({
