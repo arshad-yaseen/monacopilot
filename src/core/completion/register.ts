@@ -95,7 +95,7 @@ export const registerCompletion = (
     const registration: CompletionRegistration = {
       deregister: () => {
         disposables.forEach(disposable => disposable.dispose());
-        completionCache.clearCompletionCache();
+        completionCache.clear();
         editorCompletionState.delete(editor);
         singletonInstance = null;
       },

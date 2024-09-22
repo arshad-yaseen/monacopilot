@@ -2,63 +2,86 @@ import {CompletionCacheItem, CursorPosition, EditorModel} from '../types';
 import {getTextBeforeCursorInLine} from '../utils/editor';
 
 /**
- * CompletionCache class manages a cache of completion code completions.
- * It provides methods to get, add, and clear completion cache items.
- * The cache implements a First-In-First-Out (FIFO) mechanism.
+ * Manages a cache of code completions with FIFO eviction policy.
+ * Provides methods to retrieve, add, and clear cached completion items.
  */
 export class CompletionCache {
   private static readonly MAX_CACHE_SIZE = 10;
-  private cache: readonly CompletionCacheItem[] = [];
+  private cache: CompletionCacheItem[] = [];
 
-  public getCompletionCache(
+  /**
+   * Retrieves cached completion items that are valid based on the current cursor position and editor model.
+   * @param pos - The current position of the cursor in the editor.
+   * @param mdl - The current state of the editor.
+   * @returns An array of valid cached completion items.
+   */
+  public get(
     pos: Readonly<CursorPosition>,
     mdl: Readonly<EditorModel>,
   ): readonly CompletionCacheItem[] {
-    return this.cache.filter(cache => this.isCacheItemValid(cache, pos, mdl));
+    return this.cache.filter(cacheItem =>
+      this.isValidCacheItem(cacheItem, pos, mdl),
+    );
   }
 
-  public addCompletionCache(cacheItem: Readonly<CompletionCacheItem>): void {
-    this.cache = [
+  /**
+   * Adds a new completion item to the cache.
+   * If the cache exceeds the maximum size, the oldest item is removed.
+   * @param cacheItem - The completion item to add to the cache.
+   */
+  public add(cacheItem: Readonly<CompletionCacheItem>): void {
+    const updatedCache = [
       ...this.cache.slice(-(CompletionCache.MAX_CACHE_SIZE - 1)),
       cacheItem,
     ];
+    this.cache = updatedCache;
   }
 
-  public clearCompletionCache(): void {
+  /**
+   * Clears all items from the completion cache.
+   */
+  public clear(): void {
     this.cache = [];
   }
 
-  private isCacheItemValid(
-    cache: Readonly<CompletionCacheItem>,
+  /**
+   * Determines if a cached completion item is valid based on the current cursor position and editor model.
+   */
+  private isValidCacheItem(
+    cacheItem: Readonly<CompletionCacheItem>,
     pos: Readonly<CursorPosition>,
     mdl: Readonly<EditorModel>,
   ): boolean {
-    const currentValueInRange = mdl.getValueInRange(cache.range);
-    const currentTextBeforeCursorInLine = getTextBeforeCursorInLine(pos, mdl);
+    const currentRangeValue = mdl.getValueInRange(cacheItem.range);
+    const textBeforeCursor = getTextBeforeCursorInLine(pos, mdl);
 
     return (
-      currentTextBeforeCursorInLine.startsWith(cache.textBeforeCursorInLine) &&
-      this.isPositionValid(cache, pos, currentValueInRange)
+      textBeforeCursor.startsWith(cacheItem.textBeforeCursorInLine) &&
+      this.isPositionValid(cacheItem, pos, currentRangeValue)
     );
   }
 
+  /**
+   * Checks if the cursor position is valid for the given cached completion item.
+   */
   private isPositionValid(
-    cache: Readonly<CompletionCacheItem>,
+    cacheItem: Readonly<CompletionCacheItem>,
     pos: Readonly<CursorPosition>,
-    currentValueInRange: string,
+    currentRangeValue: string,
   ): boolean {
-    return (
-      // Check if the cursor is at the start of the cached range
-      (cache.range.startLineNumber === pos.lineNumber &&
-        pos.column === cache.range.startColumn) ||
-      // Check if the current value in range is a prefix of the cached completion
-      // and the cursor is within the valid range for this completion
-      (cache.completion.startsWith(currentValueInRange) &&
-        cache.range.startLineNumber === pos.lineNumber &&
-        // Ensure the cursor is not before the start of the completion
-        pos.column >= cache.range.startColumn - currentValueInRange.length &&
-        // Ensure the cursor is not after the end of the completion
-        pos.column <= cache.range.endColumn)
-    );
+    const {range, completion} = cacheItem;
+    const {startLineNumber, startColumn, endColumn} = range;
+    const {lineNumber, column} = pos;
+
+    const isAtStartOfRange =
+      lineNumber === startLineNumber && column === startColumn;
+
+    const isWithinCompletionRange =
+      completion.startsWith(currentRangeValue) &&
+      lineNumber === startLineNumber &&
+      column >= startColumn - currentRangeValue.length &&
+      column <= endColumn + currentRangeValue.length;
+
+    return isAtStartOfRange || isWithinCompletionRange;
   }
 }

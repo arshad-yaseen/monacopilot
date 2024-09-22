@@ -49,12 +49,16 @@ const handleInlineCompletions = async ({
     return createInlineCompletionResult([]);
   }
 
-  const cachedCompletions = completionCache
-    .getCompletionCache(pos, mdl)
-    .map(cache => ({
-      insertText: cache.completion,
-      range: cache.range,
-    }));
+  const cachedCompletions = completionCache.get(pos, mdl).map(cache => ({
+    insertText: cache.completion,
+    range: {
+      ...cache.range,
+      // Set `endColumn` to the current cursor position
+      // This ensures more accurate cache validation
+      // and prevents potential issues with partial completions
+      endColumn: pos.column,
+    },
+  }));
 
   if (cachedCompletions.length > 0) {
     onShowCompletion();
@@ -87,21 +91,21 @@ const handleInlineCompletions = async ({
     if (completion) {
       const formattedCompletion = formatCompletion(completion);
 
-      const completionInsertRange = computeCompletionInsertionRange(
+      const completionInsertionRange = computeCompletionInsertionRange(
         pos,
         mdl,
         formattedCompletion,
       );
 
-      completionCache.addCompletionCache({
+      completionCache.add({
         completion: formattedCompletion,
-        range: completionInsertRange,
+        range: completionInsertionRange,
         textBeforeCursorInLine: getTextBeforeCursorInLine(pos, mdl),
       });
 
       onShowCompletion();
       return createInlineCompletionResult([
-        {insertText: formattedCompletion, range: completionInsertRange},
+        {insertText: formattedCompletion, range: completionInsertionRange},
       ]);
     }
   } catch (err) {
