@@ -1,1 +1,0 @@
-export const MAX_GROQ_CONTEXT_LINES = 100;

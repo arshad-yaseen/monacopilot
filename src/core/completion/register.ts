@@ -41,6 +41,13 @@ export const registerCompletion = (
     isCompletionVisible: false,
   });
 
+  editor.updateOptions({
+    inlineSuggest: {
+      enabled: true,
+      mode: 'subwordSmart',
+    },
+  });
+
   try {
     const inlineCompletionsProvider =
       monaco.languages.registerInlineCompletionsProvider(options.language, {
@@ -84,13 +91,6 @@ export const registerCompletion = (
     });
 
     disposables.push(keyDownListener);
-
-    editor.updateOptions({
-      inlineSuggest: {
-        enabled: true,
-        mode: 'subwordSmart',
-      },
-    });
 
     const registration: CompletionRegistration = {
       deregister: () => {

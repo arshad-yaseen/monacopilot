@@ -1,6 +1,8 @@
 import {CompletionMetadata} from '../../types';
 import {joinWithAnd} from '../../utils';
 
+const CURSOR_PLACEHOLDER = '<user-current-cursor-position-is-here>';
+
 /**
  * Retrieves the appropriate language name for display.
  *
@@ -72,7 +74,7 @@ const createUserPrompt = (metadata: CompletionMetadata): string => {
 <context>
   <current_file path="${filename}">
     <code>
-${textBeforeCursor}█${textAfterCursor}
+${textBeforeCursor}${CURSOR_PLACEHOLDER}${textAfterCursor}
     </code>
   </current_file>
 </context>
