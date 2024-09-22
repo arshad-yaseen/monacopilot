@@ -50,7 +50,6 @@ export const registerCompletion = (
             return;
           }
           return handleInlineCompletions({
-            monaco,
             mdl,
             pos,
             token,
@@ -85,6 +84,13 @@ export const registerCompletion = (
     });
 
     disposables.push(keyDownListener);
+
+    editor.updateOptions({
+      inlineSuggest: {
+        enabled: true,
+        mode: 'prefix',
+      },
+    });
 
     const registration: CompletionRegistration = {
       deregister: () => {

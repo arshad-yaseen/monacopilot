@@ -1,8 +1,5 @@
 import {CursorPosition, EditorModel} from '../types';
-import {
-  isCursorAtStartWithTextAround,
-  isNonPunctuationCharAfterCursor,
-} from '../utils';
+import {isCursorAtStartWithTextAround} from '../utils';
 
 export class CompletionValidator {
   private cursorPos: CursorPosition;
@@ -24,10 +21,6 @@ export class CompletionValidator {
    * @returns {boolean} - True if completions should be provided, false otherwise.
    */
   public shouldProvideCompletions(): boolean {
-    return (
-      !isNonPunctuationCharAfterCursor(this.cursorPos, this.mdl) &&
-      //
-      !isCursorAtStartWithTextAround(this.cursorPos, this.mdl)
-    );
+    return !isCursorAtStartWithTextAround(this.cursorPos, this.mdl);
   }
 }

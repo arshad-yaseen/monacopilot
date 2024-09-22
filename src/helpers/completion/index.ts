@@ -10,7 +10,9 @@ import {
   FetchCompletionItemParams,
 } from '../../types';
 import {
+  getCharAfterCursor,
   getTextAfterCursor,
+  getTextAfterCursorInLine,
   getTextBeforeCursor,
   HTTP,
   keepNLines,
@@ -81,31 +83,27 @@ export const constructCompletionMetadata = ({
 >): CompletionMetadata => {
   const completionMode = determineCompletionMode(pos, mdl);
 
-  /**
-   * Retrieves and optionally limits text based on the cursor position.
-   */
-  const getLimitedText = (
-    getText: (pos: CursorPosition, mdl: EditorModel) => string,
-    pos: CursorPosition,
-    mdl: EditorModel,
+  // Determine the divisor based on the presence of external contexts
+  const hasExternalContext = !!externalContext?.length;
+  const divisor = hasExternalContext ? 3 : 2;
+  const adjustedMaxContextLines = maxContextLines
+    ? Math.floor(maxContextLines / divisor)
+    : undefined;
+
+  const limitText = (
+    getTextFn: (pos: CursorPosition, mdl: EditorModel) => string,
     maxLines?: number,
     options?: {from?: 'start' | 'end'},
   ): string => {
-    const text = getText(pos, mdl);
-    if (!maxLines) return text;
-    return keepNLines(text, maxLines, options);
+    const text = getTextFn(pos, mdl);
+    return maxLines ? keepNLines(text, maxLines, options) : text;
   };
 
-  /**
-   * Processes external contexts by limiting their content lines if required.
-   */
   const processExternalContexts = (
-    contexts: ExternalContext[] | undefined,
+    contexts?: ExternalContext[],
     maxLines?: number,
   ): ExternalContext[] | undefined => {
-    if (!maxLines || !contexts) {
-      return contexts;
-    }
+    if (!contexts || !maxLines) return contexts;
 
     return contexts.map(({content, ...rest}) => ({
       ...rest,
@@ -113,24 +111,23 @@ export const constructCompletionMetadata = ({
     }));
   };
 
-  const textBeforeCursor = getLimitedText(
+  // Retrieve and limit text around the cursor position
+  const textBeforeCursor = limitText(
     getTextBeforeCursor,
-    pos,
-    mdl,
-    maxContextLines,
-    {from: 'end'},
+    adjustedMaxContextLines,
+    {
+      from: 'end',
+    },
   );
-  const textAfterCursor = getLimitedText(
+  const textAfterCursor = limitText(
     getTextAfterCursor,
-    pos,
-    mdl,
-    maxContextLines,
+    adjustedMaxContextLines,
   );
 
-  // Process external contexts with limited lines
+  // Process external contexts with the adjusted maximum lines
   const limitedExternalContext = processExternalContexts(
     externalContext,
-    maxContextLines,
+    adjustedMaxContextLines,
   );
 
   return {
@@ -157,10 +154,16 @@ const determineCompletionMode = (
   pos: CursorPosition,
   mdl: EditorModel,
 ): CompletionMode => {
-  const textBeforeCursor = getTextBeforeCursor(pos, mdl);
-  const textAfterCursor = getTextAfterCursor(pos, mdl);
+  const charAfterCursor = getCharAfterCursor(pos, mdl);
+  const textAfterCursor = getTextAfterCursorInLine(pos, mdl);
 
-  return textBeforeCursor && textAfterCursor
-    ? 'fill-in-the-middle'
-    : 'completion';
+  if (charAfterCursor) {
+    return 'insert';
+  }
+
+  if (textAfterCursor.trim()) {
+    return 'complete';
+  }
+
+  return 'continue';
 };

@@ -9,7 +9,7 @@ import {
 } from '../../types';
 import {asyncDebounce, getTextBeforeCursorInLine} from '../../utils';
 import {
-  computeCompletionInsertRange,
+  computeCompletionInsertionRange,
   createInlineCompletionResult,
   formatCompletion,
 } from '../../utils/completion';
@@ -36,7 +36,6 @@ export const completionCache = new CompletionCache();
  * @returns A promise resolving to EditorInlineCompletionsResult.
  */
 const handleInlineCompletions = async ({
-  monaco,
   mdl,
   pos,
   token,
@@ -87,22 +86,21 @@ const handleInlineCompletions = async ({
 
     if (completion) {
       const formattedCompletion = formatCompletion(completion);
-      const range = new monaco.Range(
-        pos.lineNumber,
-        pos.column,
-        pos.lineNumber,
-        pos.column,
-      );
-      const completionInsertRange = computeCompletionInsertRange(
-        formattedCompletion,
-        range,
+
+      const completionInsertRange = computeCompletionInsertionRange(
         pos,
+        formattedCompletion,
         mdl,
       );
 
       completionCache.addCompletionCache({
         completion: formattedCompletion,
-        range: completionInsertRange,
+        range: {
+          startLineNumber: pos.lineNumber,
+          startColumn: pos.column,
+          endLineNumber: pos.lineNumber,
+          endColumn: pos.column,
+        },
         textBeforeCursorInLine: getTextBeforeCursorInLine(pos, mdl),
       });
 

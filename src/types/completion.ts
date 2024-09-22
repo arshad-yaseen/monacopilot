@@ -4,7 +4,6 @@ import {
   EditorCancellationToken,
   EditorModel,
   EditorRange,
-  Monaco,
 } from './monaco';
 
 export type Endpoint = string;
@@ -74,7 +73,7 @@ export interface RegisterCompletionOptions {
    * This limits the request size to the model to prevent `429 Too Many Requests` errors
    * and reduce costs for long code.
    *
-   * It is recommended to set `maxContextLines` to `60` if you are using `Groq` as your provider,
+   * It is recommended to set `maxContextLines` to `120` or less if you are using `Groq` as your provider,
    * since `Groq` does not implement pay-as-you-go pricing and has only low rate limits.
    */
   maxContextLines?: number;
@@ -94,7 +93,6 @@ export interface CompletionRegistration {
 }
 
 export interface InlineCompletionHandlerParams {
-  monaco: Monaco;
   mdl: EditorModel;
   pos: CursorPosition;
   token: EditorCancellationToken;
@@ -153,7 +151,7 @@ export interface CompletionResponse {
   error?: string;
 }
 
-export type CompletionMode = 'fill-in-the-middle' | 'completion';
+export type CompletionMode = 'insert' | 'complete' | 'continue';
 
 export interface CompletionMetadata {
   /**
@@ -183,7 +181,7 @@ export interface CompletionMetadata {
   /**
    * The current cursor position.
    */
-  cursorPosition: CursorPosition | undefined;
+  cursorPosition: CursorPosition;
   /**
    * The current state of the editor.
    */

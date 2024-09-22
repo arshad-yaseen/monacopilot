@@ -108,6 +108,20 @@ describe('Editor Utilities', () => {
     });
   });
 
+  describe('getCursorPositionLabel', () => {
+    it('should return the correct label for the cursor position', () => {
+      const pos: CursorPosition = {lineNumber: 5, column: 10};
+      const result = getCursorPositionLabel(pos);
+      expect(result).toBe('Line 5, Column 10');
+    });
+
+    it('should handle first line and column correctly', () => {
+      const pos: CursorPosition = {lineNumber: 1, column: 1};
+      const result = getCursorPositionLabel(pos);
+      expect(result).toBe('Line 1, Column 1');
+    });
+  });
+
   describe('getLastLineColumnCount', () => {
     it('should return the number of columns in the last line', () => {
       const result = getLastLineColumnCount(
@@ -129,20 +143,6 @@ describe('Editor Utilities', () => {
     it('should handle text ending with newline', () => {
       const result = getLastLineColumnCount('let x = 10;\nlet y = 20;\n');
       expect(result).toBe(1);
-    });
-  });
-
-  describe('getCursorPositionLabel', () => {
-    it('should return the correct label for the cursor position', () => {
-      const pos: CursorPosition = {lineNumber: 5, column: 10};
-      const result = getCursorPositionLabel(pos);
-      expect(result).toBe('Line 5, Column 10');
-    });
-
-    it('should handle first line and column correctly', () => {
-      const pos: CursorPosition = {lineNumber: 1, column: 1};
-      const result = getCursorPositionLabel(pos);
-      expect(result).toBe('Line 1, Column 1');
     });
   });
 

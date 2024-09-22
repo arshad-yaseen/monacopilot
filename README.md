@@ -99,9 +99,9 @@ const editor = monaco.editor.create(document.getElementById('container'), {
 registerCompletion(monaco, editor, {
   endpoint: 'https://api.example.com/complete',
   language: 'javascript',
-  // If you are using Groq as your provider, it's recommended to set `maxContextLines` to `60` or less.
+  // If you are using Groq as your provider, it's recommended to set `maxContextLines` to `120` or less.
   // This is because Groq has low rate limits and doesn't offer pay-as-you-go pricing.
-  maxContextLines: 60,
+  maxContextLines: 120,
 });
 ```
 
@@ -192,7 +192,7 @@ registerCompletion(monaco, editor, {
 });
 ```
 
-> **Note:** If you're using `Groq` as your provider, it's recommended to set `maxContextLines` to `60` or less due to its low rate limits and lack of pay-as-you-go pricing. However, `Groq` is expected to offer pay-as-you-go pricing in the near future.
+> **Note:** If you're using `Groq` as your provider, it's recommended to set `maxContextLines` to `120` or less due to its low rate limits and lack of pay-as-you-go pricing. However, `Groq` is expected to offer pay-as-you-go pricing in the near future.
 
 ## Copilot Options
 
@@ -334,10 +334,11 @@ The `customPrompt` function receives a `completionMetadata` object, which contai
 
 The `editorState.completionMode` can be one of the following:
 
-| Mode                 | Description                                                                                                                                                         |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `fill-in-the-middle` | Indicates that the cursor is positioned within the existing text. In this mode, the AI will generate content to be inserted at the cursor position.                 |
-| `completion`         | Indicates that the cursor is at the end of the existing text. In this mode, the AI will generate content to continue or complete the text from the cursor position. |
+| Mode       | Description                                                                                                                                                         |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `insert`   | Indicates that there is a character immediately after the cursor. In this mode, the AI will generate content to be inserted at the cursor position.                 |
+| `complete` | Indicates that there is a character after the cursor but not immediately. In this mode, the AI will generate content to complete the text from the cursor position. |
+| `continue` | Indicates that there is no character after the cursor. In this mode, the AI will generate content to continue the text from the cursor position.                    |
 
 For additional `completionMetadata` needs, please [open an issue](https://github.com/arshad-yaseen/monacopilot/issues/new).
 
