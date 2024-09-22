@@ -59,15 +59,6 @@ export const getTextBeforeCursorInLine = (
 };
 
 /**
- * Gets a label for the cursor position.
- * @returns {string} The label for the cursor position.
- */
-export const getCursorPositionLabel = ({
-  lineNumber,
-  column,
-}: CursorPosition): string => `Line ${lineNumber}, Column ${column}`;
-
-/**
  * Gets the text before the cursor.
  * @returns {string} The text before the cursor.
  */

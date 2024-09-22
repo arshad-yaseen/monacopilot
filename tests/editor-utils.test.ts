@@ -4,7 +4,6 @@ import {CursorPosition, EditorModel} from '../src/types';
 import {
   getCharAfterCursor,
   getCharBeforeCursor,
-  getCursorPositionLabel,
   getLastLineColumnCount,
   getTextAfterCursorInLine,
   getTextBeforeCursorInLine,
@@ -105,20 +104,6 @@ describe('Editor Utilities', () => {
 
       const result = getTextBeforeCursorInLine(pos, mdl);
       expect(result).toBe('');
-    });
-  });
-
-  describe('getCursorPositionLabel', () => {
-    it('should return the correct label for the cursor position', () => {
-      const pos: CursorPosition = {lineNumber: 5, column: 10};
-      const result = getCursorPositionLabel(pos);
-      expect(result).toBe('Line 5, Column 10');
-    });
-
-    it('should handle first line and column correctly', () => {
-      const pos: CursorPosition = {lineNumber: 1, column: 1};
-      const result = getCursorPositionLabel(pos);
-      expect(result).toBe('Line 1, Column 1');
     });
   });
 
