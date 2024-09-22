@@ -97,22 +97,18 @@ const editor = monaco.editor.create(document.getElementById('container'), {
 });
 
 registerCompletion(monaco, editor, {
-  endpoint: 'https://api.example.com/complete',
   // Examples:
   // - '/api/complete' if you're using the Next.js (API handler) or similar frameworks.
   // - 'https://api.example.com/complete' for a separate API server
   // Ensure this can be accessed from the browser.
+  endpoint: 'https://api.example.com/complete',
+  // The language of the editor.
   language: 'javascript',
   // If you are using Groq as your provider, it's recommended to set `maxContextLines` to `60` or less.
   // This is because Groq has low rate limits and doesn't offer pay-as-you-go pricing.
   maxContextLines: 60,
 });
 ```
-
-| Parameter  | Type     | Description                                                       |
-| ---------- | -------- | ----------------------------------------------------------------- |
-| `endpoint` | `string` | The URL of the API endpoint that we created in the previous step. |
-| `language` | `string` | The language of the editor.                                       |
 
 🎉 Congratulations! The AI auto-completion is now connected to the Monaco Editor. Start typing and see completions in the editor.
 

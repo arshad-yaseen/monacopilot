@@ -15,7 +15,7 @@ const getFormattedLanguageName = (language?: string): string | undefined => {
 };
 
 /**
- * Generates a comprehensive system prompt for the AI assistant.
+ * Generates a comprehensive system prompt for the AI assistant, giving it a specific role.
  *
  * @param metadata - The completion metadata.
  * @returns The system prompt string.
@@ -25,11 +25,11 @@ const createSystemPrompt = (metadata: CompletionMetadata): string => {
     getFormattedLanguageName(metadata.language) ||
     joinWithAnd(metadata.technologies);
 
-  return `You are a highly skilled ${languageOrTechnologies} developer assistant. Your goal is to help complete the code accurately and efficiently.`;
+  return `You are an expert ${languageOrTechnologies} developer assistant with extensive experience in code completion and adhering to best coding practices. Your role is to provide precise and contextually relevant code completions without any errors, including syntax, punctuation, spaces, tabs, and line breaks. Focus on integrating seamlessly with the existing code and follow the user's instructions carefully.`;
 };
 
 /**
- * Generates a detailed user prompt with context and clear instructions.
+ * Generates a detailed user prompt with context and clear instructions, structured using XML tags.
  *
  * @param metadata - The completion metadata.
  * @returns The user prompt string.
@@ -53,49 +53,50 @@ const createUserPrompt = (metadata: CompletionMetadata): string => {
   const specificInstruction = modeInstructions[editorState.completionMode];
 
   const guidelines = `
-${specificInstruction}
-
-**Guidelines:**
-
-- Analyze the provided code and any external files thoroughly.
-- Ensure the generated code integrates seamlessly with the existing code.
-- Adhere to best practices and maintain consistent coding style.
-- Do **not** include the code before the cursor in your response.
-- Do **not** wrap your completion with markdown code syntax (\`\`\`) or inline code syntax (\`).
-- Focus on correct syntax and language-specific conventions.
-- Do **not** add explanations, comments, or placeholders.
-- Return **only** the code required at the cursor position.
+<guidelines>
+  <instruction>${specificInstruction}</instruction>
+  <steps>
+    <step>Analyze the provided code and any external files thoroughly.</step>
+    <step>Ensure the generated code integrates seamlessly with the existing code.</step>
+    <step>Adhere to best practices and maintain consistent coding style.</step>
+    <step>Do <strong>not</strong> include the code before the cursor in your response.</step>
+    <step>Do <strong>not</strong> wrap your completion with markdown code syntax (\`\`\`) or inline code syntax (\`).</step>
+    <step>Focus on correct syntax and language-specific conventions.</step>
+    <step>Do <strong>not</strong> add explanations, comments, or placeholders.</step>
+    <step>Return <strong>only</strong> the code required at the cursor position.</step>
+  </steps>
+</guidelines>
 `;
 
   const codeContext = `
-**Current File:** \`${filename}\`
-
-\`\`\`
+<context>
+  <current_file path="${filename}">
+    <code>
 ${textBeforeCursor}█${textAfterCursor}
-\`\`\`
+    </code>
+  </current_file>
+</context>
 `;
 
   const externalFiles =
     externalContext
       ?.map(
         ({path, content}) => `
-**External File:** \`${path}\`
-
-\`\`\`
+<external_file path="${path}">
+  <code>
 ${content}
-\`\`\`
+  </code>
+</external_file>
 `,
       )
       .join('\n') || '';
 
   return `
-${guidelines}
-
-**Context:**
-
-${codeContext}
-
-${externalFiles}
+<task>
+  ${guidelines}
+  ${codeContext}
+  ${externalFiles}
+</task>
 `;
 };
 
