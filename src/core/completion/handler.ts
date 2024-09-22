@@ -95,12 +95,7 @@ const handleInlineCompletions = async ({
 
       completionCache.addCompletionCache({
         completion: formattedCompletion,
-        range: {
-          startLineNumber: pos.lineNumber,
-          startColumn: pos.column,
-          endLineNumber: pos.lineNumber,
-          endColumn: pos.column,
-        },
+        range: completionInsertRange,
         textBeforeCursorInLine: getTextBeforeCursorInLine(pos, mdl),
       });
 
