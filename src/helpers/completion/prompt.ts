@@ -61,6 +61,7 @@ ${specificInstruction}
 - Ensure the generated code integrates seamlessly with the existing code.
 - Adhere to best practices and maintain consistent coding style.
 - Do **not** include the code before the cursor in your response.
+- Do **not** wrap your completion with markdown code syntax (\`\`\`) or inline code syntax (\`).
 - Focus on correct syntax and language-specific conventions.
 - Do **not** add explanations, comments, or placeholders.
 - Return **only** the code required at the cursor position.

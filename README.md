@@ -98,6 +98,10 @@ const editor = monaco.editor.create(document.getElementById('container'), {
 
 registerCompletion(monaco, editor, {
   endpoint: 'https://api.example.com/complete',
+  // Examples:
+  // - '/api/complete' if you're using the Next.js (API handler) or similar frameworks.
+  // - 'https://api.example.com/complete' for a separate API server
+  // Ensure this can be accessed from the browser.
   language: 'javascript',
   // If you are using Groq as your provider, it's recommended to set `maxContextLines` to `60` or less.
   // This is because Groq has low rate limits and doesn't offer pay-as-you-go pricing.
