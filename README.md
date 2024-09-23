@@ -178,9 +178,10 @@ const completion = registerCompletion(monaco, editor, {
   trigger: 'onDemand',
 });
 
-monaco.editor.addAction({
+monaco.editor.addEditorAction({
   id: 'monacopilot.triggerCompletion',
   label: 'Complete Code',
+  contextMenuGroupId: 'navigation',
   keybindings: [
     monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.Space,
   ],
