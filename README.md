@@ -173,7 +173,7 @@ monaco.editor.addCommand(
 
 You can add a custom editor action to trigger completions manually.
 
-[Editor Action Demo](https://i.postimg.cc/pTNQ3k6J/editor-action-demo.png)
+![Editor Action Demo](https://i.postimg.cc/pTNQ3k6J/editor-action-demo.png)
 
 ```javascript
 const completion = registerCompletion(monaco, editor, {
