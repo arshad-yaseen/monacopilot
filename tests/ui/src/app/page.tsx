@@ -16,15 +16,19 @@ export default function Home() {
   useEffect(() => {
     if (!monaco || !editor) return;
 
-    const copilot = registerCompletion(monaco, editor, {
+    const completion = registerCompletion(monaco, editor, {
       endpoint: '/api/complete',
       language: 'javascript',
-      trigger: 'onTyping',
+      trigger: 'onDemand',
       maxContextLines: 60,
     });
 
+    editor.addCommand(2048 | 3, () => {
+      completion.trigger();
+    });
+
     return () => {
-      copilot.deregister();
+      completion.deregister();
     };
   }, [monaco, editor]);
 

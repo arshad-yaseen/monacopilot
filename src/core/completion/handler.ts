@@ -16,6 +16,7 @@ import {
 
 const ON_TYPING_DEBOUNCE_DELAY = 300;
 const ON_IDLE_DEBOUNCE_DELAY = 600;
+const ON_DEMAND_DEBOUNCE_DELAY = 0;
 
 const debouncedFetchCompletionItem = {
   [TriggerType.OnTyping]: asyncDebounce(
@@ -25,6 +26,10 @@ const debouncedFetchCompletionItem = {
   [TriggerType.OnIdle]: asyncDebounce(
     fetchCompletionItem,
     ON_IDLE_DEBOUNCE_DELAY,
+  ),
+  [TriggerType.OnDemand]: asyncDebounce(
+    fetchCompletionItem,
+    ON_DEMAND_DEBOUNCE_DELAY,
   ),
 };
 
@@ -70,12 +75,7 @@ const handleInlineCompletions = async ({
   }
 
   try {
-    const triggerType =
-      trigger === TriggerType.OnTyping
-        ? TriggerType.OnTyping
-        : TriggerType.OnIdle;
-
-    const fetchCompletion = debouncedFetchCompletionItem[triggerType];
+    const fetchCompletion = debouncedFetchCompletionItem[trigger];
 
     token.onCancellationRequested(() => {
       fetchCompletion.cancel();

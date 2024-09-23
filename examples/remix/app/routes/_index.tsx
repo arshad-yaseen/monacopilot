@@ -22,13 +22,13 @@ export default function Index() {
   useEffect(() => {
     if (!monaco || !editor) return;
 
-    const copilot = registerCompletion(monaco, editor, {
+    const completion = registerCompletion(monaco, editor, {
       endpoint: '/complete',
       language: 'javascript',
     });
 
     return () => {
-      copilot.deregister();
+      completion.deregister();
     };
   }, [monaco, editor]);
 

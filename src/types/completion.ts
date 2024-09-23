@@ -39,14 +39,15 @@ export interface RegisterCompletionOptions {
    * Specifies when the completion service should provide code completions.
    *
    * Options:
-   * - `'onIdle'`: The completion service provides completions after a brief pause in typing.
-   * - `'onTyping'`: The completion service offers completions in real-time as you type.
+   * - `'onIdle'`: Provides completions after a brief pause in typing.
+   * - `'onTyping'`: Provides completions in real-time as you type.
    *   - *Note:* Best suited for models with low response latency (e.g., Groq).
    *   - *Consideration:* May initiate additional background requests to deliver real-time suggestions.
+   * - `'onDemand'`: Completions are not provided automatically. You need to trigger the completion manually, possibly by using the `trigger` function from `registerCompletion` return.
    *
    * @default 'onIdle'
    */
-  trigger?: 'onTyping' | 'onIdle';
+  trigger?: 'onTyping' | 'onIdle' | 'onDemand';
   /**
    * The name of the file you are editing. This is used to provide more relevant completions based on the file's purpose.
    * For example, if you are editing a file named `utils.js`, the completions will be more relevant to utility functions.
@@ -82,9 +83,14 @@ export interface RegisterCompletionOptions {
 export enum TriggerType {
   OnTyping = 'onTyping',
   OnIdle = 'onIdle',
+  OnDemand = 'onDemand',
 }
 
 export interface CompletionRegistration {
+  /**
+   * Triggers the completion.
+   */
+  trigger: () => void;
   /**
    * Deregisters the completion from the Monaco editor.
    * This should be called when the completion is no longer needed.

@@ -40,6 +40,8 @@ export enum ErrorContext {
   FETCH_COMPLETION_ITEM = 'FETCH_COMPLETION_ITEM_ERROR',
   /** Error occurred during completion registration */
   REGISTER_COMPLETION = 'REGISTER_COMPLETION_ERROR',
+  /** Error occurred while triggering completion */
+  TRIGGER_COMPLETION = 'TRIGGER_COMPLETION_ERROR',
   /** Unexpected or uncategorized error */
   UNEXPECTED = 'UNEXPECTED_ERROR',
 }

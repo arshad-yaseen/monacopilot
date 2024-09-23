@@ -5,42 +5,51 @@ import {
   Monaco,
   RegisterCompletionOptions,
   StandaloneCodeEditor,
+  TriggerType,
 } from '../../types';
 import handleInlineCompletions, {completionCache} from './handler';
 
+type EditorCompletionState = {
+  isCompletionAccepted: boolean;
+  isCompletionVisible: boolean;
+  isManualTrigger: boolean;
+};
+
 const editorCompletionState = new WeakMap<
   StandaloneCodeEditor,
-  {
-    isCompletionAccepted: boolean;
-    isCompletionVisible: boolean;
-  }
+  EditorCompletionState
 >();
 
-let singletonInstance: CompletionRegistration | null = null;
+let activeCompletionRegistration: CompletionRegistration | null = null;
 
 /**
- * Registers the completion with the Monaco editor.
- * @param monaco The Monaco instance.
- * @param editor The editor instance.
- * @param options The options for the completion.
- * @returns CompletionRegistration object with a deregister method.
+ * Registers completion functionality with the Monaco editor.
+ * @param monaco - The Monaco instance.
+ * @param editor - The editor instance.
+ * @param options - Options for the completion.
+ * @returns A CompletionRegistration object with deregister and trigger methods.
  */
 export const registerCompletion = (
   monaco: Monaco,
   editor: StandaloneCodeEditor,
   options: RegisterCompletionOptions,
 ): CompletionRegistration => {
-  if (singletonInstance) {
-    singletonInstance.deregister();
+  // Deregister any existing completion registration
+  if (activeCompletionRegistration) {
+    activeCompletionRegistration.deregister();
   }
 
   const disposables: Disposable[] = [];
 
-  editorCompletionState.set(editor, {
+  // Initialize editor completion state
+  const initialState: EditorCompletionState = {
     isCompletionAccepted: false,
     isCompletionVisible: false,
-  });
+    isManualTrigger: false,
+  };
+  editorCompletionState.set(editor, initialState);
 
+  // Update editor options to force the enabling of inline completions and to use subwordSmart mode
   editor.updateOptions({
     inlineSuggest: {
       enabled: true,
@@ -49,13 +58,19 @@ export const registerCompletion = (
   });
 
   try {
+    // Register inline completions provider
     const inlineCompletionsProvider =
       monaco.languages.registerInlineCompletionsProvider(options.language, {
         provideInlineCompletions: (mdl, pos, _, token) => {
           const state = editorCompletionState.get(editor);
-          if (!state) {
-            return;
-          }
+
+          if (!state) return;
+
+          const isOnDemandTrigger =
+            options.trigger === TriggerType.OnDemand && !state.isManualTrigger;
+
+          if (isOnDemandTrigger) return;
+
           return handleInlineCompletions({
             mdl,
             pos,
@@ -63,21 +78,22 @@ export const registerCompletion = (
             isCompletionAccepted: state.isCompletionAccepted,
             onShowCompletion: () => {
               state.isCompletionVisible = true;
+              state.isManualTrigger = false;
             },
             options,
           });
         },
-        freeInlineCompletions: () => {},
+        freeInlineCompletions: () => {
+          // No-op
+        },
       });
-
     disposables.push(inlineCompletionsProvider);
 
+    // Listen for keydown events to detect completion acceptance
     const keyDownListener = editor.onKeyDown(event => {
       const state = editorCompletionState.get(editor);
-      if (!state) {
-        return;
-      }
-      // If the user presses Tab or Cmd + Right Arrow while completion is visible, it means the completion was accepted
+      if (!state) return;
+
       const isTabOrCmdRightArrow =
         event.keyCode === monaco.KeyCode.Tab ||
         (event.keyCode === monaco.KeyCode.RightArrow && event.metaKey);
@@ -89,31 +105,54 @@ export const registerCompletion = (
         state.isCompletionAccepted = false;
       }
     });
-
     disposables.push(keyDownListener);
 
+    // Create completion registration object
     const registration: CompletionRegistration = {
       deregister: () => {
         disposables.forEach(disposable => disposable.dispose());
         completionCache.clear();
         editorCompletionState.delete(editor);
-        singletonInstance = null;
+        activeCompletionRegistration = null;
       },
+      trigger: () => handleTriggerCompletion(editor),
     };
 
-    singletonInstance = registration;
+    activeCompletionRegistration = registration;
 
     return registration;
-  } catch (err) {
-    handleError(err, ErrorContext.REGISTER_COMPLETION);
+  } catch (error) {
+    handleError(error, ErrorContext.REGISTER_COMPLETION);
     return {
       deregister: () => {
         disposables.forEach(disposable => disposable.dispose());
         editorCompletionState.delete(editor);
-        singletonInstance = null;
+        activeCompletionRegistration = null;
+      },
+      trigger: () => {
+        // No-op
       },
     };
   }
+};
+
+/**
+ * Triggers the completion manually.
+ * @param editor - The editor instance.
+ */
+const handleTriggerCompletion = (editor: StandaloneCodeEditor) => {
+  const state = editorCompletionState.get(editor);
+  if (!state) {
+    handleError(
+      new Error(
+        'Completion is not registered. Use `registerCompletion` to register completion first.',
+      ),
+      ErrorContext.TRIGGER_COMPLETION,
+    );
+    return;
+  }
+  state.isManualTrigger = true;
+  editor.trigger('keyboard', 'editor.action.inlineSuggest.trigger', {});
 };
 
 /**
