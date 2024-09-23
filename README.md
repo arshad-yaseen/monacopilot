@@ -22,6 +22,7 @@
     - [Completions for Specific Technologies](#completions-for-specific-technologies)
     - [Get Completions in Real-Time](#get-completions-in-real-time)
     - [Max Context Lines](#max-context-lines)
+    - [Manually Trigger Completions](#manually-trigger-completions)
 - [Copilot Options](#copilot-options)
   - [Changing the Provider and Model](#changing-the-provider-and-model)
   - [Custom Model](#custom-model)
@@ -193,6 +194,38 @@ registerCompletion(monaco, editor, {
 ```
 
 > **Note:** If you're using `Groq` as your provider, it's recommended to set `maxContextLines` to `60` or less due to its low rate limits and lack of pay-as-you-go pricing. However, `Groq` is expected to offer pay-as-you-go pricing in the near future.
+
+### Manually Trigger Completions
+
+If you prefer not to trigger completions automatically (e.g., on typing or on idle), you can trigger completions manually. This is useful in scenarios where you want to control when completions are provided, such as through a button click or a keyboard shortcut.
+
+#### Usage
+
+```javascript
+const completion = registerCompletion(monaco, editor, {
+  trigger: 'onDemand',
+});
+
+completion.trigger();
+```
+
+To set up manual triggering, configure the `trigger` option to `'onDemand'`. This disables automatic completions, allowing you to call the `completion.trigger()` method explicitly when needed.
+
+For instance, you can set up manual completions to be triggered when the `Ctrl+Shift+Space` keyboard shortcut is pressed.
+
+```javascript
+const completion = registerCompletion(monaco, editor, {
+  // ...other options
+  trigger: 'onDemand',
+});
+
+monaco.editor.addCommand(
+  monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.Space,
+  () => {
+    completion.trigger();
+  },
+);
+```
 
 ## Copilot Options
 
