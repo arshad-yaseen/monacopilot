@@ -17,12 +17,12 @@
     - [API Handler](#api-handler)
     - [Register Completion with the Monaco Editor](#register-completion-with-the-monaco-editor)
   - [Register Completion Options](#register-completion-options)
+    - [Get Completions in Real-Time](#get-completions-in-real-time)
+    - [Manually Trigger Completions](#manually-trigger-completions)
     - [External Context](#external-context)
     - [Filename](#filename)
     - [Completions for Specific Technologies](#completions-for-specific-technologies)
-    - [Get Completions in Real-Time](#get-completions-in-real-time)
     - [Max Context Lines](#max-context-lines)
-    - [Manually Trigger Completions](#manually-trigger-completions)
 - [Copilot Options](#copilot-options)
   - [Changing the Provider and Model](#changing-the-provider-and-model)
   - [Custom Model](#custom-model)
@@ -115,6 +115,58 @@ registerCompletion(monaco, editor, {
 
 ## Register Completion Options
 
+### Get Completions in Real-Time
+
+The `trigger` option determines when the completion service provides code completions. You can choose between receiving suggestions/completions in real-time as you type or after a brief pause.
+
+```javascript
+registerCompletion(monaco, editor, {
+  // ...other options
+  trigger: 'onTyping',
+});
+```
+
+| Trigger              | Description                                                                | Notes                                                                                                                                                                                                                                                        |
+| -------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `'onIdle'` (default) | The completion service provides completions after a brief pause in typing. | This approach is less resource-intensive, as it only initiates a request when the editor is idle. However, compared to `onTyping`, it may result in a slightly reduced experience with completions.                                                          |
+| `'onTyping'`         | The completion service provides completions in real-time as you type.      | This approach is best suited for models with low response latency, such as Groq models. Please note that this trigger mode initiates additional background requests to deliver real-time suggestions. Technically, this method is called predictive caching. |
+
+[OnTyping Demo](https://github.com/user-attachments/assets/22c2ce44-334c-4963-b853-01b890b8e39f)
+
+> **Note:** If you prefer real-time completions, you can set the `trigger` option to `'onTyping'`. This may increase the number of requests made to the provider and the cost. This should not be too costly since most small models are very inexpensive.
+
+### Manually Trigger Completions
+
+If you prefer not to trigger completions automatically (e.g., on typing or on idle), you can trigger completions manually. This is useful in scenarios where you want to control when completions are provided, such as through a button click or a keyboard shortcut.
+
+#### Usage
+
+```javascript
+const completion = registerCompletion(monaco, editor, {
+  trigger: 'onDemand',
+});
+
+completion.trigger();
+```
+
+To set up manual triggering, configure the `trigger` option to `'onDemand'`. This disables automatic completions, allowing you to call the `completion.trigger()` method explicitly when needed.
+
+For instance, you can set up manual completions to be triggered when the `Ctrl+Shift+Space` keyboard shortcut is pressed.
+
+```javascript
+const completion = registerCompletion(monaco, editor, {
+  // ...other options
+  trigger: 'onDemand',
+});
+
+monaco.editor.addCommand(
+  monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.Space,
+  () => {
+    completion.trigger();
+  },
+);
+```
+
 ### External Context
 
 Enhance the accuracy and relevance of Copilot's completions by providing additional code context from your workspace.
@@ -160,26 +212,6 @@ registerCompletion(monaco, editor, {
 
 This configuration will provide completions relevant to React, Next.js, and Tailwind CSS.
 
-### Get Completions in Real-Time
-
-The `trigger` option determines when the completion service provides code completions. You can choose between receiving suggestions/completions in real-time as you type or after a brief pause.
-
-```javascript
-registerCompletion(monaco, editor, {
-  // ...other options
-  trigger: 'onTyping',
-});
-```
-
-| Trigger              | Description                                                                | Notes                                                                                                                                                                                                                                                        |
-| -------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `'onIdle'` (default) | The completion service provides completions after a brief pause in typing. | This approach is less resource-intensive, as it only initiates a request when the editor is idle. However, compared to `onTyping`, it may result in a slightly reduced experience with completions.                                                          |
-| `'onTyping'`         | The completion service provides completions in real-time as you type.      | This approach is best suited for models with low response latency, such as Groq models. Please note that this trigger mode initiates additional background requests to deliver real-time suggestions. Technically, this method is called predictive caching. |
-
-[OnTyping Demo](https://github.com/user-attachments/assets/22c2ce44-334c-4963-b853-01b890b8e39f)
-
-> **Note:** If you prefer real-time completions, you can set the `trigger` option to `'onTyping'`. This may increase the number of requests made to the provider and the cost. This should not be too costly since most small models are very inexpensive.
-
 ### Max Context Lines
 
 To manage potentially lengthy code in your editor, you can limit the number of lines included in the completion request using the `maxContextLines` option.
@@ -194,38 +226,6 @@ registerCompletion(monaco, editor, {
 ```
 
 > **Note:** If you're using `Groq` as your provider, it's recommended to set `maxContextLines` to `60` or less due to its low rate limits and lack of pay-as-you-go pricing. However, `Groq` is expected to offer pay-as-you-go pricing in the near future.
-
-### Manually Trigger Completions
-
-If you prefer not to trigger completions automatically (e.g., on typing or on idle), you can trigger completions manually. This is useful in scenarios where you want to control when completions are provided, such as through a button click or a keyboard shortcut.
-
-#### Usage
-
-```javascript
-const completion = registerCompletion(monaco, editor, {
-  trigger: 'onDemand',
-});
-
-completion.trigger();
-```
-
-To set up manual triggering, configure the `trigger` option to `'onDemand'`. This disables automatic completions, allowing you to call the `completion.trigger()` method explicitly when needed.
-
-For instance, you can set up manual completions to be triggered when the `Ctrl+Shift+Space` keyboard shortcut is pressed.
-
-```javascript
-const completion = registerCompletion(monaco, editor, {
-  // ...other options
-  trigger: 'onDemand',
-});
-
-monaco.editor.addCommand(
-  monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.Space,
-  () => {
-    completion.trigger();
-  },
-);
-```
 
 ## Copilot Options
 
