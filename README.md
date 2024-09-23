@@ -152,7 +152,7 @@ completion.trigger();
 
 To set up manual triggering, configure the `trigger` option to `'onDemand'`. This disables automatic completions, allowing you to call the `completion.trigger()` method explicitly when needed.
 
-#### Example: Triggering Completions with a Keyboard Shortcut
+#### Trigger Completions with a Keyboard Shortcut
 
 You can set up completions to trigger when the `Ctrl+Shift+Space` keyboard shortcut is pressed.
 
@@ -169,7 +169,7 @@ monaco.editor.addCommand(
 );
 ```
 
-#### Example: Add editor action to trigger completions
+#### Trigger Completions with an Editor Action
 
 You can add a custom editor action to trigger completions manually.
 
