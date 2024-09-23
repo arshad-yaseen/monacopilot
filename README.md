@@ -19,6 +19,8 @@
   - [Register Completion Options](#register-completion-options)
     - [Get Completions in Real-Time](#get-completions-in-real-time)
     - [Manually Trigger Completions](#manually-trigger-completions)
+      - [Trigger Completions with a Keyboard Shortcut](#trigger-completions-with-a-keyboard-shortcut)
+      - [Trigger Completions with an Editor Action](#trigger-completions-with-an-editor-action)
     - [External Context](#external-context)
     - [Filename](#filename)
     - [Completions for Specific Technologies](#completions-for-specific-technologies)
@@ -121,7 +123,6 @@ The `trigger` option determines when the completion service provides code comple
 
 ```javascript
 registerCompletion(monaco, editor, {
-  // ...other options
   trigger: 'onTyping',
 });
 ```
@@ -151,11 +152,12 @@ completion.trigger();
 
 To set up manual triggering, configure the `trigger` option to `'onDemand'`. This disables automatic completions, allowing you to call the `completion.trigger()` method explicitly when needed.
 
-For instance, you can set up manual completions to be triggered when the `Ctrl+Shift+Space` keyboard shortcut is pressed.
+#### Example: Triggering Completions with a Keyboard Shortcut
+
+You can set up completions to trigger when the `Ctrl+Shift+Space` keyboard shortcut is pressed.
 
 ```javascript
 const completion = registerCompletion(monaco, editor, {
-  // ...other options
   trigger: 'onDemand',
 });
 
@@ -167,13 +169,33 @@ monaco.editor.addCommand(
 );
 ```
 
+#### Example: Add editor action to trigger completions
+
+You can add a custom editor action to trigger completions manually.
+
+```javascript
+const completion = registerCompletion(monaco, editor, {
+  trigger: 'onDemand',
+});
+
+monaco.editor.addAction({
+  id: 'monacopilot.triggerCompletion',
+  label: 'Complete Code',
+  keybindings: [
+    monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.Space,
+  ],
+  run: () => {
+    completion.trigger();
+  },
+});
+```
+
 ### External Context
 
 Enhance the accuracy and relevance of Copilot's completions by providing additional code context from your workspace.
 
 ```javascript
 registerCompletion(monaco, editor, {
-  // ...other options
   externalContext: [
     {
       path: './utils.js',
@@ -192,7 +214,6 @@ Specify the name of the file being edited to receive more contextually relevant 
 
 ```javascript
 registerCompletion(monaco, editor, {
-  // ...other options
   filename: 'utils.js', // e.g., "index.js", "utils/objects.js"
 });
 ```
@@ -205,7 +226,6 @@ Enable completions tailored to specific technologies by using the `technologies`
 
 ```javascript
 registerCompletion(monaco, editor, {
-  // ...other options
   technologies: ['react', 'next.js', 'tailwindcss'],
 });
 ```
@@ -220,7 +240,6 @@ For example, if there's a chance that the code in your editor may exceed `500+ l
 
 ```javascript
 registerCompletion(monaco, editor, {
-  // ...other options
   maxContextLines: 80,
 });
 ```
@@ -312,7 +331,6 @@ You can add custom headers to the provider's completion requests. For example, i
 ```javascript
 copilot.complete({
   options: {
-    // ...other options
     headers: {
       'X-Custom-Header': 'custom-value',
     },
