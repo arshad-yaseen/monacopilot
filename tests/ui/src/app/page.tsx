@@ -19,12 +19,7 @@ export default function Home() {
     const completion = registerCompletion(monaco, editor, {
       endpoint: '/api/complete',
       language: 'javascript',
-      trigger: 'onDemand',
       maxContextLines: 60,
-    });
-
-    editor.addCommand(2048 | 3, () => {
-      completion.trigger();
     });
 
     return () => {
