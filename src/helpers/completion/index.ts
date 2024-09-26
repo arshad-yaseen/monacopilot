@@ -6,8 +6,8 @@ import {
   CompletionResponse,
   CursorPosition,
   EditorModel,
-  ExternalContext,
   FetchCompletionItemParams,
+  RelatedFile,
 } from '../../types';
 import {
   getCharAfterCursor,
@@ -30,7 +30,7 @@ export const fetchCompletionItem = async ({
   endpoint,
   language,
   technologies,
-  externalContext,
+  relatedFiles,
   mdl,
   pos,
   maxContextLines,
@@ -48,7 +48,7 @@ export const fetchCompletionItem = async ({
           mdl,
           language,
           technologies,
-          externalContext,
+          relatedFiles,
           maxContextLines,
         }),
       },
@@ -75,7 +75,7 @@ export const constructCompletionMetadata = ({
   mdl,
   language,
   technologies,
-  externalContext,
+  relatedFiles,
   maxContextLines,
 }: Omit<
   FetchCompletionItemParams,
@@ -83,9 +83,9 @@ export const constructCompletionMetadata = ({
 >): CompletionMetadata => {
   const completionMode = determineCompletionMode(pos, mdl);
 
-  // Determine the divisor based on the presence of external contexts
-  const hasExternalContext = !!externalContext?.length;
-  const divisor = hasExternalContext ? 3 : 2;
+  // Determine the divisor based on the presence of related files
+  const hasRelatedFiles = !!relatedFiles?.length;
+  const divisor = hasRelatedFiles ? 3 : 2;
   const adjustedMaxContextLines = maxContextLines
     ? Math.floor(maxContextLines / divisor)
     : undefined;
@@ -99,13 +99,13 @@ export const constructCompletionMetadata = ({
     return maxLines ? keepNLines(text, maxLines, options) : text;
   };
 
-  const processExternalContexts = (
-    contexts?: ExternalContext[],
+  const processRelatedFiles = (
+    files?: RelatedFile[],
     maxLines?: number,
-  ): ExternalContext[] | undefined => {
-    if (!contexts || !maxLines) return contexts;
+  ): RelatedFile[] | undefined => {
+    if (!files || !maxLines) return files;
 
-    return contexts.map(({content, ...rest}) => ({
+    return files.map(({content, ...rest}) => ({
       ...rest,
       content: keepNLines(content, maxLines),
     }));
@@ -124,9 +124,9 @@ export const constructCompletionMetadata = ({
     adjustedMaxContextLines,
   );
 
-  // Process external contexts with the adjusted maximum lines
-  const limitedExternalContext = processExternalContexts(
-    externalContext,
+  // Process related files with the adjusted maximum lines
+  const limitedRelatedFiles = processRelatedFiles(
+    relatedFiles,
     adjustedMaxContextLines,
   );
 
@@ -134,7 +134,7 @@ export const constructCompletionMetadata = ({
     filename,
     language,
     technologies,
-    externalContext: limitedExternalContext,
+    relatedFiles: limitedRelatedFiles,
     textBeforeCursor,
     textAfterCursor,
     cursorPosition: pos,

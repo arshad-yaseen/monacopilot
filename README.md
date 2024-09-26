@@ -21,7 +21,7 @@
     - [Manually Trigger Completions](#manually-trigger-completions)
       - [Trigger Completions with a Keyboard Shortcut](#trigger-completions-with-a-keyboard-shortcut)
       - [Trigger Completions with an Editor Action](#trigger-completions-with-an-editor-action)
-    - [External Context](#external-context)
+    - [Multi-File Context](#multi-file-context)
     - [Filename](#filename)
     - [Completions for Specific Technologies](#completions-for-specific-technologies)
     - [Max Context Lines](#max-context-lines)
@@ -197,13 +197,13 @@ monaco.editor.addEditorAction({
 });
 ```
 
-### External Context
+### Multi-File Context
 
-Enhance the accuracy and relevance of Copilot's completions by providing additional code context from your workspace.
+Improve the quality and relevance of Copilot's suggestions by providing additional code context from other files in your project. This feature allows Copilot to understand the broader scope of your codebase, resulting in more accurate and contextually appropriate completions.
 
 ```javascript
 registerCompletion(monaco, editor, {
-  externalContext: [
+  relatedFiles: [
     {
       path: './utils.js',
       content:
@@ -213,7 +213,7 @@ registerCompletion(monaco, editor, {
 });
 ```
 
-By providing external context, Copilot can offer more intelligent suggestions. For example, if you start typing `const isPalindrome = `, Copilot may suggest using the `reverse` function from `utils.js`.
+For instance, if you begin typing `const isPalindrome = ` in your current file, Copilot will recognize the `reverse` function from the `utils.js` file you provided earlier. It will then suggest a completion that utilizes this function.
 
 ### Filename
 
@@ -396,7 +396,7 @@ The `customPrompt` function receives a `completionMetadata` object, which contai
 | `cursorPosition`   | `{ lineNumber: number; column: number }` | The current cursor position in the editor.                                                                                                        |
 | `filename`         | `string` or `undefined`                  | The name of the file being edited. Only available if you have provided the `filename` option in the `registerCompletion` function.                |
 | `technologies`     | `string[]` or `undefined`                | An array of technologies used in the project. Only available if you have provided the `technologies` option in the `registerCompletion` function. |
-| `externalContext`  | `object` or `undefined`                  | Additional context from related files. Only available if you have provided the `externalContext` option in the `registerCompletion` function.     |
+| `context`          | `object` or `undefined`                  | Additional context from related files. Only available if you have provided the `context` option in the `registerCompletion` function.             |
 | `textAfterCursor`  | `string`                                 | The text that appears after the cursor.                                                                                                           |
 | `textBeforeCursor` | `string`                                 | The text that appears before the cursor.                                                                                                          |
 | `editorState`      | `object`                                 | An object containing the `completionMode` property.                                                                                               |

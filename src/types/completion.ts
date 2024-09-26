@@ -9,7 +9,7 @@ import {
 export type Endpoint = string;
 export type Filename = string;
 export type Technologies = string[];
-export type ExternalContext = {
+export type RelatedFile = {
   /**
    * The relative path from the current editing code in the editor to an external file.
    *
@@ -65,10 +65,15 @@ export interface RegisterCompletionOptions {
    */
   technologies?: Technologies;
   /**
+   * @deprecated
+   * Use `relatedFiles` instead.
+   */
+  externalContext?: RelatedFile[];
+  /**
    * Helps to give more relevant completions based on the full context.
    * You can include things like the contents/codes of other files in the same workspace.
    */
-  externalContext?: ExternalContext[];
+  relatedFiles?: RelatedFile[];
   /**
    * The maximum number of lines of code to include in the completion request.
    * This limits the request size to the model to prevent `429 Too Many Requests` errors
@@ -175,7 +180,7 @@ export interface CompletionMetadata {
   /**
    * Additional context from related files.
    */
-  externalContext: ExternalContext[] | undefined;
+  relatedFiles: RelatedFile[] | undefined;
   /**
    * The text that appears after the cursor.
    */
@@ -207,7 +212,7 @@ export interface FetchCompletionItemParams {
   endpoint: Endpoint;
   filename?: Filename;
   technologies?: Technologies;
-  externalContext?: ExternalContext[];
+  relatedFiles?: RelatedFile[];
   maxContextLines?: number;
   mdl: EditorModel;
   pos: CursorPosition;

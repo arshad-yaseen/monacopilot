@@ -41,7 +41,7 @@ const createUserPrompt = (metadata: CompletionMetadata): string => {
     filename = '/',
     textBeforeCursor = '',
     textAfterCursor = '',
-    externalContext,
+    relatedFiles,
     editorState,
   } = metadata;
 
@@ -58,7 +58,7 @@ const createUserPrompt = (metadata: CompletionMetadata): string => {
 <guidelines>
   <instruction>${specificInstruction}</instruction>
   <steps>
-    <step>Analyze the provided code and any external files thoroughly.</step>
+    <step>Analyze the provided code and any related files thoroughly.</step>
     <step>Ensure the generated code integrates seamlessly with the existing code.</step>
     <step>Adhere to best practices and maintain consistent coding style.</step>
     <step>Do <strong>not</strong> include the code before the cursor in your response.</step>
@@ -80,15 +80,15 @@ ${textBeforeCursor}${CURSOR_PLACEHOLDER}${textAfterCursor}
 </context>
 `;
 
-  const externalFiles =
-    externalContext
+  const relatedFilesText =
+    relatedFiles
       ?.map(
         ({path, content}) => `
-<external_file path="${path}">
+<related_file path="${path}">
   <code>
 ${content}
   </code>
-</external_file>
+</related_file>
 `,
       )
       .join('\n') || '';
@@ -97,7 +97,7 @@ ${content}
 <task>
   ${guidelines}
   ${codeContext}
-  ${externalFiles}
+  ${relatedFilesText}
 </task>
 `;
 };

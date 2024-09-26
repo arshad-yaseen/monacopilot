@@ -16,7 +16,7 @@ export const mockCompletionMetadata: CompletionMetadata = {
   cursorPosition: {lineNumber: 1, column: 1},
   filename: 'test.js',
   technologies: ['react'],
-  externalContext: [{path: './utils.js', content: 'function test() {}'}],
+  relatedFiles: [{path: './utils.js', content: 'function test() {}'}],
   textAfterCursor: 'console.log(',
   textBeforeCursor: 'function hello() {',
   editorState: {

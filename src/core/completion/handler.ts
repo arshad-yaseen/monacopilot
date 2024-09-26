@@ -50,6 +50,11 @@ const handleInlineCompletions = async ({
 }: InlineCompletionHandlerParams): Promise<EditorInlineCompletionsResult> => {
   const {trigger = TriggerType.OnIdle, ...restOptions} = options;
 
+  // handle the deprecated `externalContext` option until it's removed
+  if (restOptions.externalContext) {
+    restOptions.relatedFiles = restOptions.externalContext;
+  }
+
   if (!new CompletionValidator(pos, mdl).shouldProvideCompletions()) {
     return createInlineCompletionResult([]);
   }
