@@ -27,6 +27,7 @@
     - [Max Context Lines](#max-context-lines)
 - [Copilot Options](#copilot-options)
   - [Changing the Provider and Model](#changing-the-provider-and-model)
+    - [Dynamically Updating Provider and Model](#dynamically-updating-provider-and-model)
   - [Custom Model](#custom-model)
 - [Completion Request Options](#completion-request-options)
   - [Custom Headers](#custom-headers)
@@ -274,6 +275,17 @@ There are other providers and models available. Here is a list:
 | Groq      | `llama-3-70b`                                                             |
 | OpenAI    | `gpt-4o`, `gpt-4o-mini`, `o1-preview`, `o1-mini`                          |
 | Anthropic | `claude-3.5-Sonnet`, `claude-3-opus`, `claude-3-sonnet`, `claude-3-haiku` |
+
+#### Dynamically Updating Provider and Model
+
+You can change the provider and model at runtime using the `setModel` method.
+
+```javascript
+copilot.setModel({
+  provider: 'anthropic',
+  model: 'claude-3-haiku',
+});
+```
 
 ### Custom Model
 

@@ -21,13 +21,14 @@ import {
   CopilotOptions,
   CopilotProvider,
   CustomCopilotModel,
+  SetModelOptions,
 } from '../types';
 import {HTTP, joinWithAnd} from '../utils';
 
 export class Copilot {
   private readonly apiKey: string;
-  private readonly provider: CopilotProvider;
-  private readonly model: CopilotModel | CustomCopilotModel;
+  private provider: CopilotProvider;
+  private model: CopilotModel | CustomCopilotModel;
 
   /**
    * Initializes the Copilot instance with an API key and optional configuration.
@@ -144,5 +145,15 @@ export class Copilot {
       );
       return {error: errorDetails.message, completion: null};
     }
+  }
+
+  /**
+   * Sets the model and provider for the Copilot.
+   * @param options - The options for setting the model and provider.
+   */
+  public setModel({model, provider}: SetModelOptions): void {
+    this.model = model;
+    this.provider = provider;
+    this.validateInputs();
   }
 }
