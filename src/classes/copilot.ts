@@ -21,7 +21,6 @@ import {
   CopilotOptions,
   CopilotProvider,
   CustomCopilotModel,
-  SetModelOptions,
 } from '../types';
 import {HTTP, joinWithAnd} from '../utils';
 
@@ -145,15 +144,5 @@ export class Copilot {
       );
       return {error: errorDetails.message, completion: null};
     }
-  }
-
-  /**
-   * Sets the model and provider for the Copilot.
-   * @param options - The options for setting the model and provider.
-   */
-  public setModel({model, provider}: SetModelOptions): void {
-    this.model = model;
-    this.provider = provider;
-    this.validateInputs();
   }
 }

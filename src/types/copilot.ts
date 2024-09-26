@@ -111,21 +111,6 @@ export type CustomCopilotModel = {
   transformResponse: CustomCopilotModelTransformResponse;
 };
 
-export type SetModelOptions = {
-  /**
-   * The provider to set (e.g., 'openai', 'anthropic', 'groq').
-   */
-  provider: CopilotProvider;
-  /**
-   * The model to use for copilot AI requests.
-   * This can be either:
-   * 1. A predefined model name (e.g. 'claude-3-opus'): Use this option if you want to use a model that is built into Monacopilot.
-   *    If you choose this option, also set the `provider` property to the corresponding provider of the model.
-   * 2. A custom model configuration object: Use this option if you want to use a AI model from a third-party service or your own custom model.
-   */
-  model: CopilotModel | CustomCopilotModel;
-};
-
 export type CustomCopilotModelConfig = (
   apiKey: string,
   prompt: {
