@@ -1,10 +1,10 @@
-## Contributing to Monacopilot
+# Contributing to Monacopilot
 
-#### Installation
+## Installation
 
 The Monacopilot repository uses [PNPM Workspaces](https://pnpm.io/workspaces) and [Tsup](https://tsup.egoist.dev/). To install dependencies, run `pnpm install` in the project root directory.
 
-#### Building the Package
+## Building the Package
 
 To build the package, execute the following command:
 
@@ -14,7 +14,7 @@ To build the package, execute the following command:
 
 Alternatively, `pnpm dev` to start the watch mode for automatic rebuilds on file changes.
 
-#### Testing Monacopilot Locally
+## Testing Monacopilot Locally
 
 To test Monacopilot locally, first, you need to set the Groq API key as an environment variable in the `tests/ui` directory root within the `.env.local` file.
 
