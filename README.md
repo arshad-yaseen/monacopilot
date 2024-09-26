@@ -27,7 +27,7 @@
     - [Max Context Lines](#max-context-lines)
 - [Copilot Options](#copilot-options)
   - [Changing the Provider and Model](#changing-the-provider-and-model)
-    - [Dynamically Updating Provider and Model](#dynamically-updating-provider-and-model)
+    - [Updating Provider and Model at Runtime](#updating-provider-and-model-at-runtime)
   - [Custom Model](#custom-model)
 - [Completion Request Options](#completion-request-options)
   - [Custom Headers](#custom-headers)
@@ -276,7 +276,7 @@ There are other providers and models available. Here is a list:
 | OpenAI    | `gpt-4o`, `gpt-4o-mini`, `o1-preview`, `o1-mini`                          |
 | Anthropic | `claude-3.5-Sonnet`, `claude-3-opus`, `claude-3-sonnet`, `claude-3-haiku` |
 
-#### Dynamically Updating Provider and Model
+#### Updating Provider and Model at Runtime
 
 You can change the provider and model at runtime using the `setModel` method.
 
