@@ -502,7 +502,7 @@ Check out the [prompt.ts](https://github.com/arshad-yaseen/monacopilot/blob/main
 
 ### Metadata Overview
 
-The request body's `completionMetadata` object contains essential information for generating accurate completions:
+The request body's `completionMetadata` object contains essential information for crafting a prompt for the AI model to generate accurate completions:
 
 | Field              | Description                                                  |
 | ------------------ | ------------------------------------------------------------ |
