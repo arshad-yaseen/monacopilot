@@ -25,8 +25,9 @@
     - [Filename](#filename)
     - [Completions for Specific Technologies](#completions-for-specific-technologies)
     - [Max Context Lines](#max-context-lines)
-    - [Custom Request Headers](#custom-request-headers)
     - [Handling Errors](#handling-errors)
+    - [Request Options](#request-options)
+      - [Custom Headers](#custom-headers)
 - [Copilot Options](#copilot-options)
   - [Changing the Provider and Model](#changing-the-provider-and-model)
   - [Custom Model](#custom-model)
@@ -253,7 +254,11 @@ registerCompletion(monaco, editor, {
 
 > **Note:** If you're using `Groq` as your provider, it's recommended to set `maxContextLines` to `60` or less due to its low rate limits and lack of pay-as-you-go pricing. However, `Groq` is expected to offer pay-as-you-go pricing in the near future.
 
-### Custom Request Headers
+### Request Options
+
+You can customize the `fetch` request made by Monacopilot to the specified endpoint by using the `requestOptions` parameter in the `registerCompletion` function.
+
+#### Custom Headers
 
 You can include custom headers in the requests sent to the endpoint specified in the `registerCompletion` function.
 
