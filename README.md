@@ -33,6 +33,7 @@
   - [Custom Model](#custom-model)
 - [Completion Request Options](#completion-request-options)
   - [Custom Headers for AI Model Requests](#custom-headers-for-ai-model-requests)
+- [Using a Different Language for the API Handler](#using-a-different-language-for-the-api-handler)
 - [Select and Edit](#select-and-edit)
 - [Contributing](#contributing)
 
@@ -84,6 +85,8 @@ app.post('/complete', async (req, res) => {
 
 app.listen(port);
 ```
+
+If you prefer to use a different programming language for your API handler in cases where your backend is not in JavaScript, please refer to the section [Using a Different Language for the API Handler](#using-a-different-language-for-the-api-handler) for guidance on implementing the handler in your chosen language.
 
 Now, Monacopilot is set up to send completion requests to the `/complete` endpoint and receive completions in response.
 
@@ -413,16 +416,18 @@ copilot.complete({
 
 The `customPrompt` function receives a `completionMetadata` object, which contains information about the current editor state and can be used to tailor the prompt.
 
-| Property           | Type                                     | Description                                                                                                                                       |
-| ------------------ | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `language`         | `string`                                 | The programming language of the code.                                                                                                             |
-| `cursorPosition`   | `{ lineNumber: number; column: number }` | The current cursor position in the editor.                                                                                                        |
-| `filename`         | `string` or `undefined`                  | The name of the file being edited. Only available if you have provided the `filename` option in the `registerCompletion` function.                |
-| `technologies`     | `string[]` or `undefined`                | An array of technologies used in the project. Only available if you have provided the `technologies` option in the `registerCompletion` function. |
-| `context`          | `object` or `undefined`                  | Additional context from related files. Only available if you have provided the `context` option in the `registerCompletion` function.             |
-| `textAfterCursor`  | `string`                                 | The text that appears after the cursor.                                                                                                           |
-| `textBeforeCursor` | `string`                                 | The text that appears before the cursor.                                                                                                          |
-| `editorState`      | `object`                                 | An object containing the `completionMode` property.                                                                                               |
+##### Completion Metadata
+
+| Property           | Type                                     | Description                                                                                                                                                                   |
+| ------------------ | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `language`         | `string`                                 | The programming language of the code.                                                                                                                                         |
+| `cursorPosition`   | `{ lineNumber: number; column: number }` | The current cursor position in the editor.                                                                                                                                    |
+| `filename`         | `string` or `undefined`                  | The name of the file being edited. Only available if you have provided the `filename` option in the `registerCompletion` function.                                            |
+| `technologies`     | `string[]` or `undefined`                | An array of technologies used in the project. Only available if you have provided the `technologies` option in the `registerCompletion` function.                             |
+| `relatedFiles`     | `object[]` or `undefined`                | An array of objects containing the `path` and `content` of related files. Only available if you have provided the `relatedFiles` option in the `registerCompletion` function. |
+| `textAfterCursor`  | `string`                                 | The text that appears after the cursor.                                                                                                                                       |
+| `textBeforeCursor` | `string`                                 | The text that appears before the cursor.                                                                                                                                      |
+| `editorState`      | `object`                                 | An object containing the `completionMode` property.                                                                                                                           |
 
 The `editorState.completionMode` can be one of the following:
 
@@ -455,7 +460,7 @@ const customPrompt = ({textBeforeCursor, textAfterCursor}) => ({
     // Cursor position
     ${textAfterCursor}
 
-    Use modern React practices and hooks where appropriate. If you're adding new props, make sure to include proper TypeScript types. Please provide only the finished code without additional comments or explanations.`,
+    Use modern React practices and hooks where appropriate. If you're adding new props, make sure to include proper TypeScript types. Please provide only the completed part of the code without additional comments or explanations.`,
 });
 
 copilot.complete({
@@ -464,6 +469,102 @@ copilot.complete({
 ```
 
 By using a custom prompt, you can guide the model to generate completions that better fit your coding style, project requirements, or specific technologies you're working with.
+
+## Using a Different Language for the API Handler
+
+While the example in this documentation uses JavaScript/Node.js (which is recommended), you can set up the API handler in any language or framework. For JavaScript, Monacopilot provides a built-in function that handles all the necessary steps, such as generating the prompt, sending it to the model, and processing the response. However, if you're using a different language, you'll need to implement these steps manually until Monacopilot supports your language. Here's a general approach to implement the handler in your preferred language:
+
+1. Create an endpoint that accepts POST requests (e.g., `/complete`).
+2. The endpoint should expect a JSON body containing completion metadata.
+3. Use the metadata to construct a prompt for your AI model.
+4. Send the prompt to your chosen AI model and get the completion.
+5. Return a JSON response with the following structure:
+   ```json
+   {
+     "completion": "Generated completion text",
+     "error": null
+   }
+   ```
+   Or in case of an error:
+   ```json
+   {
+     "completion": null,
+     "error": "Error message"
+   }
+   ```
+
+### Key Considerations
+
+- The prompt should instruct the model to return only the completion text, without any additional formatting or explanations.
+- The completion text should be ready for direct insertion into the editor.
+
+Check out the [prompt.ts](https://github.com/arshad-yaseen/monacopilot/blob/main/src/helpers/completion/prompt.ts) file to see how Monacopilot generates the prompt. This will give you an idea of how to structure the prompt for your AI model to achieve the best completions.
+
+### Metadata Overview
+
+The request body's `completionMetadata` object contains essential information for crafting a prompt for the AI model to generate accurate completions:
+
+| Field              | Description                                                  |
+| ------------------ | ------------------------------------------------------------ |
+| `language`         | The programming language of the current file                 |
+| `textBeforeCursor` | Code preceding the cursor position                           |
+| `textAfterCursor`  | Code following the cursor position                           |
+| `filename`         | Name of the file being edited                                |
+| `technologies`     | Array of technologies/frameworks used in the project         |
+| `relatedFiles`     | Array of related files and their contents                    |
+| `cursorPosition`   | Object containing the current cursor's line and column       |
+| `editorState`      | Object with `completionMode` (insert, complete, or continue) |
+
+For a comprehensive breakdown of the `completionMetadata` object and its properties, see the [Completion Metadata](#completion-metadata) section.
+
+If you need additional metadata fields, please [open an issue](https://github.com/arshad-yaseen/monacopilot/issues/new) on our GitHub repository.
+
+### Example Implementation (Python with FastAPI)
+
+Here's a basic example using Python and FastAPI:
+
+```python
+from fastapi import FastAPI, Request
+
+app = FastAPI()
+
+@app.post('/complete')
+async def handle_completion(request: Request):
+    try:
+        body = await request.json()
+        metadata = body['completionMetadata']
+
+        prompt = f"""Please complete the following {metadata['language']} code:
+
+{metadata['textBeforeCursor']}
+<cursor>
+{metadata['textAfterCursor']}
+
+Use modern {metadata['language']} practices and hooks where appropriate. Please provide only the completed part of the
+code without additional comments or explanations."""
+
+        # Simulate a response from a model
+        response = "Your model's response here"
+
+        return {
+            'completion': response,
+            'error': None
+        }
+    except Exception as e:
+        return {
+            'completion': None,
+            'error': str(e)
+        }
+```
+
+Now, Monacopilot is set up to send completion requests to the `/complete` endpoint and receive completions in response.
+
+```javascript
+registerCompletion(monaco, editor, {
+  endpoint: 'https://my-python-api.com/complete',
+  // ... other options
+});
+```
 
 ## Select and Edit
 
