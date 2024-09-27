@@ -33,6 +33,7 @@
   - [Custom Model](#custom-model)
 - [Completion Request Options](#completion-request-options)
   - [Custom Headers for AI Model Requests](#custom-headers-for-ai-model-requests)
+- [Using a Different Language for the API Handler](#using-a-different-language-for-the-api-handler)
 - [Select and Edit](#select-and-edit)
 - [Contributing](#contributing)
 
@@ -84,6 +85,8 @@ app.post('/complete', async (req, res) => {
 
 app.listen(port);
 ```
+
+If you prefer to use a different programming language for your API handler, please refer to the section [Using a Different Language for the API Handler](#using-a-different-language-for-the-api-handler) for guidance on implementing the handler in your chosen language.
 
 Now, Monacopilot is set up to send completion requests to the `/complete` endpoint and receive completions in response.
 
@@ -455,7 +458,7 @@ const customPrompt = ({textBeforeCursor, textAfterCursor}) => ({
     // Cursor position
     ${textAfterCursor}
 
-    Use modern React practices and hooks where appropriate. If you're adding new props, make sure to include proper TypeScript types. Please provide only the finished code without additional comments or explanations.`,
+    Use modern React practices and hooks where appropriate. If you're adding new props, make sure to include proper TypeScript types. Please provide only the completed part of the code without additional comments or explanations.`,
 });
 
 copilot.complete({
@@ -464,6 +467,83 @@ copilot.complete({
 ```
 
 By using a custom prompt, you can guide the model to generate completions that better fit your coding style, project requirements, or specific technologies you're working with.
+
+## Using a Different Language for the API Handler
+
+While the previous example used Node.js, you can set up the API handler in any language or framework. Here's a general approach to implement the handler in your preferred language:
+
+1. Create an endpoint that accepts POST requests (e.g., `/complete`).
+2. The endpoint should expect a JSON body containing completion metadata.
+3. Use the metadata to construct a prompt for your AI model.
+4. Send the prompt to your chosen AI model and get the completion.
+5. Return a JSON response with the following structure:
+   ```json
+   {
+     "completion": "Generated completion text",
+     "error": null
+   }
+   ```
+   Or in case of an error:
+   ```json
+   {
+     "completion": null,
+     "error": "Error message"
+   }
+   ```
+
+### Key Considerations
+
+- The prompt should instruct the model to return only the completion text, without any additional formatting or explanations.
+- The completion text should be ready for direct insertion into the editor.
+
+### Metadata Overview
+
+The request body will include these key pieces of information:
+
+- `language`: The programming language being used
+- `textBeforeCursor`: Code before the cursor position
+- `textAfterCursor`: Code after the cursor position
+- `filename`: Name of the file being edited
+- `cursorPosition`: Current cursor location (line and column)
+- `editorState`: Information about the completion mode (insert, complete, or continue)
+
+### Example Implementation (Python with FastAPI)
+
+Here's a basic example using Python and FastAPI:
+
+```python
+from fastapi import FastAPI, Request
+
+app = FastAPI()
+
+@app.post('/complete')
+async def handle_completion(request: Request):
+    try:
+        body = await request.json()
+        metadata = body['completionMetadata']
+
+        prompt = f"""Please complete the following {metadata['language']} code:
+
+{metadata['textBeforeCursor']}
+<cursor>
+{metadata['textAfterCursor']}
+
+Use modern {metadata['language']} practices and hooks where appropriate. Please provide only the completed part of the
+code without additional comments or explanations."""
+
+        # Simulate a response from a model
+        response = "Your model's response here"
+
+        return {
+            'completion': response,
+            'error': None
+        }
+    except Exception as e:
+        return {
+            'completion': None,
+            'error': str(e)
+        }
+```
 
 ## Select and Edit
 
