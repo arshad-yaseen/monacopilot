@@ -498,7 +498,7 @@ While the example in this documentation uses JavaScript/Node.js (which is recomm
 - The prompt should instruct the model to return only the completion text, without any additional formatting or explanations.
 - The completion text should be ready for direct insertion into the editor.
 
-Check out the [prompt.ts](https://github.com/arshad-yaseen/monacopilot/blob/main/src/prompt.ts) file to see how Monacopilot generates the prompt. This will give you an idea of how to structure the prompt for your AI model to achieve the best completions.
+Check out the [prompt.ts](https://github.com/arshad-yaseen/monacopilot/blob/main/src/helpers/completion/prompt.ts) file to see how Monacopilot generates the prompt. This will give you an idea of how to structure the prompt for your AI model to achieve the best completions.
 
 ### Metadata Overview
 
