@@ -1,7 +1,8 @@
-import {ErrorContext, handleError} from '../../error';
+import {logError, logWarning} from '../../logger';
 import {
   CompletionRegistration,
   Disposable,
+  LoggerContext,
   Monaco,
   RegisterCompletionOptions,
   StandaloneCodeEditor,
@@ -122,7 +123,12 @@ export const registerCompletion = (
 
     return registration;
   } catch (error) {
-    handleError(error, ErrorContext.REGISTER_COMPLETION);
+    if (options.onError) {
+      options.onError(error as Error);
+    } else {
+      logError(error, LoggerContext.REGISTER_COMPLETION);
+    }
+
     return {
       deregister: () => {
         disposables.forEach(disposable => disposable.dispose());
@@ -143,11 +149,9 @@ export const registerCompletion = (
 const handleTriggerCompletion = (editor: StandaloneCodeEditor) => {
   const state = editorCompletionState.get(editor);
   if (!state) {
-    handleError(
-      new Error(
-        'Completion is not registered. Use `registerCompletion` to register completion first.',
-      ),
-      ErrorContext.TRIGGER_COMPLETION,
+    logWarning(
+      'Completion is not registered. Use `registerCompletion` to register completion first.',
+      LoggerContext.COMPLETION_NOT_REGISTERED,
     );
     return;
   }
@@ -158,4 +162,13 @@ const handleTriggerCompletion = (editor: StandaloneCodeEditor) => {
 /**
  * @deprecated Use `registerCompletion` instead. This function will be removed in a future version.
  */
-export const registerCopilot = registerCompletion;
+export const registerCopilot = (
+  ...args: Parameters<typeof registerCompletion>
+) => {
+  logWarning(
+    'The `registerCopilot` function is deprecated. Use `registerCompletion` instead.',
+    LoggerContext.DEPRECATED_COPILOT_REGISTRATION,
+  );
+
+  return registerCompletion(...args);
+};

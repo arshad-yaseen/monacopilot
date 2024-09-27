@@ -25,12 +25,14 @@
     - [Filename](#filename)
     - [Completions for Specific Technologies](#completions-for-specific-technologies)
     - [Max Context Lines](#max-context-lines)
+    - [Handling Errors](#handling-errors)
+    - [Request Options](#request-options)
+      - [Custom Headers](#custom-headers)
 - [Copilot Options](#copilot-options)
   - [Changing the Provider and Model](#changing-the-provider-and-model)
   - [Custom Model](#custom-model)
 - [Completion Request Options](#completion-request-options)
-  - [Custom Headers](#custom-headers)
-  - [Custom Prompt](#custom-prompt)
+  - [Custom Headers for AI Model Requests](#custom-headers-for-ai-model-requests)
 - [Select and Edit](#select-and-edit)
 - [Contributing](#contributing)
 
@@ -252,6 +254,39 @@ registerCompletion(monaco, editor, {
 
 > **Note:** If you're using `Groq` as your provider, it's recommended to set `maxContextLines` to `60` or less due to its low rate limits and lack of pay-as-you-go pricing. However, `Groq` is expected to offer pay-as-you-go pricing in the near future.
 
+### Request Options
+
+You can customize the `fetch` request made by Monacopilot to the specified endpoint by using the `requestOptions` parameter in the `registerCompletion` function.
+
+#### Custom Headers
+
+You can include custom headers in the requests sent to the endpoint specified in the `registerCompletion` function.
+
+```javascript
+registerCompletion(monaco, editor, {
+  endpoint: 'https://api.example.com/complete',
+  requestOptions: {
+    headers: {
+      'X-Custom-Header': 'custom-value',
+    },
+  },
+});
+```
+
+### Handling Errors
+
+You can handle errors that occur during completion requests by providing an `onError` function when calling `registerCompletion`. This allows you to customize error handling and logging based on your application's needs.
+
+This will disable the default error handling and logging behavior of Monacopilot.
+
+```javascript
+registerCompletion(monaco, editor, {
+  onError: error => {
+    console.error(error);
+  },
+});
+```
+
 ## Copilot Options
 
 ### Changing the Provider and Model
@@ -330,7 +365,7 @@ The `transformResponse` function must return an object with the `text` property.
 
 ## Completion Request Options
 
-### Custom Headers
+### Custom Headers for AI Model Requests
 
 You can add custom headers to the provider's completion requests. For example, if you select `OpenAI` as your provider, you can add a custom header to the OpenAI completion requests made by Monacopilot.
 

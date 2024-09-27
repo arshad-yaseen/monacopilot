@@ -1,12 +1,13 @@
-import {ErrorContext, handleError} from '../../error';
+import {logError} from '../../logger';
 import {
-  CompletionMetadata,
   CompletionMode,
   CompletionRequestBody,
   CompletionResponse,
+  ConstructCompletionMetadataParams,
   CursorPosition,
   EditorModel,
   FetchCompletionItemParams,
+  LoggerContext,
   RelatedFile,
 } from '../../types';
 import {
@@ -26,41 +27,47 @@ const CONTENT_TYPE_JSON = 'application/json';
  * @returns {Promise<string | null>} The completion item or null if an error occurs or the request is aborted.
  */
 export const fetchCompletionItem = async ({
-  filename,
-  endpoint,
-  language,
-  technologies,
-  relatedFiles,
   mdl,
   pos,
-  maxContextLines,
+  ...options
 }: FetchCompletionItemParams): Promise<string | null> => {
+  const {endpoint, requestOptions, onError} = options;
+
+  const {headers} = requestOptions ?? {};
+
   try {
-    const {completion} = await HTTP.POST<
+    const {completion, error} = await HTTP.POST<
       CompletionResponse,
       CompletionRequestBody
     >(
       endpoint,
       {
         completionMetadata: constructCompletionMetadata({
-          filename,
           pos,
           mdl,
-          language,
-          technologies,
-          relatedFiles,
-          maxContextLines,
+          options,
         }),
       },
       {
-        headers: {'Content-Type': CONTENT_TYPE_JSON},
-        error: 'Error while fetching completion item',
+        headers: {
+          'Content-Type': CONTENT_TYPE_JSON,
+          ...headers,
+        },
+        fallbackError: 'Error while fetching completion item',
       },
     );
 
+    if (error) {
+      throw new Error(error);
+    }
+
     return completion;
   } catch (err) {
-    handleError(err, ErrorContext.FETCH_COMPLETION_ITEM);
+    if (onError) {
+      onError(err as Error);
+    } else {
+      logError(err, LoggerContext.FETCH_COMPLETION_ITEM);
+    }
 
     return null;
   }
@@ -70,17 +77,13 @@ export const fetchCompletionItem = async ({
  * Constructs the metadata required for fetching a completion item.
  */
 export const constructCompletionMetadata = ({
-  filename,
   pos,
   mdl,
-  language,
-  technologies,
-  relatedFiles,
-  maxContextLines,
-}: Omit<
-  FetchCompletionItemParams,
-  'text' | 'endpoint' | 'token' | 'abortSignal'
->): CompletionMetadata => {
+  options,
+}: ConstructCompletionMetadataParams) => {
+  const {filename, language, technologies, relatedFiles, maxContextLines} =
+    options;
+
   const completionMode = determineCompletionMode(pos, mdl);
 
   // Determine the divisor based on the presence of related files

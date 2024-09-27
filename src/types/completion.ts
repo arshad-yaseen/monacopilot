@@ -65,11 +65,6 @@ export interface RegisterCompletionOptions {
    */
   technologies?: Technologies;
   /**
-   * @deprecated
-   * Use `relatedFiles` instead.
-   */
-  externalContext?: RelatedFile[];
-  /**
    * Helps to give more relevant completions based on the full context.
    * You can include things like the contents/codes of other files in the same workspace.
    */
@@ -83,6 +78,23 @@ export interface RegisterCompletionOptions {
    * since `Groq` does not implement pay-as-you-go pricing and has only low rate limits.
    */
   maxContextLines?: number;
+  /**
+   * Additional options to include in the request sent to the endpoint specified in the `registerCompletion` function.
+   */
+  requestOptions?: RegisterCompletionRequestOptions;
+  /**
+   * Callback function that is called when an error occurs during the completion request.
+   * This function allows you to handle errors gracefully and provide appropriate feedback to the user.
+   * @param error - The error object containing information about the encountered error.
+   */
+  onError?: (error: Error) => void;
+}
+
+export interface RegisterCompletionRequestOptions {
+  /**
+   * Custom headers to include in the request sent to the endpoint specified in the `registerCompletion` function.
+   */
+  headers?: Record<string, string>;
 }
 
 export enum TriggerType {
@@ -139,7 +151,7 @@ export interface CompletionRequestBody {
 
 export interface CompletionRequestOptions {
   /**
-   * Additional headers to include in the provider's completion requests.
+   * Custom headers to include in the request to the AI provider.
    */
   headers?: Record<string, string>;
   /**
@@ -206,16 +218,15 @@ export interface CompletionMetadata {
   };
 }
 
-export interface FetchCompletionItemParams {
-  text: string;
-  language: string;
-  endpoint: Endpoint;
-  filename?: Filename;
-  technologies?: Technologies;
-  relatedFiles?: RelatedFile[];
-  maxContextLines?: number;
+export interface FetchCompletionItemParams extends RegisterCompletionOptions {
   mdl: EditorModel;
   pos: CursorPosition;
+}
+
+export interface ConstructCompletionMetadataParams {
+  mdl: EditorModel;
+  pos: CursorPosition;
+  options: RegisterCompletionOptions;
 }
 
 export interface CompletionCacheItem {

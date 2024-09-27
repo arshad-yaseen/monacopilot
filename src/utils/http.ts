@@ -6,7 +6,7 @@ interface RequestOptions<
 > {
   body?: MethodType extends 'POST' | 'PUT' ? BodyType : never;
   headers?: HeadersInit;
-  error?: string;
+  fallbackError?: string;
   signal?: AbortSignal;
 }
 
@@ -38,7 +38,7 @@ const request = async <
 
   if (!response.ok) {
     throw new Error(
-      `${options.error || 'Network error'}: ${response.statusText}`,
+      `${response.statusText || options.fallbackError || 'Network error'}`,
     );
   }
 

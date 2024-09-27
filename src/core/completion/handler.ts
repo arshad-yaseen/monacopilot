@@ -1,10 +1,11 @@
 import {CompletionValidator} from '../../classes';
 import {CompletionCache} from '../../classes/completion-cache';
-import {ErrorContext, handleError} from '../../error';
 import {fetchCompletionItem} from '../../helpers';
+import {logError} from '../../logger';
 import {
   EditorInlineCompletionsResult,
   InlineCompletionHandlerParams,
+  LoggerContext,
   TriggerType,
 } from '../../types';
 import {asyncDebounce, getTextBeforeCursorInLine} from '../../utils';
@@ -50,11 +51,6 @@ const handleInlineCompletions = async ({
 }: InlineCompletionHandlerParams): Promise<EditorInlineCompletionsResult> => {
   const {trigger = TriggerType.OnIdle, ...restOptions} = options;
 
-  // handle the deprecated `externalContext` option until it's removed
-  if (restOptions.externalContext) {
-    restOptions.relatedFiles = restOptions.externalContext;
-  }
-
   if (!new CompletionValidator(pos, mdl).shouldProvideCompletions()) {
     return createInlineCompletionResult([]);
   }
@@ -87,10 +83,9 @@ const handleInlineCompletions = async ({
     });
 
     const completion = await fetchCompletion({
-      ...restOptions,
-      text: mdl.getValue(),
       mdl,
       pos,
+      ...restOptions,
     });
 
     if (completion) {
@@ -114,10 +109,13 @@ const handleInlineCompletions = async ({
       ]);
     }
   } catch (err) {
-    if (isCancellationError(err)) {
-      return createInlineCompletionResult([]);
+    if (options.onError) {
+      options.onError(err as Error);
+    } else if (!isCancellationError(err)) {
+      logError(err, LoggerContext.FETCH_COMPLETION_ITEM);
     }
-    handleError(err, ErrorContext.FETCH_COMPLETION_ITEM);
+
+    return createInlineCompletionResult([]);
   }
 
   return createInlineCompletionResult([]);
