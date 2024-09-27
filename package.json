@@ -17,8 +17,7 @@
     "lint": "eslint . --ext .ts,.tsx --fix",
     "lint:test-ui": "pnpm -C tests/ui lint",
     "format": "prettier --write .",
-    "pre-commit": "pnpm build && pnpm format && pnpm type-check && pnpm lint && pnpm lint:test-ui",
-    "release": "release-it"
+    "validate": "pnpm build && pnpm format && pnpm type-check && pnpm lint && pnpm lint:test-ui"
   },
   "devDependencies": {
     "@anthropic-ai/sdk": "^0.27.3",
@@ -29,13 +28,13 @@
     "monaco-editor": "^0.52.0",
     "openai": "^4.60.1",
     "prettier": "^3.2.5",
-    "release-it": "^17.2.1",
     "tsup": "^8.0.2",
     "typescript": "^5.4.3",
     "vitest": "^2.0.5"
   },
   "keywords": [
     "monaco-editor",
+    "monaco",
     "ai",
     "auto-completion",
     "code-completion",
@@ -53,5 +52,5 @@
     }
   ],
   "license": "MIT",
-  "author": "Arshad Yaseen <m@arshadyaseen.com>"
+  "author": "Arshad Yaseen <m@arshadyaseen.com> (https://arshadyaseen.com)"
 }
