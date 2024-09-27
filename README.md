@@ -472,7 +472,7 @@ By using a custom prompt, you can guide the model to generate completions that b
 
 ## Using a Different Language for the API Handler
 
-While the example in this documentation uses JavaScript/Node.js (which is recommended), you can set up the API handler in any language or framework. For JavaScript, Monacopilot provides a built-in function that handles all the necessary steps, such as generating the prompt, sending it to the model, and processing the response. However, if you're using a different language, you'll need to implement these steps manually. Here's a general approach to implement the handler in your preferred language:
+While the example in this documentation uses JavaScript/Node.js (which is recommended), you can set up the API handler in any language or framework. For JavaScript, Monacopilot provides a built-in function that handles all the necessary steps, such as generating the prompt, sending it to the model, and processing the response. However, if you're using a different language, you'll need to implement these steps manually until Monacopilot supports your language. Here's a general approach to implement the handler in your preferred language:
 
 1. Create an endpoint that accepts POST requests (e.g., `/complete`).
 2. The endpoint should expect a JSON body containing completion metadata.
