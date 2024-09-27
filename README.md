@@ -86,7 +86,7 @@ app.post('/complete', async (req, res) => {
 app.listen(port);
 ```
 
-If you prefer to use a different programming language for your API handler, please refer to the section [Using a Different Language for the API Handler](#using-a-different-language-for-the-api-handler) for guidance on implementing the handler in your chosen language.
+If you prefer to use a different programming language for your API handler in cases where your backend is not in JavaScript, please refer to the section [Using a Different Language for the API Handler](#using-a-different-language-for-the-api-handler) for guidance on implementing the handler in your chosen language.
 
 Now, Monacopilot is set up to send completion requests to the `/complete` endpoint and receive completions in response.
 
@@ -543,6 +543,19 @@ code without additional comments or explanations."""
             'completion': None,
             'error': str(e)
         }
+```
+
+Now, Monacopilot is set up to send completion requests to the `/complete` endpoint and receive completions in response.
+
+```javascript
+registerCompletion(monaco, editor, {
+  endpoint: 'https://my-python-api.com/complete',
+  requestOptions: {
+    headers: {
+      'X-Custom-Header': 'custom-value',
+    },
+  },
+});
 ```
 
 ## Select and Edit
