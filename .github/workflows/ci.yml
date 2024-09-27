@@ -84,5 +84,5 @@ jobs:
             @semantic-release/exec@5
             @semantic-release/git@9
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
