@@ -416,16 +416,18 @@ copilot.complete({
 
 The `customPrompt` function receives a `completionMetadata` object, which contains information about the current editor state and can be used to tailor the prompt.
 
-| Property           | Type                                     | Description                                                                                                                                       |
-| ------------------ | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `language`         | `string`                                 | The programming language of the code.                                                                                                             |
-| `cursorPosition`   | `{ lineNumber: number; column: number }` | The current cursor position in the editor.                                                                                                        |
-| `filename`         | `string` or `undefined`                  | The name of the file being edited. Only available if you have provided the `filename` option in the `registerCompletion` function.                |
-| `technologies`     | `string[]` or `undefined`                | An array of technologies used in the project. Only available if you have provided the `technologies` option in the `registerCompletion` function. |
-| `context`          | `object` or `undefined`                  | Additional context from related files. Only available if you have provided the `context` option in the `registerCompletion` function.             |
-| `textAfterCursor`  | `string`                                 | The text that appears after the cursor.                                                                                                           |
-| `textBeforeCursor` | `string`                                 | The text that appears before the cursor.                                                                                                          |
-| `editorState`      | `object`                                 | An object containing the `completionMode` property.                                                                                               |
+##### Completion Metadata
+
+| Property           | Type                                     | Description                                                                                                                                                                   |
+| ------------------ | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `language`         | `string`                                 | The programming language of the code.                                                                                                                                         |
+| `cursorPosition`   | `{ lineNumber: number; column: number }` | The current cursor position in the editor.                                                                                                                                    |
+| `filename`         | `string` or `undefined`                  | The name of the file being edited. Only available if you have provided the `filename` option in the `registerCompletion` function.                                            |
+| `technologies`     | `string[]` or `undefined`                | An array of technologies used in the project. Only available if you have provided the `technologies` option in the `registerCompletion` function.                             |
+| `relatedFiles`     | `object[]` or `undefined`                | An array of objects containing the `path` and `content` of related files. Only available if you have provided the `relatedFiles` option in the `registerCompletion` function. |
+| `textAfterCursor`  | `string`                                 | The text that appears after the cursor.                                                                                                                                       |
+| `textBeforeCursor` | `string`                                 | The text that appears before the cursor.                                                                                                                                      |
+| `editorState`      | `object`                                 | An object containing the `completionMode` property.                                                                                                                           |
 
 The `editorState.completionMode` can be one of the following:
 
@@ -470,7 +472,7 @@ By using a custom prompt, you can guide the model to generate completions that b
 
 ## Using a Different Language for the API Handler
 
-While the previous example used Node.js, you can set up the API handler in any language or framework. Here's a general approach to implement the handler in your preferred language:
+While the example in this documentation uses JavaScript/Node.js (which is recommended), you can set up the API handler in any language or framework. For JavaScript, Monacopilot provides a built-in function that handles all the necessary steps, such as generating the prompt, sending it to the model, and processing the response. However, if you're using a different language, you'll need to implement these steps manually. Here's a general approach to implement the handler in your preferred language:
 
 1. Create an endpoint that accepts POST requests (e.g., `/complete`).
 2. The endpoint should expect a JSON body containing completion metadata.
@@ -496,16 +498,26 @@ While the previous example used Node.js, you can set up the API handler in any l
 - The prompt should instruct the model to return only the completion text, without any additional formatting or explanations.
 - The completion text should be ready for direct insertion into the editor.
 
+Check out the [prompt.ts](https://github.com/arshad-yaseen/monacopilot/blob/main/src/prompt.ts) file to see how Monacopilot generates the prompt. This will give you an idea of how to structure the prompt for your AI model to achieve the best completions.
+
 ### Metadata Overview
 
-The request body will include these key pieces of information:
+The request body's `completionMetadata` object contains essential information for generating accurate completions:
 
-- `language`: The programming language being used
-- `textBeforeCursor`: Code before the cursor position
-- `textAfterCursor`: Code after the cursor position
-- `filename`: Name of the file being edited
-- `cursorPosition`: Current cursor location (line and column)
-- `editorState`: Information about the completion mode (insert, complete, or continue)
+| Field              | Description                                                  |
+| ------------------ | ------------------------------------------------------------ |
+| `language`         | The programming language of the current file                 |
+| `textBeforeCursor` | Code preceding the cursor position                           |
+| `textAfterCursor`  | Code following the cursor position                           |
+| `filename`         | Name of the file being edited                                |
+| `technologies`     | Array of technologies/frameworks used in the project         |
+| `relatedFiles`     | Array of related files and their contents                    |
+| `cursorPosition`   | Object containing the current cursor's line and column       |
+| `editorState`      | Object with `completionMode` (insert, complete, or continue) |
+
+For a comprehensive breakdown of the `completionMetadata` object and its properties, see the [Completion Metadata](#completion-metadata) section.
+
+If you need additional metadata fields, please [open an issue](https://github.com/arshad-yaseen/monacopilot/issues/new) on our GitHub repository.
 
 ### Example Implementation (Python with FastAPI)
 
