@@ -32,10 +32,8 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
+      - name: 📥 Install dependencies
+        run: npm i
 
       - name: 🧪 Run validate script
         run: npm run validate
@@ -66,10 +64,8 @@ jobs:
         with:
           node-version: 14
 
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
+      - name: 📥 Install dependencies
+        run: npm i
 
       - name: 🏗 Run build script
         run: npm run build
