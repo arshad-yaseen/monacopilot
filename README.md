@@ -281,7 +281,6 @@ This will disable the default error handling and logging behavior of Monacopilot
 
 ```javascript
 registerCompletion(monaco, editor, {
-  endpoint: 'https://api.example.com/complete',
   onError: error => {
     console.error(error);
   },
