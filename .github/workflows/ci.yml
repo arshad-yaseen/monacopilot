@@ -50,7 +50,6 @@ jobs:
   release:
     needs: main
     runs-on: ubuntu-latest
-    if: '!contains(github.event.head_commit.message, "[skip ci]")'
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.6.0
