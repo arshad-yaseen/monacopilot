@@ -562,11 +562,7 @@ Now, Monacopilot is set up to send completion requests to the `/complete` endpoi
 ```javascript
 registerCompletion(monaco, editor, {
   endpoint: 'https://my-python-api.com/complete',
-  requestOptions: {
-    headers: {
-      'X-Custom-Header': 'custom-value',
-    },
-  },
+  // ... other options
 });
 ```
 
