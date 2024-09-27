@@ -20,7 +20,10 @@ export default function Home() {
       endpoint: '/api/complete',
       language: 'javascript',
       maxContextLines: 60,
-      trigger: 'onDemand',
+      trigger: 'onDemands',
+      onError: error => {
+        console.error('hello', error);
+      },
     });
 
     monaco.editor.addEditorAction({
