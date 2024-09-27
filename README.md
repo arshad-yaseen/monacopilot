@@ -479,13 +479,16 @@ While the example in this documentation uses JavaScript/Node.js (which is recomm
 3. Use the metadata to construct a prompt for your AI model.
 4. Send the prompt to your chosen AI model and get the completion.
 5. Return a JSON response with the following structure:
+
    ```json
    {
      "completion": "Generated completion text",
      "error": null
    }
    ```
+
    Or in case of an error:
+
    ```json
    {
      "completion": null,
@@ -502,22 +505,7 @@ Check out the [prompt.ts](https://github.com/arshad-yaseen/monacopilot/blob/main
 
 ### Metadata Overview
 
-The request body's `completionMetadata` object contains essential information for crafting a prompt for the AI model to generate accurate completions:
-
-| Field              | Description                                                  |
-| ------------------ | ------------------------------------------------------------ |
-| `language`         | The programming language of the current file                 |
-| `textBeforeCursor` | Code preceding the cursor position                           |
-| `textAfterCursor`  | Code following the cursor position                           |
-| `filename`         | Name of the file being edited                                |
-| `technologies`     | Array of technologies/frameworks used in the project         |
-| `relatedFiles`     | Array of related files and their contents                    |
-| `cursorPosition`   | Object containing the current cursor's line and column       |
-| `editorState`      | Object with `completionMode` (insert, complete, or continue) |
-
-For a comprehensive breakdown of the `completionMetadata` object and its properties, see the [Completion Metadata](#completion-metadata) section.
-
-If you need additional metadata fields, please [open an issue](https://github.com/arshad-yaseen/monacopilot/issues/new) on our GitHub repository.
+The request body's `completionMetadata` object contains essential information for crafting a prompt for the AI model to generate accurate completions. See the [Completion Metadata](#completion-metadata) section for more details.
 
 ### Example Implementation (Python with FastAPI)
 
