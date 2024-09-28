@@ -1,0 +1,62 @@
+name: Release
+concurrency: main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      changes: ${{ steps.version.outputs.changes }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install pnpm
+        run: npm i -g pnpm
+
+      - name: Setup node
+        uses: actions/setup-node@main
+        with:
+          node-version: 20.x
+
+      - name: Bump version
+        id: version
+        run: |
+          pnpm install --no-package-lock --no-save @changesets/cli
+          echo ::set-output name=changes::$(npx changeset version 2>&1 | grep -q 'No unreleased changesets found' && echo 'false' || echo 'true')
+      - name: Commit changes
+        if: steps.version.outputs.changes == 'true'
+        run: |
+          git config user.email "m@arshadyaseen.com"
+          git config user.name "Arshad Yaseen"
+          git add -A
+          git commit -m "chore(release): release v$npm_package_version" || echo "No changes to commit"
+          git push
+  build:
+    runs-on: ubuntu-latest
+    needs: version
+    if: always() && needs.version.outputs.changes == 'false'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Enable node
+        uses: actions/setup-node@main
+        with:
+          node-version: 20.x
+          registry-url: 'https://registry.npmjs.org'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Release packages
+        uses: changesets/action@main
+        with:
+          publish: pnpx changeset publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
