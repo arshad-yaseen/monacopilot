@@ -41,7 +41,7 @@ jobs:
   release:
     needs: test
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.event.pull_request.merged == true
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -61,23 +61,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Determine version increment
-        id: version
-        run: |
-          if [[ "$(echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[]')" == "major" ]]; then
-            echo "increment=major" >> $GITHUB_OUTPUT
-          elif [[ "$(echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[]')" == "minor" ]]; then
-            echo "increment=minor" >> $GITHUB_OUTPUT
-          else
-            echo "increment=patch" >> $GITHUB_OUTPUT
-
       - name: Configure Git
         run: |
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
       - name: Execute release
-        run: pnpm release ${{ steps.version.outputs.increment }}
+        run: pnpm release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
