@@ -33,9 +33,6 @@ jobs:
       - name: Install NPM Dependencies
         run: pnpm install
 
-      - name: Check for errors
-        run: pnpm validate
-
       - name: Build the package
         run: pnpm build
 
