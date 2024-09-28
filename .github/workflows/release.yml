@@ -28,8 +28,8 @@ jobs:
       - name: Bump version
         id: version
         run: |
-          pnpm install --no-package-lock --no-save @changesets/cli
-          echo ::set-output name=changes::$(npx changeset version 2>&1 | grep -q 'No unreleased changesets found' && echo 'false' || echo 'true')
+          pnpm add --no-save @changesets/cli
+          echo "changes=$(pnpm dlx changeset version 2>&1 | grep -q 'No unreleased changesets found' && echo 'false' || echo 'true')" >> $GITHUB_OUTPUT
       - name: Commit changes
         if: steps.version.outputs.changes == 'true'
         run: |
@@ -57,6 +57,6 @@ jobs:
       - name: Release packages
         uses: changesets/action@main
         with:
-          publish: pnpx changeset publish
+          publish: pnpm dlx changeset publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
