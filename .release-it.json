@@ -26,48 +26,48 @@
   },
   "plugins": {
     "@release-it/conventional-changelog": {
-      "preset": {
-        "name": "conventionalcommits"
-      },
       "infile": "CHANGELOG.md",
-      "types": [
-        {
-          "type": "feat",
-          "section": "🚀 Features"
-        },
-        {
-          "type": "fix",
-          "section": "🐛 Bug Fixes"
-        },
-        {
-          "type": "docs",
-          "section": "📚 Documentation"
-        },
-        {
-          "type": "style",
-          "section": "💅 Styling"
-        },
-        {
-          "type": "refactor",
-          "section": "🔄 Refactoring"
-        },
-        {
-          "type": "perf",
-          "section": "⚡️ Performance"
-        },
-        {
-          "type": "test",
-          "section": "🧪 Testing"
-        },
-        {
-          "type": "build",
-          "section": "🛠️ Build System"
-        },
-        {
-          "type": "ci",
-          "section": "🔧 CI/CD"
-        }
-      ]
+      "preset": {
+        "name": "conventionalcommits",
+        "types": [
+          {
+            "type": "feat",
+            "section": "🚀 Features"
+          },
+          {
+            "type": "fix",
+            "section": "🐛 Bug Fixes"
+          },
+          {
+            "type": "docs",
+            "section": "📚 Documentation"
+          },
+          {
+            "type": "style",
+            "section": "💅 Styling"
+          },
+          {
+            "type": "refactor",
+            "section": "🔄 Refactoring"
+          },
+          {
+            "type": "perf",
+            "section": "⚡️ Performance"
+          },
+          {
+            "type": "test",
+            "section": "🧪 Testing"
+          },
+          {
+            "type": "build",
+            "section": "🛠️ Build System"
+          },
+          {
+            "type": "ci",
+            "section": "🔧 CI/CD"
+          }
+        ]
+      }
     }
   }
 }
