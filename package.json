@@ -18,8 +18,7 @@
     "lint:test-ui": "pnpm -C tests/ui lint",
     "validate": "pnpm build && pnpm format && pnpm type-check && pnpm lint && pnpm lint:test-ui",
     "format": "prettier --write .",
-    "release": "pnpm validate && changeset version",
-    "version": "changeset version"
+    "release": "changeset version"
   },
   "devDependencies": {
     "@anthropic-ai/sdk": "^0.27.3",
