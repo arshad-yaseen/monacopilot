@@ -28,7 +28,7 @@ jobs:
       - name: Bump version
         id: version
         run: |
-          pnpm install --no-frozen-lockfile @changesets/cli
+          pnpm install @changesets/cli
           echo "changes=$(pnpm dlx changeset version 2>&1 | grep -q 'No unreleased changesets found' && echo 'false' || echo 'true')" >> $GITHUB_OUTPUT
       - name: Commit changes
         if: steps.version.outputs.changes == 'true'
