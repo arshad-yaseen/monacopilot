@@ -1,7 +1,6 @@
 {
   "git": {
     "requireBranch": "main",
-    "changelog": "npx auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/main/templates/changelog-compact.hbs",
     "commitMessage": "chore(release): v${version} [skip-release]",
     "publish": true,
     "requireCommits": true,
