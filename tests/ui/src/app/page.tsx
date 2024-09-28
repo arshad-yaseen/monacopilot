@@ -20,19 +20,6 @@ export default function Home() {
       endpoint: '/api/complete',
       language: 'javascript',
       maxContextLines: 60,
-      trigger: 'onDemand',
-    });
-
-    monaco.editor.addEditorAction({
-      id: 'monacopilot.triggerCompletion',
-      label: 'Complete Code',
-      contextMenuGroupId: 'navigation',
-      keybindings: [
-        monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.Space,
-      ],
-      run: () => {
-        completion.trigger();
-      },
     });
 
     return () => {
