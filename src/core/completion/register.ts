@@ -1,8 +1,7 @@
-import {logError, logWarning} from '../../logger';
+import {logger} from '../../logger';
 import {
   CompletionRegistration,
   Disposable,
-  LoggerContext,
   Monaco,
   RegisterCompletionOptions,
   StandaloneCodeEditor,
@@ -126,7 +125,7 @@ export const registerCompletion = (
     if (options.onError) {
       options.onError(error as Error);
     } else {
-      logError(error, LoggerContext.REGISTER_COMPLETION);
+      logger.logError(error);
     }
 
     return {
@@ -149,9 +148,8 @@ export const registerCompletion = (
 const handleTriggerCompletion = (editor: StandaloneCodeEditor) => {
   const state = editorCompletionState.get(editor);
   if (!state) {
-    logWarning(
+    logger.warn(
       'Completion is not registered. Use `registerCompletion` to register completion first.',
-      LoggerContext.COMPLETION_NOT_REGISTERED,
     );
     return;
   }
@@ -165,9 +163,8 @@ const handleTriggerCompletion = (editor: StandaloneCodeEditor) => {
 export const registerCopilot = (
   ...args: Parameters<typeof registerCompletion>
 ) => {
-  logWarning(
+  logger.warn(
     'The `registerCopilot` function is deprecated. Use `registerCompletion` instead.',
-    LoggerContext.DEPRECATED_COPILOT_REGISTRATION,
   );
 
   return registerCompletion(...args);

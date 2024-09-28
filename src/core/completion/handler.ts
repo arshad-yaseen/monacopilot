@@ -1,11 +1,10 @@
 import {CompletionValidator} from '../../classes';
 import {CompletionCache} from '../../classes/completion-cache';
 import {fetchCompletionItem} from '../../helpers';
-import {logError} from '../../logger';
+import {logger} from '../../logger';
 import {
   EditorInlineCompletionsResult,
   InlineCompletionHandlerParams,
-  LoggerContext,
   TriggerType,
 } from '../../types';
 import {asyncDebounce, getTextBeforeCursorInLine} from '../../utils';
@@ -112,7 +111,7 @@ const handleInlineCompletions = async ({
     if (options.onError) {
       options.onError(err as Error);
     } else if (!isCancellationError(err)) {
-      logError(err, LoggerContext.FETCH_COMPLETION_ITEM);
+      logger.logError(err);
     }
 
     return createInlineCompletionResult([]);
