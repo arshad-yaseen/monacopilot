@@ -1,15 +1,9 @@
 {
   "git": {
-    "requireBranch": "main",
-    "changelog": "npx auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/main/templates/changelog-compact.hbs"
+    "requireBranch": "main"
   },
   "hooks": {
-    "before:init": ["pnpm validate"],
-    "after:bump": [
-      "npx auto-changelog -p",
-      "git add .",
-      "git commit -m \"chore: update changelog for v${version}\""
-    ]
+    "before:init": ["pnpm validate"]
   },
   "github": {
     "release": true,
