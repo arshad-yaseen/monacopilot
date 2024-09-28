@@ -71,6 +71,19 @@ jobs:
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
+      - name: Check for changes
+        id: git-check
+        run: |
+          git status --porcelain
+          echo "::set-output name=changes::$(git status --porcelain)"
+
+      - name: Commit changes if any
+        if: steps.git-check.outputs.changes
+        run: |
+          git add .
+          git commit -m "chore: update dependencies and generated files [skip ci]"
+          git push
+
       - name: Execute release
         run: pnpm release --ci
         env:
