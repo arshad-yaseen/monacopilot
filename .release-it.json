@@ -1,0 +1,21 @@
+{
+  "git": {
+    "requireBranch": "main",
+    "changelog": "npx auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/main/templates/changelog-compact.hbs"
+  },
+  "hooks": {
+    "before:init": ["pnpm validate"],
+    "after:bump": "npx auto-changelog -p"
+  },
+  "github": {
+    "release": true,
+    "comments": {
+      "submit": false,
+      "issue": ":rocket: _This issue has been resolved in v${version}. See [${releaseName}](${releaseUrl}) for release notes._",
+      "pr": ":rocket: _This pull request is included in v${version}. See [${releaseName}](${releaseUrl}) for release notes._"
+    }
+  },
+  "npm": {
+    "publish": true
+  }
+}
