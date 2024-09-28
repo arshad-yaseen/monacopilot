@@ -67,7 +67,7 @@ jobs:
           fi
 
       - name: Execute Release
-        run: pnpm release -- -i ${{ env.SEMVER }}
+        run: pnpm release ${{ env.SEMVER }} --ci
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
