@@ -1,7 +1,11 @@
 {
   "git": {
     "requireBranch": "main",
-    "changelog": "npx auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/main/templates/changelog-compact.hbs"
+    "changelog": "npx auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/main/templates/changelog-compact.hbs",
+    "commitMessage": "chore: release v${version}",
+    "publish": true,
+    "requireCommits": true,
+    "requireCleanWorkingDir": false
   },
   "hooks": {
     "before:init": ["pnpm validate"],
