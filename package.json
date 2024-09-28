@@ -19,6 +19,14 @@
     "format": "prettier --write .",
     "validate": "pnpm build && pnpm format && pnpm type-check && pnpm lint && pnpm lint:test-ui"
   },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/npm",
+      "@semantic-release/github"
+    ]
+  },
   "devDependencies": {
     "@anthropic-ai/sdk": "^0.27.3",
     "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
