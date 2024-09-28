@@ -8,8 +8,7 @@
     "tagAnnotation": "v${version}"
   },
   "hooks": {
-    "before:init": ["pnpm validate"],
-    "after:bump": "npx auto-changelog -p"
+    "before:init": ["pnpm validate"]
   },
   "github": {
     "release": true,
