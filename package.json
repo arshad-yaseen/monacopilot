@@ -41,8 +41,8 @@
     "ai",
     "auto-completion",
     "code-completion",
-    "github-copilot",
-    "copilot"
+    "copilot",
+    "github-copilot"
   ],
   "repository": {
     "type": "git",
