@@ -1,10 +1,13 @@
 name: Release
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       semver:
-        description: 'Version'
+        description: 'Version increment type'
         required: true
         default: 'patch'
         type: choice
@@ -54,8 +57,17 @@ jobs:
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
-      - name: Execute release
-        run: pnpm release -- -i ${{ inputs.semver }}
+      - name: Set SemVer
+        id: set_semver
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "SEMVER=${{ github.event.inputs.semver }}" >> $GITHUB_ENV
+          else
+            echo "SEMVER=patch" >> $GITHUB_ENV
+          fi
+
+      - name: Execute Release
+        run: pnpm release -- -i ${{ env.SEMVER }}
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
