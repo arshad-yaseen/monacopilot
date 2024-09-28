@@ -7,7 +7,6 @@
     [
       "@semantic-release/release-notes-generator",
       {
-        "preset": "conventionalCommits",
         "writerOpts": {
           "groupBy": "type",
           "mainTemplate": "\n# v{{version}}\n\n{{#each commitGroups}}\n\n### {{title}}\n{{#each commits}}\n- **{{scope}}**: {{subject}} - by [@{{author}}]({{authorLink}}) ({{shortHash}})\n{{/each}}\n\n{{/each}}\n"
@@ -65,7 +64,6 @@
     [
       "@semantic-release/commit-analyzer",
       {
-        "preset": "conventionalCommits",
         "releaseRules": [
           {
             "type": "docs",
