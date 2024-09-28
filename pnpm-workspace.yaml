@@ -1,5 +1,4 @@
 packages:
   - 'tests/ui'
-  - 'docs'
   - 'examples'
   - '.'

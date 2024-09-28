@@ -17,10 +17,15 @@
     "lint": "eslint . --ext .ts,.tsx --fix",
     "lint:test-ui": "pnpm -C tests/ui lint",
     "validate": "pnpm build && pnpm format && pnpm type-check && pnpm lint && pnpm lint:test-ui",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "release": "changeset version"
   },
   "devDependencies": {
     "@anthropic-ai/sdk": "^0.27.3",
+    "@changesets/changelog-github": "^0.5.0",
+    "@changesets/cli": "^2.27.8",
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
     "@typescript-eslint/eslint-plugin": "^7.3.1",
     "eslint": "^8.57.0",
