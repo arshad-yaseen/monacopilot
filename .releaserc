@@ -4,9 +4,119 @@
     "+([0-9])?(.{+([0-9]),x}).x"
   ],
   "plugins": [
-    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/release-notes-generator",
+      {
+        "preset": "conventionalcommits",
+        "writerOpts": {
+          "groupBy": "type",
+          "mainTemplate": "\n# v{{version}}\n\n{{#each commitGroups}}\n\n### {{title}}\n{{#each commits}}\n- **{{scope}}**: {{subject}} - by [@{{author}}]({{authorLink}}) ({{shortHash}})\n{{/each}}\n\n{{/each}}\n"
+        },
+        "presetConfig": {
+          "types": [
+            {
+              "type": "feat",
+              "section": "🚀 Features",
+              "hidden": false
+            },
+            {
+              "type": "fix",
+              "section": "🐛 Bug Fixes",
+              "hidden": false
+            },
+            {
+              "type": "docs",
+              "section": "📚 Documentation",
+              "hidden": false
+            },
+            {
+              "type": "chore",
+              "section": "✨ Maintenance",
+              "hidden": false
+            },
+            {
+              "type": "perf",
+              "section": "⚡ Performance Improvements",
+              "hidden": false
+            },
+            {
+              "type": "ci",
+              "section": "🚀 CI/CD",
+              "hidden": false
+            },
+            {
+              "type": "test",
+              "section": "🧪 Testing",
+              "hidden": false
+            }
+          ]
+        },
+        "parserOpts": {
+          "noteKeywords": [
+            "BREAKING CHANGE",
+            "BREAKING CHANGES",
+            "BREAKING"
+          ]
+        }
+      }
+    ],
     "@semantic-release/changelog",
     "@semantic-release/npm",
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits",
+        "releaseRules": [
+          {
+            "type": "docs",
+            "scope": "README",
+            "release": "patch"
+          },
+          {
+            "type": "refactor",
+            "release": "patch"
+          },
+          {
+            "type": "style",
+            "release": "patch"
+          },
+          {
+            "type": "feat",
+            "release": "minor"
+          },
+          {
+            "type": "fix",
+            "release": "patch"
+          },
+          {
+            "type": "perf",
+            "release": "patch"
+          },
+          {
+            "type": "build",
+            "release": "patch"
+          },
+          {
+            "type": "ci",
+            "release": "patch"
+          },
+          {
+            "type": "chore",
+            "release": "patch"
+          },
+          {
+            "type": "test",
+            "release": "patch"
+          }
+        ],
+        "parserOpts": {
+          "noteKeywords": [
+            "BREAKING CHANGE",
+            "BREAKING CHANGES"
+          ]
+        }
+      }
+    ],
     "@semantic-release/github"
   ]
 }
