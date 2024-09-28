@@ -1,4 +1,4 @@
-import {logError} from '../../logger';
+import {logger} from '../../logger';
 import {
   CompletionMode,
   CompletionRequestBody,
@@ -7,7 +7,6 @@ import {
   CursorPosition,
   EditorModel,
   FetchCompletionItemParams,
-  LoggerContext,
   RelatedFile,
 } from '../../types';
 import {
@@ -66,7 +65,7 @@ export const fetchCompletionItem = async ({
     if (onError) {
       onError(err as Error);
     } else {
-      logError(err, LoggerContext.FETCH_COMPLETION_ITEM);
+      logger.logError(err);
     }
 
     return null;
