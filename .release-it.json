@@ -2,10 +2,11 @@
   "git": {
     "requireBranch": "main",
     "changelog": "npx auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/main/templates/changelog-compact.hbs",
-    "commitMessage": "chore: release v${version}",
+    "commitMessage": "chore(release): v${version} [skip-release]",
     "publish": true,
     "requireCommits": true,
-    "requireCleanWorkingDir": false
+    "requireCleanWorkingDir": false,
+    "tagAnnotation": "Monacopilot v${version}"
   },
   "hooks": {
     "before:init": ["pnpm validate"],
@@ -17,7 +18,8 @@
       "submit": false,
       "issue": ":rocket: _This issue has been resolved in v${version}. See [${releaseName}](${releaseUrl}) for release notes._",
       "pr": ":rocket: _This pull request is included in v${version}. See [${releaseName}](${releaseUrl}) for release notes._"
-    }
+    },
+    "releaseName": "Monacopilot v${version}"
   },
   "npm": {
     "publish": true
