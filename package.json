@@ -18,15 +18,19 @@
     "lint:test-ui": "pnpm -C tests/ui lint",
     "validate": "pnpm build && pnpm format && pnpm type-check && pnpm lint && pnpm lint:test-ui",
     "format": "prettier --write .",
-    "release": "release-it"
+    "release": "release-it",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@anthropic-ai/sdk": "^0.27.3",
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
+    "@release-it/conventional-changelog": "^8.0.2",
     "@typescript-eslint/eslint-plugin": "^7.3.1",
-    "auto-changelog": "^2.5.0",
     "eslint": "^8.57.0",
     "groq-sdk": "^0.3.2",
+    "husky": "^9.1.6",
     "monaco-editor": "^0.52.0",
     "openai": "^4.60.1",
     "prettier": "^3.2.5",
