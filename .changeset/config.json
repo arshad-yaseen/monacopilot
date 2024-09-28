@@ -9,6 +9,5 @@
   "linked": [],
   "access": "public",
   "baseBranch": "main",
-  "updateInternalDependencies": "patch",
-  "ignore": ["examples/**", "tests/ui/**"]
+  "updateInternalDependencies": "patch"
 }
