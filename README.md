@@ -279,25 +279,6 @@ registerCompletion(monaco, editor, {
 
 > **Note:** If you're using `Groq` as your provider, it's recommended to set `maxContextLines` to `60` or less due to its low rate limits and lack of pay-as-you-go pricing. However, `Groq` is expected to offer pay-as-you-go pricing in the near future.
 
-### Request Options
-
-You can customize the `fetch` request made by Monacopilot to the specified endpoint by using the `requestOptions` parameter in the `registerCompletion` function.
-
-#### Custom Headers
-
-You can include custom headers in the requests sent to the endpoint specified in the `registerCompletion` function.
-
-```javascript
-registerCompletion(monaco, editor, {
-  endpoint: 'https://api.example.com/complete',
-  requestOptions: {
-    headers: {
-      'X-Custom-Header': 'custom-value',
-    },
-  },
-});
-```
-
 ### Handling Errors
 
 You can handle errors that occur during completion requests by providing an `onError` function when calling `registerCompletion`. This allows you to customize error handling and logging based on your application's needs.
@@ -364,7 +345,7 @@ The `requestHandler` should return an object with the following property:
 
 The example below demonstrates how to use the `requestHandler` function for more customized handling:
 
-````javascript
+```javascript
 registerCompletion(monaco, editor, {
   endpoint: 'https://api.example.com/complete',
   // ... other options
@@ -390,13 +371,13 @@ registerCompletion(monaco, editor, {
 
       if (data.error) {
         console.error('API Error:', data.error);
-        return { completion: null };
+        return {completion: null};
       }
 
-      return { completion: data.completion.trim() };
+      return {completion: data.completion.trim()};
     } catch (error) {
       console.error('Fetch error:', error);
-      return { completion: null };
+      return {completion: null};
     }
   },
 });
@@ -413,7 +394,7 @@ const copilot = new Copilot(process.env.OPENAI_API_KEY, {
   provider: 'openai',
   model: 'gpt-4o',
 });
-````
+```
 
 The default provider is `groq`, and the default model is `llama-3-70b`.
 
