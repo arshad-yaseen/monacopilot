@@ -374,7 +374,7 @@ registerCompletion(monaco, editor, {
         headers,
         body: JSON.stringify({
           ...body,
-          custom: 'value',
+          any: 'thing',
         }),
       });
 
