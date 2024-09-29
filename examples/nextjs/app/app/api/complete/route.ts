@@ -10,9 +10,10 @@ export async function POST(req: NextRequest) {
     body,
   });
 
-  // Handle error if you want
   if (error) {
-    return NextResponse.json({error}, {status: 500});
+    // handle error if you want
+    // ...
+    return NextResponse.json({completion: null, error}, {status: 500});
   }
 
   return NextResponse.json({completion}, {status: 200});

@@ -8,9 +8,10 @@ export async function POST(req: Request) {
     body,
   });
 
-  // Handle error if you want
   if (error) {
-    return Response.json({error}, {status: 500});
+    // handle error if you want
+    // ...
+    return Response.json({completion: null, error}, {status: 500});
   }
 
   return Response.json({completion});

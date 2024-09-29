@@ -6,9 +6,10 @@ const copilot = new Copilot(process.env.GROQ_API_KEY!);
 export const action = async ({request}: ActionFunctionArgs) => {
   const body: CompletionRequestBody = await request.json();
   const {completion, error} = await copilot.complete({body});
-  // Handle error if you want
   if (error) {
-    return json({error}, {status: 500});
+    // handle error if you want
+    // ...
+    return json({completion: null, error}, {status: 500});
   }
   return json(completion);
 };
