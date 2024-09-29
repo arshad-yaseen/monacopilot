@@ -90,9 +90,9 @@ export interface RegisterCompletionOptions {
    * You can implement your own logic for fetching and processing completions.
    * The function should return either a string (the completion to be inserted into the editor) or null.
    * @param params - The parameters for the completion request.
-   * @param {string} params.endpoint - The endpoint to fetch the completion item from.
-   * @param {CompletionRequestBody} params.body - The body of the completion item request.
-   * @returns {Promise<string | null>} The completion item or null if an error occurs.
+   * @param {string} params.endpoint - The endpoint to fetch the completion from.
+   * @param {CompletionRequestBody} params.body - The body of the completion request.
+   * @returns {Promise<{completion: string | null}>} An object containing the completion or null if no completion is available.
    */
   requestHandler?: FetchCompletionItemHandler;
 }
