@@ -1,11 +1,17 @@
 
 
-## [0.11.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.0...v0.11.1) (2024-09-29)
+## [0.11.2](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.1...v0.11.2) (2024-09-29)
 
 
 ### 📚 Documentation
 
-* fix code block collision ([f26bbe2](https://github.com/arshad-yaseen/monacopilot/commit/f26bbe27ded19a171db09ec67eda3b2006f030b8))
+* improve api handler section ([25d076c](https://github.com/arshad-yaseen/monacopilot/commit/25d076c1681f788e3784200924dbd9bb19549983))
+
+## [0.11.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.0...v0.11.1) (2024-09-29)
+
+### 📚 Documentation
+
+- fix code block collision ([f26bbe2](https://github.com/arshad-yaseen/monacopilot/commit/f26bbe27ded19a171db09ec67eda3b2006f030b8))
 
 ## [0.11.0](https://github.com/arshad-yaseen/monacopilot/compare/v0.10.19...v0.11.0) (2024-09-29)
 
