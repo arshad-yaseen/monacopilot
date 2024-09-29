@@ -12,9 +12,10 @@ export default async function handler(
     body: req.body,
   });
 
-  // Handle error if you want
   if (error) {
-    res.status(500).json({error});
+    // handle error if you want
+    // ...
+    res.status(500).json({completion: null, error});
   }
 
   res.status(200).json({completion});
