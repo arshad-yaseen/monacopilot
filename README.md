@@ -400,6 +400,7 @@ registerCompletion(monaco, editor, {
     }
   },
 });
+```
 
 ## Copilot Options
 
