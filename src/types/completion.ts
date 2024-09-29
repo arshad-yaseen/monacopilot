@@ -79,23 +79,25 @@ export interface RegisterCompletionOptions {
    */
   maxContextLines?: number;
   /**
-   * Additional options to include in the request sent to the endpoint specified in the `registerCompletion` function.
-   */
-  requestOptions?: RegisterCompletionRequestOptions;
-  /**
    * Callback function that is called when an error occurs during the completion request.
    * This function allows you to handle errors gracefully and provide appropriate feedback to the user.
    * @param error - The error object containing information about the encountered error.
    */
-  onError?: (error: Error) => void;
+  onError?: OnError;
+  /**
+   * Custom fetch completion handler. This function overrides the default fetch completion handler.
+   * It allows you to customize how completion requests are made and responses are processed.
+   * You can implement your own logic for fetching and processing completions.
+   * The function should return either a string (the completion to be inserted into the editor) or null.
+   * @param params - The parameters for the completion request.
+   * @param {string} params.endpoint - The endpoint to fetch the completion item from.
+   * @param {CompletionRequestBody} params.body - The body of the completion item request.
+   * @returns {Promise<string | null>} The completion item or null if an error occurs.
+   */
+  requestHandler?: FetchCompletionItemHandler;
 }
 
-export interface RegisterCompletionRequestOptions {
-  /**
-   * Custom headers to include in the request sent to the endpoint specified in the `registerCompletion` function.
-   */
-  headers?: Record<string, string>;
-}
+export type OnError = (error: Error) => void;
 
 export enum TriggerType {
   OnTyping = 'onTyping',
@@ -218,9 +220,17 @@ export interface CompletionMetadata {
   };
 }
 
-export interface FetchCompletionItemParams extends RegisterCompletionOptions {
-  mdl: EditorModel;
-  pos: CursorPosition;
+export type FetchCompletionItemHandler = (
+  params: FetchCompletionItemParams,
+) => Promise<FetchCompletionItemReturn>;
+
+export type FetchCompletionItemReturn = {
+  completion: string | null;
+};
+
+export interface FetchCompletionItemParams {
+  endpoint: string;
+  body: CompletionRequestBody;
 }
 
 export interface ConstructCompletionMetadataParams {

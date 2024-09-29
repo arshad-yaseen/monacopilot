@@ -26,8 +26,7 @@
     - [Completions for Specific Technologies](#completions-for-specific-technologies)
     - [Max Context Lines](#max-context-lines)
     - [Handling Errors](#handling-errors)
-    - [Request Options](#request-options)
-      - [Custom Headers](#custom-headers)
+    - [Custom Request Handler](#custom-request-handler)
 - [Copilot Options](#copilot-options)
   - [Changing the Provider and Model](#changing-the-provider-and-model)
   - [Custom Model](#custom-model)
@@ -77,13 +76,36 @@ const copilot = new Copilot(process.env.GROQ_API_KEY);
 app.use(express.json());
 
 app.post('/complete', async (req, res) => {
-  const completion = await copilot.complete({
+  const {completion, error} = await copilot.complete({
     body: req.body,
   });
-  res.status(200).json(completion);
+
+  // Handle error if you want
+  if (error) {
+    res.status(500).json({error});
+  }
+
+  res.status(200).json({completion});
 });
 
 app.listen(port);
+```
+
+The handler should return a JSON response with the following structure:
+
+```json
+{
+  "completion": "Generated completion text"
+}
+```
+
+Or in case of an error:
+
+```json
+{
+  "completion": null,
+  "error": "Error message"
+}
 ```
 
 If you prefer to use a different programming language for your API handler in cases where your backend is not in JavaScript, please refer to the section [Using a Different Language for the API Handler](#using-a-different-language-for-the-api-handler) for guidance on implementing the handler in your chosen language.
@@ -286,6 +308,102 @@ This will disable the default error handling and logging behavior of Monacopilot
 registerCompletion(monaco, editor, {
   onError: error => {
     console.error(error);
+  },
+});
+```
+
+### Custom Request Handler
+
+The `requestHandler` option in the `registerCompletion` function allows you to handle requests sent to the specified endpoint, offering high customization for both requests and responses. By leveraging this functionality, you can manipulate and customize the request or response to meet your specific requirements. However, ensure that the completion text is returned in the response.
+
+```javascript
+registerCompletion(monaco, editor, {
+  endpoint: 'https://api.example.com/complete',
+  // ... other options
+  requestHandler: async ({endpoint, body}) => {
+    // Perform custom actions with the request
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json();
+
+    return {
+      completion: data.completion,
+    };
+  },
+});
+```
+
+The `requestHandler` function takes `endpoint` and `body` as parameters.
+
+| Property   | Type     | Description                                                                                            |
+| ---------- | -------- | ------------------------------------------------------------------------------------------------------ |
+| `endpoint` | `string` | The endpoint to which the request is sent. This is the same as the `endpoint` in `registerCompletion`. |
+| `body`     | `object` | The body of the request processed by Monacopilot. You can add additional properties to this body.      |
+
+> **Note:** The `body` object is processed by Monacopilot, so you cannot modify the original `body` object. If you need to add additional properties to the body, you can do so by creating a new object.
+
+The `requestHandler` should return an object with the following property:
+
+| Property     | Type               | Description                                                                                      |
+| ------------ | ------------------ | ------------------------------------------------------------------------------------------------ |
+| `completion` | `string` or `null` | The completion text to be inserted into the editor. Return `null` if no completion is available. |
+
+#### Example
+
+The example below demonstrates how to use the `requestHandler` function for more customized handling:
+
+```javascript
+registerCompletion(monaco, editor, {
+  endpoint: 'https://api.example.com/complete',
+  // ... other options
+  requestHandler: async ({endpoint, body}) => {
+    try {
+      const headers = {
+        'Content-Type': 'application/json',
+        'X-Request-ID': generateUniqueId(),
+      };
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          ...body,
+          custom: 'value',
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      // Custom processing of the response
+      if (data.error) {
+        console.error('API Error:', data.error);
+        return {
+          completion: null,
+        };
+      }
+
+      // Additional processing on the completion
+      const processedCompletion = data.completion.trim();
+
+      return {
+        completion: processedCompletion,
+      };
+    } catch (error) {
+      console.error('Fetch error:', error);
+      return {
+        completion: null,
+      };
+    }
   },
 });
 ```
