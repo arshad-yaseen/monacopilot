@@ -15,7 +15,7 @@ export const asyncDebounce = <T extends (...args: any[]) => any>(
   (...args: Parameters<T>): Promise<ReturnType<T>>;
   cancel: () => void;
 } => {
-  let timeout: NodeJS.Timeout | null = null;
+  let timeout: ReturnType<typeof setTimeout> | null = null;
   let reject: ((reason?: any) => void) | null = null;
 
   const debouncedFunc = (...args: Parameters<T>): Promise<ReturnType<T>> => {

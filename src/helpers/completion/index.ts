@@ -1,4 +1,3 @@
-import {logger} from '../../logger';
 import {
   CompletionMode,
   CompletionRequestBody,
@@ -7,6 +6,7 @@ import {
   CursorPosition,
   EditorModel,
   FetchCompletionItemParams,
+  FetchCompletionItemReturn,
   RelatedFile,
 } from '../../types';
 import {
@@ -22,54 +22,32 @@ const CONTENT_TYPE_JSON = 'application/json';
 
 /**
  * Fetches a completion item from the API.
- * @param {FetchCompletionItemParams} params - The parameters for fetching the completion item.
- * @returns {Promise<string | null>} The completion item or null if an error occurs or the request is aborted.
+ * @param {Object} params - The parameters for the completion request.
+ * @param {string} params.endpoint - The endpoint to fetch the completion item from.
+ * @param {CompletionRequestBody} params.body - The body of the completion item request.
+ * @returns {Promise<string | null>} The completion item or null if an error occurs.
+ * @throws {Error} If there's an error during the fetch operation.
  */
-export const fetchCompletionItem = async ({
-  mdl,
-  pos,
-  ...options
-}: FetchCompletionItemParams): Promise<string | null> => {
-  const {endpoint, requestOptions, onError} = options;
+export const fetchCompletionItem = async (
+  params: FetchCompletionItemParams,
+): Promise<FetchCompletionItemReturn> => {
+  const {endpoint, body} = params;
 
-  const {headers} = requestOptions ?? {};
+  const {completion, error} = await HTTP.POST<
+    CompletionResponse,
+    CompletionRequestBody
+  >(endpoint, body, {
+    headers: {
+      'Content-Type': CONTENT_TYPE_JSON,
+    },
+    fallbackError: 'Error while fetching completion item',
+  });
 
-  try {
-    const {completion, error} = await HTTP.POST<
-      CompletionResponse,
-      CompletionRequestBody
-    >(
-      endpoint,
-      {
-        completionMetadata: constructCompletionMetadata({
-          pos,
-          mdl,
-          options,
-        }),
-      },
-      {
-        headers: {
-          'Content-Type': CONTENT_TYPE_JSON,
-          ...headers,
-        },
-        fallbackError: 'Error while fetching completion item',
-      },
-    );
-
-    if (error) {
-      throw new Error(error);
-    }
-
-    return completion;
-  } catch (err) {
-    if (onError) {
-      onError(err as Error);
-    } else {
-      logger.logError(err);
-    }
-
-    return null;
+  if (error) {
+    throw new Error(error);
   }
+
+  return {completion};
 };
 
 /**

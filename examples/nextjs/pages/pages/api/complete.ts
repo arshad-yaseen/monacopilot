@@ -8,9 +8,14 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const completion = await copilot.complete({
+  const {completion, error} = await copilot.complete({
     body: req.body,
   });
 
-  res.status(200).json(completion);
+  // Handle error if you want
+  if (error) {
+    res.status(500).json({error});
+  }
+
+  res.status(200).json({completion});
 }

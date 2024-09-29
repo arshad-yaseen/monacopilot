@@ -6,9 +6,14 @@ const copilot = new Copilot(process.env.GROQ_API_KEY!);
 
 export async function POST(req: NextRequest) {
   const body: CompletionRequestBody = await req.json();
-  const completion = await copilot.complete({
+  const {completion, error} = await copilot.complete({
     body,
   });
 
-  return NextResponse.json(completion, {status: 200});
+  // Handle error if you want
+  if (error) {
+    return NextResponse.json({error}, {status: 500});
+  }
+
+  return NextResponse.json({completion}, {status: 200});
 }
