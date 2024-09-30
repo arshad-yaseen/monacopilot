@@ -44,6 +44,7 @@ Here are some examples of how to integrate Monacopilot into your project:
   - [App Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/app)
   - [Pages Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/pages)
 - [Remix](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/remix)
+- [Vue](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/vue)
 
 ## Inline Completions
 
