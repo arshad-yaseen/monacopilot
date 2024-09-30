@@ -13,7 +13,12 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "ignorePatterns": ["node_modules/", "build/", "examples/", "tests/ui"],
+  "ignorePatterns": [
+    "node_modules/**/*",
+    "build/**/*",
+    "examples/**/*",
+    "tests/ui/**/*"
+  ],
   "plugins": ["@typescript-eslint"],
   "rules": {
     "@typescript-eslint/no-unused-vars": "warn",

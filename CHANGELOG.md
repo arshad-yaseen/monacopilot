@@ -1,11 +1,8 @@
-
-
 ## [0.11.2](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.1...v0.11.2) (2024-09-29)
-
 
 ### 📚 Documentation
 
-* improve api handler section ([25d076c](https://github.com/arshad-yaseen/monacopilot/commit/25d076c1681f788e3784200924dbd9bb19549983))
+- improve api handler section ([25d076c](https://github.com/arshad-yaseen/monacopilot/commit/25d076c1681f788e3784200924dbd9bb19549983))
 
 ## [0.11.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.0...v0.11.1) (2024-09-29)
 

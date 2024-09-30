@@ -7,3 +7,5 @@ build/
 .git/
 
 .vscode/
+
+examples/
