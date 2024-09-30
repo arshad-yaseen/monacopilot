@@ -1,12 +1,18 @@
 
 
-## [0.11.4](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.2...v0.11.4) (2024-09-30)
+## [0.11.5](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.4...v0.11.5) (2024-09-30)
 
 
 ### 📚 Documentation
 
-* add vue example ([124bbb0](https://github.com/arshad-yaseen/monacopilot/commit/124bbb04c797cfd0833b7da273984d2093b7d2e3))
-* add vue example to readme ([01aaa78](https://github.com/arshad-yaseen/monacopilot/commit/01aaa78cfb3913789fa99c275a87e72b65268174))
+* improve description ([888146b](https://github.com/arshad-yaseen/monacopilot/commit/888146b3c8d360b1932c3e3894dd86c12d766911))
+
+## [0.11.4](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.2...v0.11.4) (2024-09-30)
+
+### 📚 Documentation
+
+- add vue example ([124bbb0](https://github.com/arshad-yaseen/monacopilot/commit/124bbb04c797cfd0833b7da273984d2093b7d2e3))
+- add vue example to readme ([01aaa78](https://github.com/arshad-yaseen/monacopilot/commit/01aaa78cfb3913789fa99c275a87e72b65268174))
 
 ## [0.11.2](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.1...v0.11.2) (2024-09-29)
 
