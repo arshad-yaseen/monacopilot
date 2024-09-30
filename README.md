@@ -2,7 +2,7 @@
 
 # Monacopilot
 
-**Monacopilot** integrates AI auto-completion into the Monaco Editor, inspired by GitHub Copilot.
+**Monacopilot** is a powerful and customizable AI auto-completion plugin for the Monaco Editor. Inspired by GitHub Copilot.
 
 ### Motivation
 
