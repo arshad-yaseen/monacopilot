@@ -142,7 +142,8 @@ registerCompletion(monaco, editor, {
 });
 ```
 
-The `registerCompletion` function returns a `completion` object with useful methods such as `trigger` and `dispose`. The `trigger` method is explained later in this document. The `dispose` method should be used to clean up resources when the completion object is no longer needed. For instance, in a React component, you can call `completion.dispose()` within the `useEffect` cleanup function to ensure proper disposal when the component unmounts.
+> **Note:** The `registerCompletion` function returns a `completion` object with a `deregister` method. This method should be used to clean up the completion functionality when it's no longer needed.
+> For example, in a React component, you can call `completion.deregister()` within the `useEffect` cleanup function to ensure proper disposal when the component unmounts.
 
 🎉 Congratulations! The AI auto-completion is now connected to the Monaco Editor. Start typing and see completions in the editor.
 
