@@ -1,11 +1,17 @@
 
 
-## [0.11.5](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.4...v0.11.5) (2024-09-30)
+## [0.11.6](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.5...v0.11.6) (2024-10-01)
 
 
 ### 📚 Documentation
 
-* improve description ([888146b](https://github.com/arshad-yaseen/monacopilot/commit/888146b3c8d360b1932c3e3894dd86c12d766911))
+* fix the naming with deregister method ([97fc09c](https://github.com/arshad-yaseen/monacopilot/commit/97fc09cf23c4c98e5d1fa0e93e586f657e1a4dce))
+
+## [0.11.5](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.4...v0.11.5) (2024-09-30)
+
+### 📚 Documentation
+
+- improve description ([888146b](https://github.com/arshad-yaseen/monacopilot/commit/888146b3c8d360b1932c3e3894dd86c12d766911))
 
 ## [0.11.4](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.2...v0.11.4) (2024-09-30)
 
