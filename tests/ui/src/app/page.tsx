@@ -5,7 +5,7 @@ import {useEffect, useState} from 'react';
 import Editor from '@monaco-editor/react';
 import {
   registerCompletion,
-  registerSelectAndModify,
+  registerSelectionActions,
   type Monaco,
   type StandaloneCodeEditor,
 } from 'monacopilot';
@@ -18,17 +18,26 @@ export default function Home() {
     if (!monaco || !editor) return;
 
     const completion = registerCompletion(monaco, editor, {
-      endpoint: '/api/complete',
+      endpoint: 'https://api.dev.withcortex.ai/misc/complete-code',
       language: 'javascript',
-      maxContextLines: 60,
+      relatedFiles: [
+        {
+          path: './code_step.js',
+          content: 'const document = $input.document$\n...',
+        },
+      ],
     });
 
-    registerSelectAndModify(monaco, editor, {
-      endpoint: 'https://github.com',
+    const selectionActions = registerSelectionActions(monaco, editor, {
+      actions: ['modify'],
+      modify: {
+        endpoint: 'https://api.dev.withcortex.ai/misc/modify-code',
+      },
     });
 
     return () => {
       completion.deregister();
+      selectionActions.deregister();
     };
   }, [monaco, editor]);
 

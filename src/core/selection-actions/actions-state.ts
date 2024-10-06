@@ -1,4 +1,5 @@
 import {EditorWidgetState, StandaloneCodeEditor} from '../../types';
+import {diffDecorations} from '../../utils';
 
 /**
  * WeakMap to store the editor widget state.
@@ -24,4 +25,24 @@ export const disposeWidgets = (editor: StandaloneCodeEditor) => {
     });
     state.widgets.clear();
   }
+};
+
+/**
+ * WeakMap to store the editor decorations (e.g. diff decorations).
+ */
+export const editorDiffDecorationState = new WeakMap<
+  StandaloneCodeEditor,
+  ReturnType<typeof diffDecorations>
+>();
+
+/**
+ * Disposes all decorations from the editor.
+ * @param editor - The editor instance.
+ */
+export const disposeDiffDecorations = (editor: StandaloneCodeEditor) => {
+  const state = editorDiffDecorationState.get(editor);
+  if (state) {
+    state.clear();
+  }
+  editorDiffDecorationState.delete(editor);
 };

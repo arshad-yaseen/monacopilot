@@ -9,9 +9,13 @@ import {
   SelectionActionsRegistration,
   StandaloneCodeEditor,
 } from '../../types';
-import {generateUniqueId} from '../../utils';
+import {uid} from '../../utils';
+import {
+  disposeDiffDecorations,
+  disposeWidgets,
+  editorWidgetState,
+} from './actions-state';
 import {showModifyButton} from './modify';
-import {disposeWidgets, editorWidgetState} from './widgets-state';
 
 let activeRegistration: SelectionActionsRegistration | null = null;
 
@@ -27,6 +31,10 @@ export const registerSelectionActions = (
   editor: StandaloneCodeEditor,
   options: RegisterSelectionActionsOptions,
 ): SelectionActionsRegistration => {
+  // Currently, the monaco parameter is unused. This line prevents lint warnings.
+  // It may be used in future implementations.
+  void monaco;
+
   // Deregister any existing registration
   if (activeRegistration) {
     activeRegistration.deregister();
@@ -36,7 +44,7 @@ export const registerSelectionActions = (
 
   // Initialize editor widget state
   editorWidgetState.set(editor, {
-    isWidgetVisible: false,
+    isModifyWidgetVisible: false,
     widgets: new Set<string>(),
   });
 
@@ -44,6 +52,7 @@ export const registerSelectionActions = (
     disposables.forEach(disposable => disposable.dispose());
     editorWidgetState.delete(editor);
     disposeWidgets(editor);
+    disposeDiffDecorations(editor);
     activeRegistration = null;
   };
 
@@ -54,14 +63,12 @@ export const registerSelectionActions = (
       if (!state) return;
 
       const selection = event.selection;
-      if (!selection.isEmpty()) {
-        if (!state.isWidgetVisible) {
-          state.isWidgetVisible = true;
-          showActionButtonsWidget(editor, selection, options);
-        }
-      } else if (state.isWidgetVisible) {
-        state.isWidgetVisible = false;
+      if (!selection.isEmpty() && !state.isModifyWidgetVisible) {
+        showActionButtonsWidget(editor, selection, options);
+      } else if (!state.isModifyWidgetVisible) {
+        state.isModifyWidgetVisible = false;
         disposeWidgets(editor);
+        disposeDiffDecorations(editor);
       }
     });
     disposables.push(selectionChangeListener);
@@ -117,12 +124,14 @@ const createActionButtonsWidget = (
   selection: EditorSelection,
   options: RegisterSelectionActionsOptions,
 ): EditorOverlayWidget => {
-  const widgetId = `action-buttons-widget-${generateUniqueId()}`;
+  const widgetId = `action-buttons-widget-${uid()}`;
   const domNode = document.createElement('div');
   domNode.className = 'action-buttons-widget';
 
   // Modify Button
-  showModifyButton(editor, domNode, selection, options.modify);
+  if (options.actions.includes('modify')) {
+    showModifyButton(editor, domNode, selection, options.modify);
+  }
 
   return {
     getId: () => widgetId,

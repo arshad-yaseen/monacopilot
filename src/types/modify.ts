@@ -1,5 +1,5 @@
 export type EditorWidgetState = {
-  isWidgetVisible: boolean;
+  isModifyWidgetVisible: boolean;
   widgets: Set<string>;
 };
 
