@@ -107,17 +107,18 @@ export const getDiffs = (
  *
  * This function computes the differences between the original and modified text,
  * applies the changes to the editor, and adds decorations to highlight
- * added and deleted lines.
+ * added and deleted lines. It returns an object with methods to apply and clear the decorations.
  *
  * @param {StandaloneCodeEditor} editor - The Monaco editor instance to apply decorations to.
  * @param {string} originalText - The original text before modifications.
  * @param {string} modifiedText - The modified text to compare against the original.
+ * @returns {Object} An object with methods to apply and clear decorations.
  */
-export const applyDiffDecorations = (
+export const diffDecorations = (
   editor: StandaloneCodeEditor,
   originalText: string,
   modifiedText: string,
-): EditorDecorationsCollection | null => {
+): {apply: () => void; clear: () => void} | null => {
   const diffs = getDiffs(originalText, modifiedText);
   const model = editor.getModel();
 
@@ -158,7 +159,20 @@ export const applyDiffDecorations = (
   });
 
   const newValue = newLines.join('\n');
-  model.setValue(newValue);
+  let decorationsCollection: EditorDecorationsCollection | null = null;
 
-  return editor.createDecorationsCollection(decorations);
+  return {
+    apply: () => {
+      model.applyEdits([{range: model.getFullModelRange(), text: newValue}]);
+      decorationsCollection = editor.createDecorationsCollection(decorations);
+    },
+    clear: () => {
+      if (decorationsCollection) {
+        decorationsCollection.clear();
+      }
+      model.applyEdits([
+        {range: model.getFullModelRange(), text: originalText},
+      ]);
+    },
+  };
 };

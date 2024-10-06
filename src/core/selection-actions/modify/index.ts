@@ -1,12 +1,34 @@
-import {fetchModifiedCode} from '../../helpers/modify/fetch-modified-code';
-import {log} from '../../log';
+import {fetchModifiedCode} from '../../../helpers/modify/fetch-modified-code';
 import {
-  EditorDecorationsCollection,
   EditorSelection,
-  RegisterModifyOptions,
+  ModifyOptions,
   StandaloneCodeEditor,
-} from '../../types';
-import {applyDiffDecorations} from '../../utils';
+} from '../../../types';
+import {diffDecorations, removeSelection} from '../../../utils';
+import {disposeWidgets} from '../widgets-state';
+import {showPromptWidget} from './widgets/prompt-widget';
+
+/**
+ * Shows the modify button in the action buttons widget.
+ * @param editor - The editor instance.
+ * @param domNode - The DOM node of the action buttons widget.
+ * @param selection - The current selection.
+ * @param options - The options for the modify functionality.
+ */
+export const showModifyButton = (
+  editor: StandaloneCodeEditor,
+  domNode: HTMLElement,
+  selection: EditorSelection,
+  options: ModifyOptions,
+) => {
+  const modifyButton = document.createElement('button');
+  modifyButton.textContent = 'Modify';
+  modifyButton.onclick = () => {
+    disposeWidgets(editor);
+    showPromptWidget(editor, selection, options);
+  };
+  domNode.appendChild(modifyButton);
+};
 
 /**
  * Handles the modification of the selected code.
@@ -16,11 +38,11 @@ import {applyDiffDecorations} from '../../utils';
  * @param options - Options for the modify functionality.
  * @param promptDomNode - The DOM node of the prompt widget.
  */
-const handleModifySelection = async (
+export const handleModifySelection = async (
   editor: StandaloneCodeEditor,
   selection: EditorSelection,
   prompt: string,
-  options: RegisterModifyOptions,
+  options: ModifyOptions,
   promptDomNode: HTMLElement,
 ) => {
   const model = editor.getModel();
@@ -28,45 +50,29 @@ const handleModifySelection = async (
 
   const originalCode = model.getValueInRange(selection);
 
-  try {
-    // Indicate loading state
-    promptDomNode.classList.add('loading');
+  // Indicate loading state
+  promptDomNode.dataset.loading = 'true';
 
-    const modifiedCode = await fetchModifiedCode(originalCode, prompt, options);
+  const modifiedCode = await fetchModifiedCode(originalCode, prompt, options);
+  // Remove loading state
+  promptDomNode.dataset.loading = 'false';
 
-    // Remove loading state
-    promptDomNode.classList.remove('loading');
+  // Apply diff decorations
+  const decorations = diffDecorations(editor, originalCode, modifiedCode);
 
-    // Apply diff decorations
-    const decorations = applyDiffDecorations(
-      editor,
-      originalCode,
-      modifiedCode,
-    );
+  if (!decorations) return;
 
-    if (!decorations) return;
+  decorations.apply();
 
-    // Update the prompt widget to show Accept/Reject buttons
-    showAcceptRejectControls(
-      editor,
-      promptDomNode,
-      decorations,
-      selection,
-      modifiedCode,
-    );
-  } catch (error) {
-    // Remove loading state
-    promptDomNode.classList.remove('loading');
-
-    if (options.onError) {
-      options.onError(error as Error);
-    } else {
-      log.error(error);
-    }
-  }
+  // Update the prompt widget to show Accept/Reject buttons
+  showAcceptRejectControls(
+    editor,
+    promptDomNode,
+    decorations,
+    selection,
+    modifiedCode,
+  );
 };
-
-export default handleModifySelection;
 
 /**
  * Updates the prompt widget to show Accept/Reject buttons.
@@ -79,7 +85,7 @@ export default handleModifySelection;
 const showAcceptRejectControls = (
   editor: StandaloneCodeEditor,
   promptDomNode: HTMLElement,
-  decorations: EditorDecorationsCollection,
+  decorations: ReturnType<typeof diffDecorations>,
   selection: EditorSelection,
   modifiedCode: string,
 ) => {
@@ -90,13 +96,15 @@ const showAcceptRejectControls = (
   const acceptButton = document.createElement('button');
   acceptButton.textContent = 'Accept';
   acceptButton.onclick = () => {
-    acceptChanges(editor, decorations, selection, modifiedCode);
+    acceptChanges(editor, decorations, selection, modifiedCode, promptDomNode);
+    removeSelection(editor, selection);
   };
 
   const rejectButton = document.createElement('button');
   rejectButton.textContent = 'Reject';
   rejectButton.onclick = () => {
-    rejectChanges(decorations);
+    rejectChanges(decorations, promptDomNode);
+    removeSelection(editor, selection);
   };
 
   // Append buttons to the prompt widget
@@ -110,15 +118,24 @@ const showAcceptRejectControls = (
  * @param decorations - The diff decorations applied.
  * @param selection - The selection range of the original code.
  * @param modifiedCode - The modified code.
+ * @param promptDomNode - The DOM node of the prompt widget.
  */
 const acceptChanges = (
   editor: StandaloneCodeEditor,
-  decorations: EditorDecorationsCollection | null,
+  decorations: ReturnType<typeof diffDecorations>,
   selection: EditorSelection,
   modifiedCode: string,
+  promptDomNode: HTMLElement,
 ) => {
   const model = editor.getModel();
   if (!model) return;
+
+  if (decorations) {
+    decorations.clear();
+  }
+
+  // Clear the prompt widget content
+  promptDomNode.innerHTML = '';
 
   model.pushEditOperations(
     [],
@@ -130,19 +147,21 @@ const acceptChanges = (
     ],
     () => null,
   );
-
-  if (decorations) {
-    decorations.clear();
-  }
 };
 
 /**
  * Rejects the changes and restores the editor to its original state.
- * @param editor - The editor instance.
  * @param decorations - The diff decorations applied.
+ * @param promptDomNode - The DOM node of the prompt widget.
  */
-const rejectChanges = (decorations: EditorDecorationsCollection | null) => {
+const rejectChanges = (
+  decorations: ReturnType<typeof diffDecorations>,
+  promptDomNode: HTMLElement,
+) => {
   if (decorations) {
     decorations.clear();
   }
+
+  // Clear the prompt widget content
+  promptDomNode.innerHTML = '';
 };

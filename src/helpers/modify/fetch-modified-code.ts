@@ -1,4 +1,4 @@
-import {ModifyRequestHandler, RegisterModifyOptions} from '../../types';
+import {ModifyOptions, ModifyRequestHandler} from '../../types';
 
 /**
  * Fetches the modified code from the AI model.
@@ -10,7 +10,7 @@ import {ModifyRequestHandler, RegisterModifyOptions} from '../../types';
 export const fetchModifiedCode = async (
   originalCode: string,
   prompt: string,
-  options: RegisterModifyOptions,
+  options: ModifyOptions,
 ): Promise<string> => {
   const {endpoint, requestHandler} = options;
 

@@ -1,8 +1,8 @@
 import {Copilot} from './classes';
 import {registerCompletion, registerCopilot} from './core/completion/register';
-import {registerSelectAndModify} from './core/modify/register';
+import {registerSelectionActions} from './core/selection-actions/register';
 
-export {registerCopilot, registerCompletion, registerSelectAndModify, Copilot};
+export {registerCopilot, registerCompletion, registerSelectionActions, Copilot};
 
 export type {
   Monaco,

@@ -41,7 +41,7 @@ export default function Home() {
       }}
       theme="vs-dark"
       height="100vh"
-      defaultValue="const randomNumber = Math.random()"
+      defaultValue={`const randomNumber = Math.random()\nconst isPalindrome = 'hello'`}
       width="100%"
       options={{
         padding: {top: 16},

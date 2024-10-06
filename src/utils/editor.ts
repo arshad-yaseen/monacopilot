@@ -1,4 +1,10 @@
-import {CursorPosition, EditorModel, EditorRange} from '../types';
+import {
+  CursorPosition,
+  EditorModel,
+  EditorRange,
+  EditorSelection,
+  StandaloneCodeEditor,
+} from '../types';
 
 /**
  * Gets the character before the cursor.
@@ -258,4 +264,16 @@ export const computeInsertionRange = (
     endLineNumber: endPosition.lineNumber,
     endColumn: endPosition.column,
   };
+};
+
+export const removeSelection = (
+  editor: StandaloneCodeEditor,
+  selection: EditorSelection,
+) => {
+  editor.setSelection({
+    startLineNumber: selection.startLineNumber,
+    startColumn: selection.startColumn,
+    endLineNumber: selection.startLineNumber,
+    endColumn: selection.startColumn,
+  });
 };

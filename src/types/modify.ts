@@ -1,15 +1,23 @@
-export type EditorModifyState = {
+export type EditorWidgetState = {
   isWidgetVisible: boolean;
   widgets: Set<string>;
 };
 
-export type ModifyRegistration = {
+export type SelectionActionsRegistration = {
   deregister: () => void;
 };
 
-export type RegisterModifyOptions = {
-  endpoint: string;
+export type SelectionAction = 'modify';
+
+export type RegisterSelectionActionsOptions = {
+  actions: SelectionAction[];
+  modify: ModifyOptions;
   onError?: (error: Error) => void;
+};
+
+export type ModifyOptions = {
+  endpoint: string;
+  placeholder?: string;
   requestHandler?: ModifyRequestHandler;
 };
 
