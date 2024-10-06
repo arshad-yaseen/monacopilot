@@ -11,7 +11,7 @@ import {
   getCopilotProviderEndpoint,
   parseProviderChatCompletion,
 } from '../helpers/provider';
-import {logger} from '../logger';
+import {log} from '../log';
 import {
   ChatCompletion,
   ChatCompletionCreateParams,
@@ -145,7 +145,7 @@ export class Copilot {
     if (typeof this.model === 'object' && 'transformResponse' in this.model) {
       const transformedResponse = this.model.transformResponse(chatCompletion);
       if ('completion' in transformedResponse) {
-        logger.warn(
+        log.warning(
           'The `completion` property in `transformResponse` function is deprecated. Please use `text` instead.',
         );
       }
@@ -162,7 +162,7 @@ export class Copilot {
   }
 
   private handleCompletionError(error: unknown): CompletionResponse {
-    const errorDetails = logger.logError(error);
+    const errorDetails = log.error(error);
 
     return {error: errorDetails.message, completion: null};
   }

@@ -1,5 +1,5 @@
-import {CompletionCacheItem, CursorPosition, EditorModel} from '../types';
-import {getTextBeforeCursorInLine} from '../utils/editor';
+import {CompletionCacheItem, CursorPosition, EditorModel} from '../../types';
+import {getTextBeforeCursorInLine} from '../../utils/editor';
 
 /**
  * Manages a cache of code completions with FIFO eviction policy.

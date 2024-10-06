@@ -65,3 +65,16 @@ export const joinWithAnd = (
 
   return `${arr.slice(0, -1).join(', ')} and ${arr.slice(-1)}`;
 };
+
+export const generateRandomString = (length: number) => {
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let randomString = '';
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    randomString += characters[randomIndex];
+  }
+
+  return randomString;
+};

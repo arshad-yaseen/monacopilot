@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 
-import {CompletionFormatter} from '../src/classes/completion-formatter';
+import {CompletionFormatter} from '../src/classes/completion/completion-formatter';
 
 describe('CompletionFormatter', () => {
   describe('create', () => {

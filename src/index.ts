@@ -1,8 +1,8 @@
 import {Copilot} from './classes';
 import {registerCompletion, registerCopilot} from './core/completion/register';
-import {applyDiffDecorations} from './utils/diff';
+import {registerSelectAndModify} from './core/modify/register';
 
-export {registerCopilot, registerCompletion, Copilot, applyDiffDecorations};
+export {registerCopilot, registerCompletion, registerSelectAndModify, Copilot};
 
 export type {
   Monaco,

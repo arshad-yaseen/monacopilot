@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 
-import {computeLCS, Diff, getDiffs} from '../src/utils/diff';
+import {computeLCS, Diff, getDiffs} from '../src/utils';
 
 describe('computeLCS', () => {
   it('should return empty diff when both sequences are empty', () => {

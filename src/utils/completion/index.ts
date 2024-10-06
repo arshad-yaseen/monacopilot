@@ -1,5 +1,8 @@
-import {CompletionFormatter} from '../classes';
-import {EditorInlineCompletion, EditorInlineCompletionsResult} from '../types';
+import {CompletionFormatter} from '../../classes';
+import {
+  EditorInlineCompletion,
+  EditorInlineCompletionsResult,
+} from '../../types';
 
 export const formatCompletion = (completion: string): string => {
   return CompletionFormatter.create(completion)

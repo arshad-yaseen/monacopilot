@@ -1,4 +1,4 @@
-import {logger} from '../../logger';
+import {log} from '../../log';
 import {
   CompletionRegistration,
   Disposable,
@@ -125,7 +125,7 @@ export const registerCompletion = (
     if (options.onError) {
       options.onError(error as Error);
     } else {
-      logger.logError(error);
+      log.error(error);
     }
 
     return {
@@ -148,7 +148,7 @@ export const registerCompletion = (
 const handleTriggerCompletion = (editor: StandaloneCodeEditor) => {
   const state = editorCompletionState.get(editor);
   if (!state) {
-    logger.warn(
+    log.warning(
       'Completion is not registered. Use `registerCompletion` to register completion first.',
     );
     return;
@@ -163,7 +163,7 @@ const handleTriggerCompletion = (editor: StandaloneCodeEditor) => {
 export const registerCopilot = (
   ...args: Parameters<typeof registerCompletion>
 ) => {
-  logger.warn(
+  log.warning(
     'The `registerCopilot` function is deprecated. Use `registerCompletion` instead.',
   );
 

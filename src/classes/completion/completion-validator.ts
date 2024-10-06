@@ -1,5 +1,5 @@
-import {CursorPosition, EditorModel} from '../types';
-import {isCursorAtStartWithTextAround} from '../utils';
+import {CursorPosition, EditorModel} from '../../types';
+import {isCursorAtStartWithTextAround} from '../../utils';
 
 export class CompletionValidator {
   private cursorPos: CursorPosition;

@@ -33,7 +33,7 @@
 - [Completion Request Options](#completion-request-options)
   - [Custom Headers for AI Model Requests](#custom-headers-for-ai-model-requests)
 - [Using a Different Language for the API Handler](#using-a-different-language-for-the-api-handler)
-- [Select and Edit](#select-and-edit)
+- [Select and Modify](#select-and-modify)
 - [Contributing](#contributing)
 
 ### Examples
@@ -649,9 +649,9 @@ registerCompletion(monaco, editor, {
 });
 ```
 
-## Select and Edit
+## Select and Modify
 
-Select and Edit is a feature that allows you to select code from the editor and edit it inline with AI assistance.
+This feature allows you to edit the code by selecting the part you want to modify and ask AI to modify it.
 
 This feature is coming soon™️.
 
