@@ -1,3 +1,222 @@
+/* Define color variables for light mode */
+:root {
+  --color-background: #f9fafb; /* Light gray background */
+  --color-foreground: #111827; /* Dark text color */
+  --color-primary: #2563eb; /* Blue for primary actions */
+  --color-primary-hover: #1d4ed8; /* Darker blue on hover */
+  --color-secondary: #ffffff; /* White secondary background */
+  --color-border: #e5e7eb; /* Light border color */
+  --color-error: #dc2626; /* Red for errors */
+  --color-success: #16a34a; /* Green for success */
+  --color-muted: #6b7280; /* Muted text color */
+  --color-overlay-background: rgba(0, 0, 0, 0.05);
+}
+
+/* Define color variables for dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #1f2937; /* Dark background */
+    --color-foreground: #f9fafb; /* Light text color */
+    --color-primary: #3b82f6; /* Lighter blue for dark mode */
+    --color-primary-hover: #2563eb;
+    --color-secondary: #374151; /* Darker secondary background */
+    --color-border: #4b5563; /* Dark border color */
+    --color-error: #f87171;
+    --color-success: #34d399;
+    --color-muted: #9ca3af;
+    --color-overlay-background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* Action Buttons Widget */
+.action-buttons-widget {
+  position: absolute;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  background-color: var(--color-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px var(--color-overlay-background);
+}
+
+.action-buttons-widget button {
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.action-buttons-widget button:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.action-buttons-widget button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-primary-hover);
+}
+
+/* Modify Button */
+.modify-button {
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.modify-button:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.modify-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-primary-hover);
+}
+
+/* Modify Widget */
+.modify-widget {
+  position: absolute;
+  z-index: 1001;
+  width: 280px;
+  padding: 14px;
+  background-color: var(--color-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px var(--color-overlay-background);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 12px;
+}
+
+.modify-widget-fetching {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.modify-widget .modify-widget-close-button {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: none;
+  border: none;
+  color: var(--color-muted);
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.modify-widget .modify-widget-close-button:hover {
+  color: var(--color-foreground);
+}
+
+.modify-widget .modify-widget-close-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-primary-hover);
+}
+
+.modify-widget .modify-widget-prompt-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modify-widget .modify-widget-prompt-textarea {
+  width: 100%;
+  height: 80px;
+  padding: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-size: 13px;
+  resize: vertical;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+.modify-widget .modify-widget-prompt-textarea:focus {
+  border-color: var(--color-primary);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-primary-hover);
+}
+
+.modify-widget .modify-widget-submit-button {
+  align-self: flex-end;
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.modify-widget .modify-widget-submit-button:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.modify-widget .modify-widget-submit-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-primary-hover);
+}
+
+/* Accept/Reject Controls */
+.modify-widget .modify-widget-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.modify-widget .modify-widget-accept-button,
+.modify-widget .modify-widget-reject-button {
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  color: var(--color-secondary);
+}
+
+.modify-widget .modify-widget-accept-button {
+  background-color: var(--color-success);
+}
+
+.modify-widget .modify-widget-accept-button:hover {
+  background-color: #15803d;
+}
+
+.modify-widget .modify-widget-accept-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #15803d;
+}
+
+.modify-widget .modify-widget-reject-button {
+  background-color: var(--color-error);
+}
+
+.modify-widget .modify-widget-reject-button:hover {
+  background-color: #b91c1c;
+}
+
+.modify-widget .modify-widget-reject-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #b91c1c;
+}
+
+/* Diff Decorations */
 .diff-added-line {
   background-color: hsla(120, 40%, 17%, 1);
 }

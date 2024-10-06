@@ -1,3 +1,4 @@
+import {ACTION_BUTTONS_WIDGET_CLASS} from '../../constants';
 import {log} from '../../log';
 import {
   Disposable,
@@ -129,7 +130,7 @@ const createActionButtonsWidget = (
 ): EditorOverlayWidget => {
   const widgetId = `action-buttons-widget-${uid()}`;
   const domNode = document.createElement('div');
-  domNode.className = 'action-buttons-widget';
+  domNode.className = ACTION_BUTTONS_WIDGET_CLASS;
 
   // Modify Button
   if (options.actions.includes('modify')) {
