@@ -73,7 +73,3 @@ export const joinWithAnd = (
 export const uid = (): string => {
   return Math.random().toString(36).slice(2, 11);
 };
-
-export const className = (className: string): string => {
-  return `monacopilot-${className}`;
-};

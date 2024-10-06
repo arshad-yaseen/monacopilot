@@ -1,10 +1,11 @@
 import {
   DEFAULT_MODIFY_PLACEHOLDER,
   MODIFY_WIDGET_CLASS,
+  MODIFY_WIDGET_CLOSE_BUTTON_CLASS,
   MODIFY_WIDGET_PROMPT_CONTAINER_CLASS,
   MODIFY_WIDGET_PROMPT_SUBMIT_BUTTON_CLASS,
   MODIFY_WIDGET_PROMPT_TEXTAREA_CLASS,
-} from '../../../../constants';
+} from '../../../../constants/modify';
 import {
   EditorOverlayWidget,
   EditorSelection,
@@ -22,6 +23,7 @@ import {handleModifySelection} from '../handler';
 
 /**
  * Shows the modify widget.
+ *
  * @param editor - The editor instance.
  * @param selection - The current selection.
  * @param options - Options for the action functionality.
@@ -44,6 +46,7 @@ export const showModifyWidget = (
 
 /**
  * Creates the modify widget.
+ *
  * @param editor - The editor instance.
  * @param selection - The current selection.
  * @param options - Options for the action functionality.
@@ -62,8 +65,7 @@ const createModifyWidget = (
 
   const closeButton = document.createElement('button');
   closeButton.textContent = '✕';
-  closeButton.style.cssText =
-    'position: absolute; top: 5px; right: 5px; cursor: pointer;';
+  closeButton.className = MODIFY_WIDGET_CLOSE_BUTTON_CLASS;
   closeButton.onclick = () => {
     disposeWidgets(editor);
     disposeDiffDecorations(editor);

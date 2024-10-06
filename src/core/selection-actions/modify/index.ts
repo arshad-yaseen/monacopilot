@@ -1,4 +1,4 @@
-import {MODIFY_WIDGET_CLASS} from '../../../constants/modify';
+import {MODIFY_BUTTON_CLASS} from '../../../constants/modify';
 import {
   EditorSelection,
   ModifyOptions,
@@ -9,6 +9,7 @@ import {showModifyWidget} from './widgets/modify-widget';
 
 /**
  * Shows the modify button in the action buttons widget.
+ *
  * @param editor - The editor instance.
  * @param domNode - The DOM node of the action buttons widget.
  * @param selection - The current selection.
@@ -22,7 +23,7 @@ export const showModifyButton = (
 ) => {
   const modifyButton = document.createElement('button');
   modifyButton.textContent = 'Modify';
-  modifyButton.className = MODIFY_WIDGET_CLASS;
+  modifyButton.className = MODIFY_BUTTON_CLASS;
   modifyButton.onclick = () => {
     disposeWidgets(editor);
     showModifyWidget(editor, selection, options);

@@ -11,6 +11,7 @@ export const editorWidgetState = new WeakMap<
 
 /**
  * Disposes all action-related widgets from the editor.
+ *
  * @param editor - The editor instance.
  */
 export const disposeWidgets = (editor: StandaloneCodeEditor) => {
@@ -19,7 +20,7 @@ export const disposeWidgets = (editor: StandaloneCodeEditor) => {
     state.widgets.forEach(widgetId => {
       editor.removeOverlayWidget({
         getId: () => widgetId,
-        getDomNode: () => null as unknown as HTMLElement,
+        getDomNode: () => document.createElement('div'),
         getPosition: () => null,
       });
     });
@@ -28,7 +29,7 @@ export const disposeWidgets = (editor: StandaloneCodeEditor) => {
 };
 
 /**
- * WeakMap to store the editor decorations (e.g. diff decorations).
+ * WeakMap to store the editor decorations (e.g., diff decorations).
  */
 export const editorDiffDecorationState = new WeakMap<
   StandaloneCodeEditor,
@@ -37,6 +38,7 @@ export const editorDiffDecorationState = new WeakMap<
 
 /**
  * Disposes all decorations from the editor.
+ *
  * @param editor - The editor instance.
  */
 export const disposeDiffDecorations = (editor: StandaloneCodeEditor) => {

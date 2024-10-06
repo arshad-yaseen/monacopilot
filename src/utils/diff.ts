@@ -1,8 +1,9 @@
+// utils/diff.ts
 import {
   DIFF_ADDED_LINE_CLASS,
   DIFF_DECORATION_DEFAULT_OPTIONS,
   DIFF_DELETED_LINE_CLASS,
-} from '../constants';
+} from '../constants/editor';
 import {
   EditorDecorationsCollection,
   EditorDeltaDecoration,
@@ -19,32 +20,23 @@ export interface Diff {
 
 /**
  * Computes the Longest Common Subsequence (LCS) of two sequences.
- * @param {string[]} seq1 - The first sequence.
- * @param {string[]} seq2 - The second sequence.
- * @returns {Diff[]} An array of Diff objects representing the LCS.
+ *
+ * @param seq1 - The first sequence.
+ * @param seq2 - The second sequence.
+ * @returns An array of Diff objects representing the LCS.
  */
 export const computeLCS = (seq1: string[], seq2: string[]): Diff[] => {
   const m = seq1.length;
   const n = seq2.length;
-  const dp = Array(m + 1)
-    .fill(null)
-    .map(() => Array(n + 1).fill(0));
+  const dp = Array.from({length: m + 1}, () => Array(n + 1).fill(0));
 
   // Build the LCS dp table
-  for (let i = 0; i <= m; i++) {
-    dp[i][0] = 0;
-  }
-  for (let j = 0; j <= n; j++) {
-    dp[0][j] = 0;
-  }
   for (let i = 1; i <= m; i++) {
     for (let j = 1; j <= n; j++) {
       if (seq1[i - 1] === seq2[j - 1]) {
         dp[i][j] = dp[i - 1][j - 1] + 1;
-      } else if (dp[i - 1][j] >= dp[i][j - 1]) {
-        dp[i][j] = dp[i - 1][j];
       } else {
-        dp[i][j] = dp[i][j - 1];
+        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
       }
     }
   }
@@ -56,16 +48,13 @@ export const computeLCS = (seq1: string[], seq2: string[]): Diff[] => {
 
   while (i > 0 && j > 0) {
     if (seq1[i - 1] === seq2[j - 1]) {
-      // Characters match, move diagonally
       edits.unshift({type: 'equal', line: seq1[i - 1]});
       i--;
       j--;
     } else if (dp[i][j] === dp[i - 1][j]) {
-      // Move up, character deleted from seq1
       edits.unshift({type: 'deleted', line: seq1[i - 1]});
       i--;
     } else {
-      // Move left, character added in seq2
       edits.unshift({type: 'added', line: seq2[j - 1]});
       j--;
     }
@@ -89,9 +78,9 @@ export const computeLCS = (seq1: string[], seq2: string[]): Diff[] => {
 /**
  * Computes the differences between two texts.
  *
- * @param {string} originalText - The original text to compare.
- * @param {string} modifiedText - The modified text to compare against the original.
- * @returns {Diff[]} An array of Diff objects representing the differences between the texts.
+ * @param originalText - The original text to compare.
+ * @param modifiedText - The modified text to compare against the original.
+ * @returns An array of Diff objects representing the differences between the texts.
  */
 export const getDiffs = (
   originalText: string,
@@ -105,14 +94,10 @@ export const getDiffs = (
 /**
  * Applies diff decorations to the editor based on the differences between original and modified text.
  *
- * This function computes the differences between the original and modified text,
- * applies the changes to the editor, and adds decorations to highlight
- * added and deleted lines. It returns an object with methods to apply and clear the decorations.
- *
- * @param {StandaloneCodeEditor} editor - The Monaco editor instance to apply decorations to.
- * @param {string} originalText - The original text before modifications.
- * @param {string} modifiedText - The modified text to compare against the original.
- * @returns {Object} An object with methods to apply and clear decorations.
+ * @param editor - The Monaco editor instance to apply decorations to.
+ * @param originalText - The original text before modifications.
+ * @param modifiedText - The modified text to compare against the original.
+ * @returns An object with methods to apply and clear decorations.
  */
 export const diffDecorations = (
   editor: StandaloneCodeEditor,
@@ -163,16 +148,22 @@ export const diffDecorations = (
 
   return {
     apply: () => {
-      model.applyEdits([{range: model.getFullModelRange(), text: newValue}]);
+      model.pushEditOperations(
+        [],
+        [{range: model.getFullModelRange(), text: newValue}],
+        () => null,
+      );
       decorationsCollection = editor.createDecorationsCollection(decorations);
     },
     clear: () => {
       if (decorationsCollection) {
         decorationsCollection.clear();
       }
-      model.applyEdits([
-        {range: model.getFullModelRange(), text: originalText},
-      ]);
+      model.pushEditOperations(
+        [],
+        [{range: model.getFullModelRange(), text: originalText}],
+        () => null,
+      );
     },
   };
 };

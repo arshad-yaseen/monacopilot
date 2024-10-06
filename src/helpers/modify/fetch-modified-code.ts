@@ -2,6 +2,7 @@ import {ModifyOptions, ModifyRequestHandler} from '../../types';
 
 /**
  * Fetches the modified code from the AI model.
+ *
  * @param originalCode - The original selected code.
  * @param prompt - The user's prompt.
  * @param options - Options for the modify functionality.
@@ -29,6 +30,7 @@ export const fetchModifiedCode = async (
 
 /**
  * Default request handler for fetching modified code.
+ *
  * @param endpoint - The API endpoint.
  * @param payload - The request payload.
  * @returns A promise resolving to the response.

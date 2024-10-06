@@ -19,6 +19,7 @@ export type ModifyOptions = {
   endpoint: string;
   placeholder?: string;
   requestHandler?: ModifyRequestHandler;
+  onError?: (error: Error) => void;
 };
 
 export type ModifyRequestHandler = (

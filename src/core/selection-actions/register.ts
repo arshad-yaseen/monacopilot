@@ -21,18 +21,18 @@ let activeRegistration: SelectionActionsRegistration | null = null;
 
 /**
  * Registers the selection action functionality with the Monaco editor.
+ *
  * @param monaco - The Monaco instance.
  * @param editor - The editor instance.
  * @param options - Options for the action functionality.
- * @returns A ModifyRegistration object with a deregister method.
+ * @returns A SelectionActionsRegistration object with a deregister method.
  */
 export const registerSelectionActions = (
   monaco: Monaco,
   editor: StandaloneCodeEditor,
   options: RegisterSelectionActionsOptions,
 ): SelectionActionsRegistration => {
-  // Currently, the monaco parameter is unused. This line prevents lint warnings.
-  // It may be used in future implementations.
+  // Currently unused; reserved for future use
   void monaco;
 
   // Deregister any existing registration
@@ -63,10 +63,11 @@ export const registerSelectionActions = (
       if (!state) return;
 
       const selection = event.selection;
-      if (!selection.isEmpty() && !state.isModifyWidgetVisible) {
-        showActionButtonsWidget(editor, selection, options);
+      if (!selection.isEmpty()) {
+        if (!state.isModifyWidgetVisible) {
+          showActionButtonsWidget(editor, selection, options);
+        }
       } else if (!state.isModifyWidgetVisible) {
-        state.isModifyWidgetVisible = false;
         disposeWidgets(editor);
         disposeDiffDecorations(editor);
       }
@@ -94,6 +95,7 @@ export const registerSelectionActions = (
 
 /**
  * Shows the action buttons overlay widget.
+ *
  * @param editor - The editor instance.
  * @param selection - The current selection.
  * @param options - Options for the action functionality.
@@ -114,6 +116,7 @@ export const showActionButtonsWidget = (
 
 /**
  * Creates the action buttons overlay widget.
+ *
  * @param editor - The editor instance.
  * @param selection - The current selection.
  * @param options - Options for the action functionality.

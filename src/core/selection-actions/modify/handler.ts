@@ -3,7 +3,7 @@ import {
   MODIFY_WIDGET_ACCEPT_BUTTON_CLASS,
   MODIFY_WIDGET_PROMPT_CONTAINER_CLASS,
   MODIFY_WIDGET_REJECT_BUTTON_CLASS,
-} from '../../../constants';
+} from '../../../constants/modify';
 import {
   EditorSelection,
   ModifyOptions,
@@ -19,6 +19,7 @@ import {
 
 /**
  * Handles the modification of the selected code.
+ *
  * @param editor - The editor instance.
  * @param selection - The current selection.
  * @param prompt - The user's prompt describing the modifications.
@@ -32,46 +33,57 @@ export const handleModifySelection = async (
   options: ModifyOptions,
   modifyWidgetDomNode: HTMLElement,
 ) => {
-  const mdl = editor.getModel();
-  if (!mdl) return;
+  const model = editor.getModel();
+  if (!model) return;
 
-  const originalCode = mdl.getValueInRange(selection);
+  const originalCode = model.getValueInRange(selection);
 
   // Indicate loading state
   modifyWidgetDomNode.classList.add(FETCHING_MODIFIED_CODE_CLASS);
 
-  const modifiedCode = await new Promise<string>(resolve => {
-    setTimeout(() => {
-      resolve(
-        `const randomNumber = Math.random()\nconst isPalindrome = 'hsello'`,
-      );
-    }, 500);
-  });
+  try {
+    const modifiedCode = await new Promise<string>(resolve => {
+      setTimeout(() => {
+        resolve(
+          `const randomNumber = Math.random()\nconst isPalindrome = 'hsello'`,
+        );
+      }, 500);
+    });
 
-  // Remove loading state
-  modifyWidgetDomNode.classList.remove(FETCHING_MODIFIED_CODE_CLASS);
+    // Remove loading state
+    modifyWidgetDomNode.classList.remove(FETCHING_MODIFIED_CODE_CLASS);
 
-  // Apply diff decorations
-  const decorations = diffDecorations(editor, originalCode, modifiedCode);
+    // Apply diff decorations
+    const decorations = diffDecorations(editor, originalCode, modifiedCode);
 
-  if (!decorations) return;
+    if (!decorations) return;
 
-  editorDiffDecorationState.set(editor, decorations);
+    editorDiffDecorationState.set(editor, decorations);
 
-  decorations.apply();
-  removeSelection(editor, selection);
+    decorations.apply();
+    removeSelection(editor, selection);
 
-  // Update the prompt widget to show Accept/Reject buttons
-  showAcceptRejectControls(
-    editor,
-    modifyWidgetDomNode,
-    selection,
-    modifiedCode,
-  );
+    // Update the prompt widget to show Accept/Reject buttons
+    showAcceptRejectControls(
+      editor,
+      modifyWidgetDomNode,
+      selection,
+      modifiedCode,
+    );
+  } catch (error) {
+    // Handle error
+    modifyWidgetDomNode.classList.remove(FETCHING_MODIFIED_CODE_CLASS);
+    if (options.onError) {
+      options.onError(error as Error);
+    } else {
+      console.error(error);
+    }
+  }
 };
 
 /**
  * Updates the prompt widget to show Accept/Reject buttons.
+ *
  * @param editor - The editor instance.
  * @param modifyWidgetDomNode - The DOM node of the modify widget.
  * @param selection - The selection range of the original code.
@@ -83,7 +95,7 @@ const showAcceptRejectControls = (
   selection: EditorSelection,
   modifiedCode: string,
 ) => {
-  // remove the prompt textarea and submit button
+  // Remove the prompt textarea and submit button
   const promptContainer = modifyWidgetDomNode.querySelector(
     `.${MODIFY_WIDGET_PROMPT_CONTAINER_CLASS}`,
   );
@@ -106,7 +118,7 @@ const showAcceptRejectControls = (
   acceptButton.textContent = 'Accept';
   acceptButton.onclick = () => {
     beforeClick();
-    acceptChanges(editor, selection, modifiedCode, modifyWidgetDomNode);
+    acceptChanges(editor, selection, modifiedCode);
     disposeWidgets(editor);
   };
 
@@ -115,36 +127,35 @@ const showAcceptRejectControls = (
   rejectButton.textContent = 'Reject';
   rejectButton.onclick = () => {
     beforeClick();
-    rejectChanges(editor, modifyWidgetDomNode);
+    rejectChanges(editor);
     disposeWidgets(editor);
   };
 
   // Append buttons to the modify widget
-  modifyWidgetDomNode.appendChild(acceptButton);
-  modifyWidgetDomNode.appendChild(rejectButton);
+  const controlsContainer = document.createElement('div');
+  controlsContainer.className = 'modify-widget-controls';
+  controlsContainer.appendChild(acceptButton);
+  controlsContainer.appendChild(rejectButton);
+
+  modifyWidgetDomNode.appendChild(controlsContainer);
 };
 
 /**
  * Accepts the changes and replaces the selected code with the modified code.
+ *
  * @param editor - The editor instance.
- * @param decorations - The diff decorations applied.
  * @param selection - The selection range of the original code.
  * @param modifiedCode - The modified code.
- * @param modifyWidgetDomNode - The DOM node of the modify widget.
  */
 const acceptChanges = (
   editor: StandaloneCodeEditor,
   selection: EditorSelection,
   modifiedCode: string,
-  modifyWidgetDomNode: HTMLElement,
 ) => {
-  const mdl = editor.getModel();
-  if (!mdl) return;
+  const model = editor.getModel();
+  if (!model) return;
 
-  // Clear the modify widget content
-  modifyWidgetDomNode.innerHTML = '';
-
-  mdl.pushEditOperations(
+  model.pushEditOperations(
     [],
     [
       {
@@ -158,14 +169,9 @@ const acceptChanges = (
 
 /**
  * Rejects the changes and restores the editor to its original state.
+ *
  * @param editor - The editor instance.
- * @param modifyWidgetDomNode - The DOM node of the modify widget.
  */
-const rejectChanges = (
-  editor: StandaloneCodeEditor,
-  modifyWidgetDomNode: HTMLElement,
-) => {
+const rejectChanges = (editor: StandaloneCodeEditor) => {
   disposeDiffDecorations(editor);
-  // Clear the modify widget content
-  modifyWidgetDomNode.innerHTML = '';
 };
