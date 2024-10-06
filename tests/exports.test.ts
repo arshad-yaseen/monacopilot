@@ -23,6 +23,7 @@ describe('MonacoPilot exports', () => {
       'registerCopilot',
       'Copilot',
       'registerCompletion',
+      'applyDiffDecorations',
     ];
     const actualExports = Object.keys(MonacoPilot);
 

@@ -9,9 +9,12 @@ import {
   InlineCompletionHandlerParams,
   TriggerType,
 } from '../../types';
-import {asyncDebounce, getTextBeforeCursorInLine} from '../../utils';
 import {
-  computeCompletionInsertionRange,
+  asyncDebounce,
+  computeInsertionRange,
+  getTextBeforeCursorInLine,
+} from '../../utils';
+import {
   createInlineCompletionResult,
   formatCompletion,
 } from '../../utils/completion';
@@ -122,7 +125,7 @@ const handleInlineCompletions = async ({
 
     if (completion) {
       const formattedCompletion = formatCompletion(completion);
-      const completionInsertionRange = computeCompletionInsertionRange(
+      const completionInsertionRange = computeInsertionRange(
         pos,
         mdl,
         formattedCompletion,

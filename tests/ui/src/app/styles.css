@@ -1,0 +1,6 @@
+.monacopilot-diff-added-line {
+  background-color: hsla(120, 40%, 17%, 1);
+}
+.monacopilot-diff-deleted-line {
+  background-color: hsla(350, 52%, 19%, 1);
+}

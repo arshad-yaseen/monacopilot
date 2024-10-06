@@ -2,6 +2,8 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 
 import {CursorPosition, EditorModel} from '../src/types';
 import {
+  computeInsertionRange,
+  createRange,
   getCharAfterCursor,
   getCharBeforeCursor,
   getLastLineColumnCount,
@@ -9,13 +11,15 @@ import {
   getTextBeforeCursorInLine,
   keepNLines,
 } from '../src/utils/editor';
-import {mockModel} from './mock';
+import {mockModel, mockPosition} from './mock';
 
 describe('Editor Utilities', () => {
   let mdl: EditorModel;
+  let pos: CursorPosition;
 
   beforeEach(() => {
     mdl = mockModel;
+    pos = mockPosition;
     vi.clearAllMocks();
   });
 
@@ -189,6 +193,215 @@ describe('Editor Utilities', () => {
       const text = '\n\n\n\n';
       const result = keepNLines(text, 2);
       expect(result).toBe('\n\n');
+    });
+  });
+
+  describe('createRange', () => {
+    it('creates a range with the same start and end positions', () => {
+      const range = createRange(1, 1, 1, 1);
+      expect(range).toEqual({
+        startLineNumber: 1,
+        startColumn: 1,
+        endLineNumber: 1,
+        endColumn: 1,
+      });
+    });
+
+    it('creates a range spanning multiple lines', () => {
+      const range = createRange(1, 5, 3, 10);
+      expect(range).toEqual({
+        startLineNumber: 1,
+        startColumn: 5,
+        endLineNumber: 3,
+        endColumn: 10,
+      });
+    });
+
+    it('creates a range within a single line', () => {
+      const range = createRange(5, 10, 5, 20);
+      expect(range).toEqual({
+        startLineNumber: 5,
+        startColumn: 10,
+        endLineNumber: 5,
+        endColumn: 20,
+      });
+    });
+
+    it('handles zero values correctly', () => {
+      const range = createRange(0, 0, 0, 0);
+      expect(range).toEqual({
+        startLineNumber: 0,
+        startColumn: 0,
+        endLineNumber: 0,
+        endColumn: 0,
+      });
+    });
+
+    it('handles large numbers correctly', () => {
+      const range = createRange(1000000, 5000000, 9999999, 9999999);
+      expect(range).toEqual({
+        startLineNumber: 1000000,
+        startColumn: 5000000,
+        endLineNumber: 9999999,
+        endColumn: 9999999,
+      });
+    });
+  });
+
+  describe('computeInsertionRange', () => {
+    it('should handle empty completion', () => {
+      const result = computeInsertionRange(pos, mdl, '');
+      expect(result).toEqual({
+        startLineNumber: 1,
+        startColumn: 1,
+        endLineNumber: 1,
+        endColumn: 1,
+      });
+    });
+
+    it('should handle cursor at the end of the document', () => {
+      vi.spyOn(mdl, 'getOffsetAt').mockReturnValue(10);
+      vi.spyOn(mdl, 'getValue').mockReturnValue('1234567890');
+
+      const result = computeInsertionRange(pos, mdl, 'completion');
+      expect(result).toEqual({
+        startLineNumber: 1,
+        startColumn: 1,
+        endLineNumber: 1,
+        endColumn: 1,
+      });
+    });
+
+    it('should handle empty remaining text', () => {
+      vi.spyOn(mdl, 'getOffsetAt').mockReturnValue(10);
+      vi.spyOn(mdl, 'getValue').mockReturnValue('1234567890');
+
+      const result = computeInsertionRange(pos, mdl, 'completion');
+      expect(result).toEqual({
+        startLineNumber: 1,
+        startColumn: 1,
+        endLineNumber: 1,
+        endColumn: 1,
+      });
+    });
+
+    it('should find prefix overlap', () => {
+      vi.spyOn(mdl, 'getOffsetAt').mockReturnValue(5);
+      vi.spyOn(mdl, 'getValue').mockReturnValue('abcdefghij');
+      vi.spyOn(mdl, 'getPositionAt').mockReturnValue({
+        lineNumber: 1,
+        column: 8,
+      } as any);
+
+      const result = computeInsertionRange(pos, mdl, 'fghklm');
+      expect(result).toEqual({
+        startLineNumber: 1,
+        startColumn: 1,
+        endLineNumber: 1,
+        endColumn: 8,
+      });
+    });
+
+    it('should find suffix overlap', () => {
+      vi.spyOn(mdl, 'getOffsetAt').mockReturnValue(5);
+      vi.spyOn(mdl, 'getValue').mockReturnValue('abcdefghij');
+      vi.spyOn(mdl, 'getPositionAt').mockReturnValue({
+        lineNumber: 1,
+        column: 8,
+      } as any);
+
+      const result = computeInsertionRange(pos, mdl, 'xyzfgh');
+      expect(result).toEqual({
+        startLineNumber: 1,
+        startColumn: 1,
+        endLineNumber: 1,
+        endColumn: 8,
+      });
+    });
+
+    it('should find internal overlap', () => {
+      vi.spyOn(mdl, 'getOffsetAt').mockReturnValue(5);
+      vi.spyOn(mdl, 'getValue').mockReturnValue('abcdefghij');
+      vi.spyOn(mdl, 'getPositionAt').mockReturnValue({
+        lineNumber: 1,
+        column: 8,
+      } as any);
+
+      const result = computeInsertionRange(pos, mdl, 'xyzfghklm');
+      expect(result).toEqual({
+        startLineNumber: 1,
+        startColumn: 1,
+        endLineNumber: 1,
+        endColumn: 8,
+      });
+    });
+
+    it('should handle no overlap', () => {
+      vi.spyOn(mdl, 'getOffsetAt').mockReturnValue(5);
+      vi.spyOn(mdl, 'getValue').mockReturnValue('abcdefghij');
+      vi.spyOn(mdl, 'getPositionAt').mockReturnValue({
+        lineNumber: 1,
+        column: 5,
+      } as any);
+
+      const result = computeInsertionRange(pos, mdl, 'xyz');
+      expect(result).toEqual({
+        startLineNumber: 1,
+        startColumn: 1,
+        endLineNumber: 1,
+        endColumn: 5,
+      });
+    });
+
+    it('should handle multi-line text', () => {
+      vi.spyOn(mdl, 'getOffsetAt').mockReturnValue(10);
+      vi.spyOn(mdl, 'getValue').mockReturnValue('line1\nline2\nline3');
+      vi.spyOn(mdl, 'getPositionAt').mockReturnValue({
+        lineNumber: 2,
+        column: 3,
+      } as any);
+
+      const result = computeInsertionRange(pos, mdl, 'ne2\nlin');
+      expect(result).toEqual({
+        startLineNumber: 1,
+        startColumn: 1,
+        endLineNumber: 2,
+        endColumn: 3,
+      });
+    });
+
+    it('should handle completion longer than remaining text', () => {
+      vi.spyOn(mdl, 'getOffsetAt').mockReturnValue(5);
+      vi.spyOn(mdl, 'getValue').mockReturnValue('abcdefghij');
+      vi.spyOn(mdl, 'getPositionAt').mockReturnValue({
+        lineNumber: 1,
+        column: 10,
+      } as any);
+
+      const result = computeInsertionRange(pos, mdl, 'fghijklmnop');
+      expect(result).toEqual({
+        startLineNumber: 1,
+        startColumn: 1,
+        endLineNumber: 1,
+        endColumn: 10,
+      });
+    });
+
+    it('should handle completion shorter than remaining text', () => {
+      vi.spyOn(mdl, 'getOffsetAt').mockReturnValue(5);
+      vi.spyOn(mdl, 'getValue').mockReturnValue('abcdefghijklmnop');
+      vi.spyOn(mdl, 'getPositionAt').mockReturnValue({
+        lineNumber: 1,
+        column: 8,
+      } as any);
+
+      const result = computeInsertionRange(pos, mdl, 'fgh');
+      expect(result).toEqual({
+        startLineNumber: 1,
+        startColumn: 1,
+        endLineNumber: 1,
+        endColumn: 8,
+      });
     });
   });
 });
