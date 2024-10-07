@@ -18,20 +18,14 @@ export default function Home() {
     if (!monaco || !editor) return;
 
     const completion = registerCompletion(monaco, editor, {
-      endpoint: 'https://api.dev.withcortex.ai/misc/complete-code',
+      endpoint: '/api/complete',
       language: 'javascript',
-      relatedFiles: [
-        {
-          path: './code_step.js',
-          content: 'const document = $input.document$\n...',
-        },
-      ],
     });
 
     const selectionActions = registerSelectionActions(monaco, editor, {
       actions: ['modify'],
       modify: {
-        endpoint: 'https://api.dev.withcortex.ai/misc/modify-code',
+        endpoint: '/api/modify',
       },
     });
 

@@ -10,6 +10,13 @@ export const editorWidgetState = new WeakMap<
 >();
 
 /**
+ * WeakMap to store cleanup functions associated with each editor instance.
+ * This allows for efficient memory management and prevents memory leaks
+ * by automatically removing entries when the editor is garbage collected.
+ */
+export const cleanups = new WeakMap<StandaloneCodeEditor, () => void>();
+
+/**
  * Disposes all action-related widgets from the editor.
  *
  * @param editor - The editor instance.

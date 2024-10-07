@@ -81,6 +81,8 @@ const createModifyWidget = (
   const textArea = document.createElement('textarea');
   textArea.className = MODIFY_WIDGET_PROMPT_TEXTAREA_CLASS;
   textArea.placeholder = options.placeholder || DEFAULT_MODIFY_PLACEHOLDER;
+  textArea.rows = 4;
+  textArea.autofocus = true;
 
   const submitButton = document.createElement('button');
   submitButton.textContent = 'Submit';

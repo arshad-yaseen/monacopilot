@@ -12,6 +12,7 @@ import {
 } from '../../types';
 import {uid} from '../../utils';
 import {
+  cleanups,
   disposeDiffDecorations,
   disposeWidgets,
   editorWidgetState,
@@ -52,6 +53,11 @@ export const registerSelectionActions = (
   const deregister = () => {
     disposables.forEach(disposable => disposable.dispose());
     editorWidgetState.delete(editor);
+    const cleanup = cleanups.get(editor);
+    if (cleanup) {
+      cleanup();
+      cleanups.delete(editor);
+    }
     disposeWidgets(editor);
     disposeDiffDecorations(editor);
     activeRegistration = null;
