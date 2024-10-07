@@ -51,13 +51,13 @@
 
 :where(.action-buttons-widget) button span {
   color: var(--monacopilot-color-foreground);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 500;
 }
 
 :where(.action-buttons-widget) .action-buttons-widget-button-key {
   color: var(--monacopilot-color-muted);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 500;
 }
 
@@ -82,7 +82,7 @@
   background: none;
   border: none;
   color: var(--monacopilot-color-muted);
-  font-size: 11px;
+  font-size: 0.6875rem;
   cursor: pointer;
 }
 
@@ -107,7 +107,7 @@
   padding: 6px;
   border: 1px solid var(--monacopilot-color-border);
   border-radius: 3px;
-  font-size: 12px;
+  font-size: 0.75rem;
   resize: vertical;
   background-color: var(--monacopilot-color-background);
   color: var(--monacopilot-color-foreground);
@@ -140,7 +140,7 @@
   padding: 4px 8px;
   border-radius: 3px;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 500;
   transition: background-color 0.2s;
 }
@@ -153,7 +153,7 @@
   padding: 4px 8px;
   border-radius: 3px;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -193,9 +193,9 @@
 }
 
 :where(.modify-widget-loading-dot) {
-  width: 2px;
-  height: 2px;
-  margin: 0 1px;
+  width: 0.125rem;
+  height: 0.125rem;
+  margin: 0 0.0625rem;
   background-color: var(--monacopilot-color-foreground);
   border-radius: 50%;
   animation: monacopilot-blink 1.4s infinite both;
