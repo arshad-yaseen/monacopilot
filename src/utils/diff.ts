@@ -1,4 +1,3 @@
-// utils/diff.ts
 import {
   DIFF_ADDED_LINE_CLASS,
   DIFF_DECORATION_DEFAULT_OPTIONS,
@@ -7,6 +6,7 @@ import {
 import {
   EditorDecorationsCollection,
   EditorDeltaDecoration,
+  EditorSelection,
   StandaloneCodeEditor,
 } from '../types';
 import {createRange} from './editor';
@@ -92,18 +92,21 @@ export const getDiffs = (
 };
 
 /**
- * Applies diff decorations to the editor based on the differences between original and modified text.
+ * Applies diff decorations to the editor based on the differences between original and modified text,
+ * but only within the specified selection range.
  *
  * @param editor - The Monaco editor instance to apply decorations to.
- * @param originalText - The original text before modifications.
- * @param modifiedText - The modified text to compare against the original.
+ * @param originalText - The original text within the selection range.
+ * @param modifiedText - The modified text within the selection range.
+ * @param selection - The selection range within which to apply the diff decorations.
  * @returns An object with methods to apply and clear decorations.
  */
-export const diffDecorations = (
+export const applyDiffDecorations = (
   editor: StandaloneCodeEditor,
   originalText: string,
   modifiedText: string,
-): {apply: () => void; clear: () => void} | null => {
+  selection: EditorSelection,
+): {clear: () => void} | null => {
   const diffs = getDiffs(originalText, modifiedText);
   const model = editor.getModel();
 
@@ -111,11 +114,21 @@ export const diffDecorations = (
 
   const decorations: EditorDeltaDecoration[] = [];
   const newLines: string[] = [];
-  let lineNumber = 1;
+  let lineNumber = selection.startLineNumber;
 
-  diffs.forEach(diff => {
+  diffs.forEach((diff, index) => {
     const {type, line} = diff;
     const contentLength = line.length;
+    let rangeStartColumn = 1;
+    let rangeEndColumn = contentLength + 1;
+
+    // Adjust columns for the first and last lines
+    if (index === 0) {
+      rangeStartColumn = selection.startColumn;
+    }
+    if (index === diffs.length - 1) {
+      rangeEndColumn = selection.endColumn;
+    }
 
     if (type === 'equal') {
       newLines.push(line);
@@ -123,7 +136,12 @@ export const diffDecorations = (
     } else if (type === 'deleted') {
       newLines.push(line);
       decorations.push({
-        range: createRange(lineNumber, 1, lineNumber, contentLength + 1),
+        range: createRange(
+          lineNumber,
+          rangeStartColumn,
+          lineNumber,
+          rangeEndColumn,
+        ),
         options: {
           ...DIFF_DECORATION_DEFAULT_OPTIONS,
           className: DIFF_DELETED_LINE_CLASS,
@@ -133,7 +151,12 @@ export const diffDecorations = (
     } else if (type === 'added') {
       newLines.push(line);
       decorations.push({
-        range: createRange(lineNumber, 1, lineNumber, contentLength + 1),
+        range: createRange(
+          lineNumber,
+          rangeStartColumn,
+          lineNumber,
+          rangeEndColumn,
+        ),
         options: {
           ...DIFF_DECORATION_DEFAULT_OPTIONS,
           className: DIFF_ADDED_LINE_CLASS,
@@ -143,25 +166,38 @@ export const diffDecorations = (
     }
   });
 
-  const newValue = newLines.join('\n');
+  const newSelectionText = newLines.join('\n');
   let decorationsCollection: EditorDecorationsCollection | null = null;
 
+  // Calculate the modified range
+  const modifiedEndLineNumber = selection.startLineNumber + newLines.length - 1;
+  const modifiedEndColumn =
+    newLines.length > 1
+      ? newLines[newLines.length - 1].length + 1
+      : selection.endColumn;
+
+  const modifiedRange = createRange(
+    selection.startLineNumber,
+    selection.startColumn,
+    modifiedEndLineNumber,
+    modifiedEndColumn,
+  );
+
+  model.pushEditOperations(
+    [],
+    [{range: selection, text: newSelectionText}],
+    () => null,
+  );
+  decorationsCollection = editor.createDecorationsCollection(decorations);
+
   return {
-    apply: () => {
-      model.pushEditOperations(
-        [],
-        [{range: model.getFullModelRange(), text: newValue}],
-        () => null,
-      );
-      decorationsCollection = editor.createDecorationsCollection(decorations);
-    },
     clear: () => {
       if (decorationsCollection) {
         decorationsCollection.clear();
       }
       model.pushEditOperations(
         [],
-        [{range: model.getFullModelRange(), text: originalText}],
+        [{range: modifiedRange, text: originalText}],
         () => null,
       );
     },

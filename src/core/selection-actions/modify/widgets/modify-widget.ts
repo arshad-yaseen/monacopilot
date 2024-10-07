@@ -2,15 +2,16 @@ import {
   DEFAULT_MODIFY_PLACEHOLDER,
   MODIFY_WIDGET_CLASS,
   MODIFY_WIDGET_CLOSE_BUTTON_CLASS,
+  MODIFY_WIDGET_FOOTER_CLASS,
   MODIFY_WIDGET_PROMPT_CONTAINER_CLASS,
   MODIFY_WIDGET_PROMPT_SUBMIT_BUTTON_CLASS,
   MODIFY_WIDGET_PROMPT_TEXTAREA_CLASS,
-} from '../../../../constants/modify';
+} from '../../../../constants';
 import {
-  EditorOverlayWidget,
+  ContentWidgetPositionPreference,
+  EditorContentWidget,
   EditorSelection,
   ModifyOptions,
-  OverlayWidgetPositionPreference,
   StandaloneCodeEditor,
 } from '../../../../types';
 import {uid} from '../../../../utils';
@@ -35,13 +36,21 @@ export const showModifyWidget = (
 ) => {
   const widget = createModifyWidget(editor, selection, options);
 
-  editor.addOverlayWidget(widget);
+  editor.addContentWidget(widget);
 
   const state = editorWidgetState.get(editor);
   if (state) {
     state.widgets.add(widget.getId());
     state.isModifyWidgetVisible = true;
   }
+
+  // Focus the textarea after the widget is added
+  setTimeout(() => {
+    const textArea = widget.getDomNode().querySelector('textarea');
+    if (textArea) {
+      textArea.focus();
+    }
+  }, 0);
 };
 
 /**
@@ -50,13 +59,13 @@ export const showModifyWidget = (
  * @param editor - The editor instance.
  * @param selection - The current selection.
  * @param options - Options for the action functionality.
- * @returns The overlay widget.
+ * @returns The content widget.
  */
 const createModifyWidget = (
   editor: StandaloneCodeEditor,
   selection: EditorSelection,
   options: ModifyOptions,
-): EditorOverlayWidget => {
+): EditorContentWidget => {
   const widgetId = `modify-widget-${uid()}`;
   const domNode = document.createElement('div');
   domNode.className = MODIFY_WIDGET_CLASS;
@@ -81,8 +90,12 @@ const createModifyWidget = (
   const textArea = document.createElement('textarea');
   textArea.className = MODIFY_WIDGET_PROMPT_TEXTAREA_CLASS;
   textArea.placeholder = options.placeholder || DEFAULT_MODIFY_PLACEHOLDER;
-  textArea.rows = 4;
-  textArea.autofocus = true;
+  textArea.rows = 2;
+  // Remove autofocus attribute as it's not reliable for dynamically added elements
+  // textArea.autofocus = true;
+
+  const footerContainer = document.createElement('div');
+  footerContainer.className = MODIFY_WIDGET_FOOTER_CLASS;
 
   const submitButton = document.createElement('button');
   submitButton.textContent = 'Submit';
@@ -90,21 +103,33 @@ const createModifyWidget = (
   submitButton.onclick = () => {
     const prompt = textArea.value.trim();
     if (prompt) {
-      handleModifySelection(editor, selection, prompt, options, domNode);
+      handleModifySelection(
+        editor,
+        selection,
+        prompt,
+        options,
+        domNode,
+        footerContainer,
+      );
     }
   };
 
   promptContainer.appendChild(textArea);
-  promptContainer.appendChild(submitButton);
+  footerContainer.appendChild(submitButton);
 
   domNode.appendChild(promptContainer);
+  domNode.appendChild(footerContainer);
 
   return {
     getId: () => widgetId,
     getDomNode: () => domNode,
     getPosition: () => ({
       position: selection.getStartPosition(),
-      preference: OverlayWidgetPositionPreference.TOP_CENTER,
+      preference: [
+        ContentWidgetPositionPreference.ABOVE,
+        ContentWidgetPositionPreference.BELOW,
+        ContentWidgetPositionPreference.EXACT,
+      ],
     }),
   };
 };

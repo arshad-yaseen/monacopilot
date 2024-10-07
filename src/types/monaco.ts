@@ -19,4 +19,4 @@ export type EditorDecorationsCollection =
   monaco.editor.IEditorDecorationsCollection;
 export type EditorDecorationOptions = monaco.editor.IModelDecorationOptions;
 export type EditorSelection = monaco.Selection;
-export type EditorOverlayWidget = monaco.editor.IOverlayWidget;
+export type EditorContentWidget = monaco.editor.IContentWidget;

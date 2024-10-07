@@ -1,0 +1,225 @@
+/* Reset styles */
+:where(.action-buttons-widget, .modify-widget) *,
+:where(.action-buttons-widget, .modify-widget) *::before,
+:where(.action-buttons-widget, .modify-widget) *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --monacopilot-color-background: #010101;
+  --monacopilot-color-foreground: #f9fafb;
+  --monacopilot-color-primary: #333333;
+  --monacopilot-color-primary-hover: #3a3a3a;
+  --monacopilot-color-secondary: #222222;
+  --monacopilot-color-border: #444444;
+  --monacopilot-color-muted: #9ca3af;
+  --monacopilot-color-success: #0d9488;
+  --monacopilot-color-error: #b91c1c;
+}
+
+/* Action Buttons Widget */
+:where(.action-buttons-widget) {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: var(--monacopilot-color-secondary);
+  border: 1px solid var(--monacopilot-color-border);
+  border-radius: 4px;
+}
+
+:where(.action-buttons-widget) button {
+  background-color: var(--monacopilot-color-primary);
+  border: none;
+  padding: 4px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+:where(.action-buttons-widget) button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+:where(.action-buttons-widget) button:hover {
+  background-color: var(--monacopilot-color-primary-hover);
+}
+
+:where(.action-buttons-widget) button span {
+  color: var(--monacopilot-color-foreground);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+:where(.action-buttons-widget) .action-buttons-widget-button-key {
+  color: var(--monacopilot-color-muted);
+  font-size: 10px;
+  font-weight: 500;
+}
+
+/* Modify Widget */
+:where(.modify-widget) {
+  background-color: var(--monacopilot-color-secondary);
+  border: 1px solid var(--monacopilot-color-border);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+:where(.modify-widget) button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+:where(.modify-widget) .modify-widget-close-button {
+  position: absolute;
+  top: 5px;
+  right: 8px;
+  background: none;
+  border: none;
+  color: var(--monacopilot-color-muted);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+:where(.modify-widget) .modify-widget-close-button:hover {
+  color: var(--monacopilot-color-foreground);
+}
+
+:where(.modify-widget) .modify-widget-close-button:focus {
+  outline: none;
+}
+
+:where(.modify-widget) .modify-widget-prompt-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 4px 4px 0px 4px;
+  width: 280px;
+}
+
+:where(.modify-widget) .modify-widget-prompt-textarea {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid var(--monacopilot-color-border);
+  border-radius: 3px;
+  font-size: 12px;
+  resize: vertical;
+  background-color: var(--monacopilot-color-background);
+  color: var(--monacopilot-color-foreground);
+  font-weight: 500;
+}
+
+:where(.modify-widget) .modify-widget-prompt-textarea:focus {
+  border-color: var(--monacopilot-color-primary);
+  outline: none;
+  box-shadow: 0 0 0 0.5px var(--monacopilot-color-primary-hover);
+}
+
+:where(.modify-widget) .modify-widget-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 4px;
+  gap: 4px;
+}
+
+:where(.modify-widget) .modify-widget-footer button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+:where(.modify-widget) .modify-widget-prompt-submit-button,
+:where(.modify-widget) .modify-widget-accept-button {
+  background-color: var(--monacopilot-color-success);
+  color: var(--monacopilot-color-secondary);
+  border: none;
+  padding: 4px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+:where(.modify-widget) .modify-widget-cancel-button,
+:where(.modify-widget) .modify-widget-reject-button {
+  background-color: var(--monacopilot-color-primary);
+  color: var(--monacopilot-color-foreground);
+  border: 1px solid var(--monacopilot-color-border);
+  padding: 4px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  transition: background-color 0.2s;
+}
+
+:where(.modify-widget) .modify-widget-prompt-submit-button:focus,
+:where(.modify-widget) .modify-widget-cancel-button:focus,
+:where(.modify-widget) .modify-widget-accept-button:focus,
+:where(.modify-widget) .modify-widget-reject-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--monacopilot-color-primary-hover);
+}
+
+/* Accept/Reject Controls */
+:where(.modify-widget) .modify-widget-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+/* Diff Decorations */
+:where(.diff-added-line) {
+  background-color: hsla(120, 40%, 17%, 1);
+}
+
+:where(.diff-deleted-line) {
+  background-color: hsla(350, 52%, 19%, 1);
+}
+
+/* Loading Animation */
+:where(.modify-widget-loading-container) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:where(.modify-widget-loading-dot) {
+  width: 2px;
+  height: 2px;
+  margin: 0 1px;
+  background-color: var(--monacopilot-color-foreground);
+  border-radius: 50%;
+  animation: monacopilot-blink 1.4s infinite both;
+}
+
+:where(.modify-widget-loading-dot):nth-child(1) {
+  animation-delay: 0s;
+}
+
+:where(.modify-widget-loading-dot):nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+:where(.modify-widget-loading-dot):nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes monacopilot-blink {
+  0%,
+  80%,
+  100% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+}

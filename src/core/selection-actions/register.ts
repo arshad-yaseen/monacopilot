@@ -1,11 +1,11 @@
 import {ACTION_BUTTONS_WIDGET_CLASS} from '../../constants';
 import {log} from '../../log';
 import {
+  ContentWidgetPositionPreference,
   Disposable,
-  EditorOverlayWidget,
+  EditorContentWidget,
   EditorSelection,
   Monaco,
-  OverlayWidgetPositionPreference,
   RegisterSelectionActionsOptions,
   SelectionActionsRegistration,
   StandaloneCodeEditor,
@@ -101,7 +101,7 @@ export const registerSelectionActions = (
 };
 
 /**
- * Shows the action buttons overlay widget.
+ * Shows the action buttons content widget.
  *
  * @param editor - The editor instance.
  * @param selection - The current selection.
@@ -113,7 +113,7 @@ export const showActionButtonsWidget = (
   options: RegisterSelectionActionsOptions,
 ) => {
   const widget = createActionButtonsWidget(editor, selection, options);
-  editor.addOverlayWidget(widget);
+  editor.addContentWidget(widget);
 
   const state = editorWidgetState.get(editor);
   if (state) {
@@ -122,18 +122,18 @@ export const showActionButtonsWidget = (
 };
 
 /**
- * Creates the action buttons overlay widget.
+ * Creates the action buttons content widget.
  *
  * @param editor - The editor instance.
  * @param selection - The current selection.
  * @param options - Options for the action functionality.
- * @returns The overlay widget.
+ * @returns The content widget.
  */
 const createActionButtonsWidget = (
   editor: StandaloneCodeEditor,
   selection: EditorSelection,
   options: RegisterSelectionActionsOptions,
-): EditorOverlayWidget => {
+): EditorContentWidget => {
   const widgetId = `action-buttons-widget-${uid()}`;
   const domNode = document.createElement('div');
   domNode.className = ACTION_BUTTONS_WIDGET_CLASS;
@@ -148,7 +148,11 @@ const createActionButtonsWidget = (
     getDomNode: () => domNode,
     getPosition: () => ({
       position: selection.getStartPosition(),
-      preference: OverlayWidgetPositionPreference.TOP_CENTER,
+      preference: [
+        ContentWidgetPositionPreference.ABOVE,
+        ContentWidgetPositionPreference.BELOW,
+        ContentWidgetPositionPreference.EXACT,
+      ],
     }),
   };
 };

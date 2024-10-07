@@ -36,17 +36,17 @@ export type ModifyResponse = {
   modifiedCode: string;
 };
 
-export enum OverlayWidgetPositionPreference {
+export enum ContentWidgetPositionPreference {
   /**
-   * Position the overlay widget in the top right corner
+   * Place the content widget exactly at a position
    */
-  TOP_RIGHT_CORNER = 0,
+  EXACT = 0,
   /**
-   * Position the overlay widget in the bottom right corner
+   * Place the content widget above a position
    */
-  BOTTOM_RIGHT_CORNER = 1,
+  ABOVE = 1,
   /**
-   * Position the overlay widget in the top center
+   * Place the content widget below a position
    */
-  TOP_CENTER = 2,
+  BELOW = 2,
 }

@@ -1,5 +1,5 @@
 import {EditorWidgetState, StandaloneCodeEditor} from '../../types';
-import {diffDecorations} from '../../utils';
+import {applyDiffDecorations} from '../../utils';
 
 /**
  * WeakMap to store the editor widget state.
@@ -25,7 +25,7 @@ export const disposeWidgets = (editor: StandaloneCodeEditor) => {
   const state = editorWidgetState.get(editor);
   if (state && state.widgets.size > 0) {
     state.widgets.forEach(widgetId => {
-      editor.removeOverlayWidget({
+      editor.removeContentWidget({
         getId: () => widgetId,
         getDomNode: () => document.createElement('div'),
         getPosition: () => null,
@@ -40,7 +40,7 @@ export const disposeWidgets = (editor: StandaloneCodeEditor) => {
  */
 export const editorDiffDecorationState = new WeakMap<
   StandaloneCodeEditor,
-  ReturnType<typeof diffDecorations>
+  ReturnType<typeof applyDiffDecorations>
 >();
 
 /**
