@@ -16,6 +16,7 @@ import {
 } from '../../../../types';
 import {uid} from '../../../../utils';
 import {
+  cleanups,
   disposeDiffDecorations,
   disposeWidgets,
   editorWidgetState,
@@ -34,6 +35,10 @@ export const showModifyWidget = (
   selection: EditorSelection,
   options: ModifyOptions,
 ) => {
+  // Dispose of existing widgets and decorations
+  disposeWidgets(editor);
+  disposeDiffDecorations(editor);
+
   const widget = createModifyWidget(editor, selection, options);
 
   editor.addContentWidget(widget);
@@ -44,13 +49,21 @@ export const showModifyWidget = (
     state.isModifyWidgetVisible = true;
   }
 
+  const existingCleanup = cleanups.get(editor);
+
+  if (existingCleanup) {
+    existingCleanup();
+  }
+
   // Focus the textarea after the widget is added
-  setTimeout(() => {
+  const timeoutId = setTimeout(() => {
     const textArea = widget.getDomNode().querySelector('textarea');
     if (textArea) {
       textArea.focus();
     }
-  }, 0);
+  }, 10);
+
+  cleanups.set(editor, () => clearTimeout(timeoutId));
 };
 
 /**
@@ -91,8 +104,6 @@ const createModifyWidget = (
   textArea.className = MODIFY_WIDGET_PROMPT_TEXTAREA_CLASS;
   textArea.placeholder = options.placeholder || DEFAULT_MODIFY_PLACEHOLDER;
   textArea.rows = 2;
-  // Remove autofocus attribute as it's not reliable for dynamically added elements
-  // textArea.autofocus = true;
 
   const footerContainer = document.createElement('div');
   footerContainer.className = MODIFY_WIDGET_FOOTER_CLASS;
@@ -100,7 +111,8 @@ const createModifyWidget = (
   const submitButton = document.createElement('button');
   submitButton.textContent = 'Submit';
   submitButton.className = MODIFY_WIDGET_PROMPT_SUBMIT_BUTTON_CLASS;
-  submitButton.onclick = () => {
+
+  const submitButtonClick = () => {
     const prompt = textArea.value.trim();
     if (prompt) {
       handleModifySelection(
@@ -114,17 +126,28 @@ const createModifyWidget = (
     }
   };
 
+  submitButton.onclick = submitButtonClick;
+
   promptContainer.appendChild(textArea);
   footerContainer.appendChild(submitButton);
 
   domNode.appendChild(promptContainer);
   domNode.appendChild(footerContainer);
 
+  textArea.addEventListener('keydown', event => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      submitButtonClick();
+    }
+  });
+
   return {
     getId: () => widgetId,
     getDomNode: () => domNode,
     getPosition: () => ({
-      position: selection.getStartPosition(),
+      position: selection.isEmpty()
+        ? editor.getPosition()
+        : selection.getStartPosition(),
       preference: [
         ContentWidgetPositionPreference.ABOVE,
         ContentWidgetPositionPreference.BELOW,

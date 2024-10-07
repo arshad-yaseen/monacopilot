@@ -10,7 +10,7 @@ import {
   SelectionActionsRegistration,
   StandaloneCodeEditor,
 } from '../../types';
-import {uid} from '../../utils';
+import {removeSelection, uid} from '../../utils';
 import {
   cleanups,
   disposeDiffDecorations,
@@ -18,6 +18,7 @@ import {
   editorWidgetState,
 } from './actions-state';
 import {showModifyButton} from './modify';
+import {showModifyWidget} from './modify/widgets/modify-widget';
 
 let activeRegistration: SelectionActionsRegistration | null = null;
 
@@ -72,6 +73,10 @@ export const registerSelectionActions = (
       const selection = event.selection;
       if (!selection.isEmpty()) {
         if (!state.isModifyWidgetVisible) {
+          // Dispose of existing widgets and decorations
+          disposeWidgets(editor);
+          disposeDiffDecorations(editor);
+
           showActionButtonsWidget(editor, selection, options);
         }
       } else if (!state.isModifyWidgetVisible) {
@@ -80,6 +85,22 @@ export const registerSelectionActions = (
       }
     });
     disposables.push(selectionChangeListener);
+
+    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyK, () => {
+      const selection = editor.getSelection();
+      if (selection) {
+        showModifyWidget(editor, selection, options.modify);
+      }
+    });
+
+    editor.addCommand(monaco.KeyCode.Escape, () => {
+      disposeWidgets(editor);
+      disposeDiffDecorations(editor);
+      const selection = editor.getSelection();
+      if (selection) {
+        removeSelection(editor, selection);
+      }
+    });
 
     // Create registration object
     const registration: SelectionActionsRegistration = {
