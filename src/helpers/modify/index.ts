@@ -1,1 +1,1 @@
-export * from './fetch-modified-code';
+export * from './fetch-modified-text';

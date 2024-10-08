@@ -33,6 +33,7 @@ export default function Home() {
       actions: ['modify'],
       modify: {
         endpoint: '/api/modify',
+        context,
       },
     });
 

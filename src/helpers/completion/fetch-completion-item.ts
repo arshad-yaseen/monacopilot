@@ -1,8 +1,8 @@
 import {
+  CompletionApiRequestBody,
+  CompletionApiResponse,
   CompletionMetadata,
   CompletionMode,
-  CompletionRequestBody,
-  CompletionResponse,
   ConstructCompletionMetadataParams,
   CursorPosition,
   EditorModel,
@@ -34,8 +34,8 @@ export const fetchCompletionItem = async (
   const {endpoint, body} = params;
 
   const {completion, error} = await HTTP.POST<
-    CompletionResponse,
-    CompletionRequestBody
+    CompletionApiResponse,
+    CompletionApiRequestBody
   >(endpoint, body, {
     headers: {
       'Content-Type': CONTENT_TYPE_JSON,
@@ -59,38 +59,17 @@ export const constructCompletionMetadata = ({
   options,
 }: ConstructCompletionMetadataParams): CompletionMetadata => {
   const {context} = options;
-  const {relatedFiles, maxContextLines} = context ?? {};
+  const {maxContextLines} = context ?? {};
 
   const completionMode = determineCompletionMode(pos, mdl);
 
-  // Determine the divisor based on the presence of related files
-  const hasRelatedFiles = !!relatedFiles?.length;
-  const divisor = hasRelatedFiles ? 3 : 2;
-  const adjustedMaxContextLines = maxContextLines
-    ? Math.floor(maxContextLines / divisor)
-    : undefined;
+  const textBeforeCursor = maxContextLines
+    ? keepNLines(getTextBeforeCursor(pos, mdl), maxContextLines, {from: 'end'})
+    : getTextBeforeCursor(pos, mdl);
 
-  const limitText = (
-    getTextFn: (pos: CursorPosition, mdl: EditorModel) => string,
-    maxLines?: number,
-    options?: {from?: 'start' | 'end'},
-  ): string => {
-    const text = getTextFn(pos, mdl);
-    return maxLines ? keepNLines(text, maxLines, options) : text;
-  };
-
-  // Retrieve and limited text around the cursor position
-  const textBeforeCursor = limitText(
-    getTextBeforeCursor,
-    adjustedMaxContextLines,
-    {
-      from: 'end',
-    },
-  );
-  const textAfterCursor = limitText(
-    getTextAfterCursor,
-    adjustedMaxContextLines,
-  );
+  const textAfterCursor = maxContextLines
+    ? keepNLines(getTextAfterCursor(pos, mdl), maxContextLines)
+    : getTextAfterCursor(pos, mdl);
 
   return {
     textBeforeCursor,

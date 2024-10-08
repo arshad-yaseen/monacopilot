@@ -22,9 +22,9 @@ export type {
   CustomCopilotModelConfig,
   CustomCopilotModelTransformResponse,
   CompletionMetadata,
-  CompletionRequest,
-  CompletionRequestBody,
-  CompletionRequestOptions,
+  CompletionApiRequest,
+  CompletionApiRequestBody,
+  CompletionApiRequestOptions,
   CopilotProvider,
   CopilotModel,
 } from './types';

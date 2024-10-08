@@ -10,6 +10,10 @@ import {
   MODIFY_WIDGET_REJECT_BUTTON_CLASS,
 } from '../../../constants/classnames';
 import {
+  constructModifyMetadata,
+  fetchModifiedText,
+} from '../../../helpers/modify';
+import {
   EditorSelection,
   ModifyOptions,
   StandaloneCodeEditor,
@@ -83,29 +87,17 @@ export const handleModifySelection = async (
   }
 
   try {
-    const modifiedText = await new Promise<string>(resolve => {
-      setTimeout(() => {
-        resolve(
-          `switch (token) {
-        case syntax.PRINT:
-          console.log(stack.pop());
-          break;
-        case syntax.ADD:
-        case syntax.SUB:
-        case syntax.MUL:
-        case syntax.DIV:
-          const b = stack.pop();
-          const a = stack.pop();
-          switch (token) {
-            case syntax.ADD: stack.push(a + b); break;
-            case syntax.SUB: stack.push(a - b); break;
-            case syntax.MUL: stack.push(a * b); break;
-            case syntax.DIV: stack.push(a / b); break;
-          }
-          break;
-      }`,
-        );
-      }, 1200);
+    const {modifiedText} = await fetchModifiedText({
+      endpoint: options.endpoint,
+      body: {
+        metadata: constructModifyMetadata({
+          mdl: model,
+          pos: editor.getPosition(),
+          prompt,
+          options,
+          selection,
+        }),
+      },
     });
 
     // Remove loading state
@@ -114,6 +106,11 @@ export const handleModifySelection = async (
 
     if (submitButton instanceof HTMLButtonElement) {
       submitButton.disabled = false;
+    }
+
+    if (!modifiedText) {
+      disposeWidgets(editor);
+      return;
     }
 
     // Apply diff decorations

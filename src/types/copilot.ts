@@ -143,3 +143,5 @@ export type CustomCopilotModelTransformResponse = (response: unknown) => {
    */
   completion: string | null;
 };
+
+export type CustomPrompt<T> = (metadata: T) => Partial<PromptData>;

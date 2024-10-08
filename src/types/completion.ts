@@ -1,5 +1,5 @@
 import {Context} from './context';
-import {PromptData} from './copilot';
+import {CustomPrompt} from './copilot';
 import {
   CursorPosition,
   EditorCancellationToken,
@@ -11,7 +11,7 @@ export type Endpoint = string;
 
 export interface RegisterCompletionOptions {
   /**
-   * The API endpoint where you started the completion service.
+   * The API endpoint to fetch the completion item from.
    */
   endpoint: Endpoint;
   /**
@@ -89,25 +89,25 @@ export interface LocalPrediction {
   snippets: LocalPredictionSnippets;
 }
 
-export interface CompletionRequest {
+export interface CompletionApiRequest {
   /**
    * The body of the completion request.
    */
-  body: CompletionRequestBody;
+  body: CompletionApiRequestBody;
   /**
    * Additional options to include in the completion request.
    */
-  options?: CompletionRequestOptions;
+  options?: CompletionApiRequestOptions;
 }
 
-export interface CompletionRequestBody {
+export interface CompletionApiRequestBody {
   /**
    * The metadata required to generate the completion.
    */
   metadata: CompletionMetadata;
 }
 
-export interface CompletionRequestOptions {
+export interface CompletionApiRequestOptions {
   /**
    * Custom headers to include in the request to the AI provider.
    */
@@ -120,14 +120,10 @@ export interface CompletionRequestOptions {
    * @param metadata - Metadata about the current completion context
    * @returns An object containing custom 'system' and 'user' prompts
    */
-  customPrompt?: CustomPrompt;
+  customPrompt?: CustomPrompt<CompletionMetadata>;
 }
 
-export type CustomPrompt = (
-  metadata: CompletionMetadata,
-) => Partial<PromptData>;
-
-export interface CompletionResponse {
+export interface CompletionApiResponse {
   completion: string | null;
   error?: string;
 }
@@ -178,7 +174,7 @@ export type FetchCompletionItemReturn = {
 
 export interface FetchCompletionItemParams {
   endpoint: string;
-  body: CompletionRequestBody;
+  body: CompletionApiRequestBody;
 }
 
 export interface ConstructCompletionMetadataParams {
