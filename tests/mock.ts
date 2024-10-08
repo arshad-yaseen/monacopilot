@@ -20,11 +20,7 @@ export const mockPosition: CursorPosition = {
 export const mockApiKey = 'test-api-key';
 
 export const mockCompletionMetadata: CompletionMetadata = {
-  language: 'javascript',
   cursorPosition: {lineNumber: 1, column: 1},
-  filename: 'test.js',
-  technologies: ['react'],
-  relatedFiles: [{path: './utils.js', content: 'function test() {}'}],
   textAfterCursor: 'console.log(',
   textBeforeCursor: 'function hello() {',
   editorState: {

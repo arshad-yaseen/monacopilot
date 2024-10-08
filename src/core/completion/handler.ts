@@ -1,6 +1,8 @@
-import {CompletionValidator} from '../../classes';
-import {CompletionCache} from '../../classes/completion/completion-cache';
-import {constructCompletionMetadata, fetchCompletionItem} from '../../helpers';
+import {CompletionCache, CompletionValidator} from '../../classes/completion';
+import {
+  constructCompletionMetadata,
+  fetchCompletionItem,
+} from '../../helpers/completion';
 import {log} from '../../log';
 import {
   CompletionMetadata,
@@ -110,7 +112,7 @@ const handleInlineCompletions = async ({
       fetchCompletion.cancel();
     });
 
-    const completionMetadata: CompletionMetadata = constructCompletionMetadata({
+    const metadata: CompletionMetadata = constructCompletionMetadata({
       pos,
       mdl,
       options,
@@ -119,7 +121,7 @@ const handleInlineCompletions = async ({
     const {completion} = await fetchCompletion({
       endpoint,
       body: {
-        completionMetadata,
+        metadata,
       },
     });
 

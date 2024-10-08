@@ -1,4 +1,4 @@
-import {CompletionFormatter} from '../../classes';
+import {CompletionFormatter} from '../../classes/completion';
 import {
   EditorInlineCompletion,
   EditorInlineCompletionsResult,

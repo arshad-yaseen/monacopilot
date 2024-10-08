@@ -3,7 +3,7 @@ import {
   MODIFY_BUTTON_CLASS,
   MODIFY_BUTTON_KEY_CLASS,
   MODIFY_BUTTON_TEXT_CLASS,
-} from '../../../constants';
+} from '../../../constants/classnames';
 import {
   EditorSelection,
   ModifyOptions,

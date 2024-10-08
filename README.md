@@ -510,7 +510,7 @@ copilot.complete({
 
 #### Parameters
 
-The `customPrompt` function receives a `completionMetadata` object, which contains information about the current editor state and can be used to tailor the prompt.
+The `customPrompt` function receives a `metadata` object, which contains information about the current editor state and can be used to tailor the prompt.
 
 ##### Completion Metadata
 
@@ -533,7 +533,7 @@ The `editorState.completionMode` can be one of the following:
 | `complete` | Indicates that there is a character after the cursor but not immediately. In this mode, the AI will generate content to complete the text from the cursor position. |
 | `continue` | Indicates that there is no character after the cursor. In this mode, the AI will generate content to continue the text from the cursor position.                    |
 
-For additional `completionMetadata` needs, please [open an issue](https://github.com/arshad-yaseen/monacopilot/issues/new).
+For additional `metadata` needs, please [open an issue](https://github.com/arshad-yaseen/monacopilot/issues/new).
 
 The `customPrompt` function should return an object with two properties:
 
@@ -600,7 +600,7 @@ Check out the [prompt.ts](https://github.com/arshad-yaseen/monacopilot/blob/main
 
 ### Metadata Overview
 
-The request body's `completionMetadata` object contains essential information for crafting a prompt for the AI model to generate accurate completions. See the [Completion Metadata](#completion-metadata) section for more details.
+The request body's `metadata` object contains essential information for crafting a prompt for the AI model to generate accurate completions. See the [Completion Metadata](#completion-metadata) section for more details.
 
 ### Example Implementation (Python with FastAPI)
 
@@ -615,7 +615,7 @@ app = FastAPI()
 async def handle_completion(request: Request):
     try:
         body = await request.json()
-        metadata = body['completionMetadata']
+        metadata = body['metadata']
 
         prompt = f"""Please complete the following {metadata['language']} code:
 

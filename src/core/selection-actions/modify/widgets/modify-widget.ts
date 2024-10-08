@@ -6,7 +6,7 @@ import {
   MODIFY_WIDGET_PROMPT_CONTAINER_CLASS,
   MODIFY_WIDGET_PROMPT_SUBMIT_BUTTON_CLASS,
   MODIFY_WIDGET_PROMPT_TEXTAREA_CLASS,
-} from '../../../../constants';
+} from '../../../../constants/classnames';
 import {
   ContentWidgetPositionPreference,
   EditorContentWidget,

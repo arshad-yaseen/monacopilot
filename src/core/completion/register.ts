@@ -60,33 +60,37 @@ export const registerCompletion = (
   try {
     // Register inline completions provider
     const inlineCompletionsProvider =
-      monaco.languages.registerInlineCompletionsProvider(options.language, {
-        provideInlineCompletions: (mdl, pos, _, token) => {
-          const state = editorCompletionState.get(editor);
+      monaco.languages.registerInlineCompletionsProvider(
+        options.context.currentLanguage,
+        {
+          provideInlineCompletions: (mdl, pos, _, token) => {
+            const state = editorCompletionState.get(editor);
 
-          if (!state) return;
+            if (!state) return;
 
-          const isOnDemandTrigger =
-            options.trigger === TriggerType.OnDemand && !state.isManualTrigger;
+            const isOnDemandTrigger =
+              options.trigger === TriggerType.OnDemand &&
+              !state.isManualTrigger;
 
-          if (isOnDemandTrigger) return;
+            if (isOnDemandTrigger) return;
 
-          return handleInlineCompletions({
-            mdl,
-            pos,
-            token,
-            isCompletionAccepted: state.isCompletionAccepted,
-            onShowCompletion: () => {
-              state.isCompletionVisible = true;
-              state.isManualTrigger = false;
-            },
-            options,
-          });
+            return handleInlineCompletions({
+              mdl,
+              pos,
+              token,
+              isCompletionAccepted: state.isCompletionAccepted,
+              onShowCompletion: () => {
+                state.isCompletionVisible = true;
+                state.isManualTrigger = false;
+              },
+              options,
+            });
+          },
+          freeInlineCompletions: () => {
+            // No-op
+          },
         },
-        freeInlineCompletions: () => {
-          // No-op
-        },
-      });
+      );
     disposables.push(inlineCompletionsProvider);
 
     // Listen for keydown events to detect completion acceptance

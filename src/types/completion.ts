@@ -1,3 +1,4 @@
+import {Context} from './context';
 import {PromptData} from './copilot';
 import {
   CursorPosition,
@@ -7,34 +8,19 @@ import {
 } from './monaco';
 
 export type Endpoint = string;
-export type Filename = string;
-export type Technologies = string[];
-export type RelatedFile = {
-  /**
-   * The relative path from the current editing code in the editor to an external file.
-   *
-   * Examples:
-   * - To include a file `utils.js` in the same directory, set as `./utils.js`.
-   * - To include a file `utils.js` in the parent directory, set as `../utils.js`.
-   * - To include a file `utils.js` in the child directory, set as `./child/utils.js`.
-   */
-  path: string;
-
-  /**
-   * The content of the external file as a string.
-   */
-  content: string;
-};
 
 export interface RegisterCompletionOptions {
-  /**
-   * Language of the current model
-   */
-  language: string;
   /**
    * The API endpoint where you started the completion service.
    */
   endpoint: Endpoint;
+  /**
+   * The context object containing contextual information for generating relevant completions.
+
+   * This object is created by the `buildContext` function from monacopilot.
+   * It helps tailor completions to the specific project environment and coding context.
+   */
+  context: Context;
   /**
    * Specifies when the completion service should provide code completions.
    *
@@ -48,36 +34,6 @@ export interface RegisterCompletionOptions {
    * @default 'onIdle'
    */
   trigger?: 'onTyping' | 'onIdle' | 'onDemand';
-  /**
-   * The name of the file you are editing. This is used to provide more relevant completions based on the file's purpose.
-   * For example, if you are editing a file named `utils.js`, the completions will be more relevant to utility functions.
-   */
-  filename?: Filename;
-  /**
-   * The technologies (libraries, frameworks, etc.) you want to use for the completion.
-   * This can provide technology-specific completions.
-   * If you don't specify a technology, the completion will be specific to the language (provided as the `language`).
-   *
-   * @example
-   * ['react', 'nextjs', 'tailwindcss', 'tanstack/react-query']
-   * ['tensorflow', 'keras', 'numpy', 'pandas']
-   * etc.
-   */
-  technologies?: Technologies;
-  /**
-   * Helps to give more relevant completions based on the full context.
-   * You can include things like the contents/codes of other files in the same workspace.
-   */
-  relatedFiles?: RelatedFile[];
-  /**
-   * The maximum number of lines of code to include in the completion request.
-   * This limits the request size to the model to prevent `429 Too Many Requests` errors
-   * and reduce costs for long code.
-   *
-   * It is recommended to set `maxContextLines` to `60` or less if you are using `Groq` as your provider,
-   * since `Groq` does not implement pay-as-you-go pricing and has only low rate limits.
-   */
-  maxContextLines?: number;
   /**
    * Callback function that is called when an error occurs during the completion request.
    * This function allows you to handle errors gracefully and provide appropriate feedback to the user.
@@ -148,7 +104,7 @@ export interface CompletionRequestBody {
   /**
    * The metadata required to generate the completion.
    */
-  completionMetadata: CompletionMetadata;
+  metadata: CompletionMetadata;
 }
 
 export interface CompletionRequestOptions {
@@ -161,14 +117,14 @@ export interface CompletionRequestOptions {
    * This function allows you to override the default system and user prompts
    * used in the completion request, providing more control over the AI's context and behavior.
    *
-   * @param completionMetadata - Metadata about the current completion context
+   * @param metadata - Metadata about the current completion context
    * @returns An object containing custom 'system' and 'user' prompts
    */
   customPrompt?: CustomPrompt;
 }
 
 export type CustomPrompt = (
-  completionMetadata: CompletionMetadata,
+  metadata: CompletionMetadata,
 ) => Partial<PromptData>;
 
 export interface CompletionResponse {
@@ -180,21 +136,9 @@ export type CompletionMode = 'insert' | 'complete' | 'continue';
 
 export interface CompletionMetadata {
   /**
-   * The programming language of the code.
+   * The context object containing contextual information for generating relevant completions.
    */
-  language: string | undefined;
-  /**
-   * The name of the file being edited.
-   */
-  filename: Filename | undefined;
-  /**
-   * The technologies used in the completion.
-   */
-  technologies: Technologies | undefined;
-  /**
-   * Additional context from related files.
-   */
-  relatedFiles: RelatedFile[] | undefined;
+  context?: Context;
   /**
    * The text that appears after the cursor.
    */
@@ -211,14 +155,18 @@ export interface CompletionMetadata {
    * The current state of the editor.
    */
   editorState: {
-    /**
-     * The mode of the completion.
-     * - `fill-in-the-middle`: Indicates that the cursor is positioned within the existing text. In this mode, the AI will generate content to be inserted at the cursor position.
-     * - `completion`: Indicates that the cursor is at the end of the existing text. In this mode, the AI will generate content to continue or complete the text from the cursor position.
-     */
     completionMode: CompletionMode;
   };
 }
+
+export type EditorState = {
+  /**
+   * The mode of the completion.
+   * - `fill-in-the-middle`: Indicates that the cursor is positioned within the existing text. In this mode, the AI will generate content to be inserted at the cursor position.
+   * - `completion`: Indicates that the cursor is at the end of the existing text. In this mode, the AI will generate content to continue or complete the text from the cursor position.
+   */
+  completionMode: CompletionMode;
+};
 
 export type FetchCompletionItemHandler = (
   params: FetchCompletionItemParams,

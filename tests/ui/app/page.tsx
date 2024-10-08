@@ -6,6 +6,7 @@ import {useEffect, useState} from 'react';
 
 import Editor from '@monaco-editor/react';
 import {
+  buildContext,
   registerCompletion,
   registerSelectionActions,
   type Monaco,
@@ -19,9 +20,13 @@ export default function Home() {
   useEffect(() => {
     if (!monaco || !editor) return;
 
+    const context = buildContext({
+      currentLanguage: 'javascript',
+    });
+
     const completion = registerCompletion(monaco, editor, {
       endpoint: '/api/complete',
-      language: 'javascript',
+      context,
     });
 
     const selectionActions = registerSelectionActions(monaco, editor, {

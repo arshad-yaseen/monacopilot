@@ -1,4 +1,4 @@
-import {ACTION_BUTTONS_WIDGET_CLASS} from '../../constants';
+import {ACTION_BUTTONS_WIDGET_CLASS} from '../../constants/classnames';
 import {log} from '../../log';
 import {
   ContentWidgetPositionPreference,
