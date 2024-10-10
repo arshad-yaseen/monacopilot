@@ -1,54 +1,70 @@
 import {ModifyMetadata, PromptData} from '../types';
 import {constructPromptBase} from './prompt-base';
 
-const CURSOR_PLACEHOLDER = '<cursor-position>';
+const CURSOR_TOKEN = '<cursor>';
 
-/**
- * Generates a detailed prompt for code modifications with context and clear instructions.
- *
- * @param metadata - The completion metadata.
- * @returns The user prompt data.
- */
-export const createModifyPrompt = (metadata: ModifyMetadata): PromptData => {
+export const generateModifyPrompt = (metadata: ModifyMetadata): PromptData => {
   const {
     textBeforeCursor = '',
     textAfterCursor = '',
     context,
-    prompt,
+    prompt: userInstruction,
     selectedText,
+    selection,
     fullText,
   } = metadata;
 
-  const guidelines = `
-<guidelines>
-  <primary_instruction>${prompt}</primary_instruction>
-  <steps_to_follow>
-    <step>Analyze the provided code and any related files thoroughly.</step>
-    <step>Ensure the generated code integrates seamlessly with the existing code.</step>
-    <step>Adhere to best practices and maintain consistent coding style.</step>
-    <step>Do <strong>not</strong> include the code before the cursor in your response.</step>
-    <step>Do <strong>not</strong> wrap your completion with markdown code syntax (\`\`\`) or inline code syntax (\`).</step>
-    <step>Focus on correct syntax and language-specific conventions.</step>
-    <step>Do <strong>not</strong> add explanations, comments, or placeholders.</step>
-    <step>Return <strong>only</strong> the code required at the cursor position.</step>
-  </steps_to_follow>
-</guidelines>
-`.trim();
+  let instructions = '';
 
-  let instructions: string;
+  if (selectedText && selection) {
+    instructions = `
+You are a helpful assistant proficient in code editing.
 
-  if (selectedText) {
-    instructions = `<task>
-  ${guidelines}
-  <selected_text>${selectedText}</selected_text>
-  <full_text>${fullText}</full_text>
-</task>`;
+**Task:** ${userInstruction}
+
+**Instructions:**
+- Modify only the code between lines **${selection.startLineNumber}** and **${selection.endLineNumber}**.
+- Preserve all code outside the specified lines exactly as it is.
+- Ensure the modified code integrates seamlessly with the existing code.
+- Maintain the original formatting and indentation.
+- Do **not** include any additional text or explanations.
+- Return **only** the modified code between the specified lines.
+
+**Full Code Context:**
+\`\`\`
+${fullText}
+\`\`\`
+
+**Code to Modify:**
+\`\`\`
+${selectedText}
+\`\`\`
+`;
   } else {
-    instructions = `<task>
-  ${guidelines}
-  <current_file><code>${textBeforeCursor}${CURSOR_PLACEHOLDER}${textAfterCursor}</code></current_file>
-</task>`;
+    instructions = `
+You are a helpful assistant proficient in code editing.
+
+**Task:** ${userInstruction}
+
+**Instructions:**
+- Make the modifications at the cursor position indicated by **<cursor>**.
+- Preserve all code outside the cursor position exactly as it is.
+- Ensure the modified code integrates seamlessly with the existing code.
+- Maintain the original formatting and indentation.
+- Do **not** include any additional text or explanations.
+- Return **only** the modified code inserted at the cursor position.
+
+**Full Code Context:**
+\`\`\`
+${fullText}
+\`\`\`
+
+**Code with Cursor Position:**
+\`\`\`
+${textBeforeCursor}${CURSOR_TOKEN}${textAfterCursor}
+\`\`\`
+`;
   }
 
-  return constructPromptBase(instructions, context);
+  return constructPromptBase(instructions.trim(), context);
 };

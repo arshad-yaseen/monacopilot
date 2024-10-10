@@ -2,16 +2,35 @@ import {Context, PromptData, RelatedFile} from '../types';
 import {joinWithAnd} from '../utils';
 
 const createSystemPrompt = (context: Context | undefined): string => {
-  const {technologies, resolvedCurrentLanguage, currentFileName} =
+  const {technologies, resolvedCurrentLanguage, currentFileName, relatedFiles} =
     context ?? {};
   const languageOrTechnologies =
     resolvedCurrentLanguage || joinWithAnd(technologies);
 
-  return `You are an expert${
-    languageOrTechnologies ? ` ${languageOrTechnologies} ` : ' '
-  }developer assistant. Provide precise and contextually relevant code completions/generations${
-    currentFileName ? ` for '${currentFileName}'` : ''
-  }. Integrate seamlessly with the existing code, maintain consistency with the project's style, and follow the user's instructions. Consider the context of the current and related files.`;
+  const persona = `You are an expert ${languageOrTechnologies ? `${languageOrTechnologies} ` : ''}developer assistant.`;
+
+  const instructions = `Your task is to provide precise and contextually relevant code completions, modifications, or generations`;
+
+  const fileContext = currentFileName
+    ? `for the file '${currentFileName}'`
+    : '';
+
+  const relatedFilesInfo =
+    relatedFiles && relatedFiles.length > 0
+      ? `Consider the context of the current and related files provided.`
+      : '';
+
+  const codeStyleGuidelines = `Ensure that your responses integrate seamlessly with the existing code and maintain consistency with the project's style and conventions.`;
+
+  const reasoning = `Before providing the completion or modification, think through the problem step-by-step, considering best practices and any potential edge cases.`;
+
+  const systemPrompt = `${persona}
+${instructions} ${fileContext}.
+${codeStyleGuidelines}
+${relatedFilesInfo}
+${reasoning}`;
+
+  return systemPrompt.trim();
 };
 
 const formatRelatedFiles = (relatedFiles: RelatedFile[]): string => {
@@ -22,10 +41,13 @@ const formatRelatedFiles = (relatedFiles: RelatedFile[]): string => {
   return relatedFiles
     .map(({path, content}) =>
       `
-<related_file path="${path}">
-  <code>
+<related_file>
+  <path>${path}</path>
+  <content>
+\`\`\`
 ${content}
-  </code>
+\`\`\`
+  </content>
 </related_file>
 `.trim(),
     )
@@ -39,10 +61,14 @@ const createUserPrompt = (
   const {relatedFiles} = context ?? {};
   const relatedFilesText = relatedFiles ? formatRelatedFiles(relatedFiles) : '';
 
-  return `<task>
-  ${instructions}
+  return `
+<task>
+  <instructions>
+${instructions.trim()}
+  </instructions>
   ${relatedFilesText}
-</task>`;
+</task>
+`.trim();
 };
 
 /**

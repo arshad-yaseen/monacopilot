@@ -19,6 +19,7 @@ import {
   StandaloneCodeEditor,
 } from '../../../types';
 import {applyDiffDecorations, removeSelection} from '../../../utils';
+import {formatModifiedText} from '../../../utils/modify';
 import {
   disposeDiffDecorations,
   disposeWidgets,
@@ -100,6 +101,10 @@ export const handleModifySelection = async (
       },
     });
 
+    const formattedModifiedText = modifiedText
+      ? formatModifiedText(modifiedText)
+      : null;
+
     // Remove loading state
     modifyWidgetDomNode.dataset.fetching = 'false';
     cancelButton.remove();
@@ -108,7 +113,7 @@ export const handleModifySelection = async (
       submitButton.disabled = false;
     }
 
-    if (!modifiedText) {
+    if (!formattedModifiedText) {
       disposeWidgets(editor);
       return;
     }
@@ -117,7 +122,7 @@ export const handleModifySelection = async (
     const decorations = applyDiffDecorations(
       editor,
       originalText,
-      modifiedText,
+      formattedModifiedText,
       selection,
     );
 
@@ -132,7 +137,7 @@ export const handleModifySelection = async (
       editor,
       footerContainer,
       selection,
-      modifiedText,
+      formattedModifiedText,
       modifyWidgetDomNode,
     );
   } catch (error) {

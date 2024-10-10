@@ -1,57 +1,53 @@
 import {CompletionMetadata, PromptData} from '../types';
 import {constructPromptBase} from './prompt-base';
 
-const CURSOR_PLACEHOLDER = '<cursor-position>';
+const CURSOR_TOKEN = '<cursor>';
 
-/**
- * Generates a detailed prompt for code completions with context and clear instructionss.
- *
- * @param metadata - The completion metadata.
- * @returns The user prompt data.
- */
-export const createCompletionPrompt = (
+export const generateCompletionPrompt = (
   metadata: CompletionMetadata,
 ): PromptData => {
   const {
     textBeforeCursor = '',
     textAfterCursor = '',
     context,
-    editorState,
+    editorState: {completionMode},
   } = metadata;
 
-  const modeInstructions: Record<string, string> = {
-    continue: 'Continue writing the code from where the cursor is positioned.',
-    insert: 'Insert the appropriate code snippet at the cursor position.',
+  const codeFile = `<code_file>
+${textBeforeCursor}${CURSOR_TOKEN}${textAfterCursor}
+</code_file>`;
+
+  const completionModeInstructions: Record<string, string> = {
+    continue: '-- Continue writing the code from the current cursor location.',
+    insert: '-- Insert the appropriate code snippet at the cursor point.',
     complete:
-      'Provide the necessary code to complete the current statement or block.',
+      '-- Supply the necessary code to finish the ongoing statement or block.',
   };
 
-  const specificInstruction =
-    modeInstructions[editorState.completionMode] ||
-    'Continue your task based on the provided instructions.';
+  const instructions = `
+You are an AI coding assistant. Your task is to provide code completions based on the current cursor position in the code.
 
-  const guidelines = `
-<guidelines>
-  <primary_instruction>${specificInstruction}</primary_instruction>
-  <steps_to_follow>
-    <step>Analyze the provided code and any related files thoroughly.</step>
-    <step>Ensure the generated code integrates seamlessly with the existing code.</step>
-    <step>Adhere to best practices and maintain consistent coding style.</step>
-    <step>Do <strong>not</strong> include the code before the cursor in your response.</step>
-    <step>Do <strong>not</strong> wrap your completion with markdown code syntax (\`\`\`) or inline code syntax (\`).</step>
-    <step>Focus on correct syntax and language-specific conventions.</step>
-    <step>Do <strong>not</strong> add explanations, comments, or placeholders.</step>
-    <step>Return <strong>only</strong> the code required at the cursor position.</step>
-  </steps_to_follow>
-</guidelines>
+Below is the code file with a special token '${CURSOR_TOKEN}' indicating the current cursor position.
+
+${codeFile}
+
+Please provide the code that should be inserted at the cursor position, following these guidelines:
+
+- Carefully analyze the code context before and after the cursor to understand what code is needed.
+- Follow best practices and maintain a consistent coding style with the existing code.
+- Ensure the generated code integrates smoothly with the existing codebase.
+- Do **not** include any code that is before the cursor in your response.
+- Do **not** include any explanations, comments, or placeholders.
+- Avoid wrapping your completion with markdown code blocks (\`\`\` or \`).
+- Provide **only** the necessary code to be inserted at the cursor location.
+
+Depending on the completion mode, adjust your completion accordingly:
+
+- **Completion Mode**: ${completionMode}
+${completionModeInstructions[completionMode] || ''}
+
+Remember to output **only** the code that should be inserted at the cursor, without any additional formatting or explanations.
 `.trim();
-
-  const currentFileContext = `<current_file><code>${textBeforeCursor}${CURSOR_PLACEHOLDER}${textAfterCursor}</code></current_file>`;
-
-  const instructions = `<task>
-  ${guidelines}
-  ${currentFileContext}
-</task>`;
 
   return constructPromptBase(instructions, context);
 };

@@ -11,7 +11,7 @@ import {
   parseProviderChatCompletion,
 } from '../helpers/provider';
 import {log} from '../log';
-import {createCompletionPrompt, createModifyPrompt} from '../prompts';
+import {generateCompletionPrompt, generateModifyPrompt} from '../prompts';
 import {
   ChatCompletion,
   ChatCompletionCreateParams,
@@ -80,7 +80,7 @@ export class Copilot {
     return this.makeApiCall<CompletionMetadata, CompletionApiResponse>(
       metadata,
       customPrompt,
-      createCompletionPrompt,
+      generateCompletionPrompt,
       this.processCompletionResponse.bind(this),
       customHeaders,
       this.handleCompletionError.bind(this),
@@ -95,7 +95,7 @@ export class Copilot {
     return this.makeApiCall<ModifyMetadata, ModifyApiResponse>(
       metadata,
       customPrompt,
-      createModifyPrompt,
+      generateModifyPrompt,
       this.processModifyResponse.bind(this),
       customHeaders,
       this.handleModifyError.bind(this),

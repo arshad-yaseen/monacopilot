@@ -1,11 +1,11 @@
-import {CompletionFormatter} from '../../classes/completion';
+import {LLMCodeFormatter} from '../../classes/llm-code-formatter';
 import {
   EditorInlineCompletion,
   EditorInlineCompletionsResult,
 } from '../../types';
 
 export const formatCompletion = (completion: string): string => {
-  return CompletionFormatter.create(completion)
+  return LLMCodeFormatter.create(completion)
     .removeMarkdownCodeSyntax()
     .removeExcessiveNewlines()
     .removeInvalidLineBreaks()
