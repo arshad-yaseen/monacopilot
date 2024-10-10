@@ -65,3 +65,11 @@ export const joinWithAnd = (
 
   return `${arr.slice(0, -1).join(', ')} and ${arr.slice(-1)}`;
 };
+
+/**
+ * Generates a unique ID.
+ * @returns A unique string.
+ */
+export const uid = (): string => {
+  return Math.random().toString(36).slice(2, 11);
+};

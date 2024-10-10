@@ -1,7 +1,9 @@
-import {CompletionValidator} from '../../classes';
-import {CompletionCache} from '../../classes/completion-cache';
-import {constructCompletionMetadata, fetchCompletionItem} from '../../helpers';
-import {logger} from '../../logger';
+import {CompletionCache, CompletionValidator} from '../../classes/completion';
+import {
+  constructCompletionMetadata,
+  fetchCompletionItem,
+} from '../../helpers/completion';
+import {log} from '../../log';
 import {
   CompletionMetadata,
   EditorInlineCompletionsResult,
@@ -9,9 +11,12 @@ import {
   InlineCompletionHandlerParams,
   TriggerType,
 } from '../../types';
-import {asyncDebounce, getTextBeforeCursorInLine} from '../../utils';
 import {
-  computeCompletionInsertionRange,
+  asyncDebounce,
+  computeInsertionRange,
+  getTextBeforeCursorInLine,
+} from '../../utils';
+import {
   createInlineCompletionResult,
   formatCompletion,
 } from '../../utils/completion';
@@ -107,7 +112,7 @@ const handleInlineCompletions = async ({
       fetchCompletion.cancel();
     });
 
-    const completionMetadata: CompletionMetadata = constructCompletionMetadata({
+    const metadata: CompletionMetadata = constructCompletionMetadata({
       pos,
       mdl,
       options,
@@ -116,13 +121,13 @@ const handleInlineCompletions = async ({
     const {completion} = await fetchCompletion({
       endpoint,
       body: {
-        completionMetadata,
+        metadata,
       },
     });
 
     if (completion) {
       const formattedCompletion = formatCompletion(completion);
-      const completionInsertionRange = computeCompletionInsertionRange(
+      const completionInsertionRange = computeInsertionRange(
         pos,
         mdl,
         formattedCompletion,
@@ -140,10 +145,14 @@ const handleInlineCompletions = async ({
       ]);
     }
   } catch (err) {
+    if (isCancellationError(err)) {
+      return createInlineCompletionResult([]);
+    }
+
     if (onError) {
       onError(err as Error);
-    } else if (!isCancellationError(err)) {
-      logger.logError(err);
+    } else {
+      log.error(err);
     }
   }
 

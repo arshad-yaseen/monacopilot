@@ -1,4 +1,4 @@
-import {logger} from '../../logger';
+import {log} from '../../log';
 import {
   CompletionRegistration,
   Disposable,
@@ -60,33 +60,37 @@ export const registerCompletion = (
   try {
     // Register inline completions provider
     const inlineCompletionsProvider =
-      monaco.languages.registerInlineCompletionsProvider(options.language, {
-        provideInlineCompletions: (mdl, pos, _, token) => {
-          const state = editorCompletionState.get(editor);
+      monaco.languages.registerInlineCompletionsProvider(
+        options.context.currentLanguage,
+        {
+          provideInlineCompletions: (mdl, pos, _, token) => {
+            const state = editorCompletionState.get(editor);
 
-          if (!state) return;
+            if (!state) return;
 
-          const isOnDemandTrigger =
-            options.trigger === TriggerType.OnDemand && !state.isManualTrigger;
+            const isOnDemandTrigger =
+              options.trigger === TriggerType.OnDemand &&
+              !state.isManualTrigger;
 
-          if (isOnDemandTrigger) return;
+            if (isOnDemandTrigger) return;
 
-          return handleInlineCompletions({
-            mdl,
-            pos,
-            token,
-            isCompletionAccepted: state.isCompletionAccepted,
-            onShowCompletion: () => {
-              state.isCompletionVisible = true;
-              state.isManualTrigger = false;
-            },
-            options,
-          });
+            return handleInlineCompletions({
+              mdl,
+              pos,
+              token,
+              isCompletionAccepted: state.isCompletionAccepted,
+              onShowCompletion: () => {
+                state.isCompletionVisible = true;
+                state.isManualTrigger = false;
+              },
+              options,
+            });
+          },
+          freeInlineCompletions: () => {
+            // No-op
+          },
         },
-        freeInlineCompletions: () => {
-          // No-op
-        },
-      });
+      );
     disposables.push(inlineCompletionsProvider);
 
     // Listen for keydown events to detect completion acceptance
@@ -125,7 +129,7 @@ export const registerCompletion = (
     if (options.onError) {
       options.onError(error as Error);
     } else {
-      logger.logError(error);
+      log.error(error);
     }
 
     return {
@@ -148,7 +152,7 @@ export const registerCompletion = (
 const handleTriggerCompletion = (editor: StandaloneCodeEditor) => {
   const state = editorCompletionState.get(editor);
   if (!state) {
-    logger.warn(
+    log.warning(
       'Completion is not registered. Use `registerCompletion` to register completion first.',
     );
     return;
@@ -163,7 +167,7 @@ const handleTriggerCompletion = (editor: StandaloneCodeEditor) => {
 export const registerCopilot = (
   ...args: Parameters<typeof registerCompletion>
 ) => {
-  logger.warn(
+  log.warning(
     'The `registerCopilot` function is deprecated. Use `registerCompletion` instead.',
   );
 
