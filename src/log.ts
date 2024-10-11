@@ -14,7 +14,7 @@ class Logger {
     return Logger.instance;
   }
 
-  public logError(error: unknown): {message: string; stack?: string} {
+  public error(error: unknown): {message: string; stack?: string} {
     let errorMessage: string;
     let errorStack: string | undefined;
 
@@ -39,15 +39,15 @@ class Logger {
     return {message: errorMessage, stack: errorStack};
   }
 
-  public warn(message: string): void {
+  public warning(message: string): void {
     console.warn(
       `${Logger.YELLOW}${Logger.BOLD}[MONACOPILOT WARN] ${message}${Logger.RESET}`,
     );
   }
 
-  public log(message: string): void {
+  public information(message: string): void {
     console.log(`${Logger.BOLD}[MONACOPILOT] ${message}${Logger.RESET}`);
   }
 }
 
-export const logger = Logger.getInstance();
+export const log = Logger.getInstance();

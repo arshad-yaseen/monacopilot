@@ -1,17 +1,24 @@
-import {CompletionValidator} from '../../classes';
-import {CompletionCache} from '../../classes/completion-cache';
-import {constructCompletionMetadata, fetchCompletionItem} from '../../helpers';
-import {logger} from '../../logger';
+import {CompletionCache, CompletionValidator} from '../../classes/completion';
+import {
+  constructCompletionMetadata,
+  fetchCompletionItem,
+} from '../../helpers/completion';
+import {log} from '../../log';
+import {completionState} from '../../state';
 import {
   CompletionMetadata,
   EditorInlineCompletionsResult,
   FetchCompletionItemHandler,
   InlineCompletionHandlerParams,
+  StandaloneCodeEditor,
   TriggerType,
 } from '../../types';
-import {asyncDebounce, getTextBeforeCursorInLine} from '../../utils';
 import {
-  computeCompletionInsertionRange,
+  asyncDebounce,
+  computeInsertionRange,
+  getTextBeforeCursorInLine,
+} from '../../utils';
+import {
   createInlineCompletionResult,
   formatCompletion,
 } from '../../utils/completion';
@@ -29,6 +36,7 @@ const DEBOUNCE_DELAYS = {
  */
 const getDebouncedFunctionPerTrigger = (
   fn: FetchCompletionItemHandler,
+  editor: StandaloneCodeEditor,
 ): Record<
   TriggerType,
   ReturnType<typeof asyncDebounce<FetchCompletionItemHandler>>
@@ -37,14 +45,23 @@ const getDebouncedFunctionPerTrigger = (
     [TriggerType.OnTyping]: asyncDebounce(
       fn,
       DEBOUNCE_DELAYS[TriggerType.OnTyping],
+      {
+        shouldExecute: () => completionState.canShowCompletion(editor),
+      },
     ),
     [TriggerType.OnIdle]: asyncDebounce(
       fn,
       DEBOUNCE_DELAYS[TriggerType.OnIdle],
+      {
+        shouldExecute: () => completionState.canShowCompletion(editor),
+      },
     ),
     [TriggerType.OnDemand]: asyncDebounce(
       fn,
       DEBOUNCE_DELAYS[TriggerType.OnDemand],
+      {
+        shouldExecute: () => completionState.canShowCompletion(editor),
+      },
     ),
   };
 };
@@ -58,6 +75,7 @@ export const completionCache = new CompletionCache();
  */
 const handleInlineCompletions = async ({
   mdl,
+  editor,
   pos,
   token,
   isCompletionAccepted,
@@ -98,6 +116,7 @@ const handleInlineCompletions = async ({
     // Create a debounced fetch function based on the trigger type
     const debouncedFetchCompletion = getDebouncedFunctionPerTrigger(
       requestHandler ?? fetchCompletionItem,
+      editor,
     );
 
     const fetchCompletion = debouncedFetchCompletion[trigger];
@@ -107,7 +126,7 @@ const handleInlineCompletions = async ({
       fetchCompletion.cancel();
     });
 
-    const completionMetadata: CompletionMetadata = constructCompletionMetadata({
+    const metadata: CompletionMetadata = constructCompletionMetadata({
       pos,
       mdl,
       options,
@@ -116,16 +135,16 @@ const handleInlineCompletions = async ({
     const {completion} = await fetchCompletion({
       endpoint,
       body: {
-        completionMetadata,
+        metadata,
       },
     });
 
-    if (completion) {
+    if (completion && completionState.canShowCompletion(editor)) {
       const formattedCompletion = formatCompletion(completion);
-      const completionInsertionRange = computeCompletionInsertionRange(
+      const completionInsertionRange = computeInsertionRange(
         pos,
         mdl,
-        formattedCompletion,
+        completion,
       );
 
       completionCache.add({
@@ -140,10 +159,14 @@ const handleInlineCompletions = async ({
       ]);
     }
   } catch (err) {
+    if (isCancellationError(err)) {
+      return createInlineCompletionResult([]);
+    }
+
     if (onError) {
       onError(err as Error);
-    } else if (!isCancellationError(err)) {
-      logger.logError(err);
+    } else {
+      log.error(err);
     }
   }
 

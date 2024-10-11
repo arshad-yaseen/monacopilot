@@ -4,25 +4,28 @@ import {
   DEFAULT_COPILOT_MODEL,
   DEFAULT_COPILOT_PROVIDER,
 } from '../constants';
-import generatePrompt from '../helpers/completion/prompt';
 import {
   createProviderHeaders,
   createRequestBody,
   getCopilotProviderEndpoint,
   parseProviderChatCompletion,
 } from '../helpers/provider';
-import {logger} from '../logger';
+import {log} from '../log';
+import {generateCompletionPrompt, generateModifyPrompt} from '../prompts';
 import {
   ChatCompletion,
   ChatCompletionCreateParams,
+  CompletionApiRequest,
+  CompletionApiResponse,
   CompletionMetadata,
-  CompletionRequest,
-  CompletionResponse,
   CopilotModel,
   CopilotOptions,
   CopilotProvider,
   CustomCopilotModel,
   CustomPrompt,
+  ModifyApiRequest,
+  ModifyApiResponse,
+  ModifyMetadata,
   PromptData,
 } from '../types';
 import {HTTP, joinWithAnd} from '../utils';
@@ -68,13 +71,50 @@ export class Copilot {
   }
 
   public async complete(
-    request: CompletionRequest,
-  ): Promise<CompletionResponse> {
+    request: CompletionApiRequest,
+  ): Promise<CompletionApiResponse> {
     const {body, options} = request;
-    const {completionMetadata} = body;
+    const {metadata} = body;
     const {headers: customHeaders = {}, customPrompt} = options ?? {};
 
-    const prompt = this.generatePrompt(completionMetadata, customPrompt);
+    return this.makeApiCall<CompletionMetadata, CompletionApiResponse>(
+      metadata,
+      customPrompt,
+      generateCompletionPrompt,
+      this.processCompletionResponse.bind(this),
+      customHeaders,
+      this.handleCompletionError.bind(this),
+    );
+  }
+
+  public async modify(request: ModifyApiRequest): Promise<ModifyApiResponse> {
+    const {body, options} = request;
+    const {metadata} = body;
+    const {headers: customHeaders = {}, customPrompt} = options ?? {};
+
+    return this.makeApiCall<ModifyMetadata, ModifyApiResponse>(
+      metadata,
+      customPrompt,
+      generateModifyPrompt,
+      this.processModifyResponse.bind(this),
+      customHeaders,
+      this.handleModifyError.bind(this),
+    );
+  }
+
+  private async makeApiCall<TMetadata, TApiResponse>(
+    metadata: TMetadata,
+    customPrompt: CustomPrompt<TMetadata> | undefined,
+    createBasePrompt: (metadata: TMetadata) => PromptData,
+    processResponse: (chatCompletion: ChatCompletion) => TApiResponse,
+    customHeaders: Record<string, string> = {},
+    handleError: (error: unknown) => TApiResponse,
+  ): Promise<TApiResponse> {
+    const prompt = this.generatePrompt(
+      metadata,
+      customPrompt,
+      createBasePrompt,
+    );
 
     const {endpoint, requestBody, headers} = this.prepareRequestDetails(prompt);
 
@@ -85,19 +125,20 @@ export class Copilot {
         {...headers, ...customHeaders},
       );
 
-      return this.processCompletionResponse(chatCompletion);
+      return processResponse(chatCompletion);
     } catch (error) {
-      return this.handleCompletionError(error);
+      return handleError(error);
     }
   }
 
-  private generatePrompt(
-    completionMetadata: CompletionMetadata,
-    customPrompt?: CustomPrompt,
+  private generatePrompt<TMetadata>(
+    metadata: TMetadata,
+    customPrompt: CustomPrompt<TMetadata> | undefined,
+    createBasePrompt: (metadata: TMetadata) => PromptData,
   ): PromptData {
-    const basePrompt = generatePrompt(completionMetadata);
+    const basePrompt = createBasePrompt(metadata);
     return customPrompt
-      ? {...basePrompt, ...customPrompt(completionMetadata)}
+      ? {...basePrompt, ...customPrompt(metadata)}
       : basePrompt;
   }
 
@@ -141,16 +182,11 @@ export class Copilot {
 
   private processCompletionResponse(
     chatCompletion: ChatCompletion,
-  ): CompletionResponse {
+  ): CompletionApiResponse {
     if (typeof this.model === 'object' && 'transformResponse' in this.model) {
       const transformedResponse = this.model.transformResponse(chatCompletion);
-      if ('completion' in transformedResponse) {
-        logger.warn(
-          'The `completion` property in `transformResponse` function is deprecated. Please use `text` instead.',
-        );
-      }
       return {
-        completion: transformedResponse.text ?? transformedResponse.completion,
+        completion: transformedResponse.text,
       };
     } else {
       const parsedCompletion = parseProviderChatCompletion(
@@ -161,9 +197,32 @@ export class Copilot {
     }
   }
 
-  private handleCompletionError(error: unknown): CompletionResponse {
-    const errorDetails = logger.logError(error);
+  private processModifyResponse(
+    chatCompletion: ChatCompletion,
+  ): ModifyApiResponse {
+    if (typeof this.model === 'object' && 'transformResponse' in this.model) {
+      const transformedResponse = this.model.transformResponse(chatCompletion);
+      return {
+        modifiedText: transformedResponse.text,
+      };
+    } else {
+      const parsedCompletion = parseProviderChatCompletion(
+        chatCompletion,
+        this.provider,
+      );
+      return {modifiedText: parsedCompletion};
+    }
+  }
+
+  private handleCompletionError(error: unknown): CompletionApiResponse {
+    const errorDetails = log.error(error);
 
     return {error: errorDetails.message, completion: null};
+  }
+
+  private handleModifyError(error: unknown): ModifyApiResponse {
+    const errorDetails = log.error(error);
+
+    return {error: errorDetails.message, modifiedText: null};
   }
 }

@@ -1,10 +1,8 @@
-import {Copilot} from 'monacopilot';
-
-const copilot = new Copilot(process.env.GROQ_API_KEY!);
+import {copilot} from '@/app/lib/monacopilot';
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const {completion, error} = await copilot.complete({
+  const {modifiedText, error} = await copilot.modify({
     body,
   });
 
@@ -14,5 +12,5 @@ export async function POST(req: Request) {
     return Response.json({completion: null, error}, {status: 500});
   }
 
-  return Response.json({completion});
+  return Response.json({modifiedText});
 }

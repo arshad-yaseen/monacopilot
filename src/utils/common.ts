@@ -4,6 +4,8 @@
  * @template T - The type of the function to be debounced
  * @param {T} func - The function to debounce
  * @param {number} wait - The number of milliseconds to delay
+ * @param {Object} options - Additional options for the debounce function
+ * @param {() => boolean} [options.shouldExecute] - A function that returns a boolean to determine if the debounced function should execute
  * @returns {Object} An object containing the debounced function and a cancel method
  * @property {(...args: Parameters<T>) => Promise<ReturnType<T>>} - The debounced function
  * @property {() => void} cancel - A method to cancel the pending execution
@@ -11,6 +13,7 @@
 export const asyncDebounce = <T extends (...args: any[]) => any>(
   func: T,
   wait: number,
+  options: {shouldExecute?: () => boolean} = {},
 ): {
   (...args: Parameters<T>): Promise<ReturnType<T>>;
   cancel: () => void;
@@ -28,7 +31,9 @@ export const asyncDebounce = <T extends (...args: any[]) => any>(
       reject = rejectPromise;
 
       timeout = setTimeout(() => {
-        resolve(func(...args));
+        if (!options.shouldExecute || options.shouldExecute()) {
+          resolve(func(...args));
+        }
         reject = null;
       }, wait);
     });
@@ -64,4 +69,12 @@ export const joinWithAnd = (
   }
 
   return `${arr.slice(0, -1).join(', ')} and ${arr.slice(-1)}`;
+};
+
+/**
+ * Generates a unique ID.
+ * @returns A unique string.
+ */
+export const uid = (): string => {
+  return Math.random().toString(36).slice(2, 11);
 };

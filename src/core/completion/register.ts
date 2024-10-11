@@ -1,24 +1,13 @@
-import {logger} from '../../logger';
+import {log} from '../../log';
+import {completionState} from '../../state';
 import {
   CompletionRegistration,
-  Disposable,
   Monaco,
   RegisterCompletionOptions,
   StandaloneCodeEditor,
   TriggerType,
 } from '../../types';
 import handleInlineCompletions, {completionCache} from './handler';
-
-type EditorCompletionState = {
-  isCompletionAccepted: boolean;
-  isCompletionVisible: boolean;
-  isManualTrigger: boolean;
-};
-
-const editorCompletionState = new WeakMap<
-  StandaloneCodeEditor,
-  EditorCompletionState
->();
 
 let activeCompletionRegistration: CompletionRegistration | null = null;
 
@@ -39,16 +28,6 @@ export const registerCompletion = (
     activeCompletionRegistration.deregister();
   }
 
-  const disposables: Disposable[] = [];
-
-  // Initialize editor completion state
-  const initialState: EditorCompletionState = {
-    isCompletionAccepted: false,
-    isCompletionVisible: false,
-    isManualTrigger: false,
-  };
-  editorCompletionState.set(editor, initialState);
-
   // Update editor options to force the enabling of inline completions and to use subwordSmart mode
   editor.updateOptions({
     inlineSuggest: {
@@ -60,59 +39,70 @@ export const registerCompletion = (
   try {
     // Register inline completions provider
     const inlineCompletionsProvider =
-      monaco.languages.registerInlineCompletionsProvider(options.language, {
-        provideInlineCompletions: (mdl, pos, _, token) => {
-          const state = editorCompletionState.get(editor);
+      monaco.languages.registerInlineCompletionsProvider(
+        options.context.currentLanguage,
+        {
+          provideInlineCompletions: (mdl, pos, _, token) => {
+            const state = completionState.getState(editor);
 
-          if (!state) return;
+            if (!completionState.canShowCompletion(editor)) return;
 
-          const isOnDemandTrigger =
-            options.trigger === TriggerType.OnDemand && !state.isManualTrigger;
+            const isOnDemandTrigger =
+              options.trigger === TriggerType.OnDemand &&
+              !state.isManualTrigger;
 
-          if (isOnDemandTrigger) return;
+            if (isOnDemandTrigger) return;
 
-          return handleInlineCompletions({
-            mdl,
-            pos,
-            token,
-            isCompletionAccepted: state.isCompletionAccepted,
-            onShowCompletion: () => {
-              state.isCompletionVisible = true;
-              state.isManualTrigger = false;
-            },
-            options,
-          });
+            return handleInlineCompletions({
+              mdl,
+              editor,
+              pos,
+              token,
+              isCompletionAccepted: state.isAccepted,
+              onShowCompletion: () => {
+                completionState.setState(editor, {
+                  isVisible: true,
+                  isManualTrigger: false,
+                });
+              },
+              options,
+            });
+          },
+          freeInlineCompletions: () => {
+            // No-op
+          },
         },
-        freeInlineCompletions: () => {
-          // No-op
-        },
-      });
-    disposables.push(inlineCompletionsProvider);
+      );
+
+    completionState.addDisposable(editor, inlineCompletionsProvider);
 
     // Listen for keydown events to detect completion acceptance
     const keyDownListener = editor.onKeyDown(event => {
-      const state = editorCompletionState.get(editor);
-      if (!state) return;
+      const state = completionState.getState(editor);
 
       const isTabOrCmdRightArrow =
         event.keyCode === monaco.KeyCode.Tab ||
         (event.keyCode === monaco.KeyCode.RightArrow && event.metaKey);
 
-      if (state.isCompletionVisible && isTabOrCmdRightArrow) {
-        state.isCompletionAccepted = true;
-        state.isCompletionVisible = false;
+      if (state.isVisible && isTabOrCmdRightArrow) {
+        completionState.setState(editor, {
+          isAccepted: true,
+          isVisible: false,
+        });
       } else {
-        state.isCompletionAccepted = false;
+        completionState.setState(editor, {
+          isAccepted: false,
+        });
       }
     });
-    disposables.push(keyDownListener);
+
+    completionState.addDisposable(editor, keyDownListener);
 
     // Create completion registration object
     const registration: CompletionRegistration = {
       deregister: () => {
-        disposables.forEach(disposable => disposable.dispose());
         completionCache.clear();
-        editorCompletionState.delete(editor);
+        completionState.clearState(editor);
         activeCompletionRegistration = null;
       },
       trigger: () => handleTriggerCompletion(editor),
@@ -125,13 +115,13 @@ export const registerCompletion = (
     if (options.onError) {
       options.onError(error as Error);
     } else {
-      logger.logError(error);
+      log.error(error);
     }
 
     return {
       deregister: () => {
-        disposables.forEach(disposable => disposable.dispose());
-        editorCompletionState.delete(editor);
+        completionCache.clear();
+        completionState.clearState(editor);
         activeCompletionRegistration = null;
       },
       trigger: () => {
@@ -146,14 +136,10 @@ export const registerCompletion = (
  * @param editor - The editor instance.
  */
 const handleTriggerCompletion = (editor: StandaloneCodeEditor) => {
-  const state = editorCompletionState.get(editor);
-  if (!state) {
-    logger.warn(
-      'Completion is not registered. Use `registerCompletion` to register completion first.',
-    );
+  if (!completionState.canShowCompletion(editor)) {
     return;
   }
-  state.isManualTrigger = true;
+  completionState.setState(editor, {isManualTrigger: true});
   editor.trigger('keyboard', 'editor.action.inlineSuggest.trigger', {});
 };
 
@@ -163,7 +149,7 @@ const handleTriggerCompletion = (editor: StandaloneCodeEditor) => {
 export const registerCopilot = (
   ...args: Parameters<typeof registerCompletion>
 ) => {
-  logger.warn(
+  log.warning(
     'The `registerCopilot` function is deprecated. Use `registerCompletion` instead.',
   );
 
