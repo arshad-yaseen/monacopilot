@@ -1,8 +1,8 @@
 import {ACTION_BUTTONS_WIDGET_CLASS} from '../../constants/classnames';
 import {log} from '../../log';
+import {selectionActionsState} from '../../state';
 import {
   ContentWidgetPositionPreference,
-  Disposable,
   EditorContentWidget,
   EditorSelection,
   Monaco,
@@ -10,13 +10,7 @@ import {
   SelectionActionsRegistration,
   StandaloneCodeEditor,
 } from '../../types';
-import {removeSelection, uid} from '../../utils';
-import {
-  cleanups,
-  disposeDiffDecorations,
-  disposeWidgets,
-  editorWidgetState,
-} from './actions-state';
+import {isLineEmpty, removeSelection, uid} from '../../utils';
 import {showModifyButton} from './modify';
 import {showModifyWidget} from './modify/widgets/modify-widget';
 
@@ -43,59 +37,58 @@ export const registerSelectionActions = (
     activeRegistration.deregister();
   }
 
-  const disposables: Disposable[] = [];
-
   // Initialize editor widget state
-  editorWidgetState.set(editor, {
-    isModifyWidgetVisible: false,
-    widgets: new Set<string>(),
-  });
+  selectionActionsState.getWidgetState(editor);
 
   const deregister = () => {
-    disposables.forEach(disposable => disposable.dispose());
-    editorWidgetState.delete(editor);
-    const cleanup = cleanups.get(editor);
-    if (cleanup) {
-      cleanup();
-      cleanups.delete(editor);
-    }
-    disposeWidgets(editor);
-    disposeDiffDecorations(editor);
+    selectionActionsState.clearState(editor);
     activeRegistration = null;
   };
 
   try {
-    // Listen for selection changes
-    const selectionChangeListener = editor.onDidChangeCursorSelection(event => {
-      const state = editorWidgetState.get(editor);
-      if (!state) return;
-
-      const selection = event.selection;
-      if (!selection.isEmpty()) {
-        if (!state.isModifyWidgetVisible) {
-          // Dispose of existing widgets and decorations
-          disposeWidgets(editor);
-          disposeDiffDecorations(editor);
-
-          showActionButtonsWidget(editor, selection, options);
-        }
-      } else if (!state.isModifyWidgetVisible) {
-        disposeWidgets(editor);
-        disposeDiffDecorations(editor);
+    // Listen for mouse up event to detect end of selection
+    const mouseUpListener = editor.onMouseUp(() => {
+      const selection = editor.getSelection();
+      if (
+        selection &&
+        !selection.isEmpty() &&
+        !selectionActionsState.isSelectionActionsWidgetOpen(editor)
+      ) {
+        showActionButtonsWidget(editor, selection, options);
+        selectionActionsState.setSelectionActionsWidgetOpen(editor, true);
       }
     });
-    disposables.push(selectionChangeListener);
+
+    selectionActionsState.addDisposable(editor, mouseUpListener);
+
+    // Listen for selection change event to detect keyboard selection
+    const selectionChangeListener = editor.onDidChangeCursorSelection(e => {
+      if (
+        e.source === 'keyboard' &&
+        !e.selection.isEmpty() &&
+        !selectionActionsState.isSelectionActionsWidgetOpen(editor)
+      ) {
+        showActionButtonsWidget(editor, e.selection, options);
+        selectionActionsState.setSelectionActionsWidgetOpen(editor, true);
+      }
+    });
+
+    selectionActionsState.addDisposable(editor, selectionChangeListener);
 
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyK, () => {
       const selection = editor.getSelection();
       if (selection) {
+        const mdl = editor.getModel();
+        if (mdl && !isLineEmpty(selection.startLineNumber, mdl)) return;
+        selectionActionsState.setSelectionActionsWidgetOpen(editor, true);
         showModifyWidget(editor, selection, options.modify);
       }
     });
 
     editor.addCommand(monaco.KeyCode.Escape, () => {
-      disposeWidgets(editor);
-      disposeDiffDecorations(editor);
+      selectionActionsState.disposeWidgets(editor);
+      selectionActionsState.disposeDiffDecorations(editor);
+      selectionActionsState.setSelectionActionsWidgetOpen(editor, false);
       const selection = editor.getSelection();
       if (selection) {
         removeSelection(editor, selection);
@@ -136,10 +129,8 @@ export const showActionButtonsWidget = (
   const widget = createActionButtonsWidget(editor, selection, options);
   editor.addContentWidget(widget);
 
-  const state = editorWidgetState.get(editor);
-  if (state) {
-    state.widgets.add(widget.getId());
-  }
+  const state = selectionActionsState.getWidgetState(editor);
+  state.widgets.add(widget.getId());
 };
 
 /**

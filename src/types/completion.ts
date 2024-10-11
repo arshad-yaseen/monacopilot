@@ -5,6 +5,7 @@ import {
   EditorCancellationToken,
   EditorModel,
   EditorRange,
+  StandaloneCodeEditor,
 } from './monaco';
 
 export type Endpoint = string;
@@ -75,6 +76,7 @@ export interface CompletionRegistration {
 
 export interface InlineCompletionHandlerParams {
   mdl: EditorModel;
+  editor: StandaloneCodeEditor;
   pos: CursorPosition;
   token: EditorCancellationToken;
 

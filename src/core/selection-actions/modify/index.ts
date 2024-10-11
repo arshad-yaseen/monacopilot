@@ -9,7 +9,6 @@ import {
   ModifyOptions,
   StandaloneCodeEditor,
 } from '../../../types';
-import {disposeWidgets} from '../actions-state';
 import {showModifyWidget} from './widgets/modify-widget';
 
 /**
@@ -42,12 +41,10 @@ export const showModifyButton = (
   modifyButton.appendChild(modifyButtonKey);
 
   const clickHandler = () => {
-    disposeWidgets(editor);
     showModifyWidget(editor, selection, options);
   };
 
   modifyButton.addEventListener('click', clickHandler);
-  modifyButton.onclick = clickHandler;
 
   modifyButton.setAttribute('title', 'Modify selected code');
   modifyButton.setAttribute('aria-label', 'Modify selected code (Command + K)');

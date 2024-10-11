@@ -4,11 +4,13 @@ import {
   fetchCompletionItem,
 } from '../../helpers/completion';
 import {log} from '../../log';
+import {completionState} from '../../state';
 import {
   CompletionMetadata,
   EditorInlineCompletionsResult,
   FetchCompletionItemHandler,
   InlineCompletionHandlerParams,
+  StandaloneCodeEditor,
   TriggerType,
 } from '../../types';
 import {
@@ -34,6 +36,7 @@ const DEBOUNCE_DELAYS = {
  */
 const getDebouncedFunctionPerTrigger = (
   fn: FetchCompletionItemHandler,
+  editor: StandaloneCodeEditor,
 ): Record<
   TriggerType,
   ReturnType<typeof asyncDebounce<FetchCompletionItemHandler>>
@@ -42,14 +45,23 @@ const getDebouncedFunctionPerTrigger = (
     [TriggerType.OnTyping]: asyncDebounce(
       fn,
       DEBOUNCE_DELAYS[TriggerType.OnTyping],
+      {
+        shouldExecute: () => completionState.canShowCompletion(editor),
+      },
     ),
     [TriggerType.OnIdle]: asyncDebounce(
       fn,
       DEBOUNCE_DELAYS[TriggerType.OnIdle],
+      {
+        shouldExecute: () => completionState.canShowCompletion(editor),
+      },
     ),
     [TriggerType.OnDemand]: asyncDebounce(
       fn,
       DEBOUNCE_DELAYS[TriggerType.OnDemand],
+      {
+        shouldExecute: () => completionState.canShowCompletion(editor),
+      },
     ),
   };
 };
@@ -63,6 +75,7 @@ export const completionCache = new CompletionCache();
  */
 const handleInlineCompletions = async ({
   mdl,
+  editor,
   pos,
   token,
   isCompletionAccepted,
@@ -103,6 +116,7 @@ const handleInlineCompletions = async ({
     // Create a debounced fetch function based on the trigger type
     const debouncedFetchCompletion = getDebouncedFunctionPerTrigger(
       requestHandler ?? fetchCompletionItem,
+      editor,
     );
 
     const fetchCompletion = debouncedFetchCompletion[trigger];
@@ -125,12 +139,12 @@ const handleInlineCompletions = async ({
       },
     });
 
-    if (completion) {
+    if (completion && completionState.canShowCompletion(editor)) {
       const formattedCompletion = formatCompletion(completion);
       const completionInsertionRange = computeInsertionRange(
         pos,
         mdl,
-        formattedCompletion,
+        completion,
       );
 
       completionCache.add({

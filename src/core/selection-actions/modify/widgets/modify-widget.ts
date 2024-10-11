@@ -7,6 +7,7 @@ import {
   MODIFY_WIDGET_PROMPT_SUBMIT_BUTTON_CLASS,
   MODIFY_WIDGET_PROMPT_TEXTAREA_CLASS,
 } from '../../../../constants/classnames';
+import {selectionActionsState} from '../../../../state';
 import {
   ContentWidgetPositionPreference,
   EditorContentWidget,
@@ -15,12 +16,6 @@ import {
   StandaloneCodeEditor,
 } from '../../../../types';
 import {uid} from '../../../../utils';
-import {
-  cleanups,
-  disposeDiffDecorations,
-  disposeWidgets,
-  editorWidgetState,
-} from '../../actions-state';
 import {handleModifySelection} from '../handler';
 
 /**
@@ -36,20 +31,20 @@ export const showModifyWidget = (
   options: ModifyOptions,
 ) => {
   // Dispose of existing widgets and decorations
-  disposeWidgets(editor);
-  disposeDiffDecorations(editor);
+  selectionActionsState.disposeWidgets(editor);
+  selectionActionsState.disposeDiffDecorations(editor);
 
   const widget = createModifyWidget(editor, selection, options);
 
   editor.addContentWidget(widget);
 
-  const state = editorWidgetState.get(editor);
+  const state = selectionActionsState.getWidgetState(editor);
   if (state) {
     state.widgets.add(widget.getId());
-    state.isModifyWidgetVisible = true;
+    selectionActionsState.setSelectionActionsWidgetOpen(editor, true);
   }
 
-  const existingCleanup = cleanups.get(editor);
+  const existingCleanup = selectionActionsState.getCleanup(editor);
 
   if (existingCleanup) {
     existingCleanup();
@@ -63,7 +58,7 @@ export const showModifyWidget = (
     }
   }, 10);
 
-  cleanups.set(editor, () => clearTimeout(timeoutId));
+  selectionActionsState.setCleanup(editor, () => clearTimeout(timeoutId));
 };
 
 /**
@@ -83,17 +78,13 @@ const createModifyWidget = (
   const domNode = document.createElement('div');
   domNode.className = MODIFY_WIDGET_CLASS;
 
-  const state = editorWidgetState.get(editor);
-
   const closeButton = document.createElement('button');
   closeButton.textContent = '✕';
   closeButton.className = MODIFY_WIDGET_CLOSE_BUTTON_CLASS;
   closeButton.onclick = () => {
-    disposeWidgets(editor);
-    disposeDiffDecorations(editor);
-    if (state) {
-      state.isModifyWidgetVisible = false;
-    }
+    selectionActionsState.disposeWidgets(editor);
+    selectionActionsState.disposeDiffDecorations(editor);
+    selectionActionsState.setSelectionActionsWidgetOpen(editor, false);
   };
   domNode.appendChild(closeButton);
 

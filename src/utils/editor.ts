@@ -65,6 +65,17 @@ export const getTextBeforeCursorInLine = (
 };
 
 /**
+ * Checks if the current line is empty.
+ * @param {number} lineNumber - The line number to check.
+ * @param {EditorModel} mdl - The editor model.
+ * @returns {boolean} True if the line is empty, false otherwise.
+ */
+export const isLineEmpty = (lineNumber: number, mdl: EditorModel): boolean => {
+  const lineContent = mdl.getLineContent(lineNumber);
+  return lineContent.trim() === '';
+};
+
+/**
  * Gets the text before the cursor.
  * @returns {string} The text before the cursor.
  */
@@ -177,12 +188,7 @@ export const computeInsertionRange = (
 ): EditorRange => {
   // Handle empty completion
   if (!completion) {
-    return {
-      startLineNumber: pos.lineNumber,
-      startColumn: pos.column,
-      endLineNumber: pos.lineNumber,
-      endColumn: pos.column,
-    };
+    return createRange(pos.lineNumber, pos.column, pos.lineNumber, pos.column);
   }
 
   // Get the offset in the model where the cursor is currently located.
@@ -201,22 +207,12 @@ export const computeInsertionRange = (
 
   // If Cursor at the end of the document
   if (startOffset >= mdl.getValue().length) {
-    return {
-      startLineNumber: pos.lineNumber,
-      startColumn: pos.column,
-      endLineNumber: pos.lineNumber,
-      endColumn: pos.column,
-    };
+    return createRange(pos.lineNumber, pos.column, pos.lineNumber, pos.column);
   }
 
   // If Remaining text is empty
   if (remainingLength === 0) {
-    return {
-      startLineNumber: pos.lineNumber,
-      startColumn: pos.column,
-      endLineNumber: pos.lineNumber,
-      endColumn: pos.column,
-    };
+    return createRange(pos.lineNumber, pos.column, pos.lineNumber, pos.column);
   }
 
   const maxPossibleOverlap = Math.min(completionLength, remainingLength);
@@ -258,12 +254,12 @@ export const computeInsertionRange = (
   // Get the end position in the model corresponding to the end offset.
   const endPosition = mdl.getPositionAt(endOffset);
 
-  return {
-    startLineNumber: pos.lineNumber,
-    startColumn: pos.column,
-    endLineNumber: endPosition.lineNumber,
-    endColumn: endPosition.column,
-  };
+  return createRange(
+    pos.lineNumber,
+    pos.column,
+    endPosition.lineNumber,
+    endPosition.column,
+  );
 };
 
 export const removeSelection = (

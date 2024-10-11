@@ -13,6 +13,7 @@ import {
   constructModifyMetadata,
   fetchModifiedText,
 } from '../../../helpers/modify';
+import {selectionActionsState} from '../../../state';
 import {
   EditorSelection,
   ModifyOptions,
@@ -20,12 +21,6 @@ import {
 } from '../../../types';
 import {applyDiffDecorations, removeSelection} from '../../../utils';
 import {formatModifiedText} from '../../../utils/modify';
-import {
-  disposeDiffDecorations,
-  disposeWidgets,
-  editorDiffDecorationState,
-  editorWidgetState,
-} from '../actions-state';
 
 /**
  * Handles the modification of the selected code.
@@ -114,7 +109,7 @@ export const handleModifySelection = async (
     }
 
     if (!formattedModifiedText) {
-      disposeWidgets(editor);
+      selectionActionsState.disposeWidgets(editor);
       return;
     }
 
@@ -128,7 +123,7 @@ export const handleModifySelection = async (
 
     if (!decorations) return;
 
-    editorDiffDecorationState.set(editor, decorations);
+    selectionActionsState.setDiffDecorationState(editor, decorations);
 
     removeSelection(editor, selection);
 
@@ -188,13 +183,9 @@ const showAcceptRejectControls = (
 
   closeButton?.remove();
 
-  const state = editorWidgetState.get(editor);
-
   const beforeClick = () => {
-    disposeDiffDecorations(editor);
-    if (state) {
-      state.isModifyWidgetVisible = false;
-    }
+    selectionActionsState.disposeDiffDecorations(editor);
+    selectionActionsState.setSelectionActionsWidgetOpen(editor, false);
   };
 
   // Create Accept and Reject buttons
@@ -204,7 +195,7 @@ const showAcceptRejectControls = (
   acceptButton.onclick = () => {
     beforeClick();
     acceptChanges(editor, selection, modifiedText);
-    disposeWidgets(editor);
+    selectionActionsState.disposeWidgets(editor);
   };
 
   const rejectButton = document.createElement('button');
@@ -213,7 +204,7 @@ const showAcceptRejectControls = (
   rejectButton.onclick = () => {
     beforeClick();
     rejectChanges(editor);
-    disposeWidgets(editor);
+    selectionActionsState.disposeWidgets(editor);
   };
 
   // Append buttons to the modify widget
@@ -258,5 +249,6 @@ const acceptChanges = (
  * @param editor - The editor instance.
  */
 const rejectChanges = (editor: StandaloneCodeEditor) => {
-  disposeDiffDecorations(editor);
+  selectionActionsState.disposeWidgets(editor);
+  selectionActionsState.disposeDiffDecorations(editor);
 };

@@ -2,11 +2,6 @@ import {Context} from './context';
 import {PromptData} from './copilot';
 import {CursorPosition, EditorModel, EditorSelection} from './monaco';
 
-export interface EditorWidgetState {
-  isModifyWidgetVisible: boolean;
-  widgets: Set<string>;
-}
-
 export interface SelectionActionsRegistration {
   deregister: () => void;
 }
