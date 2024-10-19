@@ -1,3 +1,15 @@
+
+
+## [0.11.7](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.6...v0.11.7) (2024-10-19)
+
+
+### 💅 Styling
+
+* font sizes to rem ([80bd568](https://github.com/arshad-yaseen/monacopilot/commit/80bd568232eba822d8419c09c752051ac759b217))
+* improve ([c71e6ad](https://github.com/arshad-yaseen/monacopilot/commit/c71e6ad182926ffa09fa6036ba07d53e1faaefe4))
+* modify widget styles ([90c5cfc](https://github.com/arshad-yaseen/monacopilot/commit/90c5cfc83d29e4bb800becf52a3a37337c680f2c))
+* widgets style WIP ([a159b23](https://github.com/arshad-yaseen/monacopilot/commit/a159b23fd1bc03a15d273e072144538b59a8a626))
+
 ## [0.11.6](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.5...v0.11.6) (2024-10-01)
 
 ### 📚 Documentation

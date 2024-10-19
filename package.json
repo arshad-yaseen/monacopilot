@@ -1,6 +1,6 @@
 {
   "name": "monacopilot",
-  "version": "0.11.6",
+  "version": "0.11.7",
   "description": "AI auto-completion plugin for Monaco Editor",
   "main": "./build/index.js",
   "module": "./build/index.mjs",
