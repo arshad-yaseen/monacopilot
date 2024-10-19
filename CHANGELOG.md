@@ -1,7 +1,4 @@
-
-
 ## [0.11.8](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.6...v0.11.8) (2024-10-19)
-
 
 ### 📚 Documentation
 

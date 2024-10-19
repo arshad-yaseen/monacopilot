@@ -14,3 +14,9 @@ export type EditorInlineCompletionContext =
 export type EditorInlineCompletionsResult =
   monaco.languages.InlineCompletions<monaco.languages.InlineCompletion>;
 export type Disposable = monaco.IDisposable;
+export type EditorDeltaDecoration = monaco.editor.IModelDeltaDecoration;
+export type EditorDecorationsCollection =
+  monaco.editor.IEditorDecorationsCollection;
+export type EditorDecorationOptions = monaco.editor.IModelDecorationOptions;
+export type EditorSelection = monaco.Selection;
+export type EditorContentWidget = monaco.editor.IContentWidget;

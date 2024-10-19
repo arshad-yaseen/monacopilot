@@ -35,7 +35,7 @@ describe('Completion', () => {
 
     const result = await copilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        metadata: mockCompletionMetadata,
       },
     });
 
@@ -61,7 +61,7 @@ describe('Completion', () => {
 
     const result = await copilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        metadata: mockCompletionMetadata,
       },
     });
 
@@ -80,7 +80,7 @@ describe('Completion', () => {
 
     await customCopilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        metadata: mockCompletionMetadata,
       },
     });
 
@@ -99,7 +99,7 @@ describe('Completion', () => {
 
     const result = await copilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        metadata: mockCompletionMetadata,
       },
     });
 
@@ -115,7 +115,7 @@ describe('Completion', () => {
 
     await copilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        metadata: mockCompletionMetadata,
       },
       options: {
         headers: customHeaders,
@@ -140,7 +140,7 @@ describe('Completion', () => {
 
     await copilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        metadata: mockCompletionMetadata,
       },
       options: {
         customPrompt,
@@ -167,7 +167,7 @@ describe('Completion', () => {
 
     await copilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        metadata: mockCompletionMetadata,
       },
     });
 
@@ -188,7 +188,7 @@ describe('Completion', () => {
 
     await copilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        metadata: mockCompletionMetadata,
       },
       options: {
         customPrompt: () => ({
@@ -214,7 +214,7 @@ describe('Completion', () => {
     );
   });
 
-  it('should pass complete CompletionMetadata to customPrompt and handle optional properties correctly', () => {
+  it('should pass complete metadata to customPrompt and handle optional properties correctly', () => {
     const customPrompt = (metadata: CompletionMetadata) => ({
       system: 'Custom system prompt',
       user: `Custom user prompt: ${metadata.textBeforeCursor}`,
@@ -239,7 +239,7 @@ describe('Completion', () => {
 
     await customCopilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        metadata: mockCompletionMetadata,
       },
     });
 
@@ -274,7 +274,7 @@ describe('Completion', () => {
 
     await customCopilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        metadata: mockCompletionMetadata,
       },
     });
 
@@ -309,7 +309,7 @@ describe('Completion', () => {
 
     await customCopilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        metadata: mockCompletionMetadata,
       },
     });
 

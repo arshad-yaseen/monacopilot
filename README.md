@@ -11,28 +11,29 @@
 ### Table of Contents
 
 - [Examples](#examples)
-- [Demo](#demo)
-- [Installation](#installation)
-- [Usage](#usage)
-  - [API Handler](#api-handler)
-  - [Register Completion with the Monaco Editor](#register-completion-with-the-monaco-editor)
-- [Register Completion Options](#register-completion-options)
-  - [Get Completions in Real-Time](#get-completions-in-real-time)
-  - [Manually Trigger Completions](#manually-trigger-completions)
-    - [Trigger Completions with a Keyboard Shortcut](#trigger-completions-with-a-keyboard-shortcut)
-    - [Trigger Completions with an Editor Action](#trigger-completions-with-an-editor-action)
-  - [Multi-File Context](#multi-file-context)
-  - [Filename](#filename)
-  - [Completions for Specific Technologies](#completions-for-specific-technologies)
-  - [Max Context Lines](#max-context-lines)
-  - [Handling Errors](#handling-errors)
-  - [Custom Request Handler](#custom-request-handler)
+- [Inline Completions](#inline-completions)
+  - [Installation](#installation)
+  - [Usage](#usage)
+    - [API Handler](#api-handler)
+    - [Register Completion with the Monaco Editor](#register-completion-with-the-monaco-editor)
+  - [Register Completion Options](#register-completion-options)
+    - [Get Completions in Real-Time](#get-completions-in-real-time)
+    - [Manually Trigger Completions](#manually-trigger-completions)
+      - [Trigger Completions with a Keyboard Shortcut](#trigger-completions-with-a-keyboard-shortcut)
+      - [Trigger Completions with an Editor Action](#trigger-completions-with-an-editor-action)
+    - [Multi-File Context](#multi-file-context)
+    - [Filename](#filename)
+    - [Completions for Specific Technologies](#completions-for-specific-technologies)
+    - [Max Context Lines](#max-context-lines)
+    - [Handling Errors](#handling-errors)
+    - [Custom Request Handler](#custom-request-handler)
 - [Copilot Options](#copilot-options)
   - [Changing the Provider and Model](#changing-the-provider-and-model)
   - [Custom Model](#custom-model)
 - [Completion Request Options](#completion-request-options)
   - [Custom Headers for AI Model Requests](#custom-headers-for-ai-model-requests)
 - [Using a Different Language for the API Handler](#using-a-different-language-for-the-api-handler)
+- [Select and Modify](#select-and-modify)
 - [Contributing](#contributing)
 
 ### Examples
@@ -45,7 +46,9 @@ Here are some examples of how to integrate Monacopilot into your project:
 - [Remix](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/remix)
 - [Vue](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/vue)
 
-### Demo
+## Inline Completions
+
+Monacopilot provides inline completions, offering real-time, AI-powered, context-aware code suggestions as you type.
 
 [Inline Completions Demo Video](https://github.com/user-attachments/assets/f2ec4ae1-f658-4002-af9c-c6b1bbad70d9)
 
@@ -507,7 +510,7 @@ copilot.complete({
 
 #### Parameters
 
-The `customPrompt` function receives a `completionMetadata` object, which contains information about the current editor state and can be used to tailor the prompt.
+The `customPrompt` function receives a `metadata` object, which contains information about the current editor state and can be used to tailor the prompt.
 
 ##### Completion Metadata
 
@@ -530,7 +533,7 @@ The `editorState.completionMode` can be one of the following:
 | `complete` | Indicates that there is a character after the cursor but not immediately. In this mode, the AI will generate content to complete the text from the cursor position. |
 | `continue` | Indicates that there is no character after the cursor. In this mode, the AI will generate content to continue the text from the cursor position.                    |
 
-For additional `completionMetadata` needs, please [open an issue](https://github.com/arshad-yaseen/monacopilot/issues/new).
+For additional `metadata` needs, please [open an issue](https://github.com/arshad-yaseen/monacopilot/issues/new).
 
 The `customPrompt` function should return an object with two properties:
 
@@ -597,7 +600,7 @@ Check out the [prompt.ts](https://github.com/arshad-yaseen/monacopilot/blob/main
 
 ### Metadata Overview
 
-The request body's `completionMetadata` object contains essential information for crafting a prompt for the AI model to generate accurate completions. See the [Completion Metadata](#completion-metadata) section for more details.
+The request body's `metadata` object contains essential information for crafting a prompt for the AI model to generate accurate completions. See the [Completion Metadata](#completion-metadata) section for more details.
 
 ### Example Implementation (Python with FastAPI)
 
@@ -612,7 +615,7 @@ app = FastAPI()
 async def handle_completion(request: Request):
     try:
         body = await request.json()
-        metadata = body['completionMetadata']
+        metadata = body['metadata']
 
         prompt = f"""Please complete the following {metadata['language']} code:
 
@@ -645,6 +648,12 @@ registerCompletion(monaco, editor, {
   // ... other options
 });
 ```
+
+## Select and Modify
+
+This feature allows you to edit the code by selecting the part you want to modify and ask AI to modify it.
+
+This feature is coming soon™️.
 
 ## Contributing
 

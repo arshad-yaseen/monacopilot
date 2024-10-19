@@ -34,7 +34,7 @@ describe('Copilot with model', () => {
 
     const result = await copilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        metadata: mockCompletionMetadata,
       },
     });
 
@@ -69,7 +69,7 @@ describe('Copilot with model', () => {
 
     const result = await copilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        metadata: mockCompletionMetadata,
       },
     });
 
@@ -86,7 +86,7 @@ describe('Copilot with model', () => {
 
     await copilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        metadata: mockCompletionMetadata,
       },
     });
 
@@ -114,7 +114,7 @@ describe('Copilot with model', () => {
 
     await copilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        metadata: mockCompletionMetadata,
       },
     });
 

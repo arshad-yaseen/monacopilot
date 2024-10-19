@@ -23,6 +23,8 @@ describe('MonacoPilot exports', () => {
       'registerCopilot',
       'Copilot',
       'registerCompletion',
+      'registerSelectionActions',
+      'buildContext',
     ];
     const actualExports = Object.keys(MonacoPilot);
 
