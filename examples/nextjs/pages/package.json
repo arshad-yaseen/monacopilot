@@ -11,7 +11,7 @@
   "dependencies": {
     "@monaco-editor/react": "^4.6.0",
     "monacopilot": "^0.9.22",
-    "next": "14.2.6",
+    "next": "14.2.10",
     "react": "^18",
     "react-dom": "^18"
   },
