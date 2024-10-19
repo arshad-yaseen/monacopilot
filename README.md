@@ -11,16 +11,16 @@
 ### Table of Contents
 
 - [Examples](#examples)
-- [Inline Completions](#inline-completions)
-  - [Installation](#installation)
-  - [Usage](#usage)
+- [Demo](#demo)
+- [Installation](#installation)
+- [Usage](#usage)
     - [API Handler](#api-handler)
     - [Register Completion with the Monaco Editor](#register-completion-with-the-monaco-editor)
-  - [Register Completion Options](#register-completion-options)
+- [Register Completion Options](#register-completion-options)
     - [Get Completions in Real-Time](#get-completions-in-real-time)
     - [Manually Trigger Completions](#manually-trigger-completions)
-      - [Trigger Completions with a Keyboard Shortcut](#trigger-completions-with-a-keyboard-shortcut)
-      - [Trigger Completions with an Editor Action](#trigger-completions-with-an-editor-action)
+        - [Trigger Completions with a Keyboard Shortcut](#trigger-completions-with-a-keyboard-shortcut)
+        - [Trigger Completions with an Editor Action](#trigger-completions-with-an-editor-action)
     - [Multi-File Context](#multi-file-context)
     - [Filename](#filename)
     - [Completions for Specific Technologies](#completions-for-specific-technologies)
@@ -28,12 +28,11 @@
     - [Handling Errors](#handling-errors)
     - [Custom Request Handler](#custom-request-handler)
 - [Copilot Options](#copilot-options)
-  - [Changing the Provider and Model](#changing-the-provider-and-model)
-  - [Custom Model](#custom-model)
+    - [Changing the Provider and Model](#changing-the-provider-and-model)
+    - [Custom Model](#custom-model)
 - [Completion Request Options](#completion-request-options)
-  - [Custom Headers for AI Model Requests](#custom-headers-for-ai-model-requests)
+    - [Custom Headers for AI Model Requests](#custom-headers-for-ai-model-requests)
 - [Using a Different Language for the API Handler](#using-a-different-language-for-the-api-handler)
-- [Select and Edit](#select-and-edit)
 - [Contributing](#contributing)
 
 ### Examples
@@ -46,9 +45,7 @@ Here are some examples of how to integrate Monacopilot into your project:
 - [Remix](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/remix)
 - [Vue](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/vue)
 
-## Inline Completions
-
-Monacopilot provides inline completions, offering real-time, AI-powered, context-aware code suggestions as you type.
+### Demo
 
 [Inline Completions Demo Video](https://github.com/user-attachments/assets/f2ec4ae1-f658-4002-af9c-c6b1bbad70d9)
 
@@ -648,12 +645,6 @@ registerCompletion(monaco, editor, {
   // ... other options
 });
 ```
-
-## Select and Edit
-
-Select and Edit is a feature that allows you to select code from the editor and edit it inline with AI assistance.
-
-This feature is coming soon™️.
 
 ## Contributing
 
