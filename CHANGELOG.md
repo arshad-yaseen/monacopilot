@@ -1,3 +1,9 @@
+## [0.11.8](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.6...v0.11.8) (2024-10-19)
+
+### 📚 Documentation
+
+* Remove select & edit ([4feb857](https://github.com/arshad-yaseen/monacopilot/commit/4feb85753d80d19ee2d97b042b3bc88a5caacfa4))
+
 ## [0.11.6](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.5...v0.11.6) (2024-10-01)
 
 ### 📚 Documentation
