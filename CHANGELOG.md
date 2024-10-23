@@ -1,11 +1,12 @@
 
 
-## [0.12.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.0...v0.12.1) (2024-10-23)
+## [0.12.2](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.1...v0.12.2) (2024-10-23)
 
+## [0.12.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.0...v0.12.1) (2024-10-23)
 
 ### 📚 Documentation
 
-* add caching completions section to toc ([921b8cb](https://github.com/arshad-yaseen/monacopilot/commit/921b8cbc03f6c8d1eeb3b24c8cd0c7273259db7b))
+- add caching completions section to toc ([921b8cb](https://github.com/arshad-yaseen/monacopilot/commit/921b8cbc03f6c8d1eeb3b24c8cd0c7273259db7b))
 
 ## [0.12.0](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.9...v0.12.0) (2024-10-23)
 
