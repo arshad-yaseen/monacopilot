@@ -1,16 +1,21 @@
 
 
-## [0.12.0](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.9...v0.12.0) (2024-10-23)
-
-
-### 🚀 Features
-
-* add  option to control caching behavior ([00e6cb3](https://github.com/arshad-yaseen/monacopilot/commit/00e6cb3c5ae0cc9047b7351e18883654ed5732ce))
+## [0.12.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.0...v0.12.1) (2024-10-23)
 
 
 ### 📚 Documentation
 
-* add enableCaching option documentation ([13085bf](https://github.com/arshad-yaseen/monacopilot/commit/13085bf0d323a76d579869832abdeb66e65d48a6))
+* add caching completions section to toc ([921b8cb](https://github.com/arshad-yaseen/monacopilot/commit/921b8cbc03f6c8d1eeb3b24c8cd0c7273259db7b))
+
+## [0.12.0](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.9...v0.12.0) (2024-10-23)
+
+### 🚀 Features
+
+- add option to control caching behavior ([00e6cb3](https://github.com/arshad-yaseen/monacopilot/commit/00e6cb3c5ae0cc9047b7351e18883654ed5732ce))
+
+### 📚 Documentation
+
+- add enableCaching option documentation ([13085bf](https://github.com/arshad-yaseen/monacopilot/commit/13085bf0d323a76d579869832abdeb66e65d48a6))
 
 ## [0.11.9](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.8...v0.11.9) (2024-10-23)
 
