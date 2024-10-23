@@ -25,6 +25,7 @@
   - [Filename](#filename)
   - [Completions for Specific Technologies](#completions-for-specific-technologies)
   - [Max Context Lines](#max-context-lines)
+  - [Caching Completions](#caching-completions)
   - [Handling Errors](#handling-errors)
   - [Custom Request Handler](#custom-request-handler)
 - [Copilot Options](#copilot-options)
