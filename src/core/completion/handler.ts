@@ -130,6 +130,7 @@ const handleInlineCompletions = async ({
       const completionInsertionRange = computeCompletionInsertionRange(
         monaco,
         pos,
+        mdl,
         formattedCompletion,
       );
 

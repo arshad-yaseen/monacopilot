@@ -14,7 +14,7 @@ import {
 export type OpenAIModel = 'gpt-4o' | 'gpt-4o-mini' | 'o1-preview' | 'o1-mini';
 export type GroqModel = 'llama-3-70b';
 export type AnthropicModel =
-  | 'claude-3.5-sonnet'
+  | 'claude-3-5-sonnet'
   | 'claude-3-opus'
   | 'claude-3-haiku'
   | 'claude-3-sonnet';
@@ -141,5 +141,5 @@ export type CustomCopilotModelTransformResponse = (response: unknown) => {
   /**
    * @deprecated Use `text` instead. This property will be removed in a future version.
    */
-  completion: string | null;
+  completion?: string | null;
 };

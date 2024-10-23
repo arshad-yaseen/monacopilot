@@ -3,10 +3,10 @@ import {
   CursorPosition,
   EditorInlineCompletion,
   EditorInlineCompletionsResult,
+  EditorModel,
   EditorRange,
   Monaco,
 } from '../types';
-import {getLastLineColumnCount} from './editor';
 
 /**
  * Calculates the range where the completion should be inserted in the editor.
@@ -19,14 +19,85 @@ import {getLastLineColumnCount} from './editor';
 export const computeCompletionInsertionRange = (
   monaco: Monaco,
   pos: CursorPosition,
+  mdl: EditorModel,
   completion: string,
 ): EditorRange => {
-  const newLineCount = completion.match(/\n/g)?.length || 0;
-  const endLineNumber = pos.lineNumber + newLineCount;
-  const lastLineColumnCount = getLastLineColumnCount(completion);
-  const endColumn =
-    newLineCount === 0 ? pos.column + lastLineColumnCount : lastLineColumnCount;
-  return new monaco.Range(pos.lineNumber, pos.column, endLineNumber, endColumn);
+  // Handle empty completion
+  if (!completion) {
+    return new monaco.Range(
+      pos.lineNumber,
+      pos.column,
+      pos.lineNumber,
+      pos.column,
+    );
+  }
+
+  const startOffset = mdl.getOffsetAt(pos);
+  const remainingText = mdl.getValue().substring(startOffset);
+
+  let prefixOverlapLength = 0;
+  let suffixOverlapLength = 0;
+  let maxOverlapLength = 0;
+
+  const completionLength = completion.length;
+  const remainingLength = remainingText.length;
+
+  // Handle cursor at the end of the document
+  if (startOffset >= mdl.getValue().length) {
+    return new monaco.Range(
+      pos.lineNumber,
+      pos.column,
+      pos.lineNumber,
+      pos.column,
+    );
+  }
+
+  // Handle empty remaining text
+  if (remainingLength === 0) {
+    return new monaco.Range(
+      pos.lineNumber,
+      pos.column,
+      pos.lineNumber,
+      pos.column,
+    );
+  }
+
+  const maxPossibleOverlap = Math.min(completionLength, remainingLength);
+
+  // Find the longest prefix overlap
+  for (let i = 0; i < maxPossibleOverlap; i++) {
+    if (completion[i] !== remainingText[i]) break;
+    prefixOverlapLength++;
+  }
+
+  // Find the longest suffix overlap
+  for (let i = 1; i <= maxPossibleOverlap; i++) {
+    if (completion.slice(-i) === remainingText.slice(0, i)) {
+      suffixOverlapLength = i;
+    }
+  }
+
+  maxOverlapLength = Math.max(prefixOverlapLength, suffixOverlapLength);
+
+  // Check for internal overlaps if no prefix or suffix overlap
+  if (maxOverlapLength === 0) {
+    for (let i = 1; i < completionLength; i++) {
+      if (remainingText.startsWith(completion.substring(i))) {
+        maxOverlapLength = completionLength - i;
+        break;
+      }
+    }
+  }
+
+  const endOffset = startOffset + maxOverlapLength;
+  const endPosition = mdl.getPositionAt(endOffset);
+
+  return new monaco.Range(
+    pos.lineNumber,
+    pos.column,
+    endPosition.lineNumber,
+    endPosition.column,
+  );
 };
 
 export const formatCompletion = (completion: string): string => {

@@ -80,7 +80,7 @@ app.post('/complete', async (req, res) => {
   });
 
   if (error) {
-    // handle error if you want
+    // Handle error if needed
     // ...
     res.status(500).json({completion: null, error});
   }
@@ -415,7 +415,7 @@ There are other providers and models available. Here is a list:
 | --------- | ------------------------------------------------------------------------- |
 | Groq      | `llama-3-70b`                                                             |
 | OpenAI    | `gpt-4o`, `gpt-4o-mini`, `o1-preview`, `o1-mini`                          |
-| Anthropic | `claude-3.5-Sonnet`, `claude-3-opus`, `claude-3-sonnet`, `claude-3-haiku` |
+| Anthropic | `claude-3-5-Sonnet`, `claude-3-opus`, `claude-3-sonnet`, `claude-3-haiku` |
 
 ### Custom Model
 
