@@ -1,3 +1,12 @@
+
+
+## [0.11.9](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.8...v0.11.9) (2024-10-23)
+
+
+### 🔄 Refactoring
+
+* use built-in monaco.Range without overlapping calculations ([3312526](https://github.com/arshad-yaseen/monacopilot/commit/3312526d6806a2ad4d6dd6b70886e476f31f5ca5))
+
 ## [0.11.8](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.6...v0.11.8) (2024-10-19)
 
 ### 📚 Documentation
