@@ -1,5 +1,12 @@
 
 
+## [0.12.3](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.2...v0.12.3) (2024-10-23)
+
+
+### 🐛 Bug Fixes
+
+* cache extraction not respecting the lines before the cursor ([fddd10d](https://github.com/arshad-yaseen/monacopilot/commit/fddd10d3693cd02ea97332b9d1c938ba71553419))
+
 ## [0.12.2](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.1...v0.12.2) (2024-10-23)
 
 ## [0.12.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.0...v0.12.1) (2024-10-23)
