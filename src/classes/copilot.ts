@@ -150,7 +150,8 @@ export class Copilot {
         );
       }
       return {
-        completion: transformedResponse.text ?? transformedResponse.completion,
+        completion:
+          transformedResponse.text ?? transformedResponse.completion ?? null,
       };
     } else {
       const parsedCompletion = parseProviderChatCompletion(

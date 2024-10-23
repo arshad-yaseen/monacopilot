@@ -13,7 +13,7 @@ export default async function handler(
   });
 
   if (error) {
-    // handle error if you want
+    // Handle error if needed
     // ...
     res.status(500).json({completion: null, error});
   }

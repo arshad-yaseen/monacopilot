@@ -2,7 +2,7 @@ import {Copilot} from 'monacopilot';
 
 const copilot = new Copilot(process.env.OPENAI_API_KEY!, {
   provider: 'openai',
-  model: 'gpt-4o-mini',
+  model: 'gpt-4o',
 });
 
 export async function POST(req: Request) {
@@ -12,7 +12,7 @@ export async function POST(req: Request) {
   });
 
   if (error) {
-    // handle error if you want
+    // Handle error if needed
     // ...
     return Response.json({completion: null, error}, {status: 500});
   }

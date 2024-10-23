@@ -2,8 +2,12 @@ import {CompletionMetadata, PromptData, RelatedFile} from '../types';
 import {joinWithAnd} from '../utils';
 
 const generateSystemPrompt = (metadata: CompletionMetadata): string => {
-  const {technologies, filename, relatedFiles} = metadata;
-  const languageOrTechnologies = joinWithAnd(technologies);
+  const {technologies = [], filename, relatedFiles, language} = metadata;
+  const languageOrTechnologies = joinWithAnd(
+    [language, ...technologies].filter(
+      (t): t is string => typeof t === 'string' && Boolean(t),
+    ),
+  );
 
   const persona = `You are an expert ${languageOrTechnologies ? `${languageOrTechnologies} ` : ''}developer assistant.`;
 
@@ -20,10 +24,15 @@ const generateSystemPrompt = (metadata: CompletionMetadata): string => {
 
   const reasoning = `Before providing the completion or modification, think through the problem step-by-step, considering best practices and any potential edge cases.`;
 
+  const languageSpecificInfo = language
+    ? `Pay special attention to ${language}-specific syntax and best practices.`
+    : '';
+
   const systemPrompt = `${persona}
 ${instructions} ${fileContext}.
 ${codeStyleGuidelines}
 ${relatedFilesInfo}
+${languageSpecificInfo}
 ${reasoning}`;
 
   return systemPrompt.trim();
