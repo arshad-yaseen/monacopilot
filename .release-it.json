@@ -63,6 +63,10 @@
           {
             "type": "ci",
             "section": "🔧 CI/CD"
+          },
+          {
+            "type": "chore",
+            "section": "🔧 Maintenance"
           }
         ]
       }

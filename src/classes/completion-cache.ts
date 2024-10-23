@@ -1,5 +1,5 @@
 import {CompletionCacheItem, CursorPosition, EditorModel} from '../types';
-import {getTextBeforeCursorInLine} from '../utils/editor';
+import {getTextBeforeCursor} from '../utils/editor';
 
 /**
  * Manages a cache of code completions with FIFO eviction policy.
@@ -53,10 +53,10 @@ export class CompletionCache {
     mdl: Readonly<EditorModel>,
   ): boolean {
     const currentRangeValue = mdl.getValueInRange(cacheItem.range);
-    const textBeforeCursor = getTextBeforeCursorInLine(pos, mdl);
+    const textBeforeCursor = getTextBeforeCursor(pos, mdl);
 
     return (
-      textBeforeCursor.startsWith(cacheItem.textBeforeCursorInLine) &&
+      textBeforeCursor.startsWith(cacheItem.textBeforeCursor) &&
       this.isPositionValid(cacheItem, pos, currentRangeValue)
     );
   }

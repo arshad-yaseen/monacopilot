@@ -250,5 +250,5 @@ export interface ConstructCompletionMetadataParams {
 export interface CompletionCacheItem {
   completion: string;
   range: EditorRange;
-  textBeforeCursorInLine: string;
+  textBeforeCursor: string;
 }

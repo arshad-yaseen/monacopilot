@@ -9,7 +9,7 @@ import {
   InlineCompletionHandlerParams,
   TriggerType,
 } from '../../types';
-import {asyncDebounce, getTextBeforeCursorInLine} from '../../utils';
+import {asyncDebounce, getTextBeforeCursor} from '../../utils';
 import {
   computeCompletionInsertionRange,
   createInlineCompletionResult,
@@ -68,14 +68,10 @@ const handleInlineCompletions = async ({
   const {
     trigger = TriggerType.OnIdle,
     endpoint,
-    enableCaching: originalEnableCaching = true,
+    enableCaching = true,
     onError,
     requestHandler,
   } = options;
-
-  // Disable caching for OnDemand trigger
-  const enableCaching =
-    trigger === TriggerType.OnDemand ? false : originalEnableCaching;
 
   // Early exit if completions should not be provided
   if (!new CompletionValidator(pos, mdl).shouldProvideCompletions()) {
@@ -138,7 +134,7 @@ const handleInlineCompletions = async ({
         completionCache.add({
           completion: formattedCompletion,
           range: completionInsertionRange,
-          textBeforeCursorInLine: getTextBeforeCursorInLine(pos, mdl),
+          textBeforeCursor: getTextBeforeCursor(pos, mdl),
         });
       }
 
