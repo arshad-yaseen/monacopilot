@@ -1,3 +1,17 @@
+
+
+## [0.12.0](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.9...v0.12.0) (2024-10-23)
+
+
+### 🚀 Features
+
+* add  option to control caching behavior ([00e6cb3](https://github.com/arshad-yaseen/monacopilot/commit/00e6cb3c5ae0cc9047b7351e18883654ed5732ce))
+
+
+### 📚 Documentation
+
+* add enableCaching option documentation ([13085bf](https://github.com/arshad-yaseen/monacopilot/commit/13085bf0d323a76d579869832abdeb66e65d48a6))
+
 ## [0.11.9](https://github.com/arshad-yaseen/monacopilot/compare/v0.11.8...v0.11.9) (2024-10-23)
 
 ### 🔄 Refactoring
