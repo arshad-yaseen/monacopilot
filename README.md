@@ -279,6 +279,16 @@ registerCompletion(monaco, editor, {
 
 > **Note:** If you're using `Groq` as your provider, it's recommended to set `maxContextLines` to `60` or less due to its low rate limits and lack of pay-as-you-go pricing. However, `Groq` is expected to offer pay-as-you-go pricing in the near future.
 
+### Caching Completions
+
+Monacopilot caches completions by default. It uses a FIFO (First In First Out) strategy, reusing cached completions when the context and cursor position match while editing. To disable caching:
+
+```javascript
+registerCompletion(monaco, editor, {
+  enableCaching: false,
+});
+```
+
 ### Handling Errors
 
 You can handle errors that occur during completion requests by providing an `onError` function when calling `registerCompletion`. This allows you to customize error handling and logging based on your application's needs.
