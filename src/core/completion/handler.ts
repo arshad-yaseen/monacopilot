@@ -68,27 +68,31 @@ const handleInlineCompletions = async ({
   const {
     trigger = TriggerType.OnIdle,
     endpoint,
+    enableCaching: originalEnableCaching = true,
     onError,
     requestHandler,
   } = options;
+
+  // Disable caching for OnDemand trigger
+  const enableCaching =
+    trigger === TriggerType.OnDemand ? false : originalEnableCaching;
 
   // Early exit if completions should not be provided
   if (!new CompletionValidator(pos, mdl).shouldProvideCompletions()) {
     return createInlineCompletionResult([]);
   }
 
-  // Attempt to retrieve cached completions
-  const cachedCompletions = completionCache.get(pos, mdl).map(cache => ({
-    insertText: cache.completion,
-    range: {
-      ...cache.range,
-      endColumn: pos.column, // Update endColumn to current cursor position
-    },
-  }));
+  // Attempt to retrieve cached completions if caching is enabled
+  if (enableCaching) {
+    const cachedCompletions = completionCache.get(pos, mdl).map(cache => ({
+      insertText: cache.completion,
+      range: cache.range,
+    }));
 
-  if (cachedCompletions.length > 0) {
-    onShowCompletion();
-    return createInlineCompletionResult(cachedCompletions);
+    if (cachedCompletions.length > 0) {
+      onShowCompletion();
+      return createInlineCompletionResult(cachedCompletions);
+    }
   }
 
   if (token.isCancellationRequested || isCompletionAccepted) {
@@ -129,11 +133,13 @@ const handleInlineCompletions = async ({
         formattedCompletion,
       );
 
-      completionCache.add({
-        completion: formattedCompletion,
-        range: completionInsertionRange,
-        textBeforeCursorInLine: getTextBeforeCursorInLine(pos, mdl),
-      });
+      if (enableCaching) {
+        completionCache.add({
+          completion: formattedCompletion,
+          range: completionInsertionRange,
+          textBeforeCursorInLine: getTextBeforeCursorInLine(pos, mdl),
+        });
+      }
 
       onShowCompletion();
       return createInlineCompletionResult([

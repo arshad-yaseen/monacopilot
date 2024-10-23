@@ -80,6 +80,12 @@ export interface RegisterCompletionOptions {
    */
   maxContextLines?: number;
   /**
+   * Determines if completions should be cached.
+   * Enabling caching can enhance performance by reusing previous results when the cursor position and context remain the same while editing.
+   * @default true
+   */
+  enableCaching?: boolean;
+  /**
    * Callback function that is called when an error occurs during the completion request.
    * This function allows you to handle errors gracefully and provide appropriate feedback to the user.
    * @param error - The error object containing information about the encountered error.
