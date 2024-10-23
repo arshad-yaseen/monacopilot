@@ -4,6 +4,7 @@ import {
   EditorCancellationToken,
   EditorModel,
   EditorRange,
+  Monaco,
 } from './monaco';
 
 export type Endpoint = string;
@@ -118,6 +119,7 @@ export interface CompletionRegistration {
 }
 
 export interface InlineCompletionHandlerParams {
+  monaco: Monaco;
   mdl: EditorModel;
   pos: CursorPosition;
   token: EditorCancellationToken;

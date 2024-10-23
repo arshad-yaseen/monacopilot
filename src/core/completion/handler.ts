@@ -57,6 +57,7 @@ export const completionCache = new CompletionCache();
  * @returns A promise resolving to EditorInlineCompletionsResult.
  */
 const handleInlineCompletions = async ({
+  monaco,
   mdl,
   pos,
   token,
@@ -123,8 +124,8 @@ const handleInlineCompletions = async ({
     if (completion) {
       const formattedCompletion = formatCompletion(completion);
       const completionInsertionRange = computeCompletionInsertionRange(
+        monaco,
         pos,
-        mdl,
         formattedCompletion,
       );
 
