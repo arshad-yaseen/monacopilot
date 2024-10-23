@@ -72,6 +72,7 @@ export const registerCompletion = (
           if (isOnDemandTrigger) return;
 
           return handleInlineCompletions({
+            monaco,
             mdl,
             pos,
             token,
