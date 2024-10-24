@@ -1,53 +1,41 @@
-/**
- * Logger class for consistent logging across the application.
- */
-class Logger {
-  private static readonly instance: Logger = new Logger();
-  private static readonly RED = '\x1b[31m';
-  private static readonly YELLOW = '\x1b[33m';
-  private static readonly RESET = '\x1b[0m';
-  private static readonly BOLD = '\x1b[1m';
+const RED = '\x1b[91m';
+const YELLOW = '\x1b[93m';
+const RESET = '\x1b[0m';
+const BOLD = '\x1b[1m';
 
-  private constructor() {}
+export const report = (error: unknown): {message: string; stack?: string} => {
+  let errorMessage: string;
+  let errorStack: string | undefined;
 
-  public static getInstance(): Logger {
-    return Logger.instance;
+  if (error instanceof Error) {
+    errorMessage = error.message;
+    errorStack = error.stack;
+  } else if (typeof error === 'string') {
+    errorMessage = error;
+  } else {
+    errorMessage = 'An unknown error occurred';
   }
 
-  public logError(error: unknown): {message: string; stack?: string} {
-    let errorMessage: string;
-    let errorStack: string | undefined;
-
-    if (error instanceof Error) {
-      errorMessage = error.message;
-      errorStack = error.stack;
-    } else if (typeof error === 'string') {
-      errorMessage = error;
-    } else {
-      errorMessage = 'An unknown error occurred';
-    }
-
-    const formattedError = `${Logger.RED}${Logger.BOLD}[MONACOPILOT ERROR] ${errorMessage}${Logger.RESET}`;
-    console.error(formattedError);
-
-    if (errorStack) {
-      console.error(
-        `${Logger.RED}[MONACOPILOT ERROR] Stack trace:${Logger.RESET}\n${errorStack}`,
-      );
-    }
-
-    return {message: errorMessage, stack: errorStack};
-  }
-
-  public warn(message: string): void {
-    console.warn(
-      `${Logger.YELLOW}${Logger.BOLD}[MONACOPILOT WARN] ${message}${Logger.RESET}`,
+  const formattedError = `${RED}${BOLD}[MONACOPILOT ERROR] ${errorMessage}${RESET}`;
+  if (errorStack) {
+    console.error(
+      `${formattedError}\n${RED}Stack trace:${RESET}\n${errorStack}`,
     );
+  } else {
+    console.error(formattedError);
   }
 
-  public log(message: string): void {
-    console.log(`${Logger.BOLD}[MONACOPILOT] ${message}${Logger.RESET}`);
-  }
-}
+  return {message: errorMessage, stack: errorStack};
+};
 
-export const logger = Logger.getInstance();
+export const deprecated = (message: string): void => {
+  console.warn(`${YELLOW}${BOLD}[MONACOPILOT DEPRECATED] ${message}${RESET}`);
+};
+
+export const warn = (message: string): void => {
+  console.warn(`${YELLOW}${BOLD}[MONACOPILOT WARN] ${message}${RESET}`);
+};
+
+export const log = (message: string): void => {
+  console.log(`${BOLD}[MONACOPILOT] ${message}${RESET}`);
+};
