@@ -1,7 +1,7 @@
 import {CompletionValidator} from '../../classes';
 import {CompletionCache} from '../../classes/completion-cache';
 import {constructCompletionMetadata, fetchCompletionItem} from '../../helpers';
-import {logger} from '../../logger';
+import {report} from '../../logger';
 import {
   CompletionMetadata,
   EditorInlineCompletionsResult,
@@ -143,11 +143,11 @@ const handleInlineCompletions = async ({
         {insertText: formattedCompletion, range: completionInsertionRange},
       ]);
     }
-  } catch (err) {
+  } catch (error) {
     if (onError) {
-      onError(err as Error);
-    } else if (!isCancellationError(err)) {
-      logger.logError(err);
+      onError(error as Error);
+    } else if (!isCancellationError(error)) {
+      report(error);
     }
   }
 

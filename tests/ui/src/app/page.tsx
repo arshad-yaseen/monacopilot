@@ -19,22 +19,21 @@ export default function Home() {
     const completion = registerCompletion(monaco, editor, {
       endpoint: '/api/complete',
       language: 'javascript',
-      trigger: 'onDemand',
       maxContextLines: 60,
     });
 
-    monaco.editor.addEditorAction({
-      id: 'complete-code',
-      label: 'Complete Code',
-      contextMenuGroupId: 'navigation',
-      contextMenuOrder: 1,
-      keybindings: [
-        monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.Space,
-      ],
-      run: () => {
-        completion.trigger();
-      },
-    });
+    // monaco.editor.addEditorAction({
+    //   id: 'complete-code',
+    //   label: 'Complete Code',
+    //   contextMenuGroupId: 'navigation',
+    //   contextMenuOrder: 1,
+    //   keybindings: [
+    //     monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.Space,
+    //   ],
+    //   run: () => {
+    //     completion.trigger();
+    //   },
+    // });
 
     return () => {
       completion.deregister();
