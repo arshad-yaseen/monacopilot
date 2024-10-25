@@ -18,10 +18,9 @@
   - [Register Completion with the Monaco Editor](#register-completion-with-the-monaco-editor)
 - [Register Completion Options](#register-completion-options)
   - [Trigger Mode](#trigger-mode)
-    - [Get Completions in Real-Time](#get-completions-in-real-time)
-    - [Manually Trigger Completions](#manually-trigger-completions)
-      - [Trigger Completions with a Keyboard Shortcut](#trigger-completions-with-a-keyboard-shortcut)
-      - [Trigger Completions with an Editor Action](#trigger-completions-with-an-editor-action)
+  - [Manually Trigger Completions](#manually-trigger-completions)
+    - [Trigger Completions with a Keyboard Shortcut](#trigger-completions-with-a-keyboard-shortcut)
+    - [Trigger Completions with an Editor Action](#trigger-completions-with-an-editor-action)
   - [Multi-File Context](#multi-file-context)
   - [Filename](#filename)
   - [Completions for Specific Technologies](#completions-for-specific-technologies)
@@ -168,7 +167,7 @@ registerCompletion(monaco, editor, {
 
 > **Note:** If you prefer real-time completions, you can set the `trigger` option to `'onTyping'`. This may increase the number of requests made to the provider and the cost. This should not be too costly since most small models are very inexpensive.
 
-#### Manually Trigger Completions
+### Manually Trigger Completions
 
 If you prefer not to trigger completions automatically (e.g., on typing or on idle), you can trigger completions manually. This is useful in scenarios where you want to control when completions are provided, such as through a button click or a keyboard shortcut.
 
@@ -182,7 +181,7 @@ completion.trigger();
 
 To set up manual triggering, configure the `trigger` option to `'onDemand'`. This disables automatic completions, allowing you to call the `completion.trigger()` method explicitly when needed.
 
-##### Trigger Completions with a Keyboard Shortcut
+#### Trigger Completions with a Keyboard Shortcut
 
 You can set up completions to trigger when the `Ctrl+Shift+Space` keyboard shortcut is pressed.
 
@@ -199,7 +198,7 @@ monaco.editor.addCommand(
 );
 ```
 
-##### Trigger Completions with an Editor Action
+#### Trigger Completions with an Editor Action
 
 You can add a custom editor action to trigger completions manually.
 
