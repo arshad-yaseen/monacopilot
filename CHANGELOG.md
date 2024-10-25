@@ -1,15 +1,24 @@
-<<<<<<< Updated upstream
 
+
+## [0.12.5](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.4...v0.12.5) (2024-10-25)
+
+
+### 📚 Documentation
+
+* improve toc ([9353ac2](https://github.com/arshad-yaseen/monacopilot/commit/9353ac22f66af2819b04bd369b38980d88f9a81b))
+
+<<<<<<< Updated upstream
 
 ## [0.12.4](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.3...v0.12.4) (2024-10-24)
 
-
 ### 🔧 Maintenance
 
-* improved logger logic ([cc71782](https://github.com/arshad-yaseen/monacopilot/commit/cc7178270f555abe1a9c21f92386aef3540d020d))
+- improved logger logic ([cc71782](https://github.com/arshad-yaseen/monacopilot/commit/cc7178270f555abe1a9c21f92386aef3540d020d))
 
 =======
->>>>>>> Stashed changes
+
+> > > > > > > Stashed changes
+
 ## [0.12.3](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.2...v0.12.3) (2024-10-23)
 
 ### 🐛 Bug Fixes
