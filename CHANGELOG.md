@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 
 
 ## [0.12.4](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.3...v0.12.4) (2024-10-24)
@@ -7,6 +8,8 @@
 
 * improved logger logic ([cc71782](https://github.com/arshad-yaseen/monacopilot/commit/cc7178270f555abe1a9c21f92386aef3540d020d))
 
+=======
+>>>>>>> Stashed changes
 ## [0.12.3](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.2...v0.12.3) (2024-10-23)
 
 ### 🐛 Bug Fixes
