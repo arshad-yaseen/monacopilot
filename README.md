@@ -33,7 +33,7 @@
   - [Custom Model](#custom-model)
 - [Completion Request Options](#completion-request-options)
   - [Custom Headers for AI Model Requests](#custom-headers-for-ai-model-requests)
-- [Using a Different Language for the API Handler](#using-a-different-language-for-the-api-handler)
+- [Cross-Language API Handler Implementation](#cross-language-api-handler-implementation)
 - [Contributing](#contributing)
 
 ### Examples
@@ -108,7 +108,7 @@ Or in case of an error:
 }
 ```
 
-If you prefer to use a different programming language for your API handler in cases where your backend is not in JavaScript, please refer to the section [Using a Different Language for the API Handler](#using-a-different-language-for-the-api-handler) for guidance on implementing the handler in your chosen language.
+If you prefer to use a different programming language for your API handler in cases where your backend is not in JavaScript, please refer to the section [Cross-Language API Handler Implementation](#cross-language-api-handler-implementation) for guidance on implementing the handler in your chosen language.
 
 Now, Monacopilot is set up to send completion requests to the `/complete` endpoint and receive completions in response.
 
@@ -572,7 +572,7 @@ copilot.complete({
 
 By using a custom prompt, you can guide the model to generate completions that better fit your coding style, project requirements, or specific technologies you're working with.
 
-## Using a Different Language for the API Handler
+## Cross-Language API Handler Implementation
 
 While the example in this documentation uses JavaScript/Node.js (which is recommended), you can set up the API handler in any language or framework. For JavaScript, Monacopilot provides a built-in function that handles all the necessary steps, such as generating the prompt, sending it to the model, and processing the response. However, if you're using a different language, you'll need to implement these steps manually. Here's a general approach to implement the handler in your preferred language:
 
