@@ -1,3 +1,12 @@
+
+
+## [0.12.6](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.5...v0.12.6) (2024-10-25)
+
+
+### 📚 Documentation
+
+* separate manual trigger heading from trigger mode ([bc520e8](https://github.com/arshad-yaseen/monacopilot/commit/bc520e8e35d9c5a8373707480a42599a40be9273))
+
 ## [0.12.5](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.4...v0.12.5) (2024-10-25)
 
 ### 📚 Documentation
