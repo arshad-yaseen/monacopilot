@@ -1,11 +1,8 @@
-
-
 ## [0.12.7](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.6...v0.12.7) (2024-10-25)
-
 
 ### 📚 Documentation
 
-* make the cross language api handler heading better ([f1190fe](https://github.com/arshad-yaseen/monacopilot/commit/f1190feed0f8097dead2cb2c931cfa26833ae9a4))
+- make the cross language api handler heading better ([f1190fe](https://github.com/arshad-yaseen/monacopilot/commit/f1190feed0f8097dead2cb2c931cfa26833ae9a4))
 
 ## [0.12.6](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.5...v0.12.6) (2024-10-25)
 

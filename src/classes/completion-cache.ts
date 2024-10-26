@@ -1,5 +1,6 @@
 import {CompletionCacheItem, CursorPosition, EditorModel} from '../types';
 import {getTextBeforeCursor} from '../utils/editor';
+import {Queue} from './queue';
 
 /**
  * Manages a cache of code completions with FIFO eviction policy.
@@ -7,7 +8,11 @@ import {getTextBeforeCursor} from '../utils/editor';
  */
 export class CompletionCache {
   private static readonly MAX_CACHE_SIZE = 10;
-  private cache: CompletionCacheItem[] = [];
+  private cache: Queue<CompletionCacheItem>;
+
+  constructor() {
+    this.cache = new Queue<CompletionCacheItem>(CompletionCache.MAX_CACHE_SIZE);
+  }
 
   /**
    * Retrieves cached completion items that are valid based on the current cursor position and editor model.
@@ -19,9 +24,9 @@ export class CompletionCache {
     pos: Readonly<CursorPosition>,
     mdl: Readonly<EditorModel>,
   ): readonly CompletionCacheItem[] {
-    return this.cache.filter(cacheItem =>
-      this.isValidCacheItem(cacheItem, pos, mdl),
-    );
+    return this.cache
+      .getAll()
+      .filter(cacheItem => this.isValidCacheItem(cacheItem, pos, mdl));
   }
 
   /**
@@ -30,18 +35,14 @@ export class CompletionCache {
    * @param cacheItem - The completion item to add to the cache.
    */
   public add(cacheItem: Readonly<CompletionCacheItem>): void {
-    const updatedCache = [
-      ...this.cache.slice(-(CompletionCache.MAX_CACHE_SIZE - 1)),
-      cacheItem,
-    ];
-    this.cache = updatedCache;
+    this.cache.enqueue(cacheItem);
   }
 
   /**
    * Clears all items from the completion cache.
    */
   public clear(): void {
-    this.cache = [];
+    this.cache.clear();
   }
 
   /**
