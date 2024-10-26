@@ -17,7 +17,8 @@
     "node_modules/**/*",
     "build/**/*",
     "examples/**/*",
-    "tests/ui/**/*"
+    "tests/ui/**/*",
+    "playground/**/*"
   ],
   "plugins": ["@typescript-eslint"],
   "rules": {

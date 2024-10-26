@@ -149,7 +149,7 @@ To test Monacopilot locally, follow these steps:
    Execute the following command to start the testing environment:
 
    ```bash
-   pnpm dev:test-ui
+   pnpm dev:ui
    ```
 
    This will launch the UI in a local development environment, allowing you to test changes in real-time.
