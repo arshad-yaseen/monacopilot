@@ -1,22 +1,13 @@
-<<<<<<< Updated upstream
-
-
 ## [0.12.7](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.6...v0.12.7) (2024-10-25)
-=======
-## [0.12.6](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.5...v0.12.6) (2024-10-25)
->>>>>>> Stashed changes
 
 ### 📚 Documentation
 
-<<<<<<< Updated upstream
-* make the cross language api handler heading better ([f1190fe](https://github.com/arshad-yaseen/monacopilot/commit/f1190feed0f8097dead2cb2c931cfa26833ae9a4))
+- make the cross language api handler heading better ([f1190fe](https://github.com/arshad-yaseen/monacopilot/commit/f1190feed0f8097dead2cb2c931cfa26833ae9a4))
 
 ## [0.12.6](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.5...v0.12.6) (2024-10-25)
 
 ### 📚 Documentation
 
-=======
->>>>>>> Stashed changes
 - separate manual trigger heading from trigger mode ([bc520e8](https://github.com/arshad-yaseen/monacopilot/commit/bc520e8e35d9c5a8373707480a42599a40be9273))
 
 ## [0.12.5](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.4...v0.12.5) (2024-10-25)
