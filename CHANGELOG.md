@@ -1,3 +1,12 @@
+
+
+## [0.12.10](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.9...v0.12.10) (2024-10-27)
+
+
+### 🔧 Maintenance
+
+* improve deprecated logger ([ff18dd3](https://github.com/arshad-yaseen/monacopilot/commit/ff18dd3a34b908e20a1208248b458345dbe2b641))
+
 ## [0.12.9](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.8...v0.12.9) (2024-10-27)
 
 ### 📚 Documentation
