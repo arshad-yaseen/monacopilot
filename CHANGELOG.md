@@ -1,16 +1,21 @@
 
 
-## [0.12.8](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.7...v0.12.8) (2024-10-26)
+## [0.12.9](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.8...v0.12.9) (2024-10-27)
 
+
+### 📚 Documentation
+
+* mention to always specify provider and model ([8edf342](https://github.com/arshad-yaseen/monacopilot/commit/8edf3424869a6325e2ef3a01c63ba48826180e22))
+
+## [0.12.8](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.7...v0.12.8) (2024-10-26)
 
 ### 🐛 Bug Fixes
 
-* changelog ([591787f](https://github.com/arshad-yaseen/monacopilot/commit/591787fcac2c48f02c52704aaec3486d66ea31f7))
-
+- changelog ([591787f](https://github.com/arshad-yaseen/monacopilot/commit/591787fcac2c48f02c52704aaec3486d66ea31f7))
 
 ### ⚡️ Performance
 
-* use queue for completions cache management ([e72521e](https://github.com/arshad-yaseen/monacopilot/commit/e72521eee9948fe37a3e2c0b3e97126f946d8714))
+- use queue for completions cache management ([e72521e](https://github.com/arshad-yaseen/monacopilot/commit/e72521eee9948fe37a3e2c0b3e97126f946d8714))
 
 ## [0.12.7](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.6...v0.12.7) (2024-10-25)
 
