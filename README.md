@@ -70,7 +70,10 @@ import {Copilot} from 'monacopilot';
 
 const app = express();
 const port = process.env.PORT || 3000;
-const copilot = new Copilot(process.env.GROQ_API_KEY);
+const copilot = new Copilot(process.env.GROQ_API_KEY!, {
+  provider: 'groq',
+  model: 'llama-3-70b',
+});
 
 app.use(express.json());
 
@@ -406,6 +409,8 @@ const copilot = new Copilot(process.env.OPENAI_API_KEY, {
 ```
 
 The default provider is `groq`, and the default model is `llama-3-70b`.
+
+> **Tip:** Always specify a provider and model when using Monacopilot. This ensures your code remains consistent even if the default settings change in future updates.
 
 There are other providers and models available. Here is a list:
 
