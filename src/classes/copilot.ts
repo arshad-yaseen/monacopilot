@@ -145,9 +145,7 @@ export class Copilot {
     if (typeof this.model === 'object' && 'transformResponse' in this.model) {
       const transformedResponse = this.model.transformResponse(chatCompletion);
       if ('completion' in transformedResponse) {
-        deprecated(
-          'The `completion` property in `transformResponse` function is deprecated. Please use `text` instead.',
-        );
+        deprecated('completion', 'text', 'Copilot.model.transformResponse');
       }
       return {
         completion:

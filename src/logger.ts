@@ -28,10 +28,6 @@ export const report = (error: unknown): {message: string; stack?: string} => {
   return {message: errorMessage, stack: errorStack};
 };
 
-export const deprecated = (message: string): void => {
-  console.warn(`${YELLOW}${BOLD}[MONACOPILOT DEPRECATED] ${message}${RESET}`);
-};
-
 export const warn = (message: string): void => {
   console.warn(`${YELLOW}${BOLD}[MONACOPILOT WARN] ${message}${RESET}`);
 };
@@ -39,3 +35,13 @@ export const warn = (message: string): void => {
 export const log = (message: string): void => {
   console.log(`${BOLD}[MONACOPILOT] ${message}${RESET}`);
 };
+
+export const deprecated = (
+  oldFeature: string,
+  newFeature: string,
+  location?: string,
+): void =>
+  console.warn(
+    `${YELLOW}${BOLD}[MONACOPILOT DEPRECATED] "${oldFeature}" is deprecated${location ? ` in ${location}` : ''}. ` +
+      `Please use "${newFeature}" instead. It will be removed in a future version.${RESET}`,
+  );
