@@ -1,11 +1,8 @@
-
-
 ## [0.12.9](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.8...v0.12.9) (2024-10-27)
-
 
 ### 📚 Documentation
 
-* mention to always specify provider and model ([8edf342](https://github.com/arshad-yaseen/monacopilot/commit/8edf3424869a6325e2ef3a01c63ba48826180e22))
+- mention to always specify provider and model ([8edf342](https://github.com/arshad-yaseen/monacopilot/commit/8edf3424869a6325e2ef3a01c63ba48826180e22))
 
 ## [0.12.8](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.7...v0.12.8) (2024-10-26)
 

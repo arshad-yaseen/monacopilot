@@ -164,9 +164,7 @@ const handleTriggerCompletion = (editor: StandaloneCodeEditor) => {
 export const registerCopilot = (
   ...args: Parameters<typeof registerCompletion>
 ) => {
-  deprecated(
-    'The `registerCopilot` function is deprecated. Use `registerCompletion` instead.',
-  );
+  deprecated('registerCopilot', 'registerCompletion');
 
   return registerCompletion(...args);
 };
