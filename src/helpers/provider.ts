@@ -7,9 +7,9 @@ import {MAX_TOKENS_BY_ANTHROPIC_MODEL} from '../constants/provider/anthropic';
 import {
   AnthropicModel,
   ChatCompletion,
+  ChatCompletionCreateParams,
   CopilotModel,
   CopilotProvider,
-  PickChatCompletionCreateParams,
   ProviderHandler,
 } from '../types';
 
@@ -106,7 +106,7 @@ export const createRequestBody = (
   model: CopilotModel,
   provider: CopilotProvider,
   prompt: {system: string; user: string},
-): PickChatCompletionCreateParams<CopilotProvider> => {
+): ChatCompletionCreateParams => {
   const handler = providerHandlers[provider];
   return handler.createRequestBody(model, prompt);
 };

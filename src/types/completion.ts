@@ -161,7 +161,7 @@ export interface CompletionRequestBody {
 
 export interface CompletionRequestOptions {
   /**
-   * Custom headers to include in the request to the AI provider.
+   * Custom headers to include in the request to the LLM provider.
    */
   headers?: Record<string, string>;
   /**
@@ -180,8 +180,18 @@ export type CustomPrompt = (
 ) => Partial<PromptData>;
 
 export interface CompletionResponse {
+  /**
+   * The completion text.
+   */
   completion: string | null;
+  /**
+   * The error message.
+   */
   error?: string;
+  /**
+   * The raw response from the LLM.
+   */
+  raw?: unknown;
 }
 
 export type CompletionMode = 'insert' | 'complete' | 'continue';
@@ -221,8 +231,9 @@ export interface CompletionMetadata {
   editorState: {
     /**
      * The mode of the completion.
-     * - `fill-in-the-middle`: Indicates that the cursor is positioned within the existing text. In this mode, the AI will generate content to be inserted at the cursor position.
-     * - `completion`: Indicates that the cursor is at the end of the existing text. In this mode, the AI will generate content to continue or complete the text from the cursor position.
+     * - `insert`: Indicates that there is a character immediately after the cursor. In this mode, the LLM will generate content to be inserted at the cursor position.
+     * - `complete`: Indicates that there is a character after the cursor but not immediately. In this mode, the LLM will generate content to complete the text from the cursor position.
+     * - `continue`: Indicates that there is no character after the cursor. In this mode, the LLM will generate content to continue the text from the cursor position.
      */
     completionMode: CompletionMode;
   };

@@ -77,7 +77,7 @@ ${instructions.trim()}
 };
 
 /**
- * Generates a complete prompt for AI code assistance.
+ * Generates a complete prompt for LLM code generation.
  *
  * This function creates a structured prompt that includes:
  * 1. A system prompt with context and guidelines

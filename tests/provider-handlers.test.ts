@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'vitest';
 
 import {parseProviderChatCompletion} from '../src/helpers/provider';
-import {ChatCompletion, PickChatCompletion} from '../src/types';
+import {ChatCompletion} from '../src/types';
 
 describe('Provider Handler Functions', () => {
   describe('parseProviderChatCompletion', () => {
@@ -39,7 +39,7 @@ describe('Provider Handler Functions', () => {
     it('should parse a valid OpenAI completion', () => {
       const mockCompletion = {
         choices: [{message: {content: 'OpenAI response'}}],
-      } as unknown as PickChatCompletion<'openai'>;
+      } as unknown as ChatCompletion;
       const result = parseProviderChatCompletion(mockCompletion, 'openai');
       expect(result).toEqual('OpenAI response');
     });
@@ -47,13 +47,13 @@ describe('Provider Handler Functions', () => {
     it('should handle empty choices array', () => {
       const mockCompletion = {
         choices: [],
-      } as unknown as PickChatCompletion<'openai'>;
+      } as unknown as ChatCompletion;
       const result = parseProviderChatCompletion(mockCompletion, 'openai');
       expect(result).toEqual(null);
     });
 
     it('should handle undefined choices', () => {
-      const mockCompletion = {} as unknown as PickChatCompletion<'openai'>;
+      const mockCompletion = {} as unknown as ChatCompletion;
       const result = parseProviderChatCompletion(mockCompletion, 'openai');
       expect(result).toEqual(null);
     });
@@ -63,7 +63,7 @@ describe('Provider Handler Functions', () => {
     it('should parse a valid Groq completion', () => {
       const mockCompletion = {
         choices: [{message: {content: 'Groq response'}}],
-      } as unknown as PickChatCompletion<'groq'>;
+      } as unknown as ChatCompletion;
       const result = parseProviderChatCompletion(mockCompletion, 'groq');
       expect(result).toEqual('Groq response');
     });
@@ -71,13 +71,13 @@ describe('Provider Handler Functions', () => {
     it('should handle empty choices array', () => {
       const mockCompletion = {
         choices: [],
-      } as unknown as PickChatCompletion<'groq'>;
+      } as unknown as ChatCompletion;
       const result = parseProviderChatCompletion(mockCompletion, 'groq');
       expect(result).toEqual(null);
     });
 
     it('should handle undefined choices', () => {
-      const mockCompletion = {} as unknown as PickChatCompletion<'groq'>;
+      const mockCompletion = {} as unknown as ChatCompletion;
       const result = parseProviderChatCompletion(mockCompletion, 'groq');
       expect(result).toEqual(null);
     });
@@ -87,13 +87,13 @@ describe('Provider Handler Functions', () => {
     it('should parse a valid Anthropic completion', () => {
       const mockCompletion = {
         content: 'Anthropic response',
-      } as unknown as PickChatCompletion<'anthropic'>;
+      } as unknown as ChatCompletion;
       const result = parseProviderChatCompletion(mockCompletion, 'anthropic');
       expect(result).toEqual('Anthropic response');
     });
 
     it('should handle missing content', () => {
-      const mockCompletion = {} as unknown as PickChatCompletion<'anthropic'>;
+      const mockCompletion = {} as unknown as ChatCompletion;
       const result = parseProviderChatCompletion(mockCompletion, 'anthropic');
       expect(result).toEqual(null);
     });
@@ -101,7 +101,7 @@ describe('Provider Handler Functions', () => {
     it('should handle non-string content', () => {
       const mockCompletion = {
         content: {invalid: 'object'},
-      } as unknown as PickChatCompletion<'anthropic'>;
+      } as unknown as ChatCompletion;
       const result = parseProviderChatCompletion(mockCompletion, 'anthropic');
       expect(result).toEqual(null);
     });
@@ -109,7 +109,7 @@ describe('Provider Handler Functions', () => {
     it('should handle empty string content', () => {
       const mockCompletion = {
         content: '',
-      } as unknown as PickChatCompletion<'anthropic'>;
+      } as unknown as ChatCompletion;
       const result = parseProviderChatCompletion(mockCompletion, 'anthropic');
       expect(result).toEqual(null);
     });

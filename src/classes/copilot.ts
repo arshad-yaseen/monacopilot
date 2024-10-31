@@ -145,18 +145,23 @@ export class Copilot {
     if (typeof this.model === 'object' && 'transformResponse' in this.model) {
       const transformedResponse = this.model.transformResponse(chatCompletion);
       if ('completion' in transformedResponse) {
-        deprecated('completion', 'text', 'Copilot.model.transformResponse');
+        deprecated(
+          'completion',
+          'text',
+          'Copilot.options.model.transformResponse',
+        );
       }
       return {
         completion:
           transformedResponse.text ?? transformedResponse.completion ?? null,
+        raw: chatCompletion,
       };
     } else {
       const parsedCompletion = parseProviderChatCompletion(
         chatCompletion,
         this.provider,
       );
-      return {completion: parsedCompletion};
+      return {completion: parsedCompletion, raw: chatCompletion};
     }
   }
 
