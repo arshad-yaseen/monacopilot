@@ -1,16 +1,21 @@
 
 
-## [0.13.0](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.10...v0.13.0) (2024-10-31)
+## [0.13.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.13.0...v0.13.1) (2024-10-31)
 
+
+### 📚 Documentation
+
+* improve api handler code example ([7aade3e](https://github.com/arshad-yaseen/monacopilot/commit/7aade3e3da869702d73f5163f58817ee865f07cb))
+
+## [0.13.0](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.10...v0.13.0) (2024-10-31)
 
 ### 🚀 Features
 
-* completion raw output access ([5eece6a](https://github.com/arshad-yaseen/monacopilot/commit/5eece6a959f3e216db4c90ad9c4e03042fca6932))
-
+- completion raw output access ([5eece6a](https://github.com/arshad-yaseen/monacopilot/commit/5eece6a959f3e216db4c90ad9c4e03042fca6932))
 
 ### 🐛 Bug Fixes
 
-* test errors ([cbe1b4e](https://github.com/arshad-yaseen/monacopilot/commit/cbe1b4eb6ce99e12bec543594a8799cee65c5868))
+- test errors ([cbe1b4e](https://github.com/arshad-yaseen/monacopilot/commit/cbe1b4eb6ce99e12bec543594a8799cee65c5868))
 
 ## [0.12.10](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.9...v0.12.10) (2024-10-27)
 
