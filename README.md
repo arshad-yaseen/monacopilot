@@ -85,12 +85,14 @@ app.post('/complete', async (req, res) => {
   });
 
   // Process raw LLM response if needed
+  // `raw` can be undefined if an error occurred, which happens when `error` is present
   if (raw) {
     calculateCost(raw.usage.total_tokens);
   }
 
-  // Handle error if needed
+  // Handle errors if present
   if (error) {
+    console.error('Completion error:', error);
     res.status(500).json({completion: null, error});
   }
 
