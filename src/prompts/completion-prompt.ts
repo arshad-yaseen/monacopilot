@@ -22,7 +22,7 @@ ${textBeforeCursor}${CURSOR_TOKEN}${textAfterCursor}
   };
 
   const instructions = `
-You are an AI coding assistant. Your task is to provide code completions based on the current cursor position in the code.
+You are an expert coding assistant. Your task is to provide code completions based on the current cursor position in the code.
 
 Below is the code file with a special token '${CURSOR_TOKEN}' indicating the current cursor position.
 

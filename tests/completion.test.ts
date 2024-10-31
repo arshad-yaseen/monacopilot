@@ -39,7 +39,10 @@ describe('Completion', () => {
       },
     });
 
-    expect(result).toEqual({completion: MOCK_COMPLETION_CONTENT});
+    expect(result).toEqual({
+      completion: MOCK_COMPLETION_CONTENT,
+      raw: mockCompletion,
+    });
     expect(HTTP.POST).toHaveBeenCalledWith(
       COPILOT_PROVIDER_ENDPOINT_MAP[DEFAULT_COPILOT_PROVIDER],
       expect.objectContaining({

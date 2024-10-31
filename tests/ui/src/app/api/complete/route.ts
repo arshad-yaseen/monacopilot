@@ -7,7 +7,7 @@ const copilot = new Copilot(process.env.OPENAI_API_KEY!, {
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const {completion, error} = await copilot.complete({
+  const {completion, error, raw} = await copilot.complete({
     body,
   });
 

@@ -1,14 +1,14 @@
-import {
-  Message as AnthropicChatCompletion,
+import type {
   MessageCreateParams as AnthropicChatCompletionCreateParamsBase,
+  Message as AnthropicChatCompletionType,
 } from '@anthropic-ai/sdk/resources';
 import type {
-  ChatCompletion as GroqChatCompletion,
   ChatCompletionCreateParamsBase as GroqChatCompletionCreateParamsBase,
+  ChatCompletion as GroqChatCompletionType,
 } from 'groq-sdk/resources/chat/completions';
-import {
-  ChatCompletion as OpenAIChatCompletion,
+import type {
   ChatCompletionCreateParamsBase as OpenAIChatCompletionCreateParamsBase,
+  ChatCompletion as OpenAIChatCompletionType,
 } from 'openai/resources/chat/completions';
 
 export type OpenAIModel = 'gpt-4o' | 'gpt-4o-mini' | 'o1-preview' | 'o1-mini';
@@ -36,10 +36,11 @@ export type ChatCompletionCreateParams =
   | GroqChatCompletionCreateParamsBase
   | AnthropicChatCompletionCreateParamsBase;
 
-export type ChatCompletion =
-  | OpenAIChatCompletion
-  | GroqChatCompletion
-  | AnthropicChatCompletion;
+export type OpenAIChatCompletionCreateParams =
+  OpenAIChatCompletionCreateParamsBase;
+export type GroqChatCompletionCreateParams = GroqChatCompletionCreateParamsBase;
+export type AnthropicChatCompletionCreateParams =
+  AnthropicChatCompletionCreateParamsBase;
 
 export type PickChatCompletionCreateParams<T extends CopilotProvider> =
   T extends 'openai'
@@ -49,6 +50,15 @@ export type PickChatCompletionCreateParams<T extends CopilotProvider> =
       : T extends 'anthropic'
         ? AnthropicChatCompletionCreateParamsBase
         : never;
+
+export type ChatCompletion =
+  | OpenAIChatCompletion
+  | GroqChatCompletion
+  | AnthropicChatCompletion;
+
+export type OpenAIChatCompletion = OpenAIChatCompletionType;
+export type GroqChatCompletion = GroqChatCompletionType;
+export type AnthropicChatCompletion = AnthropicChatCompletionType;
 
 export type PickChatCompletion<T extends CopilotProvider> = T extends 'openai'
   ? OpenAIChatCompletion
@@ -74,11 +84,11 @@ export interface CopilotOptions {
   provider?: CopilotProvider;
 
   /**
-   * The model to use for copilot AI requests.
+   * The model to use for copilot LLM requests.
    * This can be either:
    * 1. A predefined model name (e.g. 'claude-3-opus'): Use this option if you want to use a model that is built into Monacopilot.
    *    If you choose this option, also set the `provider` property to the corresponding provider of the model.
-   * 2. A custom model configuration object: Use this option if you want to use a AI model from a third-party service or your own custom model.
+   * 2. A custom model configuration object: Use this option if you want to use a LLM from a third-party service or your own custom model.
    *
    * If not specified, a default model will be used.
    */

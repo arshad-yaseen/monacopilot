@@ -32,7 +32,7 @@
   - [Changing the Provider and Model](#changing-the-provider-and-model)
   - [Custom Model](#custom-model)
 - [Completion Request Options](#completion-request-options)
-  - [Custom Headers for AI Model Requests](#custom-headers-for-ai-model-requests)
+  - [Custom Headers for LLM Requests](#custom-headers-for-llm-requests)
 - [Cross-Language API Handler Implementation](#cross-language-api-handler-implementation)
 - [Contributing](#contributing)
 
@@ -49,6 +49,8 @@ Here are some examples of how to integrate Monacopilot into your project:
 ### Demo
 
 [Inline Completions Demo Video](https://github.com/user-attachments/assets/f2ec4ae1-f658-4002-af9c-c6b1bbad70d9)
+
+In the demo, we are using the `onTyping` trigger mode with the Groq model, which is why you see such quick and fast completions. Groq provides very fast response times.
 
 ### Installation
 
@@ -78,13 +80,17 @@ const copilot = new Copilot(process.env.GROQ_API_KEY!, {
 app.use(express.json());
 
 app.post('/complete', async (req, res) => {
-  const {completion, error} = await copilot.complete({
+  const {completion, error, raw} = await copilot.complete({
     body: req.body,
   });
 
+  // Process raw LLM response if needed
+  if (raw) {
+    calculateCost(raw.usage.total_tokens);
+  }
+
+  // Handle error if needed
   if (error) {
-    // Handle error if needed
-    // ...
     res.status(500).json({completion: null, error});
   }
 
@@ -410,7 +416,7 @@ const copilot = new Copilot(process.env.OPENAI_API_KEY, {
 
 The default provider is `groq`, and the default model is `llama-3-70b`.
 
-> **Tip:** Always specify a provider and model when using Monacopilot. This ensures your code remains consistent even if the default settings change in future updates.
+> **Tip:** Even though the default provider and model are `groq` and `llama-3-70b`, it's always recommended to specify a provider and model when using Monacopilot. This ensures your code remains consistent even if the default settings change in future updates.
 
 There are other providers and models available. Here is a list:
 
@@ -422,7 +428,7 @@ There are other providers and models available. Here is a list:
 
 ### Custom Model
 
-You can use a custom AI model that isn't built into Monacopilot by setting up a `model` when you create a new Copilot. This feature lets you connect to AI models from other services or your own custom-built models.
+You can use a custom LLM that isn't built into Monacopilot by setting up a `model` when you create a new Copilot. This feature lets you connect to LLMs from other services or your own custom-built models.
 
 Please ensure you are using a high-quality model, especially for coding tasks, to get the best and most accurate completions. Also, use a model with very low response latency (preferably under 1.5 seconds) to enjoy a great experience and utilize the full power of Monacopilot.
 
@@ -475,7 +481,7 @@ The `transformResponse` function must return an object with the `text` property.
 
 ## Completion Request Options
 
-### Custom Headers for AI Model Requests
+### Custom Headers for LLM Requests
 
 You can add custom headers to the provider's completion requests. For example, if you select `OpenAI` as your provider, you can add a custom header to the OpenAI completion requests made by Monacopilot.
 
@@ -583,8 +589,8 @@ While the example in this documentation uses JavaScript/Node.js (which is recomm
 
 1. Create an endpoint that accepts POST requests (e.g., `/complete`).
 2. The endpoint should expect a JSON body containing completion metadata.
-3. Use the metadata to construct a prompt for your AI model.
-4. Send the prompt to your chosen AI model and get the completion.
+3. Use the metadata to construct a prompt for your LLM.
+4. Send the prompt to your chosen LLM and get the completion.
 5. Return a JSON response with the following structure:
 
    ```json
@@ -607,11 +613,11 @@ While the example in this documentation uses JavaScript/Node.js (which is recomm
 - The prompt should instruct the model to return only the completion text, without any additional formatting or explanations.
 - The completion text should be ready for direct insertion into the editor.
 
-Check out the [prompt.ts](https://github.com/arshad-yaseen/monacopilot/blob/main/src/helpers/completion/prompt.ts) file to see how Monacopilot generates the prompt. This will give you an idea of how to structure the prompt for your AI model to achieve the best completions.
+Check out the [prompt.ts](https://github.com/arshad-yaseen/monacopilot/blob/main/src/helpers/completion/prompt.ts) file to see how Monacopilot generates the prompt. This will give you an idea of how to structure the prompt for your LLM to achieve the best completions.
 
 ### Metadata Overview
 
-The request body's `completionMetadata` object contains essential information for crafting a prompt for the AI model to generate accurate completions. See the [Completion Metadata](#completion-metadata) section for more details.
+The request body's `completionMetadata` object contains essential information for crafting a prompt for the LLM to generate accurate completions. See the [Completion Metadata](#completion-metadata) section for more details.
 
 ### Example Implementation (Python with FastAPI)
 

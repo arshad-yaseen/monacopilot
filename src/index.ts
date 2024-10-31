@@ -18,4 +18,10 @@ export type {
   CompletionRequestOptions,
   CopilotProvider,
   CopilotModel,
+  OpenAIModel,
+  GroqModel,
+  AnthropicModel,
+  OpenAIChatCompletion,
+  GroqChatCompletion,
+  AnthropicChatCompletion,
 } from './types';

@@ -47,7 +47,10 @@ describe('Copilot with model', () => {
       }),
     );
     expect(customResponse).toHaveBeenCalledWith({custom: 'response'});
-    expect(result).toEqual({completion: 'Custom response'});
+    expect(result).toEqual({
+      completion: 'Custom response',
+      raw: {custom: 'response'},
+    });
   });
 
   it('should handle errors in custom model response', async () => {
