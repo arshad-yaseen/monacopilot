@@ -144,9 +144,11 @@ const handleInlineCompletions = async ({
       ]);
     }
   } catch (error) {
-    if (onError) {
+    if (isCancellationError(error)) {
+      return createInlineCompletionResult([]);
+    } else if (onError) {
       onError(error as Error);
-    } else if (!isCancellationError(error)) {
+    } else {
       report(error);
     }
   }
