@@ -58,7 +58,6 @@ export const registerCompletion = (
   });
 
   try {
-    // Register inline completions provider
     const inlineCompletionsProvider =
       monaco.languages.registerInlineCompletionsProvider(options.language, {
         provideInlineCompletions: (mdl, pos, _, token) => {
