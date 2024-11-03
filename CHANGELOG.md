@@ -1,11 +1,17 @@
 
 
-## [0.13.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.13.0...v0.13.1) (2024-10-31)
+## [0.13.2](https://github.com/arshad-yaseen/monacopilot/compare/v0.13.1...v0.13.2) (2024-11-03)
 
+
+### 🐛 Bug Fixes
+
+* prevent reporting cancellation errors ([31e6321](https://github.com/arshad-yaseen/monacopilot/commit/31e6321b25c229570df1cb198d65d1113bdf07c5))
+
+## [0.13.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.13.0...v0.13.1) (2024-10-31)
 
 ### 📚 Documentation
 
-* improve api handler code example ([7aade3e](https://github.com/arshad-yaseen/monacopilot/commit/7aade3e3da869702d73f5163f58817ee865f07cb))
+- improve api handler code example ([7aade3e](https://github.com/arshad-yaseen/monacopilot/commit/7aade3e3da869702d73f5163f58817ee865f07cb))
 
 ## [0.13.0](https://github.com/arshad-yaseen/monacopilot/compare/v0.12.10...v0.13.0) (2024-10-31)
 
