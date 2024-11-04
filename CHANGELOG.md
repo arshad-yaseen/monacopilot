@@ -1,11 +1,17 @@
 
 
-## [0.13.2](https://github.com/arshad-yaseen/monacopilot/compare/v0.13.1...v0.13.2) (2024-11-03)
+## [0.14.0](https://github.com/arshad-yaseen/monacopilot/compare/v0.13.2...v0.14.0) (2024-11-04)
 
+
+### 🚀 Features
+
+* add claude-3-5-haiku ([9189196](https://github.com/arshad-yaseen/monacopilot/commit/91891962e8e1d110434aab3f49054194e046959b))
+
+## [0.13.2](https://github.com/arshad-yaseen/monacopilot/compare/v0.13.1...v0.13.2) (2024-11-03)
 
 ### 🐛 Bug Fixes
 
-* prevent reporting cancellation errors ([31e6321](https://github.com/arshad-yaseen/monacopilot/commit/31e6321b25c229570df1cb198d65d1113bdf07c5))
+- prevent reporting cancellation errors ([31e6321](https://github.com/arshad-yaseen/monacopilot/commit/31e6321b25c229570df1cb198d65d1113bdf07c5))
 
 ## [0.13.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.13.0...v0.13.1) (2024-10-31)
 
