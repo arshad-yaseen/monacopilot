@@ -83,10 +83,22 @@ const anthropicHandler: ProviderHandler<'anthropic'> = {
   }),
 
   parseCompletion: completion => {
-    if (!completion.content || typeof completion.content !== 'string') {
+    if (
+      !completion.content ||
+      !Array.isArray(completion.content) ||
+      !completion.content.length
+    ) {
       return null;
     }
-    return completion.content;
+
+    const content = completion.content[0];
+    if (!content || typeof content !== 'object') {
+      return null;
+    }
+
+    return 'text' in content && typeof content.text === 'string'
+      ? content.text
+      : null;
   },
 };
 

@@ -136,13 +136,13 @@ To test Monacopilot locally, follow these steps:
 
 1. **Set Up Environment Variables**
 
-   You need to set the [Groq API key](https://console.groq.com/keys) as an environment variable. Create a `.env.local` file in the `tests/ui` directory with the following content:
+   You need to set the [OpenAI API key](https://platform.openai.com/api-keys) as an environment variable. Create a `.env.local` file in the `tests/ui` directory with the following content:
 
    ```plaintext
-   GROQ_API_KEY=your_api_key
+   OPENAI_API_KEY=your_api_key
    ```
 
-   Replace `your_api_key` with your actual Groq API key.
+   Replace `your_api_key` with your actual OpenAI API key.
 
 2. **Run the Test UI**
 
