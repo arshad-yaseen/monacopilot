@@ -94,7 +94,7 @@ describe('Copilot with model', () => {
     });
 
     expect(HTTP.POST).toHaveBeenCalledWith(
-      expect.stringContaining('api.groq.com'),
+      expect.stringContaining('api.anthropic.com'),
       expect.any(Object),
       expect.any(Object),
     );
@@ -122,12 +122,14 @@ describe('Copilot with model', () => {
     });
 
     expect(HTTP.POST).toHaveBeenCalledWith(
-      expect.stringContaining('api.groq.com'),
+      expect.stringContaining('api.anthropic.com'),
       expect.any(Object),
       expect.objectContaining({
         headers: expect.objectContaining({
           'X-Custom-Header': 'custom-value',
-          Authorization: expect.stringContaining('Bearer'),
+          'Content-Type': 'application/json',
+          'x-api-key': expect.any(String),
+          'anthropic-version': '2023-06-01',
         }),
       }),
     );

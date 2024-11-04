@@ -24,10 +24,10 @@ export const mockCompletionMetadata: CompletionMetadata = {
   },
 };
 
-export const MOCK_COMPLETION_CONTENT = 'Test completion';
+export const MOCK_COMPLETION_CONTENT = "Hi, I'm Claude.";
 
 export const mockCompletion = {
-  choices: [{message: {content: MOCK_COMPLETION_CONTENT}}],
+  content: [{type: 'text', text: MOCK_COMPLETION_CONTENT}],
 };
 
 export const mockError = new Error('API Error');

@@ -48,9 +48,9 @@ describe('Completion', () => {
       expect.objectContaining({
         model: COPILOT_MODEL_IDS[DEFAULT_COPILOT_MODEL],
         messages: expect.arrayContaining([
-          {role: 'system', content: expect.any(String)},
           {role: 'user', content: expect.any(String)},
         ]),
+        system: expect.any(String),
         temperature: DEFAULT_COPILOT_TEMPERATURE,
       }),
       expect.objectContaining({
@@ -154,12 +154,12 @@ describe('Completion', () => {
       expect.any(String),
       expect.objectContaining({
         messages: [
-          {role: 'system', content: 'Custom system prompt'},
           {
             role: 'user',
             content: expect.stringContaining('Custom user prompt'),
           },
         ],
+        system: 'Custom system prompt',
       }),
       expect.any(Object),
     );
@@ -177,10 +177,8 @@ describe('Completion', () => {
     expect(HTTP.POST).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
-        messages: [
-          {role: 'system', content: expect.any(String)},
-          {role: 'user', content: expect.any(String)},
-        ],
+        messages: [{role: 'user', content: expect.any(String)}],
+        system: expect.any(String),
       }),
       expect.any(Object),
     );
@@ -204,14 +202,9 @@ describe('Completion', () => {
     expect(HTTP.POST).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
-        messages: [
-          {
-            role: 'system',
-            content:
-              'You are an AI assistant specialized in writing React components.',
-          },
-          {role: 'user', content: expect.any(String)},
-        ],
+        messages: [{role: 'user', content: expect.any(String)}],
+        system:
+          'You are an AI assistant specialized in writing React components.',
       }),
       expect.any(Object),
     );

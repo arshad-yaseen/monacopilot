@@ -72,9 +72,9 @@ import {Copilot} from 'monacopilot';
 
 const app = express();
 const port = process.env.PORT || 3000;
-const copilot = new Copilot(process.env.GROQ_API_KEY!, {
-  provider: 'groq',
-  model: 'llama-3-70b',
+const copilot = new Copilot(process.env.ANTHROPIC_API_KEY!, {
+  provider: 'anthropic',
+  model: 'claude-3-5-haiku',
 });
 
 app.use(express.json());
@@ -87,7 +87,7 @@ app.post('/complete', async (req, res) => {
   // Process raw LLM response if needed
   // `raw` can be undefined if an error occurred, which happens when `error` is present
   if (raw) {
-    calculateCost(raw.usage.total_tokens);
+    calculateCost(raw.usage.input_tokens);
   }
 
   // Handle errors if present
@@ -145,9 +145,6 @@ registerCompletion(monaco, editor, {
   endpoint: 'https://api.example.com/complete',
   // The language of the editor.
   language: 'javascript',
-  // If you are using Groq as your provider, it's recommended to set `maxContextLines` to `60` or less.
-  // This is because Groq has low rate limits and doesn't offer pay-as-you-go pricing.
-  maxContextLines: 60,
 });
 ```
 
@@ -168,11 +165,11 @@ registerCompletion(monaco, editor, {
 });
 ```
 
-| Trigger              | Description                                         | Notes                                                                                                                                                                                                     |
-| -------------------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `'onIdle'` (default) | Provides completions after a brief pause in typing. | This approach is less resource-intensive, as it only initiates a request when the editor is idle.                                                                                                         |
-| `'onTyping'`         | Provides completions in real-time as you type.      | Best suited for models with low response latency, such as Groq models. This trigger mode initiates additional background requests to deliver real-time suggestions, a method known as predictive caching. |
-| `'onDemand'`         | Does not provide completions automatically.         | Completions are triggered manually using the `trigger` function from the `registerCompletion` return. This allows for precise control over when completions are provided.                                 |
+| Trigger              | Description                                         | Notes                                                                                                                                                                                                                         |
+| -------------------- | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `'onIdle'` (default) | Provides completions after a brief pause in typing. | This approach is less resource-intensive, as it only initiates a request when the editor is idle.                                                                                                                             |
+| `'onTyping'`         | Provides completions in real-time as you type.      | Best suited for models with low response latency, such as Groq models or Claude 3-5 Haiku. This trigger mode initiates additional background requests to deliver real-time suggestions, a method known as predictive caching. |
+| `'onDemand'`         | Does not provide completions automatically.         | Completions are triggered manually using the `trigger` function from the `registerCompletion` return. This allows for precise control over when completions are provided.                                                     |
 
 [OnTyping Demo](https://github.com/user-attachments/assets/22c2ce44-334c-4963-b853-01b890b8e39f)
 
@@ -416,17 +413,17 @@ const copilot = new Copilot(process.env.OPENAI_API_KEY, {
 });
 ```
 
-The default provider is `groq`, and the default model is `llama-3-70b`.
+The default provider is `anthropic`, and the default model is `claude-3-5-haiku`.
 
-> **Tip:** Even though the default provider and model are `groq` and `llama-3-70b`, it's always recommended to specify a provider and model when using Monacopilot. This ensures your code remains consistent even if the default settings change in future updates.
+> **Tip:** Even though the default provider and model are `anthropic` and `claude-3-5-haiku`, it's always recommended to specify a provider and model when using Monacopilot. This ensures your code remains consistent even if the default settings change in future updates.
 
 There are other providers and models available. Here is a list:
 
-| Provider  | Models                                                                    |
-| --------- | ------------------------------------------------------------------------- |
-| Groq      | `llama-3-70b`                                                             |
-| OpenAI    | `gpt-4o`, `gpt-4o-mini`, `o1-preview`, `o1-mini`                          |
-| Anthropic | `claude-3-5-sonnet`, `claude-3-opus`, `claude-3-sonnet`, `claude-3-haiku` |
+| Provider  | Models                                                    |
+| --------- | --------------------------------------------------------- |
+| Groq      | `llama-3-70b`                                             |
+| OpenAI    | `gpt-4o`, `gpt-4o-mini`, `o1-preview`, `o1-mini`          |
+| Anthropic | `claude-3-5-sonnet`, `claude-3-haiku`, `claude-3-5-haiku` |
 
 ### Custom Model
 

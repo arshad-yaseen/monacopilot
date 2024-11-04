@@ -26,12 +26,14 @@ describe('Provider Handler Functions', () => {
     });
 
     it('should call the correct handler for Anthropic', () => {
-      const mockCompletion = {content: 'Anthropic response'};
+      const mockCompletion = {
+        content: [{type: 'text', text: "Hi, I'm Claude."}],
+      };
       const result = parseProviderChatCompletion(
         mockCompletion as unknown as ChatCompletion,
         'anthropic',
       );
-      expect(result).toEqual('Anthropic response');
+      expect(result).toEqual("Hi, I'm Claude.");
     });
   });
 
@@ -86,10 +88,10 @@ describe('Provider Handler Functions', () => {
   describe('parseAnthropicCompletion', () => {
     it('should parse a valid Anthropic completion', () => {
       const mockCompletion = {
-        content: 'Anthropic response',
+        content: [{type: 'text', text: "Hi, I'm Claude."}],
       } as unknown as ChatCompletion;
       const result = parseProviderChatCompletion(mockCompletion, 'anthropic');
-      expect(result).toEqual('Anthropic response');
+      expect(result).toEqual("Hi, I'm Claude.");
     });
 
     it('should handle missing content', () => {
