@@ -1,3 +1,12 @@
+
+
+## [0.14.0](https://github.com/arshad-yaseen/monacopilot/compare/v0.13.2...v0.14.0) (2024-11-04)
+
+
+### 🚀 Features
+
+* add claude-3-5-haiku ([9189196](https://github.com/arshad-yaseen/monacopilot/commit/91891962e8e1d110434aab3f49054194e046959b))
+
 ## [0.13.2](https://github.com/arshad-yaseen/monacopilot/compare/v0.13.1...v0.13.2) (2024-11-03)
 
 ### 🐛 Bug Fixes
