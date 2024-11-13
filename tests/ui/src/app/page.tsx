@@ -4,7 +4,7 @@ import {useEffect, useState} from 'react';
 
 import Editor from '@monaco-editor/react';
 import {
-  registerCopilot,
+  registerCompletion,
   type Monaco,
   type StandaloneCodeEditor,
 } from 'monacopilot';
@@ -16,7 +16,7 @@ export default function Home() {
   useEffect(() => {
     if (!monaco || !editor) return;
 
-    const completion = registerCopilot(monaco, editor, {
+    const completion = registerCompletion(monaco, editor, {
       endpoint: '/api/complete',
       language: 'javascript',
       maxContextLines: 60,
