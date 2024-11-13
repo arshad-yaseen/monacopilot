@@ -9,33 +9,32 @@ const generateSystemPrompt = (metadata: CompletionMetadata): string => {
     ),
   );
 
-  const persona = `You are an expert ${languageOrTechnologies ? `${languageOrTechnologies} ` : ''}developer assistant.`;
+  const sections = [
+    `You are an expert ${
+      languageOrTechnologies ? `${languageOrTechnologies} ` : ''
+    }developer assistant specialized in precise code completion and generation.`,
 
-  const instructions = `Your task is to provide precise and contextually relevant code completions, modifications, or generations`;
+    `Your primary task is to provide accurate, context-aware code completions that seamlessly integrate with existing codebases${
+      filename ? ` in '${filename}'` : ''
+    }.`,
 
-  const fileContext = filename ? `for the file '${filename}'` : '';
+    `You must:
+- Generate only the exact code required
+- Maintain strict adherence to provided instructions
+- Follow established code patterns and conventions
+- Consider the full context before generating code`,
 
-  const relatedFilesInfo =
-    relatedFiles && relatedFiles.length > 0
-      ? `Consider the context of the current and related files provided.`
-      : '';
+    // Context awareness
+    relatedFiles?.length
+      ? `Analyze and incorporate context from all provided related files to ensure consistent and appropriate code generation.`
+      : '',
 
-  const codeStyleGuidelines = `Ensure that your responses integrate seamlessly with the existing code and maintain consistency with the project's style and conventions.`;
+    language
+      ? `Apply ${language}-specific best practices, idioms, and syntax conventions in all generated code.`
+      : '',
+  ];
 
-  const reasoning = `Before providing the completion or modification, think through the problem step-by-step, considering best practices and any potential edge cases.`;
-
-  const languageSpecificInfo = language
-    ? `Pay special attention to ${language}-specific syntax and best practices.`
-    : '';
-
-  const systemPrompt = `${persona}
-${instructions} ${fileContext}.
-${codeStyleGuidelines}
-${relatedFilesInfo}
-${languageSpecificInfo}
-${reasoning}`;
-
-  return systemPrompt.trim();
+  return sections.filter(Boolean).join('\n');
 };
 
 const formatRelatedFiles = (relatedFiles: RelatedFile[]): string => {
@@ -48,15 +47,14 @@ const formatRelatedFiles = (relatedFiles: RelatedFile[]): string => {
       `
 <related_file>
   <path>${path}</path>
-  <content>
+  <content_context>
 \`\`\`
 ${content}
 \`\`\`
-  </content>
-</related_file>
-`.trim(),
+  </content_context>
+</related_file>`.trim(),
     )
-    .join('\n');
+    .join('\n\n');
 };
 
 const generateUserPrompt = (
@@ -64,28 +62,29 @@ const generateUserPrompt = (
   metadata: CompletionMetadata,
 ): string => {
   const {relatedFiles} = metadata;
-  const relatedFilesText = relatedFiles ? formatRelatedFiles(relatedFiles) : '';
 
   return `
-<task>
-  <instructions>
+<task_context>
+  <primary_instructions>
 ${instructions.trim()}
-  </instructions>
-  ${relatedFilesText}
-</task>
-`.trim();
+  </primary_instructions>
+  ${
+    relatedFiles?.length
+      ? `
+  <reference_files>
+${formatRelatedFiles(relatedFiles)}
+  </reference_files>`
+      : ''
+  }
+</task_context>`.trim();
 };
 
 /**
- * Generates a complete prompt for LLM code generation.
+ * Constructs a complete prompt with system and user contexts for code generation.
  *
- * This function creates a structured prompt that includes:
- * 1. A system prompt with context and guidelines
- * 2. A user prompt with specific instructions and related files
- *
- * @param instructions - The specific task or request from the user
- * @param metadata - Additional information about the code environment
- * @returns An object with 'system' and 'user' properties containing the respective prompts
+ * @param instructions - Specific completion instructions
+ * @param metadata - Environment and context metadata
+ * @returns {PromptData} Structured prompt with system and user components
  */
 export const constructPromptWithContext = (
   instructions: string,
