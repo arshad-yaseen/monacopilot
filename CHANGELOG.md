@@ -1,11 +1,17 @@
 
 
-## [0.14.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.14.0...v0.14.1) (2024-11-13)
+## [0.14.2](https://github.com/arshad-yaseen/monacopilot/compare/v0.14.1...v0.14.2) (2024-11-17)
 
 
 ### 🔧 Maintenance
 
-* improve prompt nov-13 ([d7db8fc](https://github.com/arshad-yaseen/monacopilot/commit/d7db8fc59f85743d36ebc07098b293967c9087b7))
+* **completion:** handle backward overlap ([437ede1](https://github.com/arshad-yaseen/monacopilot/commit/437ede107ddc8e52e3327afd1fc86f50fad8484c))
+
+## [0.14.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.14.0...v0.14.1) (2024-11-13)
+
+### 🔧 Maintenance
+
+- improve prompt nov-13 ([d7db8fc](https://github.com/arshad-yaseen/monacopilot/commit/d7db8fc59f85743d36ebc07098b293967c9087b7))
 
 ## [0.14.0](https://github.com/arshad-yaseen/monacopilot/compare/v0.13.2...v0.14.0) (2024-11-04)
 
