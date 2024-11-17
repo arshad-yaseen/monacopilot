@@ -33,14 +33,17 @@ export const computeCompletionInsertionRange = (
   }
 
   const startOffset = mdl.getOffsetAt(pos);
-  const remainingText = mdl.getValue().substring(startOffset);
+  const textBeforeCursor = mdl.getValue().substring(0, startOffset);
+  const textAfterCursor = mdl.getValue().substring(startOffset);
 
   let prefixOverlapLength = 0;
   let suffixOverlapLength = 0;
   let maxOverlapLength = 0;
+  let startOverlapLength = 0;
 
   const completionLength = completion.length;
-  const remainingLength = remainingText.length;
+  const beforeLength = textBeforeCursor.length;
+  const afterLength = textAfterCursor.length;
 
   // Handle cursor at the end of the document
   if (startOffset >= mdl.getValue().length) {
@@ -53,7 +56,7 @@ export const computeCompletionInsertionRange = (
   }
 
   // Handle empty remaining text
-  if (remainingLength === 0) {
+  if (afterLength === 0) {
     return new monaco.Range(
       pos.lineNumber,
       pos.column,
@@ -62,17 +65,28 @@ export const computeCompletionInsertionRange = (
     );
   }
 
-  const maxPossibleOverlap = Math.min(completionLength, remainingLength);
+  // Find overlap with text before cursor
+  const maxBeforeOverlap = Math.min(completionLength, beforeLength);
+  for (let i = 1; i <= maxBeforeOverlap; i++) {
+    const completionStart = completion.substring(0, i);
+    const textEnd = textBeforeCursor.slice(-i);
+    if (completionStart === textEnd) {
+      startOverlapLength = i;
+    }
+  }
 
-  // Find the longest prefix overlap
-  for (let i = 0; i < maxPossibleOverlap; i++) {
-    if (completion[i] !== remainingText[i]) break;
+  // Find overlap with text after cursor
+  const maxAfterOverlap = Math.min(completionLength, afterLength);
+
+  // Find the longest prefix overlap with text after cursor
+  for (let i = 0; i < maxAfterOverlap; i++) {
+    if (completion[i] !== textAfterCursor[i]) break;
     prefixOverlapLength++;
   }
 
-  // Find the longest suffix overlap
-  for (let i = 1; i <= maxPossibleOverlap; i++) {
-    if (completion.slice(-i) === remainingText.slice(0, i)) {
+  // Find the longest suffix overlap with text after cursor
+  for (let i = 1; i <= maxAfterOverlap; i++) {
+    if (completion.slice(-i) === textAfterCursor.slice(0, i)) {
       suffixOverlapLength = i;
     }
   }
@@ -82,19 +96,24 @@ export const computeCompletionInsertionRange = (
   // Check for internal overlaps if no prefix or suffix overlap
   if (maxOverlapLength === 0) {
     for (let i = 1; i < completionLength; i++) {
-      if (remainingText.startsWith(completion.substring(i))) {
+      if (textAfterCursor.startsWith(completion.substring(i))) {
         maxOverlapLength = completionLength - i;
         break;
       }
     }
   }
 
+  // Calculate start and end positions
+  const startPosition =
+    startOverlapLength > 0
+      ? mdl.getPositionAt(startOffset - startOverlapLength)
+      : pos;
   const endOffset = startOffset + maxOverlapLength;
   const endPosition = mdl.getPositionAt(endOffset);
 
   return new monaco.Range(
-    pos.lineNumber,
-    pos.column,
+    startPosition.lineNumber,
+    startPosition.column,
     endPosition.lineNumber,
     endPosition.column,
   );
