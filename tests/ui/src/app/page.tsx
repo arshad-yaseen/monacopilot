@@ -43,7 +43,7 @@ export default function Home() {
   return (
     <Editor
       language="javascript"
-      onMount={(editor, monaco) => {
+      onMount={(editor: StandaloneCodeEditor, monaco: Monaco) => {
         setMonaco(monaco);
         setEditor(editor);
       }}

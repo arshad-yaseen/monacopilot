@@ -2,6 +2,10 @@ import type {
   MessageCreateParams as AnthropicChatCompletionCreateParamsBase,
   Message as AnthropicChatCompletionType,
 } from '@anthropic-ai/sdk/resources';
+import {
+  ModelParams as GoogleChatCompletionCreateParamsBase,
+  GenerateContentResponse as GoogleChatCompletionType,
+} from '@google/generative-ai';
 import type {
   ChatCompletionCreateParamsBase as GroqChatCompletionCreateParamsBase,
   ChatCompletion as GroqChatCompletionType,
@@ -17,8 +21,16 @@ export type AnthropicModel =
   | 'claude-3-5-sonnet'
   | 'claude-3-5-haiku'
   | 'claude-3-haiku';
+export type GoogleModel =
+  | 'gemini-1.5-flash'
+  | 'gemini-1.5-flash-8b'
+  | 'gemini-1.0-pro';
 
-export type CopilotModel = OpenAIModel | GroqModel | AnthropicModel;
+export type CopilotModel =
+  | OpenAIModel
+  | GroqModel
+  | AnthropicModel
+  | GoogleModel;
 
 export type PickCopilotModel<T extends CopilotProvider> = T extends 'openai'
   ? OpenAIModel
@@ -26,20 +38,25 @@ export type PickCopilotModel<T extends CopilotProvider> = T extends 'openai'
     ? GroqModel
     : T extends 'anthropic'
       ? AnthropicModel
-      : never;
+      : T extends 'google'
+        ? GoogleModel
+        : never;
 
-export type CopilotProvider = 'openai' | 'groq' | 'anthropic';
+export type CopilotProvider = 'openai' | 'groq' | 'anthropic' | 'google';
 
 export type ChatCompletionCreateParams =
   | OpenAIChatCompletionCreateParamsBase
   | GroqChatCompletionCreateParamsBase
-  | AnthropicChatCompletionCreateParamsBase;
+  | AnthropicChatCompletionCreateParamsBase
+  | GoogleChatCompletionCreateParams;
 
 export type OpenAIChatCompletionCreateParams =
   OpenAIChatCompletionCreateParamsBase;
 export type GroqChatCompletionCreateParams = GroqChatCompletionCreateParamsBase;
 export type AnthropicChatCompletionCreateParams =
   AnthropicChatCompletionCreateParamsBase;
+export type GoogleChatCompletionCreateParams =
+  GoogleChatCompletionCreateParamsBase;
 
 export type PickChatCompletionCreateParams<T extends CopilotProvider> =
   T extends 'openai'
@@ -48,16 +65,20 @@ export type PickChatCompletionCreateParams<T extends CopilotProvider> =
       ? GroqChatCompletionCreateParamsBase
       : T extends 'anthropic'
         ? AnthropicChatCompletionCreateParamsBase
-        : never;
+        : T extends 'google'
+          ? GoogleChatCompletionCreateParamsBase
+          : never;
 
 export type ChatCompletion =
   | OpenAIChatCompletion
   | GroqChatCompletion
-  | AnthropicChatCompletion;
+  | AnthropicChatCompletion
+  | GoogleChatCompletionType;
 
 export type OpenAIChatCompletion = OpenAIChatCompletionType;
 export type GroqChatCompletion = GroqChatCompletionType;
 export type AnthropicChatCompletion = AnthropicChatCompletionType;
+export type GoogleChatCompletion = GoogleChatCompletionType;
 
 export type PickChatCompletion<T extends CopilotProvider> = T extends 'openai'
   ? OpenAIChatCompletion
@@ -65,7 +86,9 @@ export type PickChatCompletion<T extends CopilotProvider> = T extends 'openai'
     ? GroqChatCompletion
     : T extends 'anthropic'
       ? AnthropicChatCompletion
-      : never;
+      : T extends 'google'
+        ? GoogleChatCompletionType
+        : never;
 
 export type PromptData = {
   system: string;

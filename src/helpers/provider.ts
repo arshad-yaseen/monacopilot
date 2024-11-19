@@ -10,10 +10,14 @@ import {
   ChatCompletionCreateParams,
   CopilotModel,
   CopilotProvider,
+  CustomCopilotModel,
   ProviderHandler,
 } from '../types';
 
 const openaiHandler: ProviderHandler<'openai'> = {
+  /* Model and API key unused in this handler */
+  createEndpoint: () => COPILOT_PROVIDER_ENDPOINT_MAP.openai,
+
   createRequestBody: (model, prompt) => {
     const isO1Model = model === 'o1-preview' || model === 'o1-mini';
     const messages = isO1Model
@@ -45,6 +49,9 @@ const openaiHandler: ProviderHandler<'openai'> = {
 };
 
 const groqHandler: ProviderHandler<'groq'> = {
+  /* Model and API key unused in this handler */
+  createEndpoint: () => COPILOT_PROVIDER_ENDPOINT_MAP.groq,
+
   createRequestBody: (model, prompt) => ({
     model: getModelId(model),
     temperature: DEFAULT_COPILOT_TEMPERATURE,
@@ -68,6 +75,9 @@ const groqHandler: ProviderHandler<'groq'> = {
 };
 
 const anthropicHandler: ProviderHandler<'anthropic'> = {
+  /* Model and API key unused in this handler */
+  createEndpoint: () => COPILOT_PROVIDER_ENDPOINT_MAP.anthropic,
+
   createRequestBody: (model, prompt) => ({
     model: getModelId(model),
     temperature: DEFAULT_COPILOT_TEMPERATURE,
@@ -102,6 +112,45 @@ const anthropicHandler: ProviderHandler<'anthropic'> = {
   },
 };
 
+const googleHandler: ProviderHandler<'google'> = {
+  createEndpoint: (model, apiKey) =>
+    `${COPILOT_PROVIDER_ENDPOINT_MAP.google}/${model}:generateContent?key=${apiKey}`,
+
+  createRequestBody: (model, prompt) => ({
+    model: getModelId(model),
+    system_instruction: {
+      parts: {text: prompt.system},
+    },
+    contents: [
+      {
+        parts: {text: prompt.user},
+      },
+    ],
+  }),
+
+  /* No API key is needed for this provider in the headers */
+  createHeaders: () => ({
+    'Content-Type': 'application/json',
+  }),
+
+  parseCompletion: completion => {
+    if (
+      !completion.candidates?.length ||
+      !completion.candidates[0]?.content ||
+      !completion.candidates[0].content?.parts?.length
+    ) {
+      return null;
+    }
+
+    const content = completion.candidates[0].content;
+
+    return 'text' in content.parts[0] &&
+      typeof content.parts[0].text === 'string'
+      ? content.parts[0].text
+      : null;
+  },
+};
+
 const providerHandlers: Record<
   CopilotProvider,
   ProviderHandler<CopilotProvider>
@@ -109,6 +158,19 @@ const providerHandlers: Record<
   openai: openaiHandler,
   groq: groqHandler,
   anthropic: anthropicHandler,
+  google: googleHandler,
+};
+
+/**
+ * Creates an endpoint for different copilot providers.
+ */
+export const createProviderEndpoint = (
+  model: CopilotModel,
+  apiKey: string,
+  provider: CopilotProvider,
+): string => {
+  const handler = providerHandlers[provider];
+  return handler.createEndpoint(model, apiKey);
 };
 
 /**
@@ -149,12 +211,6 @@ export const parseProviderChatCompletion = (
  * Gets the model ID for a given copilot model name to be used in the API request.
  */
 const getModelId = (model: CopilotModel): string => COPILOT_MODEL_IDS[model];
-
-/**
- * Gets the copilot endpoint for a given provider.
- */
-export const getCopilotProviderEndpoint = (provider: CopilotProvider): string =>
-  COPILOT_PROVIDER_ENDPOINT_MAP[provider];
 
 /**
  * Computes the maximum number of tokens for Anthropic models.

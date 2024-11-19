@@ -37,8 +37,9 @@ const request = async <
   });
 
   if (!response.ok) {
+    const data = '\n' + (JSON.stringify(await response.json(), null, 2) || '');
     throw new Error(
-      `${response.statusText || options.fallbackError || 'Network error'}`,
+      `${response.statusText || options.fallbackError || 'Network error'}${data}`,
     );
   }
 
