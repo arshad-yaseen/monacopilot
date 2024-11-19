@@ -10,7 +10,6 @@ import {
   ChatCompletionCreateParams,
   CopilotModel,
   CopilotProvider,
-  CustomCopilotModel,
   ProviderHandler,
 } from '../types';
 
