@@ -1,11 +1,8 @@
-
-
 ## [0.14.2](https://github.com/arshad-yaseen/monacopilot/compare/v0.14.1...v0.14.2) (2024-11-17)
-
 
 ### 🔧 Maintenance
 
-* **completion:** handle backward overlap ([437ede1](https://github.com/arshad-yaseen/monacopilot/commit/437ede107ddc8e52e3327afd1fc86f50fad8484c))
+- **completion:** handle backward overlap ([437ede1](https://github.com/arshad-yaseen/monacopilot/commit/437ede107ddc8e52e3327afd1fc86f50fad8484c))
 
 ## [0.14.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.14.0...v0.14.1) (2024-11-13)
 

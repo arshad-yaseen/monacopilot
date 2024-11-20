@@ -18,7 +18,7 @@ export const COPILOT_MODEL_IDS: Record<CopilotModel, string> = {
   'o1-mini': 'o1-mini',
   'gemini-1.5-flash-8b': 'gemini-1.5-flash-8b',
   'gemini-1.5-flash': 'gemini-1.5-flash',
-  'gemini-1.0-pro': 'gemini-1.0-pro',
+  'gemini-1.5-pro': 'gemini-1.5-pro',
 } as const;
 
 export const COPILOT_PROVIDER_MODEL_MAP: Record<
@@ -28,7 +28,7 @@ export const COPILOT_PROVIDER_MODEL_MAP: Record<
   groq: ['llama-3-70b'],
   openai: ['gpt-4o', 'gpt-4o-mini', 'o1-preview', 'o1-mini'],
   anthropic: ['claude-3-5-sonnet', 'claude-3-haiku', 'claude-3-5-haiku'],
-  google: ['gemini-1.5-flash-8b', 'gemini-1.0-pro', 'gemini-1.5-flash'],
+  google: ['gemini-1.5-flash-8b', 'gemini-1.5-pro', 'gemini-1.5-flash'],
 } as const;
 
 export const DEFAULT_COPILOT_PROVIDER: CopilotProvider = 'anthropic' as const;

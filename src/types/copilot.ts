@@ -24,7 +24,7 @@ export type AnthropicModel =
 export type GoogleModel =
   | 'gemini-1.5-flash'
   | 'gemini-1.5-flash-8b'
-  | 'gemini-1.0-pro';
+  | 'gemini-1.5-pro';
 
 export type CopilotModel =
   | OpenAIModel
