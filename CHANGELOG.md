@@ -1,3 +1,37 @@
+
+
+## [0.15.0](https://github.com/arshad-yaseen/monacopilot/compare/v0.14.2...v0.15.0) (2024-11-20)
+
+
+### 🚀 Features
+
+* **google:** added gemini api as provider ([41117b6](https://github.com/arshad-yaseen/monacopilot/commit/41117b6a4276683a05c250112bba717fe0be3c01))
+
+
+### 🐛 Bug Fixes
+
+* changed gemini pro model to 1.5 ([357735d](https://github.com/arshad-yaseen/monacopilot/commit/357735d8dfedefa9983c658cd01ba83560678f95))
+
+
+### 📚 Documentation
+
+* gemini provider ([204cae6](https://github.com/arshad-yaseen/monacopilot/commit/204cae6e44ea7b88c941c15919ed6edbfc8371f2))
+
+
+### 🔄 Refactoring
+
+* removed unused import of custom copilot model ([2d1b888](https://github.com/arshad-yaseen/monacopilot/commit/2d1b88878c958e6f8533bdbb6d3699abbe094d0c))
+
+
+### 🔧 Maintenance
+
+* improve copilot type ([bb9b03e](https://github.com/arshad-yaseen/monacopilot/commit/bb9b03e18bf357dbabd5fd12c5563b18ff75a020))
+* improve copilot types ([cf1701e](https://github.com/arshad-yaseen/monacopilot/commit/cf1701e8f5f7ac2ba642b080516edf2c2900706c))
+* improve range and cache calculation ([0b9f6c8](https://github.com/arshad-yaseen/monacopilot/commit/0b9f6c8b4567c1cc1ebdc7ef80fd00c8fe41c9d4))
+* remove bun lock files ([b2cb242](https://github.com/arshad-yaseen/monacopilot/commit/b2cb242efa2c3c1136ab6f5fd31ceeb97848d582))
+* treeshake ([81bc824](https://github.com/arshad-yaseen/monacopilot/commit/81bc8247b292ffebe1e6018657338cab24de755b))
+* update locks ([f9d7b61](https://github.com/arshad-yaseen/monacopilot/commit/f9d7b61e59695f5f938a5ed4c256949ee18579f9))
+
 ## [0.14.2](https://github.com/arshad-yaseen/monacopilot/compare/v0.14.1...v0.14.2) (2024-11-17)
 
 ### 🔧 Maintenance
