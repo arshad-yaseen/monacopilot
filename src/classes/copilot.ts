@@ -5,9 +5,9 @@ import {
   DEFAULT_COPILOT_PROVIDER,
 } from '../constants';
 import {
+  createProviderEndpoint,
   createProviderHeaders,
   createRequestBody,
-  getCopilotProviderEndpoint,
   parseProviderChatCompletion,
 } from '../helpers/provider';
 import {deprecated, report} from '../logger';
@@ -106,7 +106,11 @@ export class Copilot {
     requestBody: ChatCompletionCreateParams;
     headers: Record<string, string>;
   } {
-    let endpoint = getCopilotProviderEndpoint(this.provider);
+    let endpoint = createProviderEndpoint(
+      this.model as CopilotModel,
+      this.apiKey,
+      this.provider,
+    );
     let requestBody: ChatCompletionCreateParams;
     let headers = createProviderHeaders(this.apiKey, this.provider);
 

@@ -5,11 +5,9 @@ const BOLD = '\x1b[1m';
 
 export const report = (error: unknown): {message: string; stack?: string} => {
   let errorMessage: string;
-  let errorStack: string | undefined;
 
   if (error instanceof Error) {
     errorMessage = error.message;
-    errorStack = error.stack;
   } else if (typeof error === 'string') {
     errorMessage = error;
   } else {
@@ -17,15 +15,9 @@ export const report = (error: unknown): {message: string; stack?: string} => {
   }
 
   const formattedError = `${RED}${BOLD}[MONACOPILOT ERROR] ${errorMessage}${RESET}`;
-  if (errorStack) {
-    console.error(
-      `${formattedError}\n${RED}Stack trace:${RESET}\n${errorStack}`,
-    );
-  } else {
-    console.error(formattedError);
-  }
+  console.error(formattedError);
 
-  return {message: errorMessage, stack: errorStack};
+  return {message: errorMessage};
 };
 
 export const warn = (message: string): void => {

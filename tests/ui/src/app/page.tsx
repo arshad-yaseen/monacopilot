@@ -20,6 +20,7 @@ export default function Home() {
       endpoint: '/api/complete',
       language: 'javascript',
       maxContextLines: 60,
+      trigger: 'onTyping',
     });
 
     // monaco.editor.addEditorAction({
@@ -43,7 +44,7 @@ export default function Home() {
   return (
     <Editor
       language="javascript"
-      onMount={(editor, monaco) => {
+      onMount={(editor: StandaloneCodeEditor, monaco: Monaco) => {
         setMonaco(monaco);
         setEditor(editor);
       }}

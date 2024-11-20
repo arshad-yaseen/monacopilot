@@ -3,6 +3,10 @@ import type {
   Message as AnthropicChatCompletionType,
 } from '@anthropic-ai/sdk/resources';
 import type {
+  ModelParams as GoogleChatCompletionCreateParamsBase,
+  GenerateContentResponse as GoogleChatCompletionType,
+} from '@google/generative-ai';
+import type {
   ChatCompletionCreateParamsBase as GroqChatCompletionCreateParamsBase,
   ChatCompletion as GroqChatCompletionType,
 } from 'groq-sdk/resources/chat/completions';
@@ -11,121 +15,144 @@ import type {
   ChatCompletion as OpenAIChatCompletionType,
 } from 'openai/resources/chat/completions';
 
+/**
+ * Models available for OpenAI provider.
+ */
 export type OpenAIModel = 'gpt-4o' | 'gpt-4o-mini' | 'o1-preview' | 'o1-mini';
+
+/**
+ * Models available for Groq provider.
+ */
 export type GroqModel = 'llama-3-70b';
+
+/**
+ * Models available for Anthropic provider.
+ */
 export type AnthropicModel =
   | 'claude-3-5-sonnet'
   | 'claude-3-5-haiku'
   | 'claude-3-haiku';
 
-export type CopilotModel = OpenAIModel | GroqModel | AnthropicModel;
+/**
+ * Models available for Google provider.
+ */
+export type GoogleModel =
+  | 'gemini-1.5-flash'
+  | 'gemini-1.5-flash-8b'
+  | 'gemini-1.5-pro';
 
-export type PickCopilotModel<T extends CopilotProvider> = T extends 'openai'
-  ? OpenAIModel
-  : T extends 'groq'
-    ? GroqModel
-    : T extends 'anthropic'
-      ? AnthropicModel
-      : never;
+/**
+ * Union of all predefined Copilot models.
+ */
+export type CopilotModel =
+  | OpenAIModel
+  | GroqModel
+  | AnthropicModel
+  | GoogleModel;
 
-export type CopilotProvider = 'openai' | 'groq' | 'anthropic';
+/**
+ * Providers supported by Copilot.
+ */
+export type CopilotProvider = 'openai' | 'groq' | 'anthropic' | 'google';
 
+/**
+ * Mapping of providers to their models.
+ */
+type ProviderModelMap = {
+  openai: OpenAIModel;
+  groq: GroqModel;
+  anthropic: AnthropicModel;
+  google: GoogleModel;
+};
+
+/**
+ * Utility type to pick the appropriate model type based on the provider.
+ */
+export type PickCopilotModel<T extends CopilotProvider> = ProviderModelMap[T];
+
+/**
+ * Union of all ChatCompletionCreateParams types.
+ */
 export type ChatCompletionCreateParams =
   | OpenAIChatCompletionCreateParamsBase
   | GroqChatCompletionCreateParamsBase
-  | AnthropicChatCompletionCreateParamsBase;
+  | AnthropicChatCompletionCreateParamsBase
+  | GoogleChatCompletionCreateParamsBase;
 
+/**
+ * Specific ChatCompletionCreateParams types for each provider.
+ */
 export type OpenAIChatCompletionCreateParams =
   OpenAIChatCompletionCreateParamsBase;
 export type GroqChatCompletionCreateParams = GroqChatCompletionCreateParamsBase;
 export type AnthropicChatCompletionCreateParams =
   AnthropicChatCompletionCreateParamsBase;
+export type GoogleChatCompletionCreateParams =
+  GoogleChatCompletionCreateParamsBase;
 
-export type PickChatCompletionCreateParams<T extends CopilotProvider> =
-  T extends 'openai'
-    ? OpenAIChatCompletionCreateParamsBase
-    : T extends 'groq'
-      ? GroqChatCompletionCreateParamsBase
-      : T extends 'anthropic'
-        ? AnthropicChatCompletionCreateParamsBase
-        : never;
-
-export type ChatCompletion =
-  | OpenAIChatCompletion
-  | GroqChatCompletion
-  | AnthropicChatCompletion;
-
-export type OpenAIChatCompletion = OpenAIChatCompletionType;
-export type GroqChatCompletion = GroqChatCompletionType;
-export type AnthropicChatCompletion = AnthropicChatCompletionType;
-
-export type PickChatCompletion<T extends CopilotProvider> = T extends 'openai'
-  ? OpenAIChatCompletion
-  : T extends 'groq'
-    ? GroqChatCompletion
-    : T extends 'anthropic'
-      ? AnthropicChatCompletion
-      : never;
-
-export type PromptData = {
-  system: string;
-  user: string;
+/**
+ * Mapping of providers to their ChatCompletionCreateParams types.
+ */
+type ProviderChatCompletionCreateParamsMap = {
+  openai: OpenAIChatCompletionCreateParams;
+  groq: GroqChatCompletionCreateParams;
+  anthropic: AnthropicChatCompletionCreateParams;
+  google: GoogleChatCompletionCreateParams;
 };
 
 /**
- * Options for configuring the Copilot instance.
+ * Utility type to pick the appropriate ChatCompletionCreateParams type based on the provider.
  */
-export interface CopilotOptions {
-  /**
-   * The provider to use (e.g., 'openai', 'anthropic', 'groq').
-   * If not specified, a default provider will be used.
-   */
-  provider?: CopilotProvider;
+export type PickChatCompletionCreateParams<T extends CopilotProvider> =
+  ProviderChatCompletionCreateParamsMap[T];
 
-  /**
-   * The model to use for copilot LLM requests.
-   * This can be either:
-   * 1. A predefined model name (e.g. 'claude-3-5-haiku'): Use this option if you want to use a model that is built into Monacopilot.
-   *    If you choose this option, also set the `provider` property to the corresponding provider of the model.
-   * 2. A custom model configuration object: Use this option if you want to use a LLM from a third-party service or your own custom model.
-   *
-   * If not specified, a default model will be used.
-   */
-  model?: CopilotModel | CustomCopilotModel;
-}
+/**
+ * Union of all ChatCompletion types.
+ */
+export type ChatCompletion =
+  | OpenAIChatCompletionType
+  | GroqChatCompletionType
+  | AnthropicChatCompletionType
+  | GoogleChatCompletionType;
 
-export type CustomCopilotModel = {
-  /**
-   * A function to configure the custom model.
-   * This function takes the API key and the prompt data and returns the configuration for the custom model.
-   *
-   * @param {string} apiKey - The API key for authentication.
-   * @param {Object} prompt - An object containing 'system' and 'user' messages generated by Monacopilot.
-   * @returns {Object} An object that may include:
-   *   - endpoint: The URL for the custom model's API (required)
-   *   - headers: Additional HTTP headers for the API request (optional)
-   *   - body: The request body data for the custom model API (optional)
-   */
-  config: CustomCopilotModelConfig;
-  /**
-   * A function to transform the response from the custom model.
-   * This function takes the raw response from the custom model API
-   * and returns the model generated text or null.
-   *
-   * @param response - The raw response from the custom model API.
-   *                   The type is 'unknown' because different APIs
-   *                   may return responses in different formats.
-   * @returns The model generated text or null if no valid text could be extracted.
-   */
-  transformResponse: CustomCopilotModelTransformResponse;
+/**
+ * Specific ChatCompletion types for each provider.
+ */
+export type OpenAIChatCompletion = OpenAIChatCompletionType;
+export type GroqChatCompletion = GroqChatCompletionType;
+export type AnthropicChatCompletion = AnthropicChatCompletionType;
+export type GoogleChatCompletion = GoogleChatCompletionType;
+
+/**
+ * Mapping of providers to their ChatCompletion types.
+ */
+type ProviderChatCompletionMap = {
+  openai: OpenAIChatCompletion;
+  groq: GroqChatCompletion;
+  anthropic: AnthropicChatCompletion;
+  google: GoogleChatCompletion;
 };
 
+/**
+ * Utility type to pick the appropriate ChatCompletion type based on the provider.
+ */
+export type PickChatCompletion<T extends CopilotProvider> =
+  ProviderChatCompletionMap[T];
+
+/**
+ * Data structure representing the prompt data.
+ */
+export interface PromptData {
+  system: string;
+  user: string;
+}
+
+/**
+ * Function type for configuring a custom model.
+ */
 export type CustomCopilotModelConfig = (
   apiKey: string,
-  prompt: {
-    system: string;
-    user: string;
-  },
+  prompt: PromptData,
 ) => {
   /**
    * The URL endpoint for the custom model's API.
@@ -142,6 +169,9 @@ export type CustomCopilotModelConfig = (
   body?: Record<string, unknown>;
 };
 
+/**
+ * Function type for transforming the response from a custom model.
+ */
 export type CustomCopilotModelTransformResponse = (response: unknown) => {
   /**
    * The text generated by the custom model.
@@ -152,3 +182,81 @@ export type CustomCopilotModelTransformResponse = (response: unknown) => {
    */
   completion?: string | null;
 };
+
+/**
+ * Definition of a custom Copilot model.
+ */
+export interface CustomCopilotModel {
+  /**
+   * Function to configure the custom model.
+   */
+  config: CustomCopilotModelConfig;
+  /**
+   * Function to transform the response from the custom model.
+   */
+  transformResponse: CustomCopilotModelTransformResponse;
+}
+
+/**
+ * Configuration options for initializing a Copilot instance.
+ * The `model` property is type-safe and varies based on the specified `provider`.
+ */
+export type CopilotOptions =
+  | {
+      /**
+       * Specifies the provider for the Copilot instance.
+       * Supported providers include 'openai', 'anthropic', 'groq', and 'google'.
+       */
+      provider: 'openai';
+      /**
+       * Defines the model to be used for Copilot LLM (Language Model) requests.
+       * This must be a model from the 'openai' provider.
+       */
+      model?: OpenAIModel;
+    }
+  | {
+      /**
+       * Specifies the 'groq' provider for the Copilot instance.
+       */
+      provider: 'groq';
+      /**
+       * Defines the model to be used for Copilot LLM requests.
+       * This must be a model from the 'groq' provider.
+       */
+      model?: GroqModel;
+    }
+  | {
+      /**
+       * Specifies the 'anthropic' provider for the Copilot instance.
+       */
+      provider: 'anthropic';
+      /**
+       * Defines the model to be used for Copilot LLM requests.
+       * This must be a model from the 'anthropic' provider.
+       */
+      model?: AnthropicModel;
+    }
+  | {
+      /**
+       * Specifies the 'google' provider for the Copilot instance.
+       */
+      provider: 'google';
+      /**
+       * Defines the model to be used for Copilot LLM requests.
+       * This must be a model from the 'google' provider.
+       */
+      model?: GoogleModel;
+    }
+  | {
+      /**
+       * When no provider is specified, only custom models are allowed.
+       */
+      provider?: undefined;
+      /**
+       * Defines the model to be used for Copilot LLM requests.
+       * Must be a custom model when no provider is specified.
+       * For more information, refer to the documentation:
+       * @see https://github.com/arshad-yaseen/monacopilot?tab=readme-ov-file#custom-model
+       */
+      model?: CustomCopilotModel;
+    };
