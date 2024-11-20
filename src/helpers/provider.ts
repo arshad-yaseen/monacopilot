@@ -5,7 +5,6 @@ import {
 } from '../constants';
 import {MAX_TOKENS_BY_ANTHROPIC_MODEL} from '../constants/provider/anthropic';
 import {
-  AnthropicModel,
   ChatCompletion,
   ChatCompletionCreateParams,
   CopilotModel,
@@ -14,7 +13,6 @@ import {
 } from '../types';
 
 const openaiHandler: ProviderHandler<'openai'> = {
-  /* Model and API key unused in this handler */
   createEndpoint: () => COPILOT_PROVIDER_ENDPOINT_MAP.openai,
 
   createRequestBody: (model, prompt) => {
@@ -48,7 +46,6 @@ const openaiHandler: ProviderHandler<'openai'> = {
 };
 
 const groqHandler: ProviderHandler<'groq'> = {
-  /* Model and API key unused in this handler */
   createEndpoint: () => COPILOT_PROVIDER_ENDPOINT_MAP.groq,
 
   createRequestBody: (model, prompt) => ({
@@ -74,7 +71,6 @@ const groqHandler: ProviderHandler<'groq'> = {
 };
 
 const anthropicHandler: ProviderHandler<'anthropic'> = {
-  /* Model and API key unused in this handler */
   createEndpoint: () => COPILOT_PROVIDER_ENDPOINT_MAP.anthropic,
 
   createRequestBody: (model, prompt) => ({
@@ -82,7 +78,7 @@ const anthropicHandler: ProviderHandler<'anthropic'> = {
     temperature: DEFAULT_COPILOT_TEMPERATURE,
     system: prompt.system,
     messages: [{role: 'user' as const, content: prompt.user}],
-    max_tokens: computeAnthropicMaxTokens(model as AnthropicModel),
+    max_tokens: MAX_TOKENS_BY_ANTHROPIC_MODEL[model],
   }),
 
   createHeaders: apiKey => ({
@@ -127,7 +123,6 @@ const googleHandler: ProviderHandler<'google'> = {
     ],
   }),
 
-  /* No API key is needed for this provider in the headers */
   createHeaders: () => ({
     'Content-Type': 'application/json',
   }),
@@ -210,9 +205,3 @@ export const parseProviderChatCompletion = (
  * Gets the model ID for a given copilot model name to be used in the API request.
  */
 const getModelId = (model: CopilotModel): string => COPILOT_MODEL_IDS[model];
-
-/**
- * Computes the maximum number of tokens for Anthropic models.
- */
-const computeAnthropicMaxTokens = (model: AnthropicModel): number =>
-  MAX_TOKENS_BY_ANTHROPIC_MODEL[model] || 4096;

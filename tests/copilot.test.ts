@@ -30,6 +30,7 @@ describe('Copilot', () => {
 
   it('should throw an error when an unsupported model is provided for a provider', () => {
     expect(
+      // @ts-expect-error testing unsupported model
       () => new Copilot(mockApiKey, {provider: 'groq', model: 'gpt-4o'}),
     ).toThrow(
       `Model "gpt-4o" is not supported by the "groq" provider. Supported models: ${joinWithAnd(
