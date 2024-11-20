@@ -198,41 +198,65 @@ export interface CustomCopilotModel {
 }
 
 /**
- * Options for configuring the Copilot instance.
- * The `model` property is type-safe based on the selected `provider`.
+ * Configuration options for initializing a Copilot instance.
+ * The `model` property is type-safe and varies based on the specified `provider`.
  */
 export type CopilotOptions =
   | {
       /**
-       * The provider to use (e.g., 'openai', 'anthropic', 'groq', 'google').
+       * Specifies the provider for the Copilot instance.
+       * Supported providers include 'openai', 'anthropic', 'groq', and 'google'.
        */
       provider: 'openai';
       /**
-       * The model to use for Copilot LLM requests.
-       * Must be a model from the 'openai' provider or a custom model.
+       * Defines the model to be used for Copilot LLM (Language Model) requests.
+       * This must be a model from the 'openai' provider.
        */
-      model?: OpenAIModel | CustomCopilotModel;
-    }
-  | {
-      provider: 'groq';
-      model?: GroqModel | CustomCopilotModel;
-    }
-  | {
-      provider: 'anthropic';
-      model?: AnthropicModel | CustomCopilotModel;
-    }
-  | {
-      provider: 'google';
-      model?: GoogleModel | CustomCopilotModel;
+      model?: OpenAIModel;
     }
   | {
       /**
-       * If no provider is specified, a default provider will be used.
+       * Specifies the 'groq' provider for the Copilot instance.
+       */
+      provider: 'groq';
+      /**
+       * Defines the model to be used for Copilot LLM requests.
+       * This must be a model from the 'groq' provider.
+       */
+      model?: GroqModel;
+    }
+  | {
+      /**
+       * Specifies the 'anthropic' provider for the Copilot instance.
+       */
+      provider: 'anthropic';
+      /**
+       * Defines the model to be used for Copilot LLM requests.
+       * This must be a model from the 'anthropic' provider.
+       */
+      model?: AnthropicModel;
+    }
+  | {
+      /**
+       * Specifies the 'google' provider for the Copilot instance.
+       */
+      provider: 'google';
+      /**
+       * Defines the model to be used for Copilot LLM requests.
+       * This must be a model from the 'google' provider.
+       */
+      model?: GoogleModel;
+    }
+  | {
+      /**
+       * When no provider is specified, only custom models are allowed.
        */
       provider?: undefined;
       /**
-       * The model to use for Copilot LLM requests.
-       * Must be one of the predefined models or a custom model.
+       * Defines the model to be used for Copilot LLM requests.
+       * Must be a custom model when no provider is specified.
+       * For more information, refer to the documentation:
+       * @see https://github.com/arshad-yaseen/monacopilot?tab=readme-ov-file#custom-model
        */
-      model?: CopilotModel | CustomCopilotModel;
+      model?: CustomCopilotModel;
     };
