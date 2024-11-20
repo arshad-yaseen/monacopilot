@@ -1,13 +1,13 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 
 import {CursorPosition, EditorModel} from '../src/types';
+import {keepNLines} from '../src/utils';
 import {
   getCharAfterCursor,
   getCharBeforeCursor,
   getLastLineColumnCount,
   getTextAfterCursorInLine,
   getTextBeforeCursorInLine,
-  keepNLines,
 } from '../src/utils/editor';
 import {mockModel} from './mock';
 
