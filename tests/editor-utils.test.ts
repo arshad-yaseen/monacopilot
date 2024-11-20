@@ -5,7 +5,6 @@ import {keepNLines} from '../src/utils';
 import {
   getCharAfterCursor,
   getCharBeforeCursor,
-  getLastLineColumnCount,
   getTextAfterCursorInLine,
   getTextBeforeCursorInLine,
 } from '../src/utils/editor';
@@ -104,30 +103,6 @@ describe('Editor Utilities', () => {
 
       const result = getTextBeforeCursorInLine(pos, mdl);
       expect(result).toBe('');
-    });
-  });
-
-  describe('getLastLineColumnCount', () => {
-    it('should return the number of columns in the last line', () => {
-      const result = getLastLineColumnCount(
-        'function greet(name) {\n  console.log(`Hello, ${name}!`);\n}',
-      );
-      expect(result).toBe(2);
-    });
-
-    it('should handle single-line text correctly', () => {
-      const result = getLastLineColumnCount('const PI = 3.14159;');
-      expect(result).toBe(20);
-    });
-
-    it('should handle empty string', () => {
-      const result = getLastLineColumnCount('');
-      expect(result).toBe(1);
-    });
-
-    it('should handle text ending with newline', () => {
-      const result = getLastLineColumnCount('let x = 10;\nlet y = 20;\n');
-      expect(result).toBe(1);
     });
   });
 

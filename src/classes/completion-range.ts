@@ -1,4 +1,4 @@
-import {CursorPosition, EditorModel, EditorRange, Monaco} from '../types';
+import {CursorPosition, EditorRange, Monaco} from '../types';
 
 export class CompletionRange {
   private monaco: Monaco;
@@ -10,7 +10,6 @@ export class CompletionRange {
   public computeInsertionRange(
     pos: CursorPosition,
     completion: string,
-    mdl: EditorModel,
   ): EditorRange {
     // Handle empty completion
     if (!completion) {

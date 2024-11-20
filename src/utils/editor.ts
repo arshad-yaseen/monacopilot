@@ -25,16 +25,6 @@ export const getCharAfterCursor = (
 };
 
 /**
- * Gets the number of columns in the last line of the text.
- * @param {string} text - The text content.
- * @returns {number} The number of columns in the last line.
- */
-export const getLastLineColumnCount = (text: string): number => {
-  const lines = text.split('\n');
-  return lines[lines.length - 1].length + 1;
-};
-
-/**
  * Gets the text after the cursor in the current line.
  * @returns {string} The text after the cursor in the current line.
  */
