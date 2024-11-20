@@ -8,6 +8,7 @@ import {Queue} from './queue';
  */
 export class CompletionCache {
   private static readonly MAX_CACHE_SIZE = 10;
+  private static readonly LOOK_AROUND = 3; // Number of characters to look around cache range
   private cache: Queue<CompletionCacheItem>;
 
   constructor() {
@@ -71,18 +72,35 @@ export class CompletionCache {
     currentRangeValue: string,
   ): boolean {
     const {range, completion} = cacheItem;
-    const {startLineNumber, startColumn, endColumn} = range;
+    const {startLineNumber, startColumn, endLineNumber, endColumn} = range;
     const {lineNumber, column} = pos;
 
+    // Check if cursor is at the start of the completion range
     const isAtStartOfRange =
       lineNumber === startLineNumber && column === startColumn;
 
-    const isWithinCompletionRange =
-      completion.startsWith(currentRangeValue) &&
-      lineNumber === startLineNumber &&
-      column >= startColumn - currentRangeValue.length &&
-      column <= endColumn + currentRangeValue.length;
+    // For single line completions
+    if (startLineNumber === endLineNumber) {
+      return (
+        isAtStartOfRange ||
+        (completion.startsWith(currentRangeValue) &&
+          lineNumber === startLineNumber &&
+          column >= startColumn - CompletionCache.LOOK_AROUND &&
+          column <= endColumn + CompletionCache.LOOK_AROUND)
+      );
+    }
 
-    return isAtStartOfRange || isWithinCompletionRange;
+    // Check if cursor is within the valid range for multi-line completion
+    const isWithinMultiLineRange =
+      completion.startsWith(currentRangeValue) &&
+      lineNumber >= startLineNumber &&
+      lineNumber <= endLineNumber &&
+      ((lineNumber === startLineNumber &&
+        column >= startColumn - CompletionCache.LOOK_AROUND) ||
+        (lineNumber === endLineNumber &&
+          column <= endColumn + CompletionCache.LOOK_AROUND) ||
+        (lineNumber > startLineNumber && lineNumber < endLineNumber));
+
+    return isAtStartOfRange || isWithinMultiLineRange;
   }
 }

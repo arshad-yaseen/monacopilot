@@ -26,7 +26,7 @@ const openaiHandler: ProviderHandler<'openai'> = {
 
     return {
       model: getModelId(model),
-      temperature: DEFAULT_COPILOT_TEMPERATURE,
+      ...(!isO1Model && {temperature: DEFAULT_COPILOT_TEMPERATURE}),
       messages,
     };
   },

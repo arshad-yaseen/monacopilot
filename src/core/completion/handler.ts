@@ -1,5 +1,6 @@
 import {CompletionValidator} from '../../classes';
 import {CompletionCache} from '../../classes/completion-cache';
+import {CompletionRange} from '../../classes/completion-range';
 import {constructCompletionMetadata, fetchCompletionItem} from '../../helpers';
 import {report} from '../../logger';
 import {
@@ -9,9 +10,12 @@ import {
   InlineCompletionHandlerParams,
   TriggerType,
 } from '../../types';
-import {asyncDebounce, getTextBeforeCursor} from '../../utils';
 import {
-  computeCompletionInsertionRange,
+  debouncedAsync,
+  getTextAfterCursor,
+  getTextBeforeCursor,
+} from '../../utils';
+import {
   createInlineCompletionResult,
   formatCompletion,
 } from '../../utils/completion';
@@ -31,18 +35,18 @@ const getDebouncedFunctionPerTrigger = (
   fn: FetchCompletionItemHandler,
 ): Record<
   TriggerType,
-  ReturnType<typeof asyncDebounce<FetchCompletionItemHandler>>
+  ReturnType<typeof debouncedAsync<FetchCompletionItemHandler>>
 > => {
   return {
-    [TriggerType.OnTyping]: asyncDebounce(
+    [TriggerType.OnTyping]: debouncedAsync(
       fn,
       DEBOUNCE_DELAYS[TriggerType.OnTyping],
     ),
-    [TriggerType.OnIdle]: asyncDebounce(
+    [TriggerType.OnIdle]: debouncedAsync(
       fn,
       DEBOUNCE_DELAYS[TriggerType.OnIdle],
     ),
-    [TriggerType.OnDemand]: asyncDebounce(
+    [TriggerType.OnDemand]: debouncedAsync(
       fn,
       DEBOUNCE_DELAYS[TriggerType.OnDemand],
     ),
@@ -123,11 +127,11 @@ const handleInlineCompletions = async ({
 
     if (completion) {
       const formattedCompletion = formatCompletion(completion);
-      const completionInsertionRange = computeCompletionInsertionRange(
-        monaco,
+      const completionRange = new CompletionRange(monaco);
+      const completionInsertionRange = completionRange.computeInsertionRange(
         pos,
-        mdl,
         formattedCompletion,
+        mdl,
       );
 
       if (enableCaching) {
@@ -135,6 +139,8 @@ const handleInlineCompletions = async ({
           completion: formattedCompletion,
           range: completionInsertionRange,
           textBeforeCursor: getTextBeforeCursor(pos, mdl),
+          textAfterCursor: getTextAfterCursor(pos, mdl),
+          cachePos: pos,
         });
       }
 
