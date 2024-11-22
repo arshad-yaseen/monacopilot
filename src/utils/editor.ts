@@ -19,7 +19,7 @@ export const getCharBeforeCursor = (
 export const getCharAfterCursor = (
   pos: CursorPosition,
   mdl: EditorModel,
-): string => {
+): string | undefined => {
   const line = mdl.getLineContent(pos.lineNumber);
   return line[pos.column - 1];
 };

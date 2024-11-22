@@ -12,21 +12,20 @@ const generateSystemPrompt = (metadata: CompletionMetadata): string => {
   const sections = [
     `You are an expert ${
       languageOrTechnologies ? `${languageOrTechnologies} ` : ''
-    }developer assistant specialized in precise code completion and generation.`,
+    }developer assistant specialized in precise code completion.`,
 
     `Your primary task is to provide accurate, context-aware code completions that seamlessly integrate with existing codebases${
       filename ? ` in '${filename}'` : ''
     }.`,
 
     `You must:
-- Generate only the exact code required
-- Maintain strict adherence to provided instructions
-- Follow established code patterns and conventions
-- Consider the full context before generating code`,
+- Generate only the exact code required.
+- Maintain strict adherence to provided instructions.
+- Follow established code patterns and conventions.
+- Consider the full context before generating code.`,
 
-    // Context awareness
     relatedFiles?.length
-      ? `Analyze and incorporate context from all provided related files to ensure consistent and appropriate code generation.`
+      ? `Analyze and incorporate context from all provided related files to ensure consistent and appropriate code completion.`
       : '',
 
     language
@@ -34,7 +33,7 @@ const generateSystemPrompt = (metadata: CompletionMetadata): string => {
       : '',
   ];
 
-  return sections.filter(Boolean).join('\n');
+  return sections.filter(Boolean).join('\n\n');
 };
 
 const formatRelatedFiles = (relatedFiles: RelatedFile[]): string => {
@@ -67,8 +66,7 @@ const generateUserPrompt = (
 <task_context>
   <primary_instructions>
 ${instructions.trim()}
-  </primary_instructions>
-  ${
+  </primary_instructions>${
     relatedFiles?.length
       ? `
   <reference_files>
@@ -82,9 +80,9 @@ ${formatRelatedFiles(relatedFiles)}
 /**
  * Constructs a complete prompt with system and user contexts for code generation.
  *
- * @param instructions - Specific completion instructions
- * @param metadata - Environment and context metadata
- * @returns {PromptData} Structured prompt with system and user components
+ * @param instructions - Specific completion instructions.
+ * @param metadata - Environment and context metadata.
+ * @returns {PromptData} Structured prompt with system and user components.
  */
 export const constructPromptWithContext = (
   instructions: string,

@@ -8,7 +8,7 @@ import {Queue} from './queue';
  */
 export class CompletionCache {
   private static readonly MAX_CACHE_SIZE = 10;
-  private static readonly LOOK_AROUND = 5; // Number of characters to look around cache range
+  private static readonly LOOK_AROUND = 10; // Number of characters to look around cache range
   private cache: Queue<CompletionCacheItem>;
 
   constructor() {

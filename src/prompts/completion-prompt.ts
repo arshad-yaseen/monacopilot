@@ -9,7 +9,7 @@ const generateCompletionPrompt = ({
   ...rest
 }: CompletionMetadata): PromptData => {
   const instructions = `
-You are a precise code completion engine. Given the ${language || 'code'} context:
+Given the ${language || 'code'} context:
 
 ${textBeforeCursor}<cursor>${textAfterCursor}
 
@@ -18,15 +18,17 @@ CRITICAL RULES:
 2. Start EXACTLY at cursor position
 3. Output ONLY new code
 4. No explanations/comments
-5. Follow ${completionMode} mode: ${completionMode === 'continue' ? 'continue writing' : completionMode === 'insert' ? 'insert snippet' : 'complete block'}
+5. Do not add unnecessary quotes or backticks around code
+6. Follow ${completionMode} mode: ${
+    completionMode === 'continue'
+      ? 'continue writing'
+      : completionMode === 'insert'
+        ? 'insert exactly missing code between'
+        : 'complete block'
+  }
+7. Respect Monaco editor subwordSmart inline suggest mode (MANDATORY)
 
-Examples:
-"const <cursor>" → "myVariable = 42" (NOT "const myVariable = 42")
-"function hello<cursor>" → "(name) {}" (NOT "function hello(name) {}")
-"const myVar = {key: <cursor>}" → "'value'" (NOT "'value'}")
-
-
-Analyze context, maintain style, ensure syntax correctness. Provide ONLY the completion code without any explanations or comments`.trim();
+Analyze context, maintain style, ensure syntax correctness. Provide ONLY the completion code without any explanations or comments.`.trim();
 
   return constructPromptWithContext(instructions, {
     textBeforeCursor,
