@@ -118,7 +118,7 @@ export interface CopilotOptions {
 
   /**
    * The endpoint to use. Can be used to override the default endpoint for the provider, without using a custom model.
-   * Mainly for things like Azure OpenAI or other providers that have multiple endpoints.
+   * Allows support for third-party providers that use familiar API structures.
    * If not specified, a default endpoint will be used.
    */
   endpoint?: string;

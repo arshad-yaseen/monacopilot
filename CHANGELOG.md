@@ -1,11 +1,8 @@
-
-
 ## [0.14.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.14.0...v0.14.1) (2024-11-13)
-
 
 ### 🔧 Maintenance
 
-* improve prompt nov-13 ([d7db8fc](https://github.com/arshad-yaseen/monacopilot/commit/d7db8fc59f85743d36ebc07098b293967c9087b7))
+- improve prompt nov-13 ([d7db8fc](https://github.com/arshad-yaseen/monacopilot/commit/d7db8fc59f85743d36ebc07098b293967c9087b7))
 
 ## [0.14.0](https://github.com/arshad-yaseen/monacopilot/compare/v0.13.2...v0.14.0) (2024-11-04)
 
