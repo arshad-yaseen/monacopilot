@@ -422,7 +422,7 @@ There are other providers and models available. Here is a list:
 | Provider  | Models                                                      |
 | --------- | ----------------------------------------------------------- |
 | Groq      | `llama-3-70b`                                               |
-| OpenAI    | `gpt-4o`, `gpt-4o-mini`, `o1-preview`, `o1-mini`            |
+| OpenAI    | `gpt-4o`, `gpt-4o-mini`, `o1-mini (beta model)`             |
 | Anthropic | `claude-3-5-sonnet`, `claude-3-haiku`, `claude-3-5-haiku`   |
 | Google    | `gemini-1.5-pro`, `gemini-1.5-flash`, `gemini-1.5-flash-8b` |
 
