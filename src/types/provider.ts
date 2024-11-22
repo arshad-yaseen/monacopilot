@@ -7,7 +7,11 @@ import {
 } from './copilot';
 
 export interface ProviderHandler<T extends CopilotProvider> {
-  createEndpoint(model: PickCopilotModel<T>, apiKey: string): string;
+  createEndpoint(
+    endpoint: string | undefined,
+    model: PickCopilotModel<T>,
+    apiKey: string,
+  ): string;
   createRequestBody(
     model: PickCopilotModel<T>,
     prompt: PromptData,

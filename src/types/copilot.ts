@@ -115,6 +115,13 @@ export interface CopilotOptions {
    * If not specified, a default model will be used.
    */
   model?: CopilotModel | CustomCopilotModel;
+
+  /**
+   * The endpoint to use. Can be used to override the default endpoint for the provider, without using a custom model.
+   * Mainly for things like Azure OpenAI or other providers that have multiple endpoints.
+   * If not specified, a default endpoint will be used.
+   */
+  endpoint?: string;
 }
 
 export type CustomCopilotModel = {

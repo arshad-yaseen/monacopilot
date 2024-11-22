@@ -10,13 +10,12 @@ import {
   ChatCompletionCreateParams,
   CopilotModel,
   CopilotProvider,
-  CustomCopilotModel,
   ProviderHandler,
 } from '../types';
 
 const openaiHandler: ProviderHandler<'openai'> = {
   /* Model and API key unused in this handler */
-  createEndpoint: () => COPILOT_PROVIDER_ENDPOINT_MAP.openai,
+  createEndpoint: endpoint => endpoint || COPILOT_PROVIDER_ENDPOINT_MAP.openai,
 
   createRequestBody: (model, prompt) => {
     const isO1Model = model === 'o1-preview' || model === 'o1-mini';
@@ -50,7 +49,7 @@ const openaiHandler: ProviderHandler<'openai'> = {
 
 const groqHandler: ProviderHandler<'groq'> = {
   /* Model and API key unused in this handler */
-  createEndpoint: () => COPILOT_PROVIDER_ENDPOINT_MAP.groq,
+  createEndpoint: endpoint => endpoint || COPILOT_PROVIDER_ENDPOINT_MAP.groq,
 
   createRequestBody: (model, prompt) => ({
     model: getModelId(model),
@@ -76,7 +75,8 @@ const groqHandler: ProviderHandler<'groq'> = {
 
 const anthropicHandler: ProviderHandler<'anthropic'> = {
   /* Model and API key unused in this handler */
-  createEndpoint: () => COPILOT_PROVIDER_ENDPOINT_MAP.anthropic,
+  createEndpoint: endpoint =>
+    endpoint || COPILOT_PROVIDER_ENDPOINT_MAP.anthropic,
 
   createRequestBody: (model, prompt) => ({
     model: getModelId(model),
@@ -113,8 +113,8 @@ const anthropicHandler: ProviderHandler<'anthropic'> = {
 };
 
 const googleHandler: ProviderHandler<'google'> = {
-  createEndpoint: (model, apiKey) =>
-    `${COPILOT_PROVIDER_ENDPOINT_MAP.google}/${model}:generateContent?key=${apiKey}`,
+  createEndpoint: (endpoint, model, apiKey) =>
+    `${endpoint || COPILOT_PROVIDER_ENDPOINT_MAP.google}/${model}:generateContent?key=${apiKey}`,
 
   createRequestBody: (model, prompt) => ({
     model: getModelId(model),
@@ -165,12 +165,13 @@ const providerHandlers: Record<
  * Creates an endpoint for different copilot providers.
  */
 export const createProviderEndpoint = (
+  endpoint: string | undefined,
   model: CopilotModel,
   apiKey: string,
   provider: CopilotProvider,
 ): string => {
   const handler = providerHandlers[provider];
-  return handler.createEndpoint(model, apiKey);
+  return handler.createEndpoint(endpoint, model, apiKey);
 };
 
 /**

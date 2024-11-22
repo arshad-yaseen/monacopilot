@@ -31,6 +31,7 @@ export class Copilot {
   private readonly apiKey: string;
   private provider: CopilotProvider;
   private model: CopilotModel | CustomCopilotModel;
+  private endpoint?: string;
 
   constructor(apiKey: string, options: CopilotOptions = {}) {
     if (!apiKey) {
@@ -40,6 +41,7 @@ export class Copilot {
     this.apiKey = apiKey;
     this.provider = options.provider ?? DEFAULT_COPILOT_PROVIDER;
     this.model = options.model ?? DEFAULT_COPILOT_MODEL;
+    this.endpoint = options.endpoint ?? undefined;
 
     this.validateInputs();
   }
@@ -63,6 +65,12 @@ export class Copilot {
         }" provider. Supported models: ${joinWithAnd(
           COPILOT_PROVIDER_MODEL_MAP[this.provider],
         )}`,
+      );
+    }
+
+    if (this.endpoint && this.endpoint.endsWith('/')) {
+      throw new Error(
+        `Endpoint URL should not end with a trailing slash: "${this.endpoint}".`,
       );
     }
   }
@@ -107,6 +115,7 @@ export class Copilot {
     headers: Record<string, string>;
   } {
     let endpoint = createProviderEndpoint(
+      this.endpoint,
       this.model as CopilotModel,
       this.apiKey,
       this.provider,
