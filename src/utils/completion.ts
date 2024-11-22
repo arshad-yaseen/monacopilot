@@ -14,4 +14,5 @@ export const createInlineCompletionResult = (
 ): EditorInlineCompletionsResult => ({
   items,
   enableForwardStability: true,
+  suppressSuggestions: true,
 });

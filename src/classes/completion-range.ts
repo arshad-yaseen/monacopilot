@@ -1,11 +1,12 @@
 import {CursorPosition, EditorModel, EditorRange, Monaco} from '../types';
+import {
+  getCharAfterCursor,
+  getTextAfterCursor,
+  getTextBeforeCursor,
+} from '../utils';
 
 export class CompletionRange {
-  private monaco: Monaco;
-
-  constructor(monaco: Monaco) {
-    this.monaco = monaco;
-  }
+  constructor(private monaco: Monaco) {}
 
   public computeInsertionRange(
     pos: CursorPosition,
@@ -22,21 +23,20 @@ export class CompletionRange {
       );
     }
 
+    const charAfterCursor = getCharAfterCursor(pos, mdl);
+    const completionFirstChar = completion[0];
+
+    // If there's no non-whitespace character after the cursor, calculate range without overlap
+    if (!charAfterCursor || completionFirstChar === charAfterCursor) {
+      return this.calculateRangeWithoutOverlap(pos, completion);
+    }
+
     const startOffset = mdl.getOffsetAt(pos);
-    const textBeforeCursor = mdl.getValue().substring(0, startOffset);
-    const textAfterCursor = mdl.getValue().substring(startOffset);
+    const textBeforeCursor = getTextBeforeCursor(pos, mdl);
+    const textAfterCursor = getTextAfterCursor(pos, mdl);
 
-    let prefixOverlapLength = 0;
-    let suffixOverlapLength = 0;
-    let maxOverlapLength = 0;
-    let startOverlapLength = 0;
-
-    const completionLength = completion.length;
-    const beforeLength = textBeforeCursor.length;
-    const afterLength = textAfterCursor.length;
-
-    // Handle cursor at the end of the document
-    if (startOffset >= mdl.getValue().length) {
+    // Handle cursor at the end of the document or when there's no text after the cursor
+    if (startOffset >= mdl.getValue().length || !textAfterCursor.length) {
       return new this.monaco.Range(
         pos.lineNumber,
         pos.column,
@@ -45,55 +45,17 @@ export class CompletionRange {
       );
     }
 
-    // Handle empty remaining text
-    if (afterLength === 0) {
-      return new this.monaco.Range(
-        pos.lineNumber,
-        pos.column,
-        pos.lineNumber,
-        pos.column,
-      );
-    }
+    // Calculate overlaps with text before and after the cursor
+    const startOverlapLength = this.getSuffixOverlapLength(
+      completion,
+      textBeforeCursor,
+    );
+    const maxOverlapLength = this.computeMaxOverlapLength(
+      completion,
+      textAfterCursor,
+    );
 
-    // Find overlap with text before cursor
-    const maxBeforeOverlap = Math.min(completionLength, beforeLength);
-    for (let i = 1; i <= maxBeforeOverlap; i++) {
-      const completionStart = completion.substring(0, i);
-      const textEnd = textBeforeCursor.slice(-i);
-      if (completionStart === textEnd) {
-        startOverlapLength = i;
-      }
-    }
-
-    // Find overlap with text after cursor
-    const maxAfterOverlap = Math.min(completionLength, afterLength);
-
-    // Find the longest prefix overlap with text after cursor
-    for (let i = 0; i < maxAfterOverlap; i++) {
-      if (completion[i] !== textAfterCursor[i]) break;
-      prefixOverlapLength++;
-    }
-
-    // Find the longest suffix overlap with text after cursor
-    for (let i = 1; i <= maxAfterOverlap; i++) {
-      if (completion.slice(-i) === textAfterCursor.slice(0, i)) {
-        suffixOverlapLength = i;
-      }
-    }
-
-    maxOverlapLength = Math.max(prefixOverlapLength, suffixOverlapLength);
-
-    // Check for internal overlaps if no prefix or suffix overlap
-    if (maxOverlapLength === 0) {
-      for (let i = 1; i < completionLength; i++) {
-        if (textAfterCursor.startsWith(completion.substring(i))) {
-          maxOverlapLength = completionLength - i;
-          break;
-        }
-      }
-    }
-
-    // Calculate start and end positions
+    // Calculate start and end positions based on overlaps
     const startPosition =
       startOverlapLength > 0
         ? mdl.getPositionAt(startOffset - startOverlapLength)
@@ -107,5 +69,127 @@ export class CompletionRange {
       endPosition.lineNumber,
       endPosition.column,
     );
+  }
+
+  // Calculates the range when there's no overlap with existing text
+  private calculateRangeWithoutOverlap(
+    pos: CursorPosition,
+    completion: string,
+  ): EditorRange {
+    const startLineNumber = pos.lineNumber;
+    const startColumn = pos.column;
+    const completionLines = completion.split('\n');
+    const lastLineIndex = completionLines.length - 1;
+
+    const endLineNumber = startLineNumber + lastLineIndex;
+    const endColumn =
+      lastLineIndex === 0
+        ? startColumn + completionLines[0].length // Single-line completion
+        : completionLines[lastLineIndex].length + 1; // Multi-line completion
+
+    return new this.monaco.Range(
+      startLineNumber,
+      startColumn,
+      endLineNumber,
+      endColumn,
+    );
+  }
+
+  // Computes the maximum overlap length with text after the cursor
+  private computeMaxOverlapLength(
+    completion: string,
+    textAfterCursor: string,
+  ): number {
+    const prefixOverlapLength = this.getPrefixOverlapLength(
+      completion,
+      textAfterCursor,
+    );
+    const suffixOverlapLength = this.getSuffixPrefixOverlapLength(
+      completion,
+      textAfterCursor,
+    );
+    let maxOverlapLength = Math.max(prefixOverlapLength, suffixOverlapLength);
+
+    // Check for internal overlaps if no prefix or suffix overlap is found
+    if (maxOverlapLength === 0) {
+      maxOverlapLength = this.getInternalOverlapLength(
+        completion,
+        textAfterCursor,
+      );
+    }
+
+    return maxOverlapLength;
+  }
+
+  // Finds overlap where the suffix of 'textBeforeCursor' matches the prefix of 'completion'
+  private getSuffixOverlapLength(
+    completion: string,
+    textBeforeCursor: string,
+  ): number {
+    const maxPossibleOverlap = Math.min(
+      completion.length,
+      textBeforeCursor.length,
+    );
+    let overlapLength = 0;
+
+    for (let i = 1; i <= maxPossibleOverlap; i++) {
+      if (completion.substring(0, i) === textBeforeCursor.slice(-i)) {
+        overlapLength = i;
+      }
+    }
+
+    return overlapLength;
+  }
+
+  // Finds the maximum length where the prefix of 'completion' matches 'textAfterCursor'
+  private getPrefixOverlapLength(
+    completion: string,
+    textAfterCursor: string,
+  ): number {
+    const maxPossibleOverlap = Math.min(
+      completion.length,
+      textAfterCursor.length,
+    );
+
+    for (let i = 0; i < maxPossibleOverlap; i++) {
+      if (completion[i] !== textAfterCursor[i]) {
+        return i;
+      }
+    }
+
+    return maxPossibleOverlap;
+  }
+
+  // Finds overlap where the suffix of 'completion' matches the prefix of 'textAfterCursor'
+  private getSuffixPrefixOverlapLength(
+    completion: string,
+    textAfterCursor: string,
+  ): number {
+    const maxPossibleOverlap = Math.min(
+      completion.length,
+      textAfterCursor.length,
+    );
+
+    for (let i = maxPossibleOverlap; i > 0; i--) {
+      if (completion.slice(-i) === textAfterCursor.slice(0, i)) {
+        return i;
+      }
+    }
+
+    return 0;
+  }
+
+  // Finds internal overlaps within 'completion' and 'textAfterCursor'
+  private getInternalOverlapLength(
+    completion: string,
+    textAfterCursor: string,
+  ): number {
+    for (let i = 1; i < completion.length; i++) {
+      if (textAfterCursor.startsWith(completion.substring(i))) {
+        return completion.length - i;
+      }
+    }
+
+    return 0;
   }
 }

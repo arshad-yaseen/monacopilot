@@ -10,11 +10,7 @@ import {
   InlineCompletionHandlerParams,
   TriggerType,
 } from '../../types';
-import {
-  debouncedAsync,
-  getTextAfterCursor,
-  getTextBeforeCursor,
-} from '../../utils';
+import {debouncedAsync, getTextBeforeCursor} from '../../utils';
 import {
   createInlineCompletionResult,
   formatCompletion,
@@ -139,8 +135,6 @@ const handleInlineCompletions = async ({
           completion: formattedCompletion,
           range: completionInsertionRange,
           textBeforeCursor: getTextBeforeCursor(pos, mdl),
-          textAfterCursor: getTextAfterCursor(pos, mdl),
-          cachePos: pos,
         });
       }
 
