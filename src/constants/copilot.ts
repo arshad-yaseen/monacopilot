@@ -14,7 +14,6 @@ export const COPILOT_MODEL_IDS: Record<CopilotModel, string> = {
   'claude-3-5-sonnet': 'claude-3-5-sonnet-20241022',
   'claude-3-haiku': 'claude-3-haiku-20240307',
   'claude-3-5-haiku': 'claude-3-5-haiku-20241022',
-  'o1-preview': 'o1-preview',
   'o1-mini': 'o1-mini',
   'gemini-1.5-flash-8b': 'gemini-1.5-flash-8b',
   'gemini-1.5-flash': 'gemini-1.5-flash',
@@ -26,7 +25,7 @@ export const COPILOT_PROVIDER_MODEL_MAP: Record<
   CopilotModel[]
 > = {
   groq: ['llama-3-70b'],
-  openai: ['gpt-4o', 'gpt-4o-mini', 'o1-preview', 'o1-mini'],
+  openai: ['gpt-4o', 'gpt-4o-mini', 'o1-mini'],
   anthropic: ['claude-3-5-sonnet', 'claude-3-haiku', 'claude-3-5-haiku'],
   google: ['gemini-1.5-flash-8b', 'gemini-1.5-pro', 'gemini-1.5-flash'],
 } as const;

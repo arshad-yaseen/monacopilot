@@ -1,8 +1,8 @@
 import {Copilot} from 'monacopilot';
 
-const copilot = new Copilot(process.env.GROQ_API_KEY!, {
-  provider: 'groq',
-  model: 'llama-3-70b',
+const copilot = new Copilot(process.env.ANTHROPIC_API_KEY!, {
+  provider: 'anthropic',
+  model: 'claude-3-5-haiku',
 });
 
 export async function POST(req: Request) {

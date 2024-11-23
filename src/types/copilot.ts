@@ -18,7 +18,7 @@ import type {
 /**
  * Models available for OpenAI provider.
  */
-export type OpenAIModel = 'gpt-4o' | 'gpt-4o-mini' | 'o1-preview' | 'o1-mini';
+export type OpenAIModel = 'gpt-4o' | 'gpt-4o-mini' | 'o1-mini';
 
 /**
  * Models available for Groq provider.

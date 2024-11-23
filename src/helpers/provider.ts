@@ -16,18 +16,15 @@ const openaiHandler: ProviderHandler<'openai'> = {
   createEndpoint: () => COPILOT_PROVIDER_ENDPOINT_MAP.openai,
 
   createRequestBody: (model, prompt) => {
-    const isO1Model = model === 'o1-preview' || model === 'o1-mini';
-    const messages = isO1Model
-      ? [{role: 'user' as const, content: prompt.user}]
-      : [
-          {role: 'system' as const, content: prompt.system},
-          {role: 'user' as const, content: prompt.user},
-        ];
+    const isO1Model = model === 'o1-mini';
 
     return {
       model: getModelId(model),
       ...(!isO1Model && {temperature: DEFAULT_COPILOT_TEMPERATURE}),
-      messages,
+      messages: [
+        {role: 'system' as const, content: prompt.system},
+        {role: 'user' as const, content: prompt.user},
+      ],
     };
   },
 

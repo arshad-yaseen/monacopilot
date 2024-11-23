@@ -10,11 +10,7 @@ import {
   InlineCompletionHandlerParams,
   TriggerType,
 } from '../../types';
-import {
-  debouncedAsync,
-  getTextAfterCursor,
-  getTextBeforeCursor,
-} from '../../utils';
+import {debouncedAsync, getTextBeforeCursor} from '../../utils';
 import {createInlineCompletionResult} from '../../utils/completion';
 
 const DEBOUNCE_DELAYS = {
@@ -141,8 +137,6 @@ const handleInlineCompletions = async ({
           completion: formattedCompletion,
           range: completionInsertionRange,
           textBeforeCursor: getTextBeforeCursor(pos, mdl),
-          textAfterCursor: getTextAfterCursor(pos, mdl),
-          cachePos: pos,
         });
       }
 
