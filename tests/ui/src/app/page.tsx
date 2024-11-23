@@ -20,7 +20,13 @@ export default function Home() {
       endpoint: '/api/complete',
       language: 'javascript',
       maxContextLines: 60,
-      trigger: 'onTyping',
+      relatedFiles: [
+        {
+          path: './utils/index.js',
+          content:
+            'export function reverse(str) { return str.split("").reverse().join(""); }',
+        },
+      ],
     });
 
     // monaco.editor.addEditorAction({

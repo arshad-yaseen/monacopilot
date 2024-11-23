@@ -4,6 +4,7 @@ import {
   DEFAULT_COPILOT_MODEL,
   DEFAULT_COPILOT_PROVIDER,
 } from '../constants';
+import {generateCompletionPrompt} from '../helpers/prompt';
 import {
   createProviderEndpoint,
   createProviderHeaders,
@@ -11,7 +12,6 @@ import {
   parseProviderChatCompletion,
 } from '../helpers/provider';
 import {deprecated, report} from '../logger';
-import generateCompletionPrompt from '../prompts/completion-prompt';
 import {
   ChatCompletion,
   ChatCompletionCreateParams,
