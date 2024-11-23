@@ -1,16 +1,22 @@
 
 
-## [0.15.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.0...v0.15.1) (2024-11-22)
+## [0.15.2](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.1...v0.15.2) (2024-11-23)
 
 
 ### 🔧 Maintenance
 
-* improve insertion range calculation ([2847786](https://github.com/arshad-yaseen/monacopilot/commit/284778630e11e4c685ac52d49142531cab490ca9))
-* improve insertion range calculation ([4250770](https://github.com/arshad-yaseen/monacopilot/commit/425077031010a28e72b3e2f2decff103a65cd71b))
-* improve prompt ([95683a6](https://github.com/arshad-yaseen/monacopilot/commit/95683a60acb02f4d9241e58ca7c3a49dce149790))
-* improve range calculation ([14f24aa](https://github.com/arshad-yaseen/monacopilot/commit/14f24aa91df0a520a0108dfb0c77610e3c2ee6f0))
-* remove unused cache entries ([5480895](https://github.com/arshad-yaseen/monacopilot/commit/5480895e6c1792811f8591ec5398f2b09e6436d9))
-* update models ([e7f53a9](https://github.com/arshad-yaseen/monacopilot/commit/e7f53a9c69988e14ca3acfb5a14bc7ed0d338f45))
+* completion intentation matching ([4ed56b9](https://github.com/arshad-yaseen/monacopilot/commit/4ed56b987ef69a21c29bf53aa0189d91d37e19b1))
+
+## [0.15.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.0...v0.15.1) (2024-11-22)
+
+### 🔧 Maintenance
+
+- improve insertion range calculation ([2847786](https://github.com/arshad-yaseen/monacopilot/commit/284778630e11e4c685ac52d49142531cab490ca9))
+- improve insertion range calculation ([4250770](https://github.com/arshad-yaseen/monacopilot/commit/425077031010a28e72b3e2f2decff103a65cd71b))
+- improve prompt ([95683a6](https://github.com/arshad-yaseen/monacopilot/commit/95683a60acb02f4d9241e58ca7c3a49dce149790))
+- improve range calculation ([14f24aa](https://github.com/arshad-yaseen/monacopilot/commit/14f24aa91df0a520a0108dfb0c77610e3c2ee6f0))
+- remove unused cache entries ([5480895](https://github.com/arshad-yaseen/monacopilot/commit/5480895e6c1792811f8591ec5398f2b09e6436d9))
+- update models ([e7f53a9](https://github.com/arshad-yaseen/monacopilot/commit/e7f53a9c69988e14ca3acfb5a14bc7ed0d338f45))
 
 ## [0.15.0](https://github.com/arshad-yaseen/monacopilot/compare/v0.14.2...v0.15.0) (2024-11-20)
 
