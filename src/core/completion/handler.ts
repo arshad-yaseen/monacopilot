@@ -1,4 +1,4 @@
-import {CompletionValidator} from '../../classes';
+import {CompletionFormatter, CompletionValidator} from '../../classes';
 import {CompletionCache} from '../../classes/completion-cache';
 import {CompletionRange} from '../../classes/completion-range';
 import {constructCompletionMetadata, fetchCompletionItem} from '../../helpers';
@@ -15,10 +15,7 @@ import {
   getTextAfterCursor,
   getTextBeforeCursor,
 } from '../../utils';
-import {
-  createInlineCompletionResult,
-  formatCompletion,
-} from '../../utils/completion';
+import {createInlineCompletionResult} from '../../utils/completion';
 
 const DEBOUNCE_DELAYS = {
   [TriggerType.OnTyping]: 300,
@@ -126,7 +123,12 @@ const handleInlineCompletions = async ({
     });
 
     if (completion) {
-      const formattedCompletion = formatCompletion(completion);
+      const formattedCompletion = CompletionFormatter.create(completion)
+        .removeMarkdownCodeSyntax()
+        .removeExcessiveNewlines()
+        .removeInvalidLineBreaks()
+        .build();
+
       const completionRange = new CompletionRange(monaco);
       const completionInsertionRange = completionRange.computeInsertionRange(
         pos,
