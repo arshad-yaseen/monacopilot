@@ -1,11 +1,17 @@
 
 
-## [0.15.3](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.2...v0.15.3) (2024-11-28)
+## [0.15.4](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.3...v0.15.4) (2024-12-01)
 
 
 ### 🔧 Maintenance
 
-* improve prompt nov 28 ([629976e](https://github.com/arshad-yaseen/monacopilot/commit/629976ebbc62645d960e37420c35cef940cd0d4e))
+* issue template ([46dc85e](https://github.com/arshad-yaseen/monacopilot/commit/46dc85e55c4dd6736e4163b8574425a5f2279e63))
+
+## [0.15.3](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.2...v0.15.3) (2024-11-28)
+
+### 🔧 Maintenance
+
+- improve prompt nov 28 ([629976e](https://github.com/arshad-yaseen/monacopilot/commit/629976ebbc62645d960e37420c35cef940cd0d4e))
 
 ## [0.15.2](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.1...v0.15.2) (2024-11-23)
 
