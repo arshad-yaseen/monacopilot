@@ -10,7 +10,6 @@ understand what's going on and fix the issue.
 - `monacopilot` version:
 - `monaco-editor` version:
 - `node` version:
-- `npm` version:
 
 Relevant code or config
 
