@@ -1,11 +1,17 @@
 
 
-## [0.15.4](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.3...v0.15.4) (2024-12-01)
+## [0.15.5](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.4...v0.15.5) (2024-12-06)
 
+
+### 🐛 Bug Fixes
+
+* completion not showing if the mode is insert ([a16ae11](https://github.com/arshad-yaseen/monacopilot/commit/a16ae115552170efca5bc8959d0906568fbbdbb2))
+
+## [0.15.4](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.3...v0.15.4) (2024-12-01)
 
 ### 🔧 Maintenance
 
-* issue template ([46dc85e](https://github.com/arshad-yaseen/monacopilot/commit/46dc85e55c4dd6736e4163b8574425a5f2279e63))
+- issue template ([46dc85e](https://github.com/arshad-yaseen/monacopilot/commit/46dc85e55c4dd6736e4163b8574425a5f2279e63))
 
 ## [0.15.3](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.2...v0.15.3) (2024-11-28)
 
