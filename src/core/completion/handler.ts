@@ -132,10 +132,15 @@ const handleInlineCompletions = async ({
         mdl,
       );
 
+      const cacheRange = completionRange.computeCacheRange(
+        pos,
+        formattedCompletion,
+      );
+
       if (enableCaching) {
         completionCache.add({
           completion: formattedCompletion,
-          range: completionInsertionRange,
+          range: cacheRange,
           textBeforeCursor: getTextBeforeCursor(pos, mdl),
         });
       }
