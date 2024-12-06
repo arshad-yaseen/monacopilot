@@ -33,6 +33,7 @@
   - [Custom Model](#custom-model)
 - [Completion Request Options](#completion-request-options)
   - [Custom Headers for LLM Requests](#custom-headers-for-llm-requests)
+  - [Custom Prompt](#custom-prompt)
 - [Cross-Language API Handler Implementation](#cross-language-api-handler-implementation)
 - [Contributing](#contributing)
 
