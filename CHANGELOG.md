@@ -1,11 +1,17 @@
 
 
-## [0.15.5](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.4...v0.15.5) (2024-12-06)
+## [0.15.6](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.5...v0.15.6) (2024-12-06)
 
+
+### 📚 Documentation
+
+* add custom prompt section to toc ([1649e81](https://github.com/arshad-yaseen/monacopilot/commit/1649e8188a47823f9f1df0d15faad480620a5bbe))
+
+## [0.15.5](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.4...v0.15.5) (2024-12-06)
 
 ### 🐛 Bug Fixes
 
-* completion not showing if the mode is insert ([a16ae11](https://github.com/arshad-yaseen/monacopilot/commit/a16ae115552170efca5bc8959d0906568fbbdbb2))
+- completion not showing if the mode is insert ([a16ae11](https://github.com/arshad-yaseen/monacopilot/commit/a16ae115552170efca5bc8959d0906568fbbdbb2))
 
 ## [0.15.4](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.3...v0.15.4) (2024-12-01)
 
