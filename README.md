@@ -1,8 +1,22 @@
+[![npm version](https://img.shields.io/npm/v/monacopilot.svg)](https://www.npmjs.com/package/monacopilot)
+[![License](https://img.shields.io/npm/l/monacopilot.svg)](https://github.com/arshad-yaseen/monacopilot/blob/main/LICENSE)
+
 ![Monacopilot Banner](https://i.postimg.cc/GhpGVjVG/monacopilot-banner.png)
 
 # Monacopilot
 
 **Monacopilot** is a powerful and customizable AI auto-completion plugin for the Monaco Editor. Inspired by GitHub Copilot.
+
+### Features
+
+- 🎯 Multiple AI Provider Support (Anthropic, OpenAI, Groq, Google)
+- 🔄 Real-time Code Completions
+- ⚡️ Efficient Caching System
+- 🎨 Context-Aware Suggestions
+- 🛠️ Customizable Completion Behavior
+- 📦 Framework Agnostic
+- 🔌 Custom Model Support
+- 🎮 Manual Trigger Support
 
 ### Motivation
 
