@@ -1,11 +1,17 @@
 
 
-## [0.15.7](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.6...v0.15.7) (2024-12-11)
+## [0.15.8](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.7...v0.15.8) (2024-12-15)
 
 
 ### 📚 Documentation
 
-* add features ([c567035](https://github.com/arshad-yaseen/monacopilot/commit/c567035d88ca4c3b30c79842f0273849ad364fdd))
+* fix prompt.ts file url ([d838692](https://github.com/arshad-yaseen/monacopilot/commit/d8386922a786b076da3c1d2b6dcc63e1c7b14a36))
+
+## [0.15.7](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.6...v0.15.7) (2024-12-11)
+
+### 📚 Documentation
+
+- add features ([c567035](https://github.com/arshad-yaseen/monacopilot/commit/c567035d88ca4c3b30c79842f0273849ad364fdd))
 
 ## [0.15.6](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.5...v0.15.6) (2024-12-06)
 
