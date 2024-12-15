@@ -61,6 +61,7 @@ const handleInlineCompletions = async ({
   isCompletionAccepted,
   onShowCompletion,
   options,
+  recentChanges,
 }: InlineCompletionHandlerParams): Promise<EditorInlineCompletionsResult> => {
   const {
     trigger = TriggerType.OnIdle,
@@ -109,6 +110,7 @@ const handleInlineCompletions = async ({
       pos,
       mdl,
       options,
+      recentChanges,
     });
 
     const {completion} = await fetchCompletion({

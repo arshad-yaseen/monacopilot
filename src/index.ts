@@ -24,4 +24,6 @@ export type {
   OpenAIChatCompletion,
   GroqChatCompletion,
   AnthropicChatCompletion,
+  EditorRecentChange,
+  EditorStructuredRecentChange,
 } from './types';

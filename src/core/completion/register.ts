@@ -1,3 +1,4 @@
+import {RecentChangesTracker} from '../../classes/recent-changes-tracker';
 import {deprecated, report, warn} from '../../logger';
 import {
   CompletionRegistration,
@@ -13,6 +14,7 @@ type EditorCompletionState = {
   isCompletionAccepted: boolean;
   isCompletionVisible: boolean;
   isManualTrigger: boolean;
+  recentChangesTracker: RecentChangesTracker;
 };
 
 const editorCompletionState = new WeakMap<
@@ -40,13 +42,20 @@ export const registerCompletion = (
   }
 
   const disposables: Disposable[] = [];
+  const model = editor.getModel();
 
-  // Initialize editor completion state
+  if (!model) {
+    throw new Error('Editor model not found');
+  }
+
+  const recentChangesTracker = new RecentChangesTracker(model);
   const initialState: EditorCompletionState = {
     isCompletionAccepted: false,
     isCompletionVisible: false,
     isManualTrigger: false,
+    recentChangesTracker,
   };
+
   editorCompletionState.set(editor, initialState);
 
   // Update editor options to force the enabling of inline completions and to use subwordSmart mode
@@ -70,6 +79,8 @@ export const registerCompletion = (
 
           if (isOnDemandTrigger) return;
 
+          const recentChanges = state.recentChangesTracker.getRecentChanges();
+
           return handleInlineCompletions({
             monaco,
             mdl,
@@ -81,6 +92,7 @@ export const registerCompletion = (
               state.isManualTrigger = false;
             },
             options,
+            recentChanges,
           });
         },
         freeInlineCompletions: () => {
@@ -110,6 +122,8 @@ export const registerCompletion = (
     // Create completion registration object
     const registration: CompletionRegistration = {
       deregister: () => {
+        const state = editorCompletionState.get(editor);
+        state?.recentChangesTracker.dispose();
         disposables.forEach(disposable => disposable.dispose());
         completionCache.clear();
         editorCompletionState.delete(editor);
@@ -130,6 +144,8 @@ export const registerCompletion = (
 
     return {
       deregister: () => {
+        const state = editorCompletionState.get(editor);
+        state?.recentChangesTracker.dispose();
         disposables.forEach(disposable => disposable.dispose());
         editorCompletionState.delete(editor);
         activeCompletionRegistration = null;
