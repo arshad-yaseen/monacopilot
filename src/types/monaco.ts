@@ -14,3 +14,5 @@ export type EditorInlineCompletionContext =
 export type EditorInlineCompletionsResult =
   monaco.languages.InlineCompletions<monaco.languages.InlineCompletion>;
 export type Disposable = monaco.IDisposable;
+export type EditorContentChangedEvent = monaco.editor.IModelContentChangedEvent;
+export type EditorContentChange = monaco.editor.IModelContentChange;

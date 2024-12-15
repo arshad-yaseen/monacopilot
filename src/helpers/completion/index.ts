@@ -43,6 +43,8 @@ export const fetchCompletionItem = async (
     fallbackError: 'Error while fetching completion item',
   });
 
+  console.log(params.body.completionMetadata.recentChanges);
+
   if (error) {
     throw new Error(error);
   }
@@ -57,6 +59,7 @@ export const constructCompletionMetadata = ({
   pos,
   mdl,
   options,
+  recentChanges,
 }: ConstructCompletionMetadataParams) => {
   const {filename, language, technologies, relatedFiles, maxContextLines} =
     options;
@@ -118,6 +121,7 @@ export const constructCompletionMetadata = ({
     textBeforeCursor,
     textAfterCursor,
     cursorPosition: pos,
+    recentChanges,
     editorState: {
       completionMode,
     },

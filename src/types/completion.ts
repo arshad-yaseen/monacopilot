@@ -6,6 +6,7 @@ import {
   EditorRange,
   Monaco,
 } from './monaco';
+import {EditorRecentChange} from './recent-changes';
 
 export type Endpoint = string;
 export type Filename = string;
@@ -133,6 +134,7 @@ export interface InlineCompletionHandlerParams {
   isCompletionAccepted: boolean;
   onShowCompletion: () => void;
   options: RegisterCompletionOptions;
+  recentChanges: EditorRecentChange[];
 }
 
 export type LocalPredictionSnippets = Record<string, string>;
@@ -237,6 +239,10 @@ export interface CompletionMetadata {
      */
     completionMode: CompletionMode;
   };
+  /**
+   * Recent changes made in the editor
+   */
+  recentChanges: EditorRecentChange[];
 }
 
 export type FetchCompletionItemHandler = (
@@ -256,6 +262,7 @@ export interface ConstructCompletionMetadataParams {
   mdl: EditorModel;
   pos: CursorPosition;
   options: RegisterCompletionOptions;
+  recentChanges: EditorRecentChange[];
 }
 
 export interface CompletionCacheItem {

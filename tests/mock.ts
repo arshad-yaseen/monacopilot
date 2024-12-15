@@ -22,6 +22,7 @@ export const mockCompletionMetadata: CompletionMetadata = {
   editorState: {
     completionMode: 'complete',
   },
+  recentChanges: [],
 };
 
 export const MOCK_COMPLETION_CONTENT = "Hi, I'm Claude.";
