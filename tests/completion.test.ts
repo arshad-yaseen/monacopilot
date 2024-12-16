@@ -6,8 +6,8 @@ import {
   COPILOT_PROVIDER_ENDPOINT_MAP,
   DEFAULT_COPILOT_MODEL,
   DEFAULT_COPILOT_PROVIDER,
-  DEFAULT_COPILOT_TEMPERATURE,
 } from '../src/constants';
+import {DEFAULT_COMPLETION_TEMPERATURE} from '../src/constants/completion';
 import {HTTP} from '../src/utils';
 import {
   MOCK_COMPLETION_CONTENT,
@@ -51,7 +51,7 @@ describe('Completion', () => {
           {role: 'user', content: expect.any(String)},
         ]),
         system: expect.any(String),
-        temperature: DEFAULT_COPILOT_TEMPERATURE,
+        temperature: DEFAULT_COMPLETION_TEMPERATURE,
       }),
       expect.objectContaining({
         headers: expect.any(Object),

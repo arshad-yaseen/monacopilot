@@ -1,9 +1,8 @@
+import {COPILOT_MODEL_IDS, COPILOT_PROVIDER_ENDPOINT_MAP} from '../constants';
 import {
-  COPILOT_MODEL_IDS,
-  COPILOT_PROVIDER_ENDPOINT_MAP,
-  DEFAULT_COPILOT_TEMPERATURE,
-} from '../constants';
-import {MAX_TOKENS_BY_ANTHROPIC_MODEL} from '../constants/provider/anthropic';
+  DEFAULT_COMPLETION_MAX_TOKENS,
+  DEFAULT_COMPLETION_TEMPERATURE,
+} from '../constants/completion';
 import {
   ChatCompletion,
   ChatCompletionCreateParams,
@@ -20,7 +19,8 @@ const openaiHandler: ProviderHandler<'openai'> = {
 
     return {
       model: getModelId(model),
-      ...(!isO1Model && {temperature: DEFAULT_COPILOT_TEMPERATURE}),
+      ...(!isO1Model && {temperature: DEFAULT_COMPLETION_TEMPERATURE}),
+      max_completion_tokens: DEFAULT_COMPLETION_MAX_TOKENS,
       messages: [
         {role: 'system' as const, content: prompt.system},
         {role: 'user' as const, content: prompt.user},
@@ -47,7 +47,8 @@ const groqHandler: ProviderHandler<'groq'> = {
 
   createRequestBody: (model, prompt) => ({
     model: getModelId(model),
-    temperature: DEFAULT_COPILOT_TEMPERATURE,
+    temperature: DEFAULT_COMPLETION_TEMPERATURE,
+    max_tokens: DEFAULT_COMPLETION_MAX_TOKENS,
     messages: [
       {role: 'system' as const, content: prompt.system},
       {role: 'user' as const, content: prompt.user},
@@ -72,10 +73,10 @@ const anthropicHandler: ProviderHandler<'anthropic'> = {
 
   createRequestBody: (model, prompt) => ({
     model: getModelId(model),
-    temperature: DEFAULT_COPILOT_TEMPERATURE,
+    temperature: DEFAULT_COMPLETION_TEMPERATURE,
     system: prompt.system,
     messages: [{role: 'user' as const, content: prompt.user}],
-    max_tokens: MAX_TOKENS_BY_ANTHROPIC_MODEL[model],
+    max_tokens: DEFAULT_COMPLETION_MAX_TOKENS,
   }),
 
   createHeaders: apiKey => ({
@@ -112,6 +113,10 @@ const googleHandler: ProviderHandler<'google'> = {
     model: getModelId(model),
     system_instruction: {
       parts: {text: prompt.system},
+    },
+    generationConfig: {
+      temperature: DEFAULT_COMPLETION_TEMPERATURE,
+      maxOutputTokens: DEFAULT_COMPLETION_MAX_TOKENS,
     },
     contents: [
       {
