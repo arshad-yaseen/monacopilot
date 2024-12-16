@@ -12,7 +12,6 @@ import {
 import {
   getCharAfterCursor,
   getTextAfterCursor,
-  getTextAfterCursorInLine,
   getTextBeforeCursor,
   HTTP,
   keepNLines,
@@ -135,7 +134,7 @@ const determineCompletionMode = (
   mdl: EditorModel,
 ): CompletionMode => {
   const charAfterCursor = getCharAfterCursor(pos, mdl);
-  const textAfterCursor = getTextAfterCursorInLine(pos, mdl);
+  const textAfterCursor = getTextAfterCursor(pos, mdl);
 
   if (charAfterCursor) {
     return 'insert';
