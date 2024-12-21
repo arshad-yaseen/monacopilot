@@ -1,5 +1,5 @@
 import {CompletionMetadata, PromptData, RelatedFile} from '../types';
-import {joinWithAnd} from '../utils';
+import {capitalizeFirstLetter, joinWithAnd} from '../utils';
 
 const compileRelatedFiles = (files?: RelatedFile[]): string => {
   if (!files || files.length === 0) {
@@ -39,51 +39,26 @@ export const craftCompletionPrompt = (meta: CompletionMetadata): PromptData => {
   );
 
   const systemInstruction = `
-Take your time to reason as an exceptional${
-    mergedTechStack ? ' ' + mergedTechStack : ''
-  } code-generating assistant. You must produce solutions that are:
+You are a code completion assistant.
 
-1. Scrutinized carefully for syntax, semantics, and relevancy.
-2. Perfectly aligned with the prescribed completion mode and formatting norms.
-3. Free from logical or contextual slip-ups in the final result.
-
-Contextual Data:
-- Active File: ${filename || 'Untitled'}
-- Main Language: ${language || 'Undetermined'}
-- Mode of Completion: ${completionMode}
-- Detected Technologies: ${mergedTechStack || 'None'}
-
-Execution Directives:
-- Insert the code snippet exactly at the specified cursor mark, omitting any superfluous commentary.
-- If other files are relevant, incorporate details from them cautiously.
-- Respect the completion mode rules for ${completionMode}:
-  ${
-    completionMode === 'continue'
-      ? '- Expand from the cursor, upholding continuity in the surrounding code.'
-      : completionMode === 'insert'
-        ? '- Place the snippet precisely at the cursor location (marked by <cursor>).\n' +
-          '  - Only output the exact code to be inserted, without surrounding code.\n' +
-          '  - Example:\n' +
-          '    Input: const num = Math.random(); console.log(<cursor>);\n' +
-          '    Correct: num\n' +
-          '    Incorrect: `num` or console.log(num)'
-        : '- Extend the existing code flow without deviating from its logic.'
-  }
-`;
+Context:
+File: ${filename || 'Untitled'}
+Language: ${language || 'Undetermined'} 
+Mode: ${completionMode}
+Stack: ${mergedTechStack || 'None'}`;
 
   const userInstruction = `
-Below is all the context you have:
-
-1. Related Files in Workspace:
+Related Files:
 ${compileRelatedFiles(relatedFiles)}
 
-2. Existing Source with Cursor:
+Source:
 \`\`\`
 ${textBeforeCursor}<cursor>${textAfterCursor}
 \`\`\`
 
-Please craft a minimal yet complete snippet to fill in at <cursor>. Double-check correctness and ensure no syntactic or semantic flaws. Provide only the snippet as final output—no added explanations.
-`;
+${capitalizeFirstLetter(completionMode)} the code at <cursor>.
+
+Output only the raw code to be inserted at the cursor location without any additional text or comments.`;
 
   return {
     system: systemInstruction,
