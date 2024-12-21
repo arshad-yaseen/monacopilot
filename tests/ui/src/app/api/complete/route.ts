@@ -2,7 +2,7 @@ import {Copilot} from 'monacopilot';
 
 const copilot = new Copilot(process.env.ANTHROPIC_API_KEY!, {
   provider: 'anthropic',
-  model: 'claude-3-5-haiku',
+  model: 'claude-3-5-sonnet',
 });
 
 export async function POST(req: Request) {

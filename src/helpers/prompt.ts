@@ -1,29 +1,27 @@
 import {CompletionMetadata, PromptData, RelatedFile} from '../types';
 import {joinWithAnd} from '../utils';
 
-const formatRelatedFiles = (
-  relatedFiles: RelatedFile[] | undefined,
-): string => {
-  if (!relatedFiles?.length) return '';
+const compileRelatedFiles = (files?: RelatedFile[]): string => {
+  if (!files || files.length === 0) {
+    return '';
+  }
 
-  return relatedFiles
-    .map(({path, content}) =>
-      `
+  return files
+    .map(({path, content}) => {
+      return `
 <related_file>
-  <path>${path}</path>
-  <content>
+  <filePath>${path}</filePath>
+  <fileContent>
 \`\`\`
 ${content}
 \`\`\`
-  </content>
-</related_file>`.trim(),
-    )
+  </fileContent>
+</related_file>`.trim();
+    })
     .join('\n\n');
 };
 
-export const generateCompletionPrompt = (
-  metadata: CompletionMetadata,
-): PromptData => {
+export const craftCompletionPrompt = (meta: CompletionMetadata): PromptData => {
   const {
     technologies = [],
     filename,
@@ -32,51 +30,63 @@ export const generateCompletionPrompt = (
     textBeforeCursor = '',
     textAfterCursor = '',
     editorState: {completionMode},
-  } = metadata;
+  } = meta;
 
-  const languageOrTechnologies = joinWithAnd(
+  const mergedTechStack = joinWithAnd(
     [language, ...technologies].filter(
-      (t): t is string => typeof t === 'string' && Boolean(t),
+      (item): item is string => typeof item === 'string' && !!item,
     ),
   );
 
-  const system = `You are an expert ${
-    languageOrTechnologies ? `${languageOrTechnologies} ` : ''
-  }AI code completion assistant. Generate precise, contextually-aware code completions by:
+  const systemInstruction = `
+Take your time to reason as an exceptional${
+    mergedTechStack ? ' ' + mergedTechStack : ''
+  } code-generating assistant. You must produce solutions that are:
 
-1. Analyzing code context, patterns and conventions
-2. Determining appropriate completions based on mode and context
-3. Ensuring proper formatting and style consistency
-4. Respect the monaco editor's inline suggest subwordSmart mode
+1. Scrutinized carefully for syntax, semantics, and relevancy.
+2. Perfectly aligned with the prescribed completion mode and formatting norms.
+3. Free from logical or contextual slip-ups in the final result.
 
-Context:
-- File: ${filename || 'current file'}
-- Language: ${language || 'detected from context'}
-- Mode: ${completionMode}
-- Technologies: ${languageOrTechnologies || 'inferred from context'}
+Contextual Data:
+- Active File: ${filename || 'Untitled'}
+- Main Language: ${language || 'Undetermined'}
+- Mode of Completion: ${completionMode}
+- Detected Technologies: ${mergedTechStack || 'None'}
 
-Guidelines:
-- Maintain consistent style and patterns
-- Consider related files and context
-- Follow mode-specific behavior (${completionMode}):
+Execution Directives:
+- Insert the code snippet exactly at the specified cursor mark, omitting any superfluous commentary.
+- If other files are relevant, incorporate details from them cautiously.
+- Respect the completion mode rules for ${completionMode}:
   ${
     completionMode === 'continue'
-      ? '- Continue code naturally from cursor'
+      ? '- Expand from the cursor, upholding continuity in the surrounding code.'
       : completionMode === 'insert'
-        ? '- Insert precisely between segments'
-        : '- Complete current code block'
-  }`;
+        ? '- Place the snippet precisely at the cursor location (marked by <cursor>).\n' +
+          '  - Only output the exact code to be inserted, without surrounding code.\n' +
+          '  - Example:\n' +
+          '    Input: const num = Math.random(); console.log(<cursor>);\n' +
+          '    Correct: num\n' +
+          '    Incorrect: `num` or console.log(num)'
+        : '- Extend the existing code flow without deviating from its logic.'
+  }
+`;
 
-  const user = `Context:
-1. Related Files:
-${formatRelatedFiles(relatedFiles)}
+  const userInstruction = `
+Below is all the context you have:
 
-2. Code State:
+1. Related Files in Workspace:
+${compileRelatedFiles(relatedFiles)}
+
+2. Existing Source with Cursor:
 \`\`\`
 ${textBeforeCursor}<cursor>${textAfterCursor}
 \`\`\`
 
-Generate appropriate code completion at <cursor> position (Output only code without any comments or explanations):`;
+Please craft a minimal yet complete snippet to fill in at <cursor>. Double-check correctness and ensure no syntactic or semantic flaws. Provide only the snippet as final output—no added explanations.
+`;
 
-  return {system, user};
+  return {
+    system: systemInstruction,
+    user: userInstruction,
+  };
 };

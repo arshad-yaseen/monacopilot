@@ -4,7 +4,7 @@ import {
   DEFAULT_COPILOT_MODEL,
   DEFAULT_COPILOT_PROVIDER,
 } from '../constants';
-import {generateCompletionPrompt} from '../helpers/prompt';
+import {craftCompletionPrompt} from '../helpers/prompt';
 import {
   createProviderEndpoint,
   createProviderHeaders,
@@ -95,7 +95,7 @@ export class Copilot {
     completionMetadata: CompletionMetadata,
     customPrompt?: CustomPrompt,
   ): PromptData {
-    const basePrompt = generateCompletionPrompt(completionMetadata);
+    const basePrompt = craftCompletionPrompt(completionMetadata);
     return customPrompt
       ? {...basePrompt, ...customPrompt(completionMetadata)}
       : basePrompt;
