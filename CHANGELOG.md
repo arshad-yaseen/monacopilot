@@ -1,11 +1,17 @@
 
 
-## [0.15.9](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.8...v0.15.9) (2024-12-21)
+## [0.15.10](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.9...v0.15.10) (2024-12-21)
 
 
 ### 🔧 Maintenance
 
-* add fetch timeout ([3df46dd](https://github.com/arshad-yaseen/monacopilot/commit/3df46dd74cd65f3d2ae85d5a288d21b7d0969870))
+* improve prompt ([6cf6223](https://github.com/arshad-yaseen/monacopilot/commit/6cf62231fe7b42b9d555dd87cddce197901cad9b))
+
+## [0.15.9](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.8...v0.15.9) (2024-12-21)
+
+### 🔧 Maintenance
+
+- add fetch timeout ([3df46dd](https://github.com/arshad-yaseen/monacopilot/commit/3df46dd74cd65f3d2ae85d5a288d21b7d0969870))
 
 ## [0.15.8](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.7...v0.15.8) (2024-12-15)
 
