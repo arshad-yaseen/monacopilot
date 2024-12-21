@@ -313,9 +313,9 @@ registerCompletion(monaco, editor, {
 
 ### Handling Errors
 
-You can handle errors that occur during completion requests by providing an `onError` function when calling `registerCompletion`. This allows you to customize error handling and logging based on your application's needs.
+When an error occurs during the completion process or requests, Monacopilot will log it to the console by default rather than throwing errors. This ensures smooth editing even when completions are unavailable.
 
-This will disable the default error handling and logging behavior of Monacopilot.
+You can provide this callback to handle errors yourself, which will disable the default console logging.
 
 ```javascript
 registerCompletion(monaco, editor, {
