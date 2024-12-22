@@ -2,7 +2,10 @@ import {NextApiRequest, NextApiResponse} from 'next';
 
 import {Copilot} from 'monacopilot';
 
-const copilot = new Copilot(process.env.ANTHROPIC_API_KEY!);
+const copilot = new Copilot(process.env.GROQ_API_KEY!, {
+  provider: 'groq',
+  model: 'llama-3-70b',
+});
 
 export default async function handler(
   req: NextApiRequest,

@@ -4,8 +4,6 @@ import {CompletionMetadata, Copilot} from '../src';
 import {
   COPILOT_MODEL_IDS,
   COPILOT_PROVIDER_ENDPOINT_MAP,
-  DEFAULT_COPILOT_MODEL,
-  DEFAULT_COPILOT_PROVIDER,
   DEFAULT_COPILOT_TEMPERATURE,
 } from '../src/constants';
 import {HTTP} from '../src/utils';
@@ -16,13 +14,18 @@ import {
   mockCompletionMetadata,
   mockError,
   mockNetworkError,
+  TEST_MODEL,
+  TEST_PROVIDER,
 } from './mock';
 
 describe('Completion', () => {
   let copilot: Copilot;
 
   beforeEach(() => {
-    copilot = new Copilot(mockApiKey);
+    copilot = new Copilot(mockApiKey, {
+      provider: TEST_PROVIDER,
+      model: TEST_MODEL,
+    });
     vi.clearAllMocks();
   });
 
@@ -44,9 +47,9 @@ describe('Completion', () => {
       raw: mockCompletion,
     });
     expect(HTTP.POST).toHaveBeenCalledWith(
-      COPILOT_PROVIDER_ENDPOINT_MAP[DEFAULT_COPILOT_PROVIDER],
+      COPILOT_PROVIDER_ENDPOINT_MAP[TEST_PROVIDER],
       expect.objectContaining({
-        model: COPILOT_MODEL_IDS[DEFAULT_COPILOT_MODEL],
+        model: COPILOT_MODEL_IDS[TEST_MODEL],
         messages: expect.arrayContaining([
           {role: 'user', content: expect.any(String)},
         ]),

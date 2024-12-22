@@ -212,7 +212,7 @@ export type CopilotOptions =
        * Defines the model to be used for Copilot LLM (Language Model) requests.
        * This must be a model from the 'openai' provider.
        */
-      model?: OpenAIModel;
+      model: OpenAIModel;
     }
   | {
       /**
@@ -223,7 +223,7 @@ export type CopilotOptions =
        * Defines the model to be used for Copilot LLM requests.
        * This must be a model from the 'groq' provider.
        */
-      model?: GroqModel;
+      model: GroqModel;
     }
   | {
       /**
@@ -234,7 +234,7 @@ export type CopilotOptions =
        * Defines the model to be used for Copilot LLM requests.
        * This must be a model from the 'anthropic' provider.
        */
-      model?: AnthropicModel;
+      model: AnthropicModel;
     }
   | {
       /**
@@ -245,7 +245,7 @@ export type CopilotOptions =
        * Defines the model to be used for Copilot LLM requests.
        * This must be a model from the 'google' provider.
        */
-      model?: GoogleModel;
+      model: GoogleModel;
     }
   | {
       /**
@@ -258,5 +258,5 @@ export type CopilotOptions =
        * For more information, refer to the documentation:
        * @see https://github.com/arshad-yaseen/monacopilot?tab=readme-ov-file#custom-model
        */
-      model?: CustomCopilotModel;
+      model: CustomCopilotModel;
     };

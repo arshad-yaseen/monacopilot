@@ -1,8 +1,8 @@
 import {Copilot} from 'monacopilot';
 
-const copilot = new Copilot(process.env.ANTHROPIC_API_KEY!, {
-  provider: 'anthropic',
-  model: 'claude-3-5-sonnet',
+const copilot = new Copilot(process.env.GROQ_API_KEY!, {
+  provider: 'groq',
+  model: 'llama-3-70b',
 });
 
 export async function POST(req: Request) {
@@ -12,13 +12,8 @@ export async function POST(req: Request) {
   });
 
   if (error) {
-    console.log(error);
-    // Handle error if needed
-    // ...
     return Response.json({completion: null, error}, {status: 500});
   }
-
-  console.log('Got completion');
 
   return Response.json({completion});
 }

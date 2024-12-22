@@ -20,6 +20,7 @@ export default function Home() {
       endpoint: '/api/complete',
       language: 'javascript',
       maxContextLines: 60,
+      trigger: 'onTyping',
       relatedFiles: [
         {
           path: './utils/index.js',
@@ -28,19 +29,6 @@ export default function Home() {
         },
       ],
     });
-
-    // monaco.editor.addEditorAction({
-    //   id: 'complete-code',
-    //   label: 'Complete Code',
-    //   contextMenuGroupId: 'navigation',
-    //   contextMenuOrder: 1,
-    //   keybindings: [
-    //     monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.Space,
-    //   ],
-    //   run: () => {
-    //     completion.trigger();
-    //   },
-    // });
 
     return () => {
       completion.deregister();

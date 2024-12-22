@@ -1,9 +1,4 @@
-import {
-  COPILOT_PROVIDER_MODEL_MAP,
-  COPILOT_PROVIDERS,
-  DEFAULT_COPILOT_MODEL,
-  DEFAULT_COPILOT_PROVIDER,
-} from '../constants';
+import {COPILOT_PROVIDER_MODEL_MAP, COPILOT_PROVIDERS} from '../constants';
 import {craftCompletionPrompt} from '../helpers/prompt';
 import {
   createProviderEndpoint,
@@ -29,30 +24,61 @@ import {HTTP, joinWithAnd} from '../utils';
 
 export class Copilot {
   private readonly apiKey: string;
-  private provider: CopilotProvider;
+  private provider: CopilotProvider | undefined;
   private model: CopilotModel | CustomCopilotModel;
 
-  constructor(apiKey: string, options: CopilotOptions = {}) {
-    if (!apiKey) {
-      throw new Error('Please provide an API key.');
-    }
+  constructor(apiKey: string, options: CopilotOptions) {
+    this.validateParams(apiKey, options);
 
     this.apiKey = apiKey;
-    this.provider = options.provider ?? DEFAULT_COPILOT_PROVIDER;
-    this.model = options.model ?? DEFAULT_COPILOT_MODEL;
+    this.provider = options.provider;
+    this.model = options.model;
 
     this.validateInputs();
   }
 
+  private validateParams(apiKey: string, options: CopilotOptions): void {
+    if (!apiKey) {
+      throw new Error('Please provide an API key.');
+    }
+
+    if (
+      !options ||
+      (typeof options === 'object' && Object.keys(options).length === 0)
+    ) {
+      throw new Error('Please provide options.');
+    }
+  }
+
   private validateInputs(): void {
-    if (!COPILOT_PROVIDERS.includes(this.provider)) {
+    // Check if using a custom model (has config property)
+    if (typeof this.model === 'object') {
+      // Custom models cannot have a provider specified
+      if (this.provider !== undefined) {
+        throw new Error(
+          'Provider should not be specified when using a custom model.',
+        );
+      }
+
+      if (!('config' in this.model) || !('transformResponse' in this.model)) {
+        throw new Error(
+          'Please ensure both config and transformResponse are provided for custom model.',
+        );
+      }
+
+      return;
+    }
+
+    // Validate that a supported provider is specified for built-in models
+    if (!this.provider || !COPILOT_PROVIDERS.includes(this.provider)) {
       throw new Error(
-        `Unsupported provider "${this.provider}". Please choose from: ${joinWithAnd(
+        `Provider must be specified and supported when using built-in models. Please choose from: ${joinWithAnd(
           COPILOT_PROVIDERS,
-        )}. For custom models, provider specification is not needed.`,
+        )}`,
       );
     }
 
+    // Validate that the model is supported by the specified provider
     if (
       typeof this.model === 'string' &&
       !COPILOT_PROVIDER_MODEL_MAP[this.provider].includes(this.model)
@@ -106,29 +132,33 @@ export class Copilot {
     requestBody: ChatCompletionCreateParams;
     headers: Record<string, string>;
   } {
-    let endpoint = createProviderEndpoint(
-      this.model as CopilotModel,
-      this.apiKey,
-      this.provider,
-    );
-    let requestBody: ChatCompletionCreateParams;
-    let headers = createProviderHeaders(this.apiKey, this.provider);
-
     if (typeof this.model === 'object' && 'config' in this.model) {
+      // Handle custom model case
       const customConfig = this.model.config(this.apiKey, prompt);
-      endpoint = customConfig.endpoint ?? endpoint;
-      requestBody =
+      const endpoint = customConfig.endpoint;
+      const requestBody =
         (customConfig.body as unknown as ChatCompletionCreateParams) ?? {};
-      headers = {...headers, ...customConfig.headers};
+      const headers = customConfig.headers ?? {};
+      return {endpoint, requestBody, headers};
     } else {
-      requestBody = createRequestBody(
+      // Handle provider model case
+      if (!this.provider) {
+        throw new Error('Provider is required for non-custom models');
+      }
+
+      const endpoint = createProviderEndpoint(
+        this.model as CopilotModel,
+        this.apiKey,
+        this.provider,
+      );
+      const headers = createProviderHeaders(this.apiKey, this.provider);
+      const requestBody = createRequestBody(
         this.model as CopilotModel,
         this.provider,
         prompt,
       );
+      return {endpoint, requestBody, headers};
     }
-
-    return {endpoint, requestBody, headers};
   }
 
   private async sendCompletionRequest(
@@ -147,6 +177,7 @@ export class Copilot {
     chatCompletion: ChatCompletion,
   ): CompletionResponse {
     if (typeof this.model === 'object' && 'transformResponse' in this.model) {
+      // Handle custom model case
       const transformedResponse = this.model.transformResponse(chatCompletion);
       if ('completion' in transformedResponse) {
         deprecated(
@@ -161,6 +192,10 @@ export class Copilot {
         raw: chatCompletion,
       };
     } else {
+      // Handle provider model case
+      if (!this.provider) {
+        throw new Error('Provider is required for non-custom models');
+      }
       const parsedCompletion = parseProviderChatCompletion(
         chatCompletion,
         this.provider,
