@@ -36,5 +36,3 @@ export const COPILOT_PROVIDER_ENDPOINT_MAP: Record<CopilotProvider, string> = {
   anthropic: 'https://api.anthropic.com/v1/messages',
   google: 'https://generativelanguage.googleapis.com/v1beta/models',
 } as const;
-
-export const DEFAULT_COPILOT_TEMPERATURE = 0.1 as const;
