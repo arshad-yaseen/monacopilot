@@ -2,7 +2,7 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 
 import {Copilot} from '../src';
 import {HTTP} from '../src/utils';
-import {mockApiKey, mockCompletion, mockCompletionMetadata} from './mock';
+import {mockApiKey, mockCompletionMetadata} from './mock';
 
 describe('Copilot with model', () => {
   let copilot: Copilot;
@@ -80,58 +80,5 @@ describe('Copilot with model', () => {
       error: expect.stringContaining('Custom response error'),
       completion: null,
     });
-  });
-
-  it('should use default provider when model is not provided', async () => {
-    copilot = new Copilot(mockApiKey);
-
-    vi.spyOn(HTTP, 'POST').mockResolvedValue(mockCompletion);
-
-    await copilot.complete({
-      body: {
-        completionMetadata: mockCompletionMetadata,
-      },
-    });
-
-    expect(HTTP.POST).toHaveBeenCalledWith(
-      expect.stringContaining('api.anthropic.com'),
-      expect.any(Object),
-      expect.any(Object),
-    );
-  });
-
-  it('should allow partial override of default configuration', async () => {
-    const customConfig = vi.fn().mockReturnValue({
-      headers: {'X-Custom-Header': 'custom-value'},
-    });
-    const customResponse = vi.fn().mockReturnValue({text: 'Custom response'});
-
-    copilot = new Copilot(mockApiKey, {
-      model: {
-        config: customConfig,
-        transformResponse: customResponse,
-      },
-    });
-
-    vi.spyOn(HTTP, 'POST').mockResolvedValue({custom: 'response'});
-
-    await copilot.complete({
-      body: {
-        completionMetadata: mockCompletionMetadata,
-      },
-    });
-
-    expect(HTTP.POST).toHaveBeenCalledWith(
-      expect.stringContaining('api.anthropic.com'),
-      expect.any(Object),
-      expect.objectContaining({
-        headers: expect.objectContaining({
-          'X-Custom-Header': 'custom-value',
-          'Content-Type': 'application/json',
-          'x-api-key': expect.any(String),
-          'anthropic-version': '2023-06-01',
-        }),
-      }),
-    );
   });
 });

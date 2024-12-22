@@ -18,6 +18,10 @@ export const joinWithAnd = (
   return `${arr.slice(0, -1).join(', ')} and ${arr.slice(-1)}`;
 };
 
+export const capitalizeFirstLetter = (str: string): string => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
 /**
  * Keeps a specified number of lines from the given text.
  *

@@ -32,3 +32,6 @@ export const mockCompletion = {
 
 export const mockError = new Error('API Error');
 export const mockNetworkError = new Error('Network error');
+
+export const TEST_PROVIDER = 'anthropic';
+export const TEST_MODEL = 'claude-3-5-haiku';

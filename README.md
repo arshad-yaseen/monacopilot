@@ -87,9 +87,9 @@ import {Copilot} from 'monacopilot';
 
 const app = express();
 const port = process.env.PORT || 3000;
-const copilot = new Copilot(process.env.ANTHROPIC_API_KEY!, {
-  provider: 'anthropic',
-  model: 'claude-3-5-haiku',
+const copilot = new Copilot(process.env.GROQ_API_KEY, {
+  provider: 'groq',
+  model: 'llama-3-70b',
 });
 
 app.use(express.json());
@@ -313,9 +313,9 @@ registerCompletion(monaco, editor, {
 
 ### Handling Errors
 
-You can handle errors that occur during completion requests by providing an `onError` function when calling `registerCompletion`. This allows you to customize error handling and logging based on your application's needs.
+When an error occurs during the completion process or requests, Monacopilot will log it to the console by default rather than throwing errors. This ensures smooth editing even when completions are unavailable.
 
-This will disable the default error handling and logging behavior of Monacopilot.
+You can provide this callback to handle errors yourself, which will disable the default console logging.
 
 ```javascript
 registerCompletion(monaco, editor, {
@@ -427,10 +427,6 @@ const copilot = new Copilot(process.env.OPENAI_API_KEY, {
   model: 'gpt-4o',
 });
 ```
-
-The default provider is `anthropic`, and the default model is `claude-3-5-haiku`.
-
-> **Tip:** Even though the default provider and model are `anthropic` and `claude-3-5-haiku`, it's always recommended to specify a provider and model when using Monacopilot. This ensures your code remains consistent even if the default settings change in future updates.
 
 There are other providers and models available. Here is a list:
 

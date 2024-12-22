@@ -1,29 +1,27 @@
 import {CompletionMetadata, PromptData, RelatedFile} from '../types';
-import {joinWithAnd} from '../utils';
+import {capitalizeFirstLetter, joinWithAnd} from '../utils';
 
-const formatRelatedFiles = (
-  relatedFiles: RelatedFile[] | undefined,
-): string => {
-  if (!relatedFiles?.length) return '';
+const compileRelatedFiles = (files?: RelatedFile[]): string => {
+  if (!files || files.length === 0) {
+    return '';
+  }
 
-  return relatedFiles
-    .map(({path, content}) =>
-      `
+  return files
+    .map(({path, content}) => {
+      return `
 <related_file>
-  <path>${path}</path>
-  <content>
+  <filePath>${path}</filePath>
+  <fileContent>
 \`\`\`
 ${content}
 \`\`\`
-  </content>
-</related_file>`.trim(),
-    )
+  </fileContent>
+</related_file>`.trim();
+    })
     .join('\n\n');
 };
 
-export const generateCompletionPrompt = (
-  metadata: CompletionMetadata,
-): PromptData => {
+export const craftCompletionPrompt = (meta: CompletionMetadata): PromptData => {
   const {
     technologies = [],
     filename,
@@ -32,51 +30,38 @@ export const generateCompletionPrompt = (
     textBeforeCursor = '',
     textAfterCursor = '',
     editorState: {completionMode},
-  } = metadata;
+  } = meta;
 
-  const languageOrTechnologies = joinWithAnd(
+  const mergedTechStack = joinWithAnd(
     [language, ...technologies].filter(
-      (t): t is string => typeof t === 'string' && Boolean(t),
+      (item): item is string => typeof item === 'string' && !!item,
     ),
   );
 
-  const system = `You are an expert ${
-    languageOrTechnologies ? `${languageOrTechnologies} ` : ''
-  }AI code completion assistant. Generate precise, contextually-aware code completions by:
-
-1. Analyzing code context, patterns and conventions
-2. Determining appropriate completions based on mode and context
-3. Ensuring proper formatting and style consistency
-4. Respect the monaco editor's inline suggest subwordSmart mode
+  const systemInstruction = `
+You are a code completion assistant.
 
 Context:
-- File: ${filename || 'current file'}
-- Language: ${language || 'detected from context'}
-- Mode: ${completionMode}
-- Technologies: ${languageOrTechnologies || 'inferred from context'}
+File: ${filename || 'Untitled'}
+Language: ${language || 'Undetermined'} 
+Mode: ${completionMode}
+Stack: ${mergedTechStack || 'None'}`;
 
-Guidelines:
-- Maintain consistent style and patterns
-- Consider related files and context
-- Follow mode-specific behavior (${completionMode}):
-  ${
-    completionMode === 'continue'
-      ? '- Continue code naturally from cursor'
-      : completionMode === 'insert'
-        ? '- Insert precisely between segments'
-        : '- Complete current code block'
-  }`;
+  const userInstruction = `
+Related Files:
+${compileRelatedFiles(relatedFiles)}
 
-  const user = `Context:
-1. Related Files:
-${formatRelatedFiles(relatedFiles)}
-
-2. Code State:
+Source:
 \`\`\`
 ${textBeforeCursor}<cursor>${textAfterCursor}
 \`\`\`
 
-Generate appropriate code completion at <cursor> position (Output only code without any comments or explanations):`;
+${capitalizeFirstLetter(completionMode)} the code at <cursor>.
 
-  return {system, user};
+Output only the raw code to be inserted at the cursor location without any additional text or comments.`;
+
+  return {
+    system: systemInstruction,
+    user: userInstruction,
+  };
 };

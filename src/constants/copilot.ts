@@ -30,9 +30,6 @@ export const COPILOT_PROVIDER_MODEL_MAP: Record<
   google: ['gemini-1.5-flash-8b', 'gemini-1.5-pro', 'gemini-1.5-flash'],
 } as const;
 
-export const DEFAULT_COPILOT_PROVIDER: CopilotProvider = 'anthropic' as const;
-export const DEFAULT_COPILOT_MODEL: CopilotModel = 'claude-3-5-haiku' as const;
-
 export const COPILOT_PROVIDER_ENDPOINT_MAP: Record<CopilotProvider, string> = {
   groq: 'https://api.groq.com/openai/v1/chat/completions',
   openai: 'https://api.openai.com/v1/chat/completions',

@@ -86,11 +86,12 @@ export interface RegisterCompletionOptions {
    */
   enableCaching?: boolean;
   /**
-   * Callback function that is called when an error occurs during the completion request.
-   * This function allows you to handle errors gracefully and provide appropriate feedback to the user.
+   * When an error occurs during the completion process or requests, Monacopilot will log it to the console by default
+   * rather than throwing errors. This ensures smooth editing even when completions are unavailable.
+   * You can provide this callback to handle errors yourself, which will disable the default console logging.
    * @param error - The error object containing information about the encountered error.
    */
-  onError?: OnError;
+  onError?: (error: Error) => void;
   /**
    * Custom fetch completion handler. This function overrides the default fetch completion handler.
    * It allows you to customize how completion requests are made and responses are processed.
@@ -103,8 +104,6 @@ export interface RegisterCompletionOptions {
    */
   requestHandler?: FetchCompletionItemHandler;
 }
-
-export type OnError = (error: Error) => void;
 
 export enum TriggerType {
   OnTyping = 'onTyping',
