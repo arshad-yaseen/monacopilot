@@ -1,11 +1,17 @@
 
 
-## [0.15.11](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.10...v0.15.11) (2024-12-21)
+## [0.15.12](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.11...v0.15.12) (2024-12-22)
 
 
 ### 🔧 Maintenance
 
-* minimal prompt ([a7101c6](https://github.com/arshad-yaseen/monacopilot/commit/a7101c6769961ab337bb3e792f50ba4422026d22))
+* require explicit model specification, remove default model ([1726beb](https://github.com/arshad-yaseen/monacopilot/commit/1726beb29e1e4ee0a8833428d0782882ebaf4136))
+
+## [0.15.11](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.10...v0.15.11) (2024-12-21)
+
+### 🔧 Maintenance
+
+- minimal prompt ([a7101c6](https://github.com/arshad-yaseen/monacopilot/commit/a7101c6769961ab337bb3e792f50ba4422026d22))
 
 ## [0.15.10](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.9...v0.15.10) (2024-12-21)
 
