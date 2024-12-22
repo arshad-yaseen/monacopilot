@@ -1,11 +1,17 @@
 
 
-## [0.15.13](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.12...v0.15.13) (2024-12-22)
+## [0.15.14](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.13...v0.15.14) (2024-12-22)
 
+
+### 🔄 Refactoring
+
+* reduce 429 errors possibility ([85832a8](https://github.com/arshad-yaseen/monacopilot/commit/85832a85d2e8f36a484ae268308a54f37ed3b65a))
+
+## [0.15.13](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.12...v0.15.13) (2024-12-22)
 
 ### 🔧 CI/CD
 
-* close inactve issues workflow ([4ef021f](https://github.com/arshad-yaseen/monacopilot/commit/4ef021fac01c3a163e4797d60a9baa030323d91d))
+- close inactve issues workflow ([4ef021f](https://github.com/arshad-yaseen/monacopilot/commit/4ef021fac01c3a163e4797d60a9baa030323d91d))
 
 ## [0.15.12](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.11...v0.15.12) (2024-12-22)
 
