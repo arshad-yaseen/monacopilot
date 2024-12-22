@@ -1,11 +1,17 @@
 
 
-## [0.15.12](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.11...v0.15.12) (2024-12-22)
+## [0.15.13](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.12...v0.15.13) (2024-12-22)
 
+
+### 🔧 CI/CD
+
+* close inactve issues workflow ([4ef021f](https://github.com/arshad-yaseen/monacopilot/commit/4ef021fac01c3a163e4797d60a9baa030323d91d))
+
+## [0.15.12](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.11...v0.15.12) (2024-12-22)
 
 ### 🔧 Maintenance
 
-* require explicit model specification, remove default model ([1726beb](https://github.com/arshad-yaseen/monacopilot/commit/1726beb29e1e4ee0a8833428d0782882ebaf4136))
+- require explicit model specification, remove default model ([1726beb](https://github.com/arshad-yaseen/monacopilot/commit/1726beb29e1e4ee0a8833428d0782882ebaf4136))
 
 ## [0.15.11](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.10...v0.15.11) (2024-12-21)
 
