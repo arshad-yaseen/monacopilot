@@ -1,4 +1,4 @@
-import {CompletionFormatter, CompletionValidator} from '../../classes';
+import {CompletionFormatter} from '../../classes';
 import {CompletionCache} from '../../classes/completion-cache';
 import {CompletionRange} from '../../classes/completion-range';
 import {constructCompletionMetadata, fetchCompletionItem} from '../../helpers';
@@ -69,11 +69,6 @@ const handleInlineCompletions = async ({
     onError,
     requestHandler,
   } = options;
-
-  // Early exit if completions should not be provided
-  if (!new CompletionValidator(pos, mdl).shouldProvideCompletions()) {
-    return createInlineCompletionResult([]);
-  }
 
   // Attempt to retrieve cached completions if caching is enabled
   if (enableCaching) {

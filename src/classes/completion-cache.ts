@@ -8,7 +8,6 @@ import {Queue} from './queue';
  */
 export class CompletionCache {
   private static readonly MAX_CACHE_SIZE = 10;
-  private static readonly LOOK_AROUND = 10; // Number of characters to look around cache range
   private cache: Queue<CompletionCacheItem>;
 
   constructor() {
@@ -85,8 +84,8 @@ export class CompletionCache {
         isAtStartOfRange ||
         (completion.startsWith(currentRangeValue) &&
           lineNumber === startLineNumber &&
-          column >= startColumn - CompletionCache.LOOK_AROUND &&
-          column <= endColumn + CompletionCache.LOOK_AROUND)
+          column >= startColumn &&
+          column <= endColumn)
       );
     }
 
@@ -95,10 +94,8 @@ export class CompletionCache {
       completion.startsWith(currentRangeValue) &&
       lineNumber >= startLineNumber &&
       lineNumber <= endLineNumber &&
-      ((lineNumber === startLineNumber &&
-        column >= startColumn - CompletionCache.LOOK_AROUND) ||
-        (lineNumber === endLineNumber &&
-          column <= endColumn + CompletionCache.LOOK_AROUND) ||
+      ((lineNumber === startLineNumber && column >= startColumn) ||
+        (lineNumber === endLineNumber && column <= endColumn) ||
         (lineNumber > startLineNumber && lineNumber < endLineNumber));
 
     return isAtStartOfRange || isWithinMultiLineRange;

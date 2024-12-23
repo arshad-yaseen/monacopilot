@@ -21,13 +21,6 @@ export default function Home() {
       language: 'javascript',
       maxContextLines: 60,
       trigger: 'onTyping',
-      relatedFiles: [
-        {
-          path: './utils/index.js',
-          content:
-            'export function reverse(str) { return str.split("").reverse().join(""); }',
-        },
-      ],
     });
 
     return () => {

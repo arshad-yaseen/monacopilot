@@ -39,19 +39,19 @@ export const craftCompletionPrompt = (meta: CompletionMetadata): PromptData => {
   );
 
   const systemInstruction = `
-You are a code completion assistant.
+You are an expert code completion assistant.
 
-Context:
+**Context:**
 File: ${filename || 'Untitled'}
 Language: ${language || 'Undetermined'} 
 Mode: ${completionMode}
 Stack: ${mergedTechStack || 'None'}`;
 
   const userInstruction = `
-Related Files:
+**Related Files:**
 ${compileRelatedFiles(relatedFiles)}
 
-Source:
+**Source:**
 \`\`\`
 ${textBeforeCursor}<cursor>${textAfterCursor}
 \`\`\`
