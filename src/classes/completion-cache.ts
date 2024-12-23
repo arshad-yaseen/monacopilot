@@ -4,7 +4,6 @@ import {Queue} from './queue';
 
 /**
  * Manages a cache of code completions with FIFO eviction policy.
- * Provides methods to retrieve, add, and clear cached completion items.
  */
 export class CompletionCache {
   private static readonly MAX_CACHE_SIZE = 10;
@@ -14,12 +13,6 @@ export class CompletionCache {
     this.cache = new Queue<CompletionCacheItem>(CompletionCache.MAX_CACHE_SIZE);
   }
 
-  /**
-   * Retrieves cached completion items that are valid based on the current cursor position and editor model.
-   * @param pos - The current position of the cursor in the editor.
-   * @param mdl - The current state of the editor.
-   * @returns An array of valid cached completion items.
-   */
   public get(
     pos: Readonly<CursorPosition>,
     mdl: Readonly<EditorModel>,
@@ -29,18 +22,10 @@ export class CompletionCache {
       .filter(cacheItem => this.isValidCacheItem(cacheItem, pos, mdl));
   }
 
-  /**
-   * Adds a new completion item to the cache.
-   * If the cache exceeds the maximum size, the oldest item is removed.
-   * @param cacheItem - The completion item to add to the cache.
-   */
   public add(cacheItem: Readonly<CompletionCacheItem>): void {
     this.cache.enqueue(cacheItem);
   }
 
-  /**
-   * Clears all items from the completion cache.
-   */
   public clear(): void {
     this.cache.clear();
   }
@@ -56,10 +41,17 @@ export class CompletionCache {
     const currentRangeValue = mdl.getValueInRange(cacheItem.range);
     const textBeforeCursor = getTextBeforeCursor(pos, mdl);
 
-    return (
-      textBeforeCursor.startsWith(cacheItem.textBeforeCursor) &&
-      this.isPositionValid(cacheItem, pos, currentRangeValue)
-    );
+    // Ensure the current text before cursor hasn't become shorter than the cached prefix
+    // and that it still starts with the same prefix.
+    if (
+      textBeforeCursor.length < cacheItem.textBeforeCursor.length ||
+      !textBeforeCursor.startsWith(cacheItem.textBeforeCursor)
+    ) {
+      return false;
+    }
+
+    // Then validate the cursor position and typed code against the stored completion range
+    return this.isPositionValid(cacheItem, pos, currentRangeValue);
   }
 
   /**
@@ -74,29 +66,34 @@ export class CompletionCache {
     const {startLineNumber, startColumn, endLineNumber, endColumn} = range;
     const {lineNumber, column} = pos;
 
+    // Check if the user's current typed text (in the range) is still a valid prefix of the completion.
+    if (!completion.startsWith(currentRangeValue)) {
+      return false;
+    }
+
     // Check if cursor is at the start of the completion range
     const isAtStartOfRange =
       lineNumber === startLineNumber && column === startColumn;
 
-    // For single line completions
+    // For single-line completion
     if (startLineNumber === endLineNumber) {
+      // Cursor must be at start of the range or within the snippet's boundaries on the same line
       return (
         isAtStartOfRange ||
-        (completion.startsWith(currentRangeValue) &&
-          lineNumber === startLineNumber &&
+        (lineNumber === startLineNumber &&
           column >= startColumn &&
           column <= endColumn)
       );
     }
 
-    // Check if cursor is within the valid range for multi-line completion
+    // For multi-line completion, the cursor must be at start of the range or within
+    // the vertical bounds. Additionally, if it's on the first or last line, it should
+    // be within the horizontal bounds; otherwise, any column is acceptable.
     const isWithinMultiLineRange =
-      completion.startsWith(currentRangeValue) &&
-      lineNumber >= startLineNumber &&
-      lineNumber <= endLineNumber &&
-      ((lineNumber === startLineNumber && column >= startColumn) ||
-        (lineNumber === endLineNumber && column <= endColumn) ||
-        (lineNumber > startLineNumber && lineNumber < endLineNumber));
+      lineNumber > startLineNumber && lineNumber < endLineNumber
+        ? true
+        : (lineNumber === startLineNumber && column >= startColumn) ||
+          (lineNumber === endLineNumber && column <= endColumn);
 
     return isAtStartOfRange || isWithinMultiLineRange;
   }
