@@ -10,11 +10,11 @@ import {
   InlineCompletionHandlerParams,
   TriggerType,
 } from '../../types';
-import {debouncedAsync, getTextBeforeCursor} from '../../utils';
+import {getTextBeforeCursor, typingDebouncedAsync} from '../../utils';
 import {createInlineCompletionResult} from '../../utils/completion';
 
 const DEBOUNCE_DELAYS = {
-  [TriggerType.OnTyping]: 300,
+  [TriggerType.OnTyping]: 200,
   [TriggerType.OnIdle]: 600,
   [TriggerType.OnDemand]: 0,
 };
@@ -28,18 +28,18 @@ const getDebouncedFunctionPerTrigger = (
   fn: FetchCompletionItemHandler,
 ): Record<
   TriggerType,
-  ReturnType<typeof debouncedAsync<FetchCompletionItemHandler>>
+  ReturnType<typeof typingDebouncedAsync<FetchCompletionItemHandler>>
 > => {
   return {
-    [TriggerType.OnTyping]: debouncedAsync(
+    [TriggerType.OnTyping]: typingDebouncedAsync(
       fn,
       DEBOUNCE_DELAYS[TriggerType.OnTyping],
     ),
-    [TriggerType.OnIdle]: debouncedAsync(
+    [TriggerType.OnIdle]: typingDebouncedAsync(
       fn,
       DEBOUNCE_DELAYS[TriggerType.OnIdle],
     ),
-    [TriggerType.OnDemand]: debouncedAsync(
+    [TriggerType.OnDemand]: typingDebouncedAsync(
       fn,
       DEBOUNCE_DELAYS[TriggerType.OnDemand],
     ),
@@ -112,6 +112,8 @@ const handleInlineCompletions = async ({
         completionMetadata,
       },
     });
+
+    console.log('completion', completion);
 
     if (completion) {
       const formattedCompletion = CompletionFormatter.create(completion)
