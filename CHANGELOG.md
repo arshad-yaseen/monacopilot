@@ -1,11 +1,27 @@
 
 
-## [0.15.14](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.13...v0.15.14) (2024-12-22)
+## [0.16.0](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.14...v0.16.0) (2024-12-23)
 
+
+### 🚀 Features
+
+* immediately trigger completion request after user stops typing ([32b8690](https://github.com/arshad-yaseen/monacopilot/commit/32b8690dae056965c289b939cebe4f70651d479a))
+
+
+### 🐛 Bug Fixes
+
+* cache lookaround preventing next completion in same lineafter another completion ([d53fb74](https://github.com/arshad-yaseen/monacopilot/commit/d53fb748b0ae63ecc91cb93382c3ec881631ff6c))
+
+
+### 🔧 Maintenance
+
+* improve cache validation ([e905bb8](https://github.com/arshad-yaseen/monacopilot/commit/e905bb8eb911a453446441eaf830fcb2eb0b401a))
+
+## [0.15.14](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.13...v0.15.14) (2024-12-22)
 
 ### 🔄 Refactoring
 
-* reduce 429 errors possibility ([85832a8](https://github.com/arshad-yaseen/monacopilot/commit/85832a85d2e8f36a484ae268308a54f37ed3b65a))
+- reduce 429 errors possibility ([85832a8](https://github.com/arshad-yaseen/monacopilot/commit/85832a85d2e8f36a484ae268308a54f37ed3b65a))
 
 ## [0.15.13](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.12...v0.15.13) (2024-12-22)
 
