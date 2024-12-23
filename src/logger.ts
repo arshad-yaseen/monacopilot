@@ -3,16 +3,18 @@ const YELLOW = '\x1b[93m';
 const RESET = '\x1b[0m';
 const BOLD = '\x1b[1m';
 
-export const report = (error: unknown): {message: string; stack?: string} => {
-  let errorMessage: string;
-
+const parseErrorMessage = (error: unknown): string => {
   if (error instanceof Error) {
-    errorMessage = error.message;
+    return error.message;
   } else if (typeof error === 'string') {
-    errorMessage = error;
+    return error;
   } else {
-    errorMessage = 'An unknown error occurred';
+    return 'An unknown error occurred';
   }
+};
+
+export const report = (error: unknown): {message: string; stack?: string} => {
+  const errorMessage = parseErrorMessage(error);
 
   const formattedError = `${RED}${BOLD}[MONACOPILOT ERROR] ${errorMessage}${RESET}`;
   console.error(formattedError);
@@ -20,8 +22,10 @@ export const report = (error: unknown): {message: string; stack?: string} => {
   return {message: errorMessage};
 };
 
-export const warn = (message: string): void => {
-  console.warn(`${YELLOW}${BOLD}[MONACOPILOT WARN] ${message}${RESET}`);
+export const warn = (message: string, error?: unknown): void => {
+  console.warn(
+    `${YELLOW}${BOLD}[MONACOPILOT WARN] ${message}${error ? `\n${parseErrorMessage(error)}` : ''}${RESET}`,
+  );
 };
 
 export const log = (message: string): void => {

@@ -2,7 +2,7 @@ import {CompletionFormatter} from '../../classes';
 import {CompletionCache} from '../../classes/completion-cache';
 import {CompletionRange} from '../../classes/completion-range';
 import {constructCompletionMetadata, fetchCompletionItem} from '../../helpers';
-import {report} from '../../logger';
+import {warn} from '../../logger';
 import {
   CompletionMetadata,
   EditorInlineCompletionsResult,
@@ -113,8 +113,6 @@ const handleInlineCompletions = async ({
       },
     });
 
-    console.log('completion', completion);
-
     if (completion) {
       const formattedCompletion = CompletionFormatter.create(completion)
         .removeMarkdownCodeSyntax()
@@ -153,7 +151,7 @@ const handleInlineCompletions = async ({
     } else if (onError) {
       onError(error as Error);
     } else {
-      report(error);
+      warn('Cannot provide completion', error);
     }
   }
 
