@@ -1,11 +1,17 @@
 
 
-## [0.16.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.0...v0.16.1) (2024-12-23)
+## [0.16.2](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.1...v0.16.2) (2024-12-23)
 
+
+### 🔧 Maintenance
+
+* log a warning instead of an error when encountering issues fetching or processing completions ([17fefee](https://github.com/arshad-yaseen/monacopilot/commit/17fefeea248e568f7976dca75de4a249fd959af2))
+
+## [0.16.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.0...v0.16.1) (2024-12-23)
 
 ### 📚 Documentation
 
-* fix keyboard shortcut example code ([bd74f58](https://github.com/arshad-yaseen/monacopilot/commit/bd74f58660f5fc251575e00094cdaa9b87461cb5))
+- fix keyboard shortcut example code ([bd74f58](https://github.com/arshad-yaseen/monacopilot/commit/bd74f58660f5fc251575e00094cdaa9b87461cb5))
 
 ## [0.16.0](https://github.com/arshad-yaseen/monacopilot/compare/v0.15.14...v0.16.0) (2024-12-23)
 
