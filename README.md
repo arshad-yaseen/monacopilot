@@ -213,7 +213,7 @@ const completion = registerCompletion(monaco, editor, {
   trigger: 'onDemand',
 });
 
-monaco.editor.addCommand(
+editor.addCommand(
   monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.Space,
   () => {
     completion.trigger();

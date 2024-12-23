@@ -23,6 +23,13 @@ export default function Home() {
       trigger: 'onTyping',
     });
 
+    editor.addCommand(
+      monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.Space,
+      () => {
+        completion.trigger();
+      },
+    );
+
     return () => {
       completion.deregister();
     };
