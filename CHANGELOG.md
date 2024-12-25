@@ -1,11 +1,17 @@
 
 
-## [0.16.2](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.1...v0.16.2) (2024-12-23)
+## [0.16.3](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.2...v0.16.3) (2024-12-25)
 
 
 ### 🔧 Maintenance
 
-* log a warning instead of an error when encountering issues fetching or processing completions ([17fefee](https://github.com/arshad-yaseen/monacopilot/commit/17fefeea248e568f7976dca75de4a249fd959af2))
+* improve typing debounce pause threshold ([af4d0c9](https://github.com/arshad-yaseen/monacopilot/commit/af4d0c93032f0df01e955a2a19ebb576d8aa068b))
+
+## [0.16.2](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.1...v0.16.2) (2024-12-23)
+
+### 🔧 Maintenance
+
+- log a warning instead of an error when encountering issues fetching or processing completions ([17fefee](https://github.com/arshad-yaseen/monacopilot/commit/17fefeea248e568f7976dca75de4a249fd959af2))
 
 ## [0.16.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.0...v0.16.1) (2024-12-23)
 
