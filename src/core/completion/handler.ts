@@ -26,7 +26,7 @@ const getDebouncedFunctionPerTrigger = (
 > => {
   return {
     [TriggerType.OnTyping]: typingDebouncedAsync(fn, 600, 200),
-    [TriggerType.OnIdle]: typingDebouncedAsync(fn, 650, 250),
+    [TriggerType.OnIdle]: typingDebouncedAsync(fn, 600, 400),
     [TriggerType.OnDemand]: typingDebouncedAsync(fn, 0, 0),
   };
 };
