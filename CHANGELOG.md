@@ -1,11 +1,17 @@
 
 
-## [0.16.3](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.2...v0.16.3) (2024-12-25)
+## [0.16.4](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.3...v0.16.4) (2024-12-25)
 
 
 ### 🔧 Maintenance
 
-* improve typing debounce pause threshold ([af4d0c9](https://github.com/arshad-yaseen/monacopilot/commit/af4d0c93032f0df01e955a2a19ebb576d8aa068b))
+* improve onidle typing pause threshold ([1edb30d](https://github.com/arshad-yaseen/monacopilot/commit/1edb30dcd0c31d3b8a5550a62cbe6aa318db2e55))
+
+## [0.16.3](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.2...v0.16.3) (2024-12-25)
+
+### 🔧 Maintenance
+
+- improve typing debounce pause threshold ([af4d0c9](https://github.com/arshad-yaseen/monacopilot/commit/af4d0c93032f0df01e955a2a19ebb576d8aa068b))
 
 ## [0.16.2](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.1...v0.16.2) (2024-12-23)
 
