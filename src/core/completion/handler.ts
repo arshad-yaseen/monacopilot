@@ -13,12 +13,6 @@ import {
 import {getTextBeforeCursor, typingDebouncedAsync} from '../../utils';
 import {createInlineCompletionResult} from '../../utils/completion';
 
-const DEBOUNCE_DELAYS = {
-  [TriggerType.OnTyping]: 200,
-  [TriggerType.OnIdle]: 600,
-  [TriggerType.OnDemand]: 0,
-};
-
 /**
  * Returns a set of debounced functions for each trigger type.
  * @param fn - The function to debounce.
@@ -31,18 +25,9 @@ const getDebouncedFunctionPerTrigger = (
   ReturnType<typeof typingDebouncedAsync<FetchCompletionItemHandler>>
 > => {
   return {
-    [TriggerType.OnTyping]: typingDebouncedAsync(
-      fn,
-      DEBOUNCE_DELAYS[TriggerType.OnTyping],
-    ),
-    [TriggerType.OnIdle]: typingDebouncedAsync(
-      fn,
-      DEBOUNCE_DELAYS[TriggerType.OnIdle],
-    ),
-    [TriggerType.OnDemand]: typingDebouncedAsync(
-      fn,
-      DEBOUNCE_DELAYS[TriggerType.OnDemand],
-    ),
+    [TriggerType.OnTyping]: typingDebouncedAsync(fn, 600, 200),
+    [TriggerType.OnIdle]: typingDebouncedAsync(fn, 650, 250),
+    [TriggerType.OnDemand]: typingDebouncedAsync(fn, 0, 0),
   };
 };
 

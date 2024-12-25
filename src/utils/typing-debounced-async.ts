@@ -1,12 +1,11 @@
 /**
  * Creates a debounced version of a function that returns a promise.
- * Adjusts delay based on typing speed - uses full delay for rapid typing,
- * shorter delay after pauses.
+ * Adjusts delay based on typing speed - shorter delay after pauses.
+ * Ensures that if a function call is in progress, new calls wait until it finishes.
  *
  * @param func - Function to debounce
- * @param baseWait - Max delay in ms
- * @param threshold - Pause threshold in ms
- * @returns Debounced function with cancel method
+ * @param baseWait - Max delay in ms (default: 600)
+ * @param threshold - Pause threshold in ms (default: 200)
  */
 export const typingDebouncedAsync = <
   T extends (...args: any[]) => Promise<any>,
@@ -22,14 +21,18 @@ export const typingDebouncedAsync = <
   let lastCallTime = 0;
   let lastArgs: Parameters<T> | null = null;
   let currentPromise: Promise<ReturnType<T>> | null = null;
+  let isExecuting = false;
 
   const debouncedFunc = (...args: Parameters<T>): Promise<ReturnType<T>> => {
+    if (isExecuting) {
+      return Promise.resolve(undefined as ReturnType<T>);
+    }
+
     lastArgs = args;
     const currentTime = Date.now();
     const timeSinceLastCall = currentTime - lastCallTime;
     lastCallTime = currentTime;
 
-    // Cancel any existing timeout
     if (timeoutId) {
       clearTimeout(timeoutId);
       timeoutId = null;
@@ -37,18 +40,20 @@ export const typingDebouncedAsync = <
 
     const delay = timeSinceLastCall < threshold ? baseWait : threshold;
 
-    // Create a new promise for this call
     currentPromise = new Promise((resolve, reject) => {
       timeoutId = setTimeout(async () => {
+        isExecuting = true;
         try {
           if (lastArgs) {
             const result = await func(...lastArgs);
             resolve(result);
+          } else {
+            resolve(undefined as ReturnType<T>);
           }
         } catch (error) {
           reject(error);
         } finally {
-          // Reset state
+          isExecuting = false;
           timeoutId = null;
           lastArgs = null;
         }
@@ -63,7 +68,6 @@ export const typingDebouncedAsync = <
       clearTimeout(timeoutId);
       timeoutId = null;
     }
-    // Don't reject the promise on cancel, allowing code after fetchCompletion to execute
     lastArgs = null;
   };
 

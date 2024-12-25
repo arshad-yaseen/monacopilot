@@ -20,7 +20,6 @@ export default function Home() {
       endpoint: '/api/complete',
       language: 'javascript',
       maxContextLines: 60,
-      trigger: 'onTyping',
     });
 
     return () => {
