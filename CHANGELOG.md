@@ -1,3 +1,12 @@
+
+
+## [0.16.6](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.5...v0.16.6) (2024-12-28)
+
+
+### 🐛 Bug Fixes
+
+* indent logic that doing in invalid cases ([2268d72](https://github.com/arshad-yaseen/monacopilot/commit/2268d721219137dbf101bcd2a4d743514d127c71))
+
 ## [0.16.5](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.4...v0.16.5) (2024-12-28)
 
 ### 🔧 Maintenance
