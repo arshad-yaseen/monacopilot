@@ -4,13 +4,18 @@
  */
 export class CompletionFormatter {
   private formattedCompletion = '';
+  private currentColumn = 0;
 
-  private constructor(completion: string) {
+  private constructor(completion: string, currentColumn: number) {
     this.formattedCompletion = completion;
+    this.currentColumn = currentColumn;
   }
 
-  public static create(completion: string): CompletionFormatter {
-    return new CompletionFormatter(completion);
+  public static create(
+    completion: string,
+    currentColumn: number,
+  ): CompletionFormatter {
+    return new CompletionFormatter(completion, currentColumn);
   }
 
   public setCompletion(completion: string): CompletionFormatter {
@@ -27,6 +32,22 @@ export class CompletionFormatter {
     this.formattedCompletion = this.removeMarkdownCodeBlocks(
       this.formattedCompletion,
     );
+    return this;
+  }
+
+  public indentByColumn(): CompletionFormatter {
+    const lines = this.formattedCompletion.split('\n');
+    if (lines.length <= 1) return this;
+
+    const indentation = ' '.repeat(this.currentColumn - 1);
+    this.formattedCompletion =
+      lines[0] +
+      '\n' +
+      lines
+        .slice(1)
+        .map(line => indentation + line)
+        .join('\n');
+
     return this;
   }
 

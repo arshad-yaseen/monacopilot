@@ -18,7 +18,7 @@ export default function Home() {
 
     const completion = registerCompletion(monaco, editor, {
       endpoint: '/api/complete',
-      language: 'javascript',
+      language: 'python',
       maxContextLines: 60,
     });
 
@@ -29,7 +29,7 @@ export default function Home() {
 
   return (
     <Editor
-      language="javascript"
+      language="python"
       onMount={(editor: StandaloneCodeEditor, monaco: Monaco) => {
         setMonaco(monaco);
         setEditor(editor);

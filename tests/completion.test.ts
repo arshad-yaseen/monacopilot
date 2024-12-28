@@ -8,12 +8,12 @@ import {
 import {DEFAULT_COMPLETION_TEMPERATURE} from '../src/constants/completion';
 import {HTTP} from '../src/utils';
 import {
+  MOCK_API_KEY,
+  MOCK_COMPLETION,
   MOCK_COMPLETION_CONTENT,
-  mockApiKey,
-  mockCompletion,
-  mockCompletionMetadata,
-  mockError,
-  mockNetworkError,
+  MOCK_COMPLETION_METADATA,
+  MOCK_ERROR,
+  MOCK_NETWORK_ERROR,
   TEST_MODEL,
   TEST_PROVIDER,
 } from './mock';
@@ -22,7 +22,7 @@ describe('Completion', () => {
   let copilot: Copilot;
 
   beforeEach(() => {
-    copilot = new Copilot(mockApiKey, {
+    copilot = new Copilot(MOCK_API_KEY, {
       provider: TEST_PROVIDER,
       model: TEST_MODEL,
     });
@@ -34,17 +34,17 @@ describe('Completion', () => {
   });
 
   it('should successfully return a completion', async () => {
-    vi.spyOn(HTTP, 'POST').mockResolvedValue(mockCompletion);
+    vi.spyOn(HTTP, 'POST').mockResolvedValue(MOCK_COMPLETION);
 
     const result = await copilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        completionMetadata: MOCK_COMPLETION_METADATA,
       },
     });
 
     expect(result).toEqual({
       completion: MOCK_COMPLETION_CONTENT,
-      raw: mockCompletion,
+      raw: MOCK_COMPLETION,
     });
     expect(HTTP.POST).toHaveBeenCalledWith(
       COPILOT_PROVIDER_ENDPOINT_MAP[TEST_PROVIDER],
@@ -63,11 +63,11 @@ describe('Completion', () => {
   });
 
   it('should handle API errors and return an error response', async () => {
-    vi.spyOn(HTTP, 'POST').mockRejectedValue(mockError);
+    vi.spyOn(HTTP, 'POST').mockRejectedValue(MOCK_ERROR);
 
     const result = await copilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        completionMetadata: MOCK_COMPLETION_METADATA,
       },
     });
 
@@ -78,15 +78,15 @@ describe('Completion', () => {
   });
 
   it('should use custom provider and model when specified', async () => {
-    const customCopilot = new Copilot(mockApiKey, {
+    const customCopilot = new Copilot(MOCK_API_KEY, {
       provider: 'openai',
       model: 'gpt-4o',
     });
-    vi.spyOn(HTTP, 'POST').mockResolvedValue(mockCompletion);
+    vi.spyOn(HTTP, 'POST').mockResolvedValue(MOCK_COMPLETION);
 
     await customCopilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        completionMetadata: MOCK_COMPLETION_METADATA,
       },
     });
 
@@ -100,12 +100,12 @@ describe('Completion', () => {
   });
 
   it('should handle network errors', async () => {
-    mockError.name = 'NetworkError';
-    vi.spyOn(HTTP, 'POST').mockRejectedValue(mockNetworkError);
+    MOCK_ERROR.name = 'NetworkError';
+    vi.spyOn(HTTP, 'POST').mockRejectedValue(MOCK_NETWORK_ERROR);
 
     const result = await copilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        completionMetadata: MOCK_COMPLETION_METADATA,
       },
     });
 
@@ -117,11 +117,11 @@ describe('Completion', () => {
 
   it('should use custom headers in API requests', async () => {
     const customHeaders = {'X-Custom-Header': 'test-value'};
-    vi.spyOn(HTTP, 'POST').mockResolvedValue(mockCompletion);
+    vi.spyOn(HTTP, 'POST').mockResolvedValue(MOCK_COMPLETION);
 
     await copilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        completionMetadata: MOCK_COMPLETION_METADATA,
       },
       options: {
         headers: customHeaders,
@@ -142,11 +142,11 @@ describe('Completion', () => {
       system: 'Custom system prompt',
       user: `Custom user prompt: ${metadata.textBeforeCursor}`,
     });
-    vi.spyOn(HTTP, 'POST').mockResolvedValue(mockCompletion);
+    vi.spyOn(HTTP, 'POST').mockResolvedValue(MOCK_COMPLETION);
 
     await copilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        completionMetadata: MOCK_COMPLETION_METADATA,
       },
       options: {
         customPrompt,
@@ -169,11 +169,11 @@ describe('Completion', () => {
   });
 
   it('should use default prompt when custom prompt is not provided', async () => {
-    vi.spyOn(HTTP, 'POST').mockResolvedValue(mockCompletion);
+    vi.spyOn(HTTP, 'POST').mockResolvedValue(MOCK_COMPLETION);
 
     await copilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        completionMetadata: MOCK_COMPLETION_METADATA,
       },
     });
 
@@ -188,11 +188,11 @@ describe('Completion', () => {
   });
 
   it('should use custom system prompt while retaining default user prompt', async () => {
-    vi.spyOn(HTTP, 'POST').mockResolvedValue(mockCompletion);
+    vi.spyOn(HTTP, 'POST').mockResolvedValue(MOCK_COMPLETION);
 
     await copilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        completionMetadata: MOCK_COMPLETION_METADATA,
       },
       options: {
         customPrompt: () => ({
@@ -219,7 +219,7 @@ describe('Completion', () => {
       user: `Custom user prompt: ${metadata.textBeforeCursor}`,
     });
 
-    const prompt = customPrompt(mockCompletionMetadata);
+    const prompt = customPrompt(MOCK_COMPLETION_METADATA);
 
     expect(prompt.system).toBe('Custom system prompt');
     expect(prompt.user).toBe('Custom user prompt: function hello() {');

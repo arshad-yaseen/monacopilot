@@ -2,7 +2,7 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 
 import {Copilot} from '../src';
 import {HTTP} from '../src/utils';
-import {mockApiKey, mockCompletionMetadata} from './mock';
+import {MOCK_API_KEY, MOCK_COMPLETION_METADATA} from './mock';
 
 describe('Copilot with model', () => {
   let copilot: Copilot;
@@ -23,7 +23,7 @@ describe('Copilot with model', () => {
     });
     const customResponse = vi.fn().mockReturnValue({text: 'Custom response'});
 
-    copilot = new Copilot(mockApiKey, {
+    copilot = new Copilot(MOCK_API_KEY, {
       model: {
         config: customConfig,
         transformResponse: customResponse,
@@ -34,11 +34,11 @@ describe('Copilot with model', () => {
 
     const result = await copilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        completionMetadata: MOCK_COMPLETION_METADATA,
       },
     });
 
-    expect(customConfig).toHaveBeenCalledWith(mockApiKey, expect.any(Object));
+    expect(customConfig).toHaveBeenCalledWith(MOCK_API_KEY, expect.any(Object));
     expect(HTTP.POST).toHaveBeenCalledWith(
       'https://custom-api.com/v1/chat/completions',
       {custom: 'data'},
@@ -61,7 +61,7 @@ describe('Copilot with model', () => {
       throw new Error('Custom response error');
     });
 
-    copilot = new Copilot(mockApiKey, {
+    copilot = new Copilot(MOCK_API_KEY, {
       model: {
         config: customConfig,
         transformResponse: customResponse,
@@ -72,7 +72,7 @@ describe('Copilot with model', () => {
 
     const result = await copilot.complete({
       body: {
-        completionMetadata: mockCompletionMetadata,
+        completionMetadata: MOCK_COMPLETION_METADATA,
       },
     });
 

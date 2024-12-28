@@ -99,10 +99,14 @@ const handleInlineCompletions = async ({
     });
 
     if (completion) {
-      const formattedCompletion = CompletionFormatter.create(completion)
+      const formattedCompletion = CompletionFormatter.create(
+        completion,
+        pos.column,
+      )
         .removeMarkdownCodeSyntax()
         .removeExcessiveNewlines()
         .removeInvalidLineBreaks()
+        .indentByColumn()
         .build();
 
       const completionRange = new CompletionRange(monaco);

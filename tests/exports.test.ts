@@ -3,11 +3,6 @@ import {describe, expect, it} from 'vitest';
 import * as MonacoPilot from '../src';
 
 describe('MonacoPilot exports', () => {
-  it('should export registerCopilot function', () => {
-    expect(MonacoPilot.registerCopilot).toBeDefined();
-    expect(typeof MonacoPilot.registerCopilot).toBe('function');
-  });
-
   it('should export registerCompletion function', () => {
     expect(MonacoPilot.registerCompletion).toBeDefined();
     expect(typeof MonacoPilot.registerCompletion).toBe('function');

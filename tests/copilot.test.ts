@@ -3,13 +3,13 @@ import {describe, expect, it, vi} from 'vitest';
 import {Copilot} from '../src/classes/copilot';
 import {COPILOT_PROVIDER_MODEL_MAP, COPILOT_PROVIDERS} from '../src/constants';
 import {joinWithAnd} from '../src/utils';
-import {mockApiKey, TEST_PROVIDER} from './mock';
+import {MOCK_API_KEY, TEST_PROVIDER} from './mock';
 
 describe('Copilot', () => {
   it('should reject initialization with an unsupported provider', () => {
     expect(
       () =>
-        new Copilot(mockApiKey, {
+        new Copilot(MOCK_API_KEY, {
           // @ts-expect-error testing unsupported provider
           provider: 'unsupported-provider',
           // @ts-expect-error testing unsupported model
@@ -21,7 +21,7 @@ describe('Copilot', () => {
   it('should reject initialization with an unsupported model for a provider', () => {
     expect(
       // @ts-expect-error testing unsupported model
-      () => new Copilot(mockApiKey, {provider: 'groq', model: 'gpt-4o'}),
+      () => new Copilot(MOCK_API_KEY, {provider: 'groq', model: 'gpt-4o'}),
     ).toThrow(
       `Model "gpt-4o" is not supported by the "groq" provider. Supported models: ${joinWithAnd(
         COPILOT_PROVIDER_MODEL_MAP['groq'],
@@ -36,7 +36,7 @@ describe('Copilot', () => {
   });
 
   it('should require valid options for initialization', () => {
-    expect(() => new Copilot(mockApiKey, {} as any)).toThrow(
+    expect(() => new Copilot(MOCK_API_KEY, {} as any)).toThrow(
       `Please provide options.`,
     );
   });
@@ -44,7 +44,7 @@ describe('Copilot', () => {
   it('should reject custom model configuration when provider is specified', () => {
     expect(
       () =>
-        new Copilot(mockApiKey, {
+        new Copilot(MOCK_API_KEY, {
           provider: TEST_PROVIDER,
           model: {
             config: vi.fn().mockReturnValue({
@@ -59,7 +59,7 @@ describe('Copilot', () => {
   it('should require a provider when using built-in models', () => {
     expect(
       () =>
-        new Copilot(mockApiKey, {
+        new Copilot(MOCK_API_KEY, {
           model: 'gpt-4o',
         } as any),
     ).toThrow(
@@ -72,7 +72,7 @@ describe('Copilot', () => {
   it('should require both config and transformResponse for custom model', () => {
     expect(
       () =>
-        new Copilot(mockApiKey, {
+        new Copilot(MOCK_API_KEY, {
           model: {
             transformResponse: vi.fn(),
           },
@@ -83,7 +83,7 @@ describe('Copilot', () => {
   });
 
   it('should successfully initialize with valid provider and model', () => {
-    const copilot = new Copilot(mockApiKey, {
+    const copilot = new Copilot(MOCK_API_KEY, {
       provider: 'openai',
       model: 'gpt-4o',
     });
@@ -92,7 +92,7 @@ describe('Copilot', () => {
   });
 
   it('should successfully initialize with custom model configuration', () => {
-    const copilot = new Copilot(mockApiKey, {
+    const copilot = new Copilot(MOCK_API_KEY, {
       model: {
         config: vi.fn(),
         transformResponse: vi.fn(),

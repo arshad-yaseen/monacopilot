@@ -13,10 +13,10 @@
     "dev": "tsup src/index.ts --watch",
     "test": "vitest",
     "dev:test-ui": "pnpm -C tests/ui dev",
-    "type-check": "tsc --noEmit",
+    "tsc": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx --fix",
     "lint:test-ui": "pnpm -C tests/ui lint",
-    "validate": "pnpm build && pnpm format && pnpm type-check && pnpm lint && pnpm lint:test-ui",
+    "validate": "pnpm build && pnpm format && pnpm tsc && pnpm lint && pnpm lint:test-ui",
     "format": "prettier --write .",
     "release": "release-it",
     "prepare": "husky"

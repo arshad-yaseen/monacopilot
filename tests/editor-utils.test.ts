@@ -8,13 +8,13 @@ import {
   getTextAfterCursorInLine,
   getTextBeforeCursorInLine,
 } from '../src/utils/editor';
-import {mockModel} from './mock';
+import {MOCK_MODEL} from './mock';
 
 describe('Editor Utilities', () => {
   let mdl: EditorModel;
 
   beforeEach(() => {
-    mdl = mockModel;
+    mdl = MOCK_MODEL;
     vi.clearAllMocks();
   });
 
