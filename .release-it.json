@@ -67,6 +67,10 @@
           {
             "type": "chore",
             "section": "🔧 Maintenance"
+          },
+          {
+            "type": "breaking",
+            "section": "💥 Breaking Changes"
           }
         ]
       }

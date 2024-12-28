@@ -1,4 +1,4 @@
-import {deprecated, report, warn} from '../../logger';
+import {report, warn} from '../../logger';
 import {
   CompletionRegistration,
   Disposable,
@@ -155,15 +155,4 @@ const handleTriggerCompletion = (editor: StandaloneCodeEditor) => {
   }
   state.isManualTrigger = true;
   editor.trigger('keyboard', 'editor.action.inlineSuggest.trigger', {});
-};
-
-/**
- * @deprecated Use `registerCompletion` instead. This function will be removed in a future version.
- */
-export const registerCopilot = (
-  ...args: Parameters<typeof registerCompletion>
-) => {
-  deprecated('registerCopilot', 'registerCompletion');
-
-  return registerCompletion(...args);
 };

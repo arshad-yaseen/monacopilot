@@ -14,11 +14,7 @@ describe('MonacoPilot exports', () => {
   });
 
   it('should not export any unexpected items', () => {
-    const expectedExports = [
-      'registerCopilot',
-      'Copilot',
-      'registerCompletion',
-    ];
+    const expectedExports = ['Copilot', 'registerCompletion'];
     const actualExports = Object.keys(MonacoPilot);
 
     expect(actualExports).toEqual(expect.arrayContaining(expectedExports));

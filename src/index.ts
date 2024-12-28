@@ -1,7 +1,7 @@
 import {Copilot} from './classes';
-import {registerCompletion, registerCopilot} from './core/completion/register';
+import {registerCompletion} from './core/completion/register';
 
-export {registerCopilot, registerCompletion, Copilot};
+export {registerCompletion, Copilot};
 
 export type {
   Monaco,
