@@ -10,7 +10,11 @@ import {
   InlineCompletionHandlerParams,
   TriggerType,
 } from '../../types';
-import {getTextBeforeCursor, typingDebouncedAsync} from '../../utils';
+import {
+  getTextBeforeCursor,
+  getTextBeforeCursorInLine,
+  typingDebouncedAsync,
+} from '../../utils';
 import {createInlineCompletionResult} from '../../utils/completion';
 
 /**
@@ -99,9 +103,10 @@ const handleInlineCompletions = async ({
     });
 
     if (completion) {
-      const formattedCompletion = CompletionFormatter.create(
+      const formattedCompletion = new CompletionFormatter(
         completion,
         pos.column,
+        getTextBeforeCursorInLine(pos, mdl),
       )
         .removeMarkdownCodeSyntax()
         .removeExcessiveNewlines()

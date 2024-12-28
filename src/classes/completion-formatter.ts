@@ -5,17 +5,16 @@
 export class CompletionFormatter {
   private formattedCompletion = '';
   private currentColumn = 0;
+  private textBeforeCursorInLine = '';
 
-  private constructor(completion: string, currentColumn: number) {
-    this.formattedCompletion = completion;
-    this.currentColumn = currentColumn;
-  }
-
-  public static create(
+  constructor(
     completion: string,
     currentColumn: number,
-  ): CompletionFormatter {
-    return new CompletionFormatter(completion, currentColumn);
+    textBeforeCursorInLine: string,
+  ) {
+    this.formattedCompletion = completion;
+    this.currentColumn = currentColumn;
+    this.textBeforeCursorInLine = textBeforeCursorInLine;
   }
 
   public setCompletion(completion: string): CompletionFormatter {
@@ -36,10 +35,18 @@ export class CompletionFormatter {
   }
 
   public indentByColumn(): CompletionFormatter {
+    // Split completion into lines
     const lines = this.formattedCompletion.split('\n');
-    if (lines.length <= 1) return this;
 
+    // Skip indentation if there's only one line or if there's text before cursor in the line
+    if (lines.length <= 1 || this.textBeforeCursorInLine.trim() !== '') {
+      return this;
+    }
+
+    // Create indentation string based on current column position
     const indentation = ' '.repeat(this.currentColumn - 1);
+
+    // Keep first line as is, indent all subsequent lines
     this.formattedCompletion =
       lines[0] +
       '\n' +

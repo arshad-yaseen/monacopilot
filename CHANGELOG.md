@@ -1,16 +1,12 @@
-
-
 ## [0.16.5](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.4...v0.16.5) (2024-12-28)
-
 
 ### 🔧 Maintenance
 
-* indent new lines of completion based on current column ([4c9fe26](https://github.com/arshad-yaseen/monacopilot/commit/4c9fe26d2e20795ec2adc3860ad305f405f64a65))
-
+- indent new lines of completion based on current column ([4c9fe26](https://github.com/arshad-yaseen/monacopilot/commit/4c9fe26d2e20795ec2adc3860ad305f405f64a65))
 
 ### 💥 Breaking Changes
 
-* drop deprecated registerCopilot ([e2ce7a2](https://github.com/arshad-yaseen/monacopilot/commit/e2ce7a2d1eb61b58818ca62a7d7b5f3388e08220))
+- drop deprecated registerCopilot ([e2ce7a2](https://github.com/arshad-yaseen/monacopilot/commit/e2ce7a2d1eb61b58818ca62a7d7b5f3388e08220))
 
 ## [0.16.4](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.3...v0.16.4) (2024-12-25)
 
