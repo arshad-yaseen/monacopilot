@@ -1,5 +1,3 @@
-Sure, here is the updated contributing guide with the specified files included in the file structure and the table below it:
-
 # Contributing to Monacopilot
 
 Thank you for your interest in contributing to Monacopilot! We're thrilled to have you on board. By contributing, you’re helping to make Monacopilot better for everyone. Please take a moment to review this guide before getting started.
@@ -75,7 +73,7 @@ Follow these steps to set up your development environment and start contributing
 
 ### Fork the Repository
 
-1. Navigate to the [Monacopilot GitHub repository](https://github.com/your-username/monacopilot).
+1. Navigate to the [Monacopilot GitHub repository](https://github.com/arshad-yaseen/monacopilot).
 2. Click the **Fork** button in the top-right corner to create a copy of the repository under your GitHub account.
 
 ### Clone the Repository
@@ -83,7 +81,7 @@ Follow these steps to set up your development environment and start contributing
 Clone your forked repository to your local machine using the following command:
 
 ```bash
-git clone https://github.com/your-username/monacopilot.git
+git clone https://github.com/arshad-yaseen/monacopilot.git
 ```
 
 ### Navigate to Project Directory
@@ -200,7 +198,7 @@ If you have ideas for new features or components, we’d love to hear them!
 
 1. **Open an Issue:**
 
-   - Navigate to the [Issues](https://github.com/your-username/monacopilot/issues) section of the repository.
+   - Navigate to the [Issues](https://github.com/arshad-yaseen/monacopilot/issues) section of the repository.
    - Click on **New Issue** and provide a clear and detailed description of your request.
 
 ## Testing
