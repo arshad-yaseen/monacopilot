@@ -1,11 +1,17 @@
 
 
-## [0.16.6](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.5...v0.16.6) (2024-12-28)
+## [0.16.7](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.6...v0.16.7) (2025-01-07)
 
 
 ### 🐛 Bug Fixes
 
-* indent logic that doing in invalid cases ([2268d72](https://github.com/arshad-yaseen/monacopilot/commit/2268d721219137dbf101bcd2a4d743514d127c71))
+* contributing.md ([c94ad31](https://github.com/arshad-yaseen/monacopilot/commit/c94ad31589bf3ba6a6a93be5a34ad44075a1baa2))
+
+## [0.16.6](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.5...v0.16.6) (2024-12-28)
+
+### 🐛 Bug Fixes
+
+- indent logic that doing in invalid cases ([2268d72](https://github.com/arshad-yaseen/monacopilot/commit/2268d721219137dbf101bcd2a4d743514d127c71))
 
 ## [0.16.5](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.4...v0.16.5) (2024-12-28)
 
