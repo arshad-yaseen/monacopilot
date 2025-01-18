@@ -3,7 +3,7 @@ import {Copilot, type CompletionRequestBody} from 'monacopilot';
 
 const copilot = new Copilot(process.env.GROQ_API_KEY!, {
   provider: 'groq',
-  model: 'llama-3-70b',
+  model: 'gemma2-9b-it',
 });
 
 export const action = async ({request}: ActionFunctionArgs) => {
@@ -14,5 +14,6 @@ export const action = async ({request}: ActionFunctionArgs) => {
     // ...
     return json({completion: null, error}, {status: 500});
   }
+  console.log(completion);
   return json(completion);
 };
