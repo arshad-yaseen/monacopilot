@@ -1,11 +1,17 @@
 
 
-## [0.16.7](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.6...v0.16.7) (2025-01-07)
+## [0.16.8](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.7...v0.16.8) (2025-01-19)
 
+
+### 📚 Documentation
+
+* beautiful note box ([f8ced6f](https://github.com/arshad-yaseen/monacopilot/commit/f8ced6fdec179dbe29ca6f303e77ddbbb52c429f))
+
+## [0.16.7](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.6...v0.16.7) (2025-01-07)
 
 ### 🐛 Bug Fixes
 
-* contributing.md ([c94ad31](https://github.com/arshad-yaseen/monacopilot/commit/c94ad31589bf3ba6a6a93be5a34ad44075a1baa2))
+- contributing.md ([c94ad31](https://github.com/arshad-yaseen/monacopilot/commit/c94ad31589bf3ba6a6a93be5a34ad44075a1baa2))
 
 ## [0.16.6](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.5...v0.16.6) (2024-12-28)
 
