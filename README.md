@@ -41,6 +41,7 @@
   - [Max Context Lines](#max-context-lines)
   - [Caching Completions](#caching-completions)
   - [Handling Errors](#handling-errors)
+  - [Completion Event Handlers](#completion-event-handlers)
   - [Custom Request Handler](#custom-request-handler)
 - [Copilot Options](#copilot-options)
   - [Changing the Provider and Model](#changing-the-provider-and-model)
@@ -419,21 +420,26 @@ registerCompletion(monaco, editor, {
 });
 ```
 
-### Handling Completion Event
+### Completion Event Handlers
 
-The editor provides several events to handle completion suggestions. These events allow you to respond to different stages of the completion process, such as when a suggestion is shown, accepted, or rejected by the user.
+The editor provides several events to handle completion suggestions. These events allow you to respond to different stages of the completion process, such as when a suggestion is shown or accepted by the user.
 
 #### onCompletionShown
 
 This event is triggered when a completion suggestion is shown to the user. You can use this event to log or perform actions when a suggestion is displayed.
+
+**Parameters:**
+
+- `completion` (string): The completion text that is being shown
+- `range` (EditorRange | undefined): The editor range where the completion will be inserted
 
 **Example:**
 
 ```javascript
 registerCompletion(monaco, editor, {
   // ... other options
-  onCompletionShown(completion, item, updatedInsertText) {
-    console.log('Completion shown', completion, item, updatedInsertText);
+  onCompletionShown: (completion, range) => {
+    console.log('Completion suggestion:', {completion, range});
   },
 });
 ```
@@ -447,23 +453,8 @@ Event triggered when a completion suggestion is accepted by the user.
 ```javascript
 registerCompletion(monaco, editor, {
   // ... other options
-  onCompletionAccepted() {
+  onCompletionAccepted: () => {
     console.log('Completion accepted');
-  },
-});
-```
-
-#### onCompletionRejected
-
-Event triggered when a completion suggestion is rejected by the user.
-
-**Example**
-
-```javascript
-registerCompletion(monaco, editor, {
-  // ... other options
-  onCompletionRejected(completions) {
-    console.log('Completion rejected', completions);
   },
 });
 ```
