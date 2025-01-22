@@ -41,8 +41,10 @@
   - [Max Context Lines](#max-context-lines)
   - [Caching Completions](#caching-completions)
   - [Handling Errors](#handling-errors)
-  - [Completion Event Handlers](#completion-event-handlers)
   - [Custom Request Handler](#custom-request-handler)
+  - [Completion Event Handlers](#completion-event-handlers)
+    - [onCompletionShown](#oncompletionshown)
+    - [onCompletionAccepted](#oncompletionaccepted)
 - [Copilot Options](#copilot-options)
   - [Changing the Provider and Model](#changing-the-provider-and-model)
   - [Custom Model](#custom-model)
@@ -428,13 +430,6 @@ The editor provides several events to handle completion suggestions. These event
 
 This event is triggered when a completion suggestion is shown to the user. You can use this event to log or perform actions when a suggestion is displayed.
 
-**Parameters:**
-
-- `completion` (string): The completion text that is being shown
-- `range` (EditorRange | undefined): The editor range where the completion will be inserted
-
-**Example:**
-
 ```javascript
 registerCompletion(monaco, editor, {
   // ... other options
@@ -444,11 +439,14 @@ registerCompletion(monaco, editor, {
 });
 ```
 
+**Parameters:**
+
+- `completion` (string): The completion text that is being shown
+- `range` (EditorRange | undefined): The editor range where the completion will be inserted
+
 #### onCompletionAccepted
 
 Event triggered when a completion suggestion is accepted by the user.
-
-**Example**
 
 ```javascript
 registerCompletion(monaco, editor, {
