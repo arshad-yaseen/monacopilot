@@ -83,8 +83,16 @@ export const registerCompletion = (
             options,
           });
         },
-        freeInlineCompletions: () => {
-          // No-op
+        handleItemDidShow: (completion, item, updatedInsertText) => {
+          options.onCompletionShown?.(completion, item, updatedInsertText);
+        },
+        freeInlineCompletions: completions => {
+          const state = editorCompletionState.get(editor);
+
+          if (!state) return;
+
+          state.isCompletionAccepted ||
+            options.onCompletionRejected?.(completions);
         },
       });
     disposables.push(inlineCompletionsProvider);
@@ -99,6 +107,7 @@ export const registerCompletion = (
         (event.keyCode === monaco.KeyCode.RightArrow && event.metaKey);
 
       if (state.isCompletionVisible && isTabOrCmdRightArrow) {
+        options.onCompletionAccepted?.();
         state.isCompletionAccepted = true;
         state.isCompletionVisible = false;
       } else {

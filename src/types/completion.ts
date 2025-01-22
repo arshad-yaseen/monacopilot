@@ -103,6 +103,16 @@ export interface RegisterCompletionOptions {
    * @returns {Promise<{completion: string | null}>} An object containing the completion or null if no completion is available.
    */
   requestHandler?: FetchCompletionItemHandler;
+
+  onCompletionShown?: (
+    completion: any,
+    item: any,
+    updatedInsertText: string,
+  ) => void;
+
+  onCompletionAccepted?: () => void;
+
+  onCompletionRejected?: (completions: any) => void;
 }
 
 export enum TriggerType {
