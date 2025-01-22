@@ -58,17 +58,31 @@ export const registerCompletion = (
   });
 
   try {
+    // Retrieve the editor's completion state once here
+    const state = editorCompletionState.get(editor);
+    if (!state) {
+      warn('Completion is not registered properly. State not found.');
+      return {
+        deregister: () => {
+          /* No-op */
+        },
+        trigger: () => {
+          /* No-op */
+        },
+      };
+    }
+
+    // Register inline completions provider
     const inlineCompletionsProvider =
       monaco.languages.registerInlineCompletionsProvider(options.language, {
         provideInlineCompletions: (mdl, pos, _, token) => {
-          const state = editorCompletionState.get(editor);
-
-          if (!state) return;
-
-          const isOnDemandTrigger =
-            options.trigger === TriggerType.OnDemand && !state.isManualTrigger;
-
-          if (isOnDemandTrigger) return;
+          // Skip if trigger is on-demand but user did not manually trigger
+          if (
+            options.trigger === TriggerType.OnDemand &&
+            !state.isManualTrigger
+          ) {
+            return;
+          }
 
           return handleInlineCompletions({
             monaco,
@@ -76,29 +90,30 @@ export const registerCompletion = (
             pos,
             token,
             isCompletionAccepted: state.isCompletionAccepted,
-            onShowCompletion: () => {
-              state.isCompletionVisible = true;
-              state.isManualTrigger = false;
-            },
             options,
           });
         },
+        handleItemDidShow: (_, item, completion) => {
+          state.isCompletionVisible = true;
+          state.isManualTrigger = false;
+
+          if (state.isCompletionAccepted) return;
+          options.onCompletionShown?.(completion, item.range);
+        },
         freeInlineCompletions: () => {
-          // No-op
+          /* No-op */
         },
       });
     disposables.push(inlineCompletionsProvider);
 
     // Listen for keydown events to detect completion acceptance
     const keyDownListener = editor.onKeyDown(event => {
-      const state = editorCompletionState.get(editor);
-      if (!state) return;
-
       const isTabOrCmdRightArrow =
         event.keyCode === monaco.KeyCode.Tab ||
         (event.keyCode === monaco.KeyCode.RightArrow && event.metaKey);
 
       if (state.isCompletionVisible && isTabOrCmdRightArrow) {
+        options.onCompletionAccepted?.();
         state.isCompletionAccepted = true;
         state.isCompletionVisible = false;
       } else {
@@ -119,7 +134,6 @@ export const registerCompletion = (
     };
 
     activeCompletionRegistration = registration;
-
     return registration;
   } catch (error) {
     if (options.onError) {
@@ -135,7 +149,7 @@ export const registerCompletion = (
         activeCompletionRegistration = null;
       },
       trigger: () => {
-        // No-op
+        /* No-op */
       },
     };
   }

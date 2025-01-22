@@ -48,7 +48,6 @@ const handleInlineCompletions = async ({
   pos,
   token,
   isCompletionAccepted,
-  onShowCompletion,
   options,
 }: InlineCompletionHandlerParams): Promise<EditorInlineCompletionsResult> => {
   const {
@@ -67,7 +66,6 @@ const handleInlineCompletions = async ({
     }));
 
     if (cachedCompletions.length > 0) {
-      onShowCompletion();
       return createInlineCompletionResult(cachedCompletions);
     }
   }
@@ -134,7 +132,6 @@ const handleInlineCompletions = async ({
         });
       }
 
-      onShowCompletion();
       return createInlineCompletionResult([
         {insertText: formattedCompletion, range: completionInsertionRange},
       ]);

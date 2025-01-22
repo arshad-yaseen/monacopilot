@@ -103,6 +103,21 @@ export interface RegisterCompletionOptions {
    * @returns {Promise<{completion: string | null}>} An object containing the completion or null if no completion is available.
    */
   requestHandler?: FetchCompletionItemHandler;
+
+  /**
+   * Callback function that is triggered when a completion is shown in the editor.
+   * @param completion - The completion text that is being shown.
+   * @param range - The editor range where the completion will be inserted.
+   */
+  onCompletionShown?: (
+    completion: string,
+    range: EditorRange | undefined,
+  ) => void;
+
+  /**
+   * Callback function triggered when a completion is accepted by the user.
+   */
+  onCompletionAccepted?: () => void;
 }
 
 export enum TriggerType {
@@ -130,7 +145,6 @@ export interface InlineCompletionHandlerParams {
   token: EditorCancellationToken;
 
   isCompletionAccepted: boolean;
-  onShowCompletion: () => void;
   options: RegisterCompletionOptions;
 }
 
