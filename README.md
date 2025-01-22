@@ -419,6 +419,55 @@ registerCompletion(monaco, editor, {
 });
 ```
 
+### Handling Completion Event
+
+The editor provides several events to handle completion suggestions. These events allow you to respond to different stages of the completion process, such as when a suggestion is shown, accepted, or rejected by the user.
+
+#### onCompletionShown
+
+This event is triggered when a completion suggestion is shown to the user. You can use this event to log or perform actions when a suggestion is displayed.
+
+**Example:**
+
+```javascript
+registerCompletion(monaco, editor, {
+  // ... other options
+  onCompletionShown(completion, item, updatedInsertText) {
+    console.log('Completion shown', completion, item, updatedInsertText);
+  },
+});
+```
+
+#### onCompletionAccepted
+
+Event triggered when a completion suggestion is accepted by the user.
+
+**Example**
+
+```javascript
+registerCompletion(monaco, editor, {
+  // ... other options
+  onCompletionAccepted() {
+    console.log('Completion accepted');
+  },
+});
+```
+
+#### onCompletionRejected
+
+Event triggered when a completion suggestion is rejected by the user.
+
+**Example**
+
+```javascript
+registerCompletion(monaco, editor, {
+  // ... other options
+  onCompletionRejected(completions) {
+    console.log('Completion rejected', completions);
+  },
+});
+```
+
 ## Copilot Options
 
 ### Changing the Provider and Model
