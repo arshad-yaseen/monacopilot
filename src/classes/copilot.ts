@@ -102,7 +102,10 @@ export class Copilot {
 
     const prompt = this.generatePrompt(completionMetadata, customPrompt);
 
-    const {endpoint, requestBody, headers} = this.prepareRequestDetails(prompt);
+    const {endpoint, requestBody, headers} = this.prepareRequestDetails(
+      prompt,
+      completionMetadata,
+    );
 
     try {
       const chatCompletion = await this.sendCompletionRequest(
@@ -127,7 +130,10 @@ export class Copilot {
       : basePrompt;
   }
 
-  private prepareRequestDetails(prompt: PromptData): {
+  private prepareRequestDetails(
+    prompt: PromptData,
+    completionMetadata: CompletionMetadata,
+  ): {
     endpoint: string;
     requestBody: ChatCompletionCreateParams;
     headers: Record<string, string>;
@@ -156,6 +162,7 @@ export class Copilot {
         this.model as CopilotModel,
         this.provider,
         prompt,
+        completionMetadata,
       );
       return {endpoint, requestBody, headers};
     }

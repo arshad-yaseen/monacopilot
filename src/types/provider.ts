@@ -1,3 +1,4 @@
+import {CompletionMetadata} from './completion';
 import {
   CopilotProvider,
   PickChatCompletion,
@@ -6,12 +7,13 @@ import {
   PromptData,
 } from './copilot';
 
-export interface ProviderHandler<T extends CopilotProvider> {
-  createEndpoint(model: PickCopilotModel<T>, apiKey: string): string;
+export interface ProviderHandler<P extends CopilotProvider> {
+  createEndpoint(model: PickCopilotModel<P>, apiKey: string): string;
   createRequestBody(
-    model: PickCopilotModel<T>,
+    model: PickCopilotModel<P>,
     prompt: PromptData,
-  ): PickChatCompletionCreateParams<T>;
+    completionMetadata: CompletionMetadata,
+  ): PickChatCompletionCreateParams<P>;
   createHeaders(apiKey: string): Record<string, string>;
-  parseCompletion(completion: PickChatCompletion<T>): string | null;
+  parseCompletion(completion: PickChatCompletion<P>): string | null;
 }

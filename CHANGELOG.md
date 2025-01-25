@@ -1,28 +1,22 @@
-
-
 ## [0.16.10](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.8...v0.16.10) (2025-01-22)
-
 
 ### 📚 Documentation
 
-* add completion event handling section to README ([1cf5734](https://github.com/arshad-yaseen/monacopilot/commit/1cf5734d74c0c5d938ad7287617b991b2d57ec35))
-* improve completion event handlers ([77e1553](https://github.com/arshad-yaseen/monacopilot/commit/77e15534c274ca933cc750b2f297d6956937dc83))
-
+- add completion event handling section to README ([1cf5734](https://github.com/arshad-yaseen/monacopilot/commit/1cf5734d74c0c5d938ad7287617b991b2d57ec35))
+- improve completion event handlers ([77e1553](https://github.com/arshad-yaseen/monacopilot/commit/77e15534c274ca933cc750b2f297d6956937dc83))
 
 ### ⚡️ Performance
 
-* add completion events ([012573b](https://github.com/arshad-yaseen/monacopilot/commit/012573b3580f88f0fdaca417238a2cf4020bb22b))
-
+- add completion events ([012573b](https://github.com/arshad-yaseen/monacopilot/commit/012573b3580f88f0fdaca417238a2cf4020bb22b))
 
 ### 🔧 CI/CD
 
-* chore version ([37e96d0](https://github.com/arshad-yaseen/monacopilot/commit/37e96d0087c60cd7f1f02913b5a6fe9dd441de8e))
-
+- chore version ([37e96d0](https://github.com/arshad-yaseen/monacopilot/commit/37e96d0087c60cd7f1f02913b5a6fe9dd441de8e))
 
 ### 🔧 Maintenance
 
-* add missing types and jsdocs ([cd3f847](https://github.com/arshad-yaseen/monacopilot/commit/cd3f847bf4897d607137a2a5125c41983f31e0a6))
-* update tsconfig.json for improved TypeScript configuration ([79c28f2](https://github.com/arshad-yaseen/monacopilot/commit/79c28f2b97953572b48c9ba11eec56df887818b1))
+- add missing types and jsdocs ([cd3f847](https://github.com/arshad-yaseen/monacopilot/commit/cd3f847bf4897d607137a2a5125c41983f31e0a6))
+- update tsconfig.json for improved TypeScript configuration ([79c28f2](https://github.com/arshad-yaseen/monacopilot/commit/79c28f2b97953572b48c9ba11eec56df887818b1))
 
 ## [0.16.8](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.7...v0.16.8) (2025-01-19)
 
