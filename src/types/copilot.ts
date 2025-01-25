@@ -15,129 +15,105 @@ import type {
   ChatCompletion as OpenAIChatCompletionType,
 } from 'openai/resources/chat/completions';
 
-/**
- * Models available for OpenAI provider.
- */
-export type OpenAIModel = 'gpt-4o' | 'gpt-4o-mini' | 'o1-mini';
-
-/**
- * Models available for Groq provider.
- */
-export type GroqModel = 'llama-3-70b';
-
-/**
- * Models available for Anthropic provider.
- */
-export type AnthropicModel =
-  | 'claude-3-5-sonnet'
-  | 'claude-3-5-haiku'
-  | 'claude-3-haiku';
-
-/**
- * Models available for Google provider.
- */
-export type GoogleModel =
-  | 'gemini-1.5-flash'
-  | 'gemini-1.5-flash-8b'
-  | 'gemini-1.5-pro';
-
-/**
- * Union of all predefined Copilot models.
- */
-export type CopilotModel =
-  | OpenAIModel
-  | GroqModel
-  | AnthropicModel
-  | GoogleModel;
+import {
+  DeepSeekChatCompletionCreateParamsBase,
+  DeepSeekChatCompletionType,
+} from './deepseek';
 
 /**
  * Providers supported by Copilot.
  */
-export type CopilotProvider = 'openai' | 'groq' | 'anthropic' | 'google';
+export type CopilotProvider =
+  | 'openai'
+  | 'groq'
+  | 'anthropic'
+  | 'google'
+  | 'deepseek';
 
 /**
- * Mapping of providers to their models.
+ * Core type mapping for provider-specific implementations
  */
-type ProviderModelMap = {
-  openai: OpenAIModel;
-  groq: GroqModel;
-  anthropic: AnthropicModel;
-  google: GoogleModel;
-};
+interface ProviderImplementationMap {
+  openai: {
+    Model: 'gpt-4o' | 'gpt-4o-mini' | 'o1-mini';
+    Params: OpenAIChatCompletionCreateParamsBase;
+    Completion: OpenAIChatCompletionType;
+  };
+  groq: {
+    Model: 'llama-3-70b';
+    Params: GroqChatCompletionCreateParamsBase;
+    Completion: GroqChatCompletionType;
+  };
+  anthropic: {
+    Model: 'claude-3-5-sonnet' | 'claude-3-5-haiku' | 'claude-3-haiku';
+    Params: AnthropicChatCompletionCreateParamsBase;
+    Completion: AnthropicChatCompletionType;
+  };
+  google: {
+    Model: 'gemini-1.5-flash' | 'gemini-1.5-flash-8b' | 'gemini-1.5-pro';
+    Params: GoogleChatCompletionCreateParamsBase;
+    Completion: GoogleChatCompletionType;
+  };
+  deepseek: {
+    Model: 'chat';
+    Params: DeepSeekChatCompletionCreateParamsBase;
+    Completion: DeepSeekChatCompletionType;
+  };
+}
 
 /**
- * Utility type to pick the appropriate model type based on the provider.
+ * Models available for each provider (maintained as individual exports)
  */
-export type PickCopilotModel<T extends CopilotProvider> = ProviderModelMap[T];
+export type OpenAIModel = ProviderImplementationMap['openai']['Model'];
+export type GroqModel = ProviderImplementationMap['groq']['Model'];
+export type AnthropicModel = ProviderImplementationMap['anthropic']['Model'];
+export type GoogleModel = ProviderImplementationMap['google']['Model'];
+export type DeepSeekModel = ProviderImplementationMap['deepseek']['Model'];
 
 /**
- * Union of all ChatCompletionCreateParams types.
+ * Union of all predefined Copilot models
  */
-export type ChatCompletionCreateParams =
-  | OpenAIChatCompletionCreateParamsBase
-  | GroqChatCompletionCreateParamsBase
-  | AnthropicChatCompletionCreateParamsBase
-  | GoogleChatCompletionCreateParamsBase;
+export type CopilotModel = {
+  [K in CopilotProvider]: ProviderImplementationMap[K]['Model'];
+}[CopilotProvider];
 
 /**
- * Specific ChatCompletionCreateParams types for each provider.
+ * Utility types for provider-specific implementations
+ */
+export type PickCopilotModel<T extends CopilotProvider> =
+  ProviderImplementationMap[T]['Model'];
+export type PickChatCompletionCreateParams<T extends CopilotProvider> =
+  ProviderImplementationMap[T]['Params'];
+export type PickChatCompletion<T extends CopilotProvider> =
+  ProviderImplementationMap[T]['Completion'];
+
+/**
+ * Consolidated chat completion types (maintained as individual exports)
+ */
+export type ChatCompletionCreateParams = {
+  [K in CopilotProvider]: ProviderImplementationMap[K]['Params'];
+}[CopilotProvider];
+export type ChatCompletion = {
+  [K in CopilotProvider]: ProviderImplementationMap[K]['Completion'];
+}[CopilotProvider];
+
+/**
+ * Individual provider type aliases (preserved from original)
  */
 export type OpenAIChatCompletionCreateParams =
   OpenAIChatCompletionCreateParamsBase;
+export type DeepSeekChatCompletionCreateParams =
+  DeepSeekChatCompletionCreateParamsBase;
 export type GroqChatCompletionCreateParams = GroqChatCompletionCreateParamsBase;
 export type AnthropicChatCompletionCreateParams =
   AnthropicChatCompletionCreateParamsBase;
 export type GoogleChatCompletionCreateParams =
   GoogleChatCompletionCreateParamsBase;
-
-/**
- * Mapping of providers to their ChatCompletionCreateParams types.
- */
-type ProviderChatCompletionCreateParamsMap = {
-  openai: OpenAIChatCompletionCreateParams;
-  groq: GroqChatCompletionCreateParams;
-  anthropic: AnthropicChatCompletionCreateParams;
-  google: GoogleChatCompletionCreateParams;
-};
-
-/**
- * Utility type to pick the appropriate ChatCompletionCreateParams type based on the provider.
- */
-export type PickChatCompletionCreateParams<T extends CopilotProvider> =
-  ProviderChatCompletionCreateParamsMap[T];
-
-/**
- * Union of all ChatCompletion types.
- */
-export type ChatCompletion =
-  | OpenAIChatCompletionType
-  | GroqChatCompletionType
-  | AnthropicChatCompletionType
-  | GoogleChatCompletionType;
-
-/**
- * Specific ChatCompletion types for each provider.
- */
 export type OpenAIChatCompletion = OpenAIChatCompletionType;
+export type DeepSeekChatCompletion = DeepSeekChatCompletionType;
 export type GroqChatCompletion = GroqChatCompletionType;
 export type AnthropicChatCompletion = AnthropicChatCompletionType;
 export type GoogleChatCompletion = GoogleChatCompletionType;
-
-/**
- * Mapping of providers to their ChatCompletion types.
- */
-type ProviderChatCompletionMap = {
-  openai: OpenAIChatCompletion;
-  groq: GroqChatCompletion;
-  anthropic: AnthropicChatCompletion;
-  google: GoogleChatCompletion;
-};
-
-/**
- * Utility type to pick the appropriate ChatCompletion type based on the provider.
- */
-export type PickChatCompletion<T extends CopilotProvider> =
-  ProviderChatCompletionMap[T];
 
 /**
  * Data structure representing the prompt data.
@@ -148,115 +124,51 @@ export interface PromptData {
 }
 
 /**
- * Function type for configuring a custom model.
+ * Custom model configuration types
  */
 export type CustomCopilotModelConfig = (
   apiKey: string,
   prompt: PromptData,
 ) => {
-  /**
-   * The URL endpoint for the custom model's API.
-   */
+  /** The URL endpoint for the custom model's API */
   endpoint: string;
-  /**
-   * Additional HTTP headers to include with the API request.
-   * Use this to add any necessary authentication or custom headers.
-   */
+  /** Additional HTTP headers */
   headers?: Record<string, string>;
-  /**
-   * The data to be sent in the request body to the custom model API.
-   */
+  /** Request body data */
   body?: Record<string, unknown>;
 };
 
-/**
- * Function type for transforming the response from a custom model.
- */
 export type CustomCopilotModelTransformResponse = (response: unknown) => {
-  /**
-   * The text generated by the custom model.
-   */
+  /** The generated text */
   text: string | null;
-  /**
-   * @deprecated Use `text` instead. This property will be removed in a future version.
-   */
+  /** @deprecated Use `text` instead */
   completion?: string | null;
 };
 
-/**
- * Definition of a custom Copilot model.
- */
 export interface CustomCopilotModel {
-  /**
-   * Function to configure the custom model.
-   */
+  /** Configuration function */
   config: CustomCopilotModelConfig;
-  /**
-   * Function to transform the response from the custom model.
-   */
+  /** Response transformer */
   transformResponse: CustomCopilotModelTransformResponse;
 }
 
 /**
- * Configuration options for initializing a Copilot instance.
- * The `model` property is type-safe and varies based on the specified `provider`.
+ * Enhanced Copilot options using mapped types
  */
+type ProviderOptions<T extends CopilotProvider> = {
+  provider: T;
+  model: ProviderImplementationMap[T]['Model'];
+};
+
+type CustomOptions = {
+  provider?: undefined;
+  model: CustomCopilotModel;
+};
+
 export type CopilotOptions =
-  | {
-      /**
-       * Specifies the provider for the Copilot instance.
-       * Supported providers include 'openai', 'anthropic', 'groq', and 'google'.
-       */
-      provider: 'openai';
-      /**
-       * Defines the model to be used for Copilot LLM (Language Model) requests.
-       * This must be a model from the 'openai' provider.
-       */
-      model: OpenAIModel;
-    }
-  | {
-      /**
-       * Specifies the 'groq' provider for the Copilot instance.
-       */
-      provider: 'groq';
-      /**
-       * Defines the model to be used for Copilot LLM requests.
-       * This must be a model from the 'groq' provider.
-       */
-      model: GroqModel;
-    }
-  | {
-      /**
-       * Specifies the 'anthropic' provider for the Copilot instance.
-       */
-      provider: 'anthropic';
-      /**
-       * Defines the model to be used for Copilot LLM requests.
-       * This must be a model from the 'anthropic' provider.
-       */
-      model: AnthropicModel;
-    }
-  | {
-      /**
-       * Specifies the 'google' provider for the Copilot instance.
-       */
-      provider: 'google';
-      /**
-       * Defines the model to be used for Copilot LLM requests.
-       * This must be a model from the 'google' provider.
-       */
-      model: GoogleModel;
-    }
-  | {
-      /**
-       * When no provider is specified, only custom models are allowed.
-       */
-      provider?: undefined;
-      /**
-       * Defines the model to be used for Copilot LLM requests.
-       * Must be a custom model when no provider is specified.
-       * For more information, refer to the documentation:
-       * @see https://github.com/arshad-yaseen/monacopilot?tab=readme-ov-file#custom-model
-       */
-      model: CustomCopilotModel;
-    };
+  | ProviderOptions<'openai'>
+  | ProviderOptions<'groq'>
+  | ProviderOptions<'anthropic'>
+  | ProviderOptions<'google'>
+  | ProviderOptions<'deepseek'>
+  | CustomOptions;

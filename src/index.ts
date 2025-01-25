@@ -22,6 +22,7 @@ export type {
   GroqModel,
   AnthropicModel,
   OpenAIChatCompletion,
+  DeepSeekChatCompletion,
   GroqChatCompletion,
   AnthropicChatCompletion,
 } from './types';

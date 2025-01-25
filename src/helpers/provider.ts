@@ -6,24 +6,28 @@ import {
 import {
   ChatCompletion,
   ChatCompletionCreateParams,
+  CompletionMetadata,
   CopilotModel,
   CopilotProvider,
+  PickChatCompletion,
+  PickCopilotModel,
+  PromptData,
   ProviderHandler,
 } from '../types';
 
+/* OpenAI Handler */
 const openaiHandler: ProviderHandler<'openai'> = {
   createEndpoint: () => COPILOT_PROVIDER_ENDPOINT_MAP.openai,
 
   createRequestBody: (model, prompt) => {
     const isO1Model = model === 'o1-mini';
-
     return {
       model: getModelId(model),
       ...(!isO1Model && {temperature: DEFAULT_COMPLETION_TEMPERATURE}),
       max_completion_tokens: DEFAULT_COMPLETION_MAX_TOKENS,
       messages: [
-        {role: 'system' as const, content: prompt.system},
-        {role: 'user' as const, content: prompt.user},
+        {role: 'system', content: prompt.system},
+        {role: 'user', content: prompt.user},
       ],
     };
   },
@@ -33,15 +37,11 @@ const openaiHandler: ProviderHandler<'openai'> = {
     Authorization: `Bearer ${apiKey}`,
   }),
 
-  parseCompletion: completion => {
-    if (!completion.choices?.length) {
-      return null;
-    }
-
-    return completion.choices[0].message.content;
-  },
+  parseCompletion: completion =>
+    completion.choices?.[0]?.message.content ?? null,
 };
 
+/* Groq Handler */
 const groqHandler: ProviderHandler<'groq'> = {
   createEndpoint: () => COPILOT_PROVIDER_ENDPOINT_MAP.groq,
 
@@ -50,8 +50,8 @@ const groqHandler: ProviderHandler<'groq'> = {
     temperature: DEFAULT_COMPLETION_TEMPERATURE,
     max_tokens: DEFAULT_COMPLETION_MAX_TOKENS,
     messages: [
-      {role: 'system' as const, content: prompt.system},
-      {role: 'user' as const, content: prompt.user},
+      {role: 'system', content: prompt.system},
+      {role: 'user', content: prompt.user},
     ],
   }),
 
@@ -60,14 +60,11 @@ const groqHandler: ProviderHandler<'groq'> = {
     Authorization: `Bearer ${apiKey}`,
   }),
 
-  parseCompletion: completion => {
-    if (!completion.choices?.length) {
-      return null;
-    }
-    return completion.choices[0].message.content;
-  },
+  parseCompletion: completion =>
+    completion.choices?.[0]?.message.content ?? null,
 };
 
+/* Anthropic Handler */
 const anthropicHandler: ProviderHandler<'anthropic'> = {
   createEndpoint: () => COPILOT_PROVIDER_ENDPOINT_MAP.anthropic,
 
@@ -75,7 +72,7 @@ const anthropicHandler: ProviderHandler<'anthropic'> = {
     model: getModelId(model),
     temperature: DEFAULT_COMPLETION_TEMPERATURE,
     system: prompt.system,
-    messages: [{role: 'user' as const, content: prompt.user}],
+    messages: [{role: 'user', content: prompt.user}],
     max_tokens: DEFAULT_COMPLETION_MAX_TOKENS,
   }),
 
@@ -86,124 +83,99 @@ const anthropicHandler: ProviderHandler<'anthropic'> = {
   }),
 
   parseCompletion: completion => {
-    if (
-      !completion.content ||
-      !Array.isArray(completion.content) ||
-      !completion.content.length
-    ) {
-      return null;
+    const c = completion.content?.[0];
+    if (c && 'text' in c) {
+      return c.text;
     }
-
-    const content = completion.content[0];
-    if (!content || typeof content !== 'object') {
-      return null;
-    }
-
-    return 'text' in content && typeof content.text === 'string'
-      ? content.text
-      : null;
+    return null;
   },
 };
 
+/* Google Handler */
 const googleHandler: ProviderHandler<'google'> = {
   createEndpoint: (model, apiKey) =>
     `${COPILOT_PROVIDER_ENDPOINT_MAP.google}/${model}:generateContent?key=${apiKey}`,
 
   createRequestBody: (model, prompt) => ({
     model: getModelId(model),
-    system_instruction: {
-      parts: {text: prompt.system},
-    },
+    system_instruction: {parts: [{text: prompt.system}]},
     generationConfig: {
       temperature: DEFAULT_COMPLETION_TEMPERATURE,
       maxOutputTokens: DEFAULT_COMPLETION_MAX_TOKENS,
     },
-    contents: [
-      {
-        parts: {text: prompt.user},
-      },
-    ],
+    contents: [{parts: [{text: prompt.user}]}],
   }),
 
   createHeaders: () => ({
     'Content-Type': 'application/json',
   }),
 
-  parseCompletion: completion => {
-    if (
-      !completion.candidates?.length ||
-      !completion.candidates[0]?.content ||
-      !completion.candidates[0].content?.parts?.length
-    ) {
-      return null;
-    }
-
-    const content = completion.candidates[0].content;
-
-    return 'text' in content.parts[0] &&
-      typeof content.parts[0].text === 'string'
-      ? content.parts[0].text
-      : null;
-  },
+  parseCompletion: completion =>
+    completion.candidates?.[0]?.content?.parts?.[0]?.text ?? null,
 };
 
-const providerHandlers: Record<
-  CopilotProvider,
-  ProviderHandler<CopilotProvider>
-> = {
+/* DeepSeek Handler */
+const deepseekHandler: ProviderHandler<'deepseek'> = {
+  createEndpoint: () => COPILOT_PROVIDER_ENDPOINT_MAP.deepseek,
+
+  createRequestBody: (model, _, completionMetadata) => ({
+    model: getModelId(model),
+    prompt: completionMetadata.textBeforeCursor,
+    suffix: completionMetadata.textAfterCursor,
+    temperature: DEFAULT_COMPLETION_TEMPERATURE,
+    max_tokens: DEFAULT_COMPLETION_MAX_TOKENS,
+  }),
+
+  createHeaders: apiKey => ({
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${apiKey}`,
+  }),
+
+  parseCompletion: completion =>
+    typeof completion.choices?.[0]?.text === 'string'
+      ? completion.choices[0].text
+      : null,
+};
+
+const providerHandlers: {[P in CopilotProvider]: ProviderHandler<P>} = {
   openai: openaiHandler,
   groq: groqHandler,
   anthropic: anthropicHandler,
   google: googleHandler,
+  deepseek: deepseekHandler,
 };
 
-/**
- * Creates an endpoint for different copilot providers.
- */
-export const createProviderEndpoint = (
-  model: CopilotModel,
+export const createProviderEndpoint = <P extends CopilotProvider>(
+  model: PickCopilotModel<P>,
   apiKey: string,
-  provider: CopilotProvider,
-): string => {
-  const handler = providerHandlers[provider];
-  return handler.createEndpoint(model, apiKey);
-};
+  provider: P,
+): string => providerHandlers[provider].createEndpoint(model, apiKey);
 
-/**
- * Creates a request body for different copilot providers.
- */
-export const createRequestBody = (
-  model: CopilotModel,
-  provider: CopilotProvider,
-  prompt: {system: string; user: string},
-): ChatCompletionCreateParams => {
-  const handler = providerHandlers[provider];
-  return handler.createRequestBody(model, prompt);
-};
+export const createRequestBody = <P extends CopilotProvider>(
+  model: PickCopilotModel<P>,
+  provider: P,
+  prompt: PromptData,
+  completionMetadata: CompletionMetadata,
+): ChatCompletionCreateParams =>
+  providerHandlers[provider].createRequestBody(
+    model,
+    prompt,
+    completionMetadata,
+  );
 
-/**
- * Creates headers for different copilot providers.
- */
-export const createProviderHeaders = (
+export const createProviderHeaders = <P extends CopilotProvider>(
   apiKey: string,
-  provider: CopilotProvider,
-): Record<string, string> => {
-  const handler = providerHandlers[provider];
-  return handler.createHeaders(apiKey);
-};
+  provider: P,
+): Record<string, string> => providerHandlers[provider].createHeaders(apiKey);
 
-/**
- * Parses the chat completion response from different providers.
- */
-export const parseProviderChatCompletion = (
+export const parseProviderChatCompletion = <P extends CopilotProvider>(
   completion: ChatCompletion,
-  provider: CopilotProvider,
-): string | null => {
-  const handler = providerHandlers[provider];
-  return handler.parseCompletion(completion);
-};
+  provider: P,
+): string | null =>
+  providerHandlers[provider].parseCompletion(
+    completion as PickChatCompletion<P>,
+  );
 
-/**
- * Gets the model ID for a given copilot model name to be used in the API request.
- */
-const getModelId = (model: CopilotModel): string => COPILOT_MODEL_IDS[model];
+const getModelId = <M extends CopilotModel>(
+  model: M,
+): (typeof COPILOT_MODEL_IDS)[M] => COPILOT_MODEL_IDS[model];
