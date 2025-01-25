@@ -19,7 +19,7 @@ export const COPILOT_MODEL_IDS: Record<CopilotModel, string> = {
   'gemini-1.5-flash-8b': 'gemini-1.5-flash-8b',
   'gemini-1.5-flash': 'gemini-1.5-flash',
   'gemini-1.5-pro': 'gemini-1.5-pro',
-  chat: 'deepseek-chat',
+  v3: 'deepseek-chat',
 } as const;
 
 export const COPILOT_PROVIDER_MODEL_MAP: Record<
@@ -30,7 +30,7 @@ export const COPILOT_PROVIDER_MODEL_MAP: Record<
   openai: ['gpt-4o', 'gpt-4o-mini', 'o1-mini'],
   anthropic: ['claude-3-5-sonnet', 'claude-3-haiku', 'claude-3-5-haiku'],
   google: ['gemini-1.5-flash-8b', 'gemini-1.5-pro', 'gemini-1.5-flash'],
-  deepseek: ['chat'],
+  deepseek: ['v3'],
 } as const;
 
 export const COPILOT_PROVIDER_ENDPOINT_MAP: Record<CopilotProvider, string> = {

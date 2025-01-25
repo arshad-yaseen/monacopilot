@@ -55,7 +55,7 @@ interface ProviderImplementationMap {
     Completion: GoogleChatCompletionType;
   };
   deepseek: {
-    Model: 'chat';
+    Model: 'v3';
     Params: DeepSeekChatCompletionCreateParamsBase;
     Completion: DeepSeekChatCompletionType;
   };

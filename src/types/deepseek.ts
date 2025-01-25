@@ -7,7 +7,7 @@ export type DeepSeekChatCompletionType = {
 };
 
 export type DeepSeekChatCompletionCreateParamsBase = {
-  model: (typeof COPILOT_MODEL_IDS)['chat'];
+  model: (typeof COPILOT_MODEL_IDS)['v3'];
   prompt: string;
   suffix: string;
   temperature: number;

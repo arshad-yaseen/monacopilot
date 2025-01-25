@@ -478,7 +478,7 @@ There are other providers and models available. Here is a list:
 | openai    | `gpt-4o`, `gpt-4o-mini`, `o1-mini (beta model)`             |                                                                                                                                                                                                    |
 | anthropic | `claude-3-5-sonnet`, `claude-3-haiku`, `claude-3-5-haiku`   | Claude-3-5-haiku provides an optimal balance between accuracy and response time.                                                                                                                   |
 | google    | `gemini-1.5-pro`, `gemini-1.5-flash`, `gemini-1.5-flash-8b` |                                                                                                                                                                                                    |
-| deepseek  | `chat`                                                      | Provides highly accurate completions using Fill-in-the-Middle (FIM) technology. While response times are slower, it excels in completion accuracy. Best choice when precision is the top priority. |
+| deepseek  | `v3`                                                        | Provides highly accurate completions using Fill-in-the-Middle (FIM) technology. While response times are slower, it excels in completion accuracy. Best choice when precision is the top priority. |
 
 ### Custom Model
 
