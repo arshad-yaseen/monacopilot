@@ -21,7 +21,10 @@ export class GoogleHandler extends BaseProviderHandler<'google'> {
     prompt: PromptData,
   ): PickChatCompletionCreateParams<'google'> {
     return {
-      systemInstruction: prompt.system,
+      systemInstruction: {
+        role: 'system',
+        parts: [{text: prompt.system}],
+      },
       generationConfig: {
         temperature: DEFAULT_COMPLETION_TEMPERATURE,
         maxOutputTokens: DEFAULT_COMPLETION_MAX_TOKENS,
