@@ -1,8 +1,8 @@
 import {Copilot} from 'monacopilot';
 
-const copilot = new Copilot(process.env.GROQ_API_KEY!, {
-  provider: 'groq',
-  model: 'llama-3-70b',
+const copilot = new Copilot(process.env.GOOGLE_API_KEY!, {
+  provider: 'google',
+  model: 'gemini-1.5-flash',
 });
 
 export async function POST(req: Request) {
