@@ -1,12 +1,18 @@
 
 
-## [0.17.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.17.0...v0.17.1) (2025-01-26)
+## [0.17.2](https://github.com/arshad-yaseen/monacopilot/compare/v0.17.1...v0.17.2) (2025-01-26)
 
+
+### 🐛 Bug Fixes
+
+* google parts ([2dd63d8](https://github.com/arshad-yaseen/monacopilot/commit/2dd63d85ffd60c704f24bfcc2c1ff980b5d6ea20))
+
+## [0.17.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.17.0...v0.17.1) (2025-01-26)
 
 ### 🔧 Maintenance
 
-* improve provider folder naming ([c9f5b3d](https://github.com/arshad-yaseen/monacopilot/commit/c9f5b3d8feae3adc63b37d47abac130be223b092))
-* make ai providers scalable ([b39717a](https://github.com/arshad-yaseen/monacopilot/commit/b39717ac17fee4ce6f5e989061fbe7ae41b94109))
+- improve provider folder naming ([c9f5b3d](https://github.com/arshad-yaseen/monacopilot/commit/c9f5b3d8feae3adc63b37d47abac130be223b092))
+- make ai providers scalable ([b39717a](https://github.com/arshad-yaseen/monacopilot/commit/b39717ac17fee4ce6f5e989061fbe7ae41b94109))
 
 ## [0.17.0](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.10...v0.17.0) (2025-01-25)
 
