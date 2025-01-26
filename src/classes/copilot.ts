@@ -1,11 +1,11 @@
-import {COPILOT_PROVIDER_MODEL_MAP, COPILOT_PROVIDERS} from '../constants';
-import {craftCompletionPrompt} from '../helpers/prompt';
+import {PROVIDER_MODEL_MAP, PROVIDERS} from '../ai/base';
 import {
   createProviderEndpoint,
   createProviderHeaders,
   createRequestBody,
   parseProviderChatCompletion,
-} from '../helpers/provider';
+} from '../ai/operations';
+import {craftCompletionPrompt} from '../helpers/prompt';
 import {deprecated, report} from '../logger';
 import {
   ChatCompletion,
@@ -13,19 +13,19 @@ import {
   CompletionMetadata,
   CompletionRequest,
   CompletionResponse,
-  CopilotModel,
   CopilotOptions,
-  CopilotProvider,
   CustomCopilotModel,
   CustomPrompt,
+  Model,
   PromptData,
+  Provider,
 } from '../types';
 import {HTTP, joinWithAnd} from '../utils';
 
 export class Copilot {
   private readonly apiKey: string;
-  private provider: CopilotProvider | undefined;
-  private model: CopilotModel | CustomCopilotModel;
+  private provider: Provider | undefined;
+  private model: Model | CustomCopilotModel;
 
   constructor(apiKey: string, options: CopilotOptions) {
     this.validateParams(apiKey, options);
@@ -70,10 +70,10 @@ export class Copilot {
     }
 
     // Validate that a supported provider is specified for built-in models
-    if (!this.provider || !COPILOT_PROVIDERS.includes(this.provider)) {
+    if (!this.provider || !PROVIDERS.includes(this.provider)) {
       throw new Error(
         `Provider must be specified and supported when using built-in models. Please choose from: ${joinWithAnd(
-          COPILOT_PROVIDERS,
+          PROVIDERS,
         )}`,
       );
     }
@@ -81,13 +81,13 @@ export class Copilot {
     // Validate that the model is supported by the specified provider
     if (
       typeof this.model === 'string' &&
-      !COPILOT_PROVIDER_MODEL_MAP[this.provider].includes(this.model)
+      !PROVIDER_MODEL_MAP[this.provider].includes(this.model)
     ) {
       throw new Error(
         `Model "${this.model}" is not supported by the "${
           this.provider
         }" provider. Supported models: ${joinWithAnd(
-          COPILOT_PROVIDER_MODEL_MAP[this.provider],
+          PROVIDER_MODEL_MAP[this.provider],
         )}`,
       );
     }
@@ -153,13 +153,13 @@ export class Copilot {
       }
 
       const endpoint = createProviderEndpoint(
-        this.model as CopilotModel,
+        this.model as Model,
         this.apiKey,
         this.provider,
       );
       const headers = createProviderHeaders(this.apiKey, this.provider);
       const requestBody = createRequestBody(
-        this.model as CopilotModel,
+        this.model as Model,
         this.provider,
         prompt,
         completionMetadata,

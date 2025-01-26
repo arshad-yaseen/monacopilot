@@ -1,7 +1,7 @@
 import {describe, expect, it, vi} from 'vitest';
 
+import {PROVIDER_MODEL_MAP, PROVIDERS} from '../src/ai/base';
 import {Copilot} from '../src/classes/copilot';
-import {COPILOT_PROVIDER_MODEL_MAP, COPILOT_PROVIDERS} from '../src/constants';
 import {joinWithAnd} from '../src/utils';
 import {MOCK_API_KEY, TEST_PROVIDER} from './mock';
 
@@ -24,7 +24,7 @@ describe('Copilot', () => {
       () => new Copilot(MOCK_API_KEY, {provider: 'groq', model: 'gpt-4o'}),
     ).toThrow(
       `Model "gpt-4o" is not supported by the "groq" provider. Supported models: ${joinWithAnd(
-        COPILOT_PROVIDER_MODEL_MAP['groq'],
+        PROVIDER_MODEL_MAP['groq'],
       )}`,
     );
   });
@@ -64,7 +64,7 @@ describe('Copilot', () => {
         } as any),
     ).toThrow(
       `Provider must be specified and supported when using built-in models. Please choose from: ${joinWithAnd(
-        COPILOT_PROVIDERS,
+        PROVIDERS,
       )}`,
     );
   });

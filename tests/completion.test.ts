@@ -1,10 +1,7 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 
 import {CompletionMetadata, Copilot} from '../src';
-import {
-  COPILOT_MODEL_IDS,
-  COPILOT_PROVIDER_ENDPOINT_MAP,
-} from '../src/constants';
+import {MODEL_IDS, PROVIDER_ENDPOINT_MAP} from '../src/ai/base';
 import {DEFAULT_COMPLETION_TEMPERATURE} from '../src/constants/completion';
 import {HTTP} from '../src/utils';
 import {
@@ -47,9 +44,9 @@ describe('Completion', () => {
       raw: MOCK_COMPLETION,
     });
     expect(HTTP.POST).toHaveBeenCalledWith(
-      COPILOT_PROVIDER_ENDPOINT_MAP[TEST_PROVIDER],
+      PROVIDER_ENDPOINT_MAP[TEST_PROVIDER],
       expect.objectContaining({
-        model: COPILOT_MODEL_IDS[TEST_MODEL],
+        model: MODEL_IDS[TEST_MODEL],
         messages: expect.arrayContaining([
           {role: 'user', content: expect.any(String)},
         ]),
@@ -91,9 +88,9 @@ describe('Completion', () => {
     });
 
     expect(HTTP.POST).toHaveBeenCalledWith(
-      COPILOT_PROVIDER_ENDPOINT_MAP['openai'],
+      PROVIDER_ENDPOINT_MAP['openai'],
       expect.objectContaining({
-        model: COPILOT_MODEL_IDS['gpt-4o'],
+        model: MODEL_IDS['gpt-4o'],
       }),
       expect.any(Object),
     );
