@@ -1,16 +1,22 @@
 
 
-## [0.17.0](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.10...v0.17.0) (2025-01-25)
-
-
-### 🚀 Features
-
-* deepseek models ([3ad425b](https://github.com/arshad-yaseen/monacopilot/commit/3ad425b4a57b505c41a1f8170bd53e416b9b7ea5))
+## [0.17.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.17.0...v0.17.1) (2025-01-26)
 
 
 ### 🔧 Maintenance
 
-* v3 ([7449148](https://github.com/arshad-yaseen/monacopilot/commit/7449148a22a95ce81787e89aa411e83c667f41e8))
+* improve provider folder naming ([c9f5b3d](https://github.com/arshad-yaseen/monacopilot/commit/c9f5b3d8feae3adc63b37d47abac130be223b092))
+* make ai providers scalable ([b39717a](https://github.com/arshad-yaseen/monacopilot/commit/b39717ac17fee4ce6f5e989061fbe7ae41b94109))
+
+## [0.17.0](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.10...v0.17.0) (2025-01-25)
+
+### 🚀 Features
+
+- deepseek models ([3ad425b](https://github.com/arshad-yaseen/monacopilot/commit/3ad425b4a57b505c41a1f8170bd53e416b9b7ea5))
+
+### 🔧 Maintenance
+
+- v3 ([7449148](https://github.com/arshad-yaseen/monacopilot/commit/7449148a22a95ce81787e89aa411e83c667f41e8))
 
 ## [0.16.10](https://github.com/arshad-yaseen/monacopilot/compare/v0.16.8...v0.16.10) (2025-01-22)
 
