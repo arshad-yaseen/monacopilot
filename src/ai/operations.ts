@@ -1,10 +1,10 @@
 import {CompletionMetadata, PromptData} from '../types';
 import {BaseProviderHandler} from './handler';
-import {AnthropicHandler} from './handlers/anthropic';
-import {DeepseekHandler} from './handlers/deepseek';
-import {GoogleHandler} from './handlers/google';
-import {GroqHandler} from './handlers/groq';
-import {OpenAIHandler} from './handlers/openai';
+import {AnthropicHandler} from './providers/anthropic';
+import {DeepseekHandler} from './providers/deepseek';
+import {GoogleHandler} from './providers/google';
+import {GroqHandler} from './providers/groq';
+import {OpenAIHandler} from './providers/openai';
 import {
   ChatCompletion,
   ChatCompletionCreateParams,
