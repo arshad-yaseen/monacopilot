@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 
-import {parseProviderChatCompletion} from '../src/helpers/provider';
+import {parseProviderChatCompletion} from '../src/ai/operations';
 import {ChatCompletion} from '../src/types';
 
 describe('Provider Handler Functions', () => {
