@@ -1,3 +1,17 @@
+
+
+## [0.17.3](https://github.com/arshad-yaseen/monacopilot/compare/v0.17.2...v0.17.3) (2025-01-28)
+
+
+### 📚 Documentation
+
+* add deepseek ([72ce9aa](https://github.com/arshad-yaseen/monacopilot/commit/72ce9aadeb3482fc44bbddd63b2dcc5f7607c7d8))
+
+
+### 🔧 Maintenance
+
+* format ([c5915d3](https://github.com/arshad-yaseen/monacopilot/commit/c5915d3febc2859ac537c75db8780fb32751c120))
+
 ## [0.17.2](https://github.com/arshad-yaseen/monacopilot/compare/v0.17.1...v0.17.2) (2025-01-26)
 
 ### 🐛 Bug Fixes
