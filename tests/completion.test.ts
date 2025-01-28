@@ -1,8 +1,8 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 
 import {CompletionMetadata, Copilot} from '../src';
-import {MODEL_IDS, PROVIDER_ENDPOINT_MAP} from '../src/ai/base';
 import {DEFAULT_COMPLETION_TEMPERATURE} from '../src/constants/completion';
+import {MODEL_IDS, PROVIDER_ENDPOINT_MAP} from '../src/llm/base';
 import {HTTP} from '../src/utils';
 import {
   MOCK_API_KEY,
