@@ -53,6 +53,7 @@
   - [Custom Headers for LLM Requests](#custom-headers-for-llm-requests)
   - [Custom Prompt](#custom-prompt)
 - [Cross-Language API Handler Implementation](#cross-language-api-handler-implementation)
+- [Security](#security)
 - [Contributing](#contributing)
 
 ### Examples
@@ -720,6 +721,12 @@ registerCompletion(monaco, editor, {
   // ... other options
 });
 ```
+
+## Security
+
+Monacopilot takes security seriously. Your code remains completely private since Monacopilot never stores or transmits code from the editor.
+
+Additionally, your AI provider API keys are protected by being stored and used exclusively on your server-side API handler, never being exposed to the client side.
 
 ## Contributing
 
