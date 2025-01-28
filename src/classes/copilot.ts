@@ -1,11 +1,11 @@
-import {PROVIDER_MODEL_MAP, PROVIDERS} from '../ai/base';
+import {craftCompletionPrompt} from '../helpers/prompt';
+import {PROVIDER_MODEL_MAP, PROVIDERS} from '../llm/base';
 import {
   createProviderEndpoint,
   createProviderHeaders,
   createRequestBody,
   parseProviderChatCompletion,
-} from '../ai/operations';
-import {craftCompletionPrompt} from '../helpers/prompt';
+} from '../llm/operations';
 import {deprecated, report} from '../logger';
 import {
   ChatCompletion,
