@@ -1,3 +1,13 @@
+
+
+## [0.18.2](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.1...v0.18.2) (2025-01-30)
+
+
+### 🔧 Maintenance
+
+* move copilot.ts to core ([8f49cf4](https://github.com/arshad-yaseen/monacopilot/commit/8f49cf484614ec89a15c0c08281b5f5c8739c5eb))
+* rename state ([552e1cf](https://github.com/arshad-yaseen/monacopilot/commit/552e1cf24d60141ca919ea2cb2fb26d399d8c470))
+
 ## [0.18.1](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.0...v0.18.1) (2025-01-30)
 
 ### 🔧 Maintenance
