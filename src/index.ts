@@ -1,5 +1,5 @@
-import {Copilot} from './classes';
 import {registerCompletion} from './core/completion/register';
+import {Copilot} from './core/copilot/instance';
 
 export {registerCompletion, Copilot};
 

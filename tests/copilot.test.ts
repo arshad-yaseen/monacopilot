@@ -1,6 +1,6 @@
 import {describe, expect, it, vi} from 'vitest';
 
-import {Copilot} from '../src/classes/copilot';
+import {Copilot} from '../src/core/copilot/instance';
 import {PROVIDER_MODEL_MAP, PROVIDERS} from '../src/llm/base';
 import {joinWithAnd} from '../src/utils';
 import {MOCK_API_KEY, TEST_PROVIDER} from './mock';

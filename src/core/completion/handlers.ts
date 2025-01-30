@@ -5,8 +5,8 @@ import {
   StandaloneCodeEditor,
   TriggerType,
 } from '../../types';
-import {getEditorState} from './editor-state';
 import {processInlineCompletions} from './processor';
+import {getEditorState} from './state';
 
 export const createInlineCompletionsProvider = (
   monaco: Monaco,

@@ -1,12 +1,11 @@
-import {craftCompletionPrompt} from '../helpers/prompt';
-import {PROVIDER_MODEL_MAP, PROVIDERS} from '../llm/base';
+import {craftCompletionPrompt} from '../../helpers/prompt';
 import {
   createProviderEndpoint,
   createProviderHeaders,
   createRequestBody,
   parseProviderChatCompletion,
-} from '../llm/operations';
-import {deprecated, report} from '../logger';
+} from '../../llm/operations';
+import {deprecated, report} from '../../logger';
 import {
   ChatCompletion,
   ChatCompletionCreateParams,
@@ -19,8 +18,9 @@ import {
   Model,
   PromptData,
   Provider,
-} from '../types';
-import {HTTP, joinWithAnd} from '../utils';
+} from '../../types';
+import {HTTP} from '../../utils';
+import {validateInputs, validateParams} from './validator';
 
 export class Copilot {
   private readonly apiKey: string;
@@ -28,69 +28,13 @@ export class Copilot {
   private model: Model | CustomCopilotModel;
 
   constructor(apiKey: string, options: CopilotOptions) {
-    this.validateParams(apiKey, options);
+    validateParams(apiKey, options);
 
     this.apiKey = apiKey;
     this.provider = options.provider;
     this.model = options.model;
 
-    this.validateInputs();
-  }
-
-  private validateParams(apiKey: string, options: CopilotOptions): void {
-    if (!apiKey) {
-      throw new Error('Please provide an API key.');
-    }
-
-    if (
-      !options ||
-      (typeof options === 'object' && Object.keys(options).length === 0)
-    ) {
-      throw new Error('Please provide options.');
-    }
-  }
-
-  private validateInputs(): void {
-    // Check if using a custom model (has config property)
-    if (typeof this.model === 'object') {
-      // Custom models cannot have a provider specified
-      if (this.provider !== undefined) {
-        throw new Error(
-          'Provider should not be specified when using a custom model.',
-        );
-      }
-
-      if (!('config' in this.model) || !('transformResponse' in this.model)) {
-        throw new Error(
-          'Please ensure both config and transformResponse are provided for custom model.',
-        );
-      }
-
-      return;
-    }
-
-    // Validate that a supported provider is specified for built-in models
-    if (!this.provider || !PROVIDERS.includes(this.provider)) {
-      throw new Error(
-        `Provider must be specified and supported when using built-in models. Please choose from: ${joinWithAnd(
-          PROVIDERS,
-        )}`,
-      );
-    }
-
-    // Validate that the model is supported by the specified provider
-    if (
-      typeof this.model === 'string' &&
-      !PROVIDER_MODEL_MAP[this.provider].includes(this.model)
-    ) {
-      throw new Error(
-        `Model "${this.model}" is not supported by the "${
-          this.provider
-        }" provider. Supported models: ${joinWithAnd(
-          PROVIDER_MODEL_MAP[this.provider],
-        )}`,
-      );
-    }
+    validateInputs(this.model, this.provider);
   }
 
   public async complete(

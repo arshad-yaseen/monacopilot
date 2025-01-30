@@ -1,6 +1,8 @@
-import {CompletionFormatter} from '../../classes';
-import {CompletionCache} from '../../classes/completion-cache';
-import {CompletionRange} from '../../classes/completion-range';
+import {
+  CompletionCache,
+  CompletionFormatter,
+  CompletionRange,
+} from '../../classes';
 import {constructCompletionMetadata, fetchCompletionItem} from '../../helpers';
 import {warn} from '../../logger';
 import {
