@@ -31,42 +31,6 @@ Here's a quick overview of the technologies we use:
 - **[Tsup](https://tsup.egoist.dev/):** A TypeScript bundler for building the project.
 - **[Vitest](https://vitest.dev):** Our testing framework.
 
-## Repository Structure
-
-Understanding the repository structure will help you navigate the project effectively.
-
-```plaintext
-monacopilot
-├── src
-│   ├── classes
-│   ├── constants
-│   ├── core
-│   │   └── completion
-│   │       ├── handler.ts
-│   │       └── register.ts
-│   ├── helpers
-│   ├── types
-│   └── utils
-└── tests
-    ├── ui
-    └── *.test.ts
-```
-
-| Path                              | Description                              |
-| --------------------------------- | ---------------------------------------- |
-| `src/classes`                     | Core classes                             |
-| `src/constants`                   | Constants and configs                    |
-| `src/core`                        | Core functionality                       |
-| `src/core/completion`             | Completion handlers and registration     |
-| `src/core/completion/handler.ts`  | InlineCompletionsProvider implementation |
-| `src/core/completion/register.ts` | Completion provider registration         |
-| `src/helpers`                     | Helper functions                         |
-| `src/types`                       | Type definitions                         |
-| `src/utils`                       | Utility functions                        |
-| `tests`                           | Test files                               |
-| `tests/ui`                        | Test UI                                  |
-| `tests/*.test.ts`                 | Unit tests                               |
-
 ## Development
 
 Follow these steps to set up your development environment and start contributing to Monacopilot.

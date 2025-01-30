@@ -7,7 +7,7 @@ import {
   CompletionMetadata,
   EditorInlineCompletionsResult,
   FetchCompletionItemHandler,
-  InlineCompletionHandlerParams,
+  InlineCompletionProcessorParams,
   TriggerType,
 } from '../../types';
 import {
@@ -38,18 +38,18 @@ const getDebouncedFunctionPerTrigger = (
 export const completionCache = new CompletionCache();
 
 /**
- * Handles inline completions for the editor.
+ * Processes inline completions for the editor.
  * @param params - Inline completion handler parameters.
  * @returns A promise resolving to EditorInlineCompletionsResult.
  */
-const handleInlineCompletions = async ({
+export const processInlineCompletions = async ({
   monaco,
   mdl,
   pos,
   token,
   isCompletionAccepted,
   options,
-}: InlineCompletionHandlerParams): Promise<EditorInlineCompletionsResult> => {
+}: InlineCompletionProcessorParams): Promise<EditorInlineCompletionsResult> => {
   const {
     trigger = TriggerType.OnIdle,
     endpoint,
@@ -149,12 +149,7 @@ const handleInlineCompletions = async ({
   return createInlineCompletionResult([]);
 };
 
-/**
- * Checks if an error is a cancellation error.
- * @param err - The error to check.
- * @returns True if the error is a cancellation error, false otherwise.
- */
-export const isCancellationError = (err: unknown): boolean => {
+const isCancellationError = (err: unknown): boolean => {
   if (typeof err === 'string') {
     return err === 'Cancelled' || err === 'AbortError';
   } else if (err instanceof Error) {
@@ -162,5 +157,3 @@ export const isCancellationError = (err: unknown): boolean => {
   }
   return false;
 };
-
-export default handleInlineCompletions;
