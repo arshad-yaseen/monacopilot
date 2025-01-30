@@ -20,6 +20,15 @@ export default function Home() {
       endpoint: '/api/complete',
       language: 'javascript',
       maxContextLines: 60,
+      onCompletionAccepted: () => {
+        console.log('Completion accepted');
+      },
+      onCompletionRejected: () => {
+        console.log('Completion rejected');
+      },
+      onCompletionShown: () => {
+        console.log('Completion shown');
+      },
     });
 
     return () => {
