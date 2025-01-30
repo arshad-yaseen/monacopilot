@@ -4,7 +4,7 @@ import {
   RegisterCompletionOptions,
   StandaloneCodeEditor,
 } from '../../types';
-import {EditorCompletionState} from './editor-state';
+import {EditorCompletionState} from './state';
 
 const ACCEPTANCE_KEYS = {
   TAB: (monaco: Monaco, event: EditorKeyboardEvent) =>

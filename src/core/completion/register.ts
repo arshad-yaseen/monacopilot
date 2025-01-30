@@ -7,17 +7,17 @@ import {
   StandaloneCodeEditor,
 } from '../../types';
 import {
-  createInitialState,
-  deleteEditorState,
-  getEditorState,
-  setEditorState,
-} from './editor-state';
-import {
   createInlineCompletionsProvider,
   handleTriggerCompletion,
 } from './handlers';
 import {createKeyDownListener} from './key-events';
 import {completionCache} from './processor';
+import {
+  createInitialState,
+  deleteEditorState,
+  getEditorState,
+  setEditorState,
+} from './state';
 
 let activeCompletionRegistration: CompletionRegistration | null = null;
 
