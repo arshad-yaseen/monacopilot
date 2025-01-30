@@ -118,6 +118,11 @@ export interface RegisterCompletionOptions {
    * Callback function triggered when a completion is accepted by the user.
    */
   onCompletionAccepted?: () => void;
+
+  /**
+   * Callback function triggered when a completion is rejected by the user.
+   */
+  onCompletionRejected?: () => void;
 }
 
 export enum TriggerType {
@@ -138,7 +143,7 @@ export interface CompletionRegistration {
   deregister: () => void;
 }
 
-export interface InlineCompletionHandlerParams {
+export interface InlineCompletionProcessorParams {
   monaco: Monaco;
   mdl: EditorModel;
   pos: CursorPosition;

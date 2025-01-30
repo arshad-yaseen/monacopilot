@@ -5,20 +5,19 @@ import {
   Monaco,
   RegisterCompletionOptions,
   StandaloneCodeEditor,
-  TriggerType,
 } from '../../types';
-import handleInlineCompletions, {completionCache} from './handler';
-
-type EditorCompletionState = {
-  isCompletionAccepted: boolean;
-  isCompletionVisible: boolean;
-  isManualTrigger: boolean;
-};
-
-const editorCompletionState = new WeakMap<
-  StandaloneCodeEditor,
-  EditorCompletionState
->();
+import {
+  createInitialState,
+  deleteEditorState,
+  getEditorState,
+  setEditorState,
+} from './editor-state';
+import {
+  createInlineCompletionsProvider,
+  handleTriggerCompletion,
+} from './handlers';
+import {createKeyDownListener} from './key-events';
+import {completionCache} from './processor';
 
 let activeCompletionRegistration: CompletionRegistration | null = null;
 
@@ -34,22 +33,14 @@ export const registerCompletion = (
   editor: StandaloneCodeEditor,
   options: RegisterCompletionOptions,
 ): CompletionRegistration => {
-  // Deregister any existing completion registration
   if (activeCompletionRegistration) {
     activeCompletionRegistration.deregister();
   }
 
   const disposables: Disposable[] = [];
 
-  // Initialize editor completion state
-  const initialState: EditorCompletionState = {
-    isCompletionAccepted: false,
-    isCompletionVisible: false,
-    isManualTrigger: false,
-  };
-  editorCompletionState.set(editor, initialState);
+  setEditorState(editor, createInitialState());
 
-  // Update editor options to force the enabling of inline completions and to use subwordSmart mode
   editor.updateOptions({
     inlineSuggest: {
       enabled: true,
@@ -58,76 +49,31 @@ export const registerCompletion = (
   });
 
   try {
-    // Retrieve the editor's completion state once here
-    const state = editorCompletionState.get(editor);
+    const state = getEditorState(editor);
+
     if (!state) {
       warn('Completion is not registered properly. State not found.');
-      return {
-        deregister: () => {
-          /* No-op */
-        },
-        trigger: () => {
-          /* No-op */
-        },
-      };
+      return createEmptyRegistration();
     }
 
-    // Register inline completions provider
-    const inlineCompletionsProvider =
-      monaco.languages.registerInlineCompletionsProvider(options.language, {
-        provideInlineCompletions: (mdl, pos, _, token) => {
-          // Skip if trigger is on-demand but user did not manually trigger
-          if (
-            options.trigger === TriggerType.OnDemand &&
-            !state.isManualTrigger
-          ) {
-            return;
-          }
+    const provider = createInlineCompletionsProvider(monaco, editor, options);
+    if (provider) {
+      disposables.push(provider);
+    }
 
-          return handleInlineCompletions({
-            monaco,
-            mdl,
-            pos,
-            token,
-            isCompletionAccepted: state.isCompletionAccepted,
-            options,
-          });
-        },
-        handleItemDidShow: (_, item, completion) => {
-          state.isCompletionVisible = true;
-          state.isManualTrigger = false;
-
-          if (state.isCompletionAccepted) return;
-          options.onCompletionShown?.(completion, item.range);
-        },
-        freeInlineCompletions: () => {
-          /* No-op */
-        },
-      });
-    disposables.push(inlineCompletionsProvider);
-
-    // Listen for keydown events to detect completion acceptance
-    const keyDownListener = editor.onKeyDown(event => {
-      const isTabOrCmdRightArrow =
-        event.keyCode === monaco.KeyCode.Tab ||
-        (event.keyCode === monaco.KeyCode.RightArrow && event.metaKey);
-
-      if (state.isCompletionVisible && isTabOrCmdRightArrow) {
-        options.onCompletionAccepted?.();
-        state.isCompletionAccepted = true;
-        state.isCompletionVisible = false;
-      } else {
-        state.isCompletionAccepted = false;
-      }
-    });
+    const keyDownListener = createKeyDownListener(
+      monaco,
+      editor,
+      state,
+      options,
+    );
     disposables.push(keyDownListener);
 
-    // Create completion registration object
     const registration: CompletionRegistration = {
       deregister: () => {
         disposables.forEach(disposable => disposable.dispose());
         completionCache.clear();
-        editorCompletionState.delete(editor);
+        deleteEditorState(editor);
         activeCompletionRegistration = null;
       },
       trigger: () => handleTriggerCompletion(editor),
@@ -145,28 +91,17 @@ export const registerCompletion = (
     return {
       deregister: () => {
         disposables.forEach(disposable => disposable.dispose());
-        editorCompletionState.delete(editor);
+        deleteEditorState(editor);
         activeCompletionRegistration = null;
       },
-      trigger: () => {
-        /* No-op */
-      },
+      trigger: () => {},
     };
   }
 };
 
-/**
- * Triggers the completion manually.
- * @param editor - The editor instance.
- */
-const handleTriggerCompletion = (editor: StandaloneCodeEditor) => {
-  const state = editorCompletionState.get(editor);
-  if (!state) {
-    warn(
-      'Completion is not registered. Use `registerCompletion` to register completion first.',
-    );
-    return;
-  }
-  state.isManualTrigger = true;
-  editor.trigger('keyboard', 'editor.action.inlineSuggest.trigger', {});
+const createEmptyRegistration = (): CompletionRegistration => {
+  return {
+    deregister: () => {},
+    trigger: () => {},
+  };
 };

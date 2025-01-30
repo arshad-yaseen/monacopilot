@@ -46,6 +46,7 @@
   - [Completion Event Handlers](#completion-event-handlers)
     - [onCompletionShown](#oncompletionshown)
     - [onCompletionAccepted](#oncompletionaccepted)
+    - [onCompletionRejected](#oncompletionrejected)
 - [Copilot Options](#copilot-options)
   - [Changing the Provider and Model](#changing-the-provider-and-model)
   - [Custom Model](#custom-model)
@@ -455,6 +456,19 @@ registerCompletion(monaco, editor, {
   // ... other options
   onCompletionAccepted: () => {
     console.log('Completion accepted');
+  },
+});
+```
+
+#### onCompletionRejected
+
+Event triggered when a completion suggestion is rejected by the user.
+
+```javascript
+registerCompletion(monaco, editor, {
+  // ... other options
+  onCompletionRejected: () => {
+    console.log('Completion rejected');
   },
 });
 ```
