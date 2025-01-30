@@ -1,11 +1,8 @@
-
-
 ## [0.18.0](https://github.com/arshad-yaseen/monacopilot/compare/v0.17.4...v0.18.0) (2025-01-30)
-
 
 ### 🚀 Features
 
-* `onCompletionRejected` event ([5a58328](https://github.com/arshad-yaseen/monacopilot/commit/5a583281f24d8002f821e19e2881100e788e5a2a))
+- `onCompletionRejected` event ([5a58328](https://github.com/arshad-yaseen/monacopilot/commit/5a583281f24d8002f821e19e2881100e788e5a2a))
 
 ## [0.17.4](https://github.com/arshad-yaseen/monacopilot/compare/v0.17.3...v0.17.4) (2025-01-28)
 

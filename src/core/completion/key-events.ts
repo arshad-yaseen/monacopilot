@@ -19,17 +19,13 @@ export const createKeyDownListener = (
   state: EditorCompletionState,
   options: RegisterCompletionOptions,
 ) => {
-  // Reset the explicit trigger flag to prevent automatic completions
-  // This ensures completions only show when explicitly requested by the user
-  state.isExplicitlyTriggered = false;
-
   return editor.onKeyDown(event => {
     handleCompletionAcceptance({monaco, event, state, options});
     handleCompletionRejection({monaco, event, state, options});
   });
 };
 
-export const handleCompletionAcceptance = ({
+const handleCompletionAcceptance = ({
   monaco,
   event,
   state,
@@ -49,7 +45,7 @@ export const handleCompletionAcceptance = ({
   return false;
 };
 
-export const handleCompletionRejection = ({
+const handleCompletionRejection = ({
   monaco,
   event,
   state,

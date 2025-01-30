@@ -137,8 +137,9 @@ export interface CompletionRegistration {
    */
   trigger: () => void;
   /**
-   * Deregisters the completion from the Monaco editor.
-   * This should be called when the completion is no longer needed.
+   * Deregisters the completion provider and cleans up all associated resources.
+   * This should be called when unmounting the editor or when completion features
+   * are no longer needed to prevent memory leaks and ensure proper cleanup.
    */
   deregister: () => void;
 }
