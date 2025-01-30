@@ -6,12 +6,79 @@ import {
 } from '../../types';
 import {EditorCompletionState} from './editor-state';
 
-type KeyEventHandlerParams = {
+const ACCEPTANCE_KEYS = {
+  TAB: (monaco: Monaco, event: EditorKeyboardEvent) =>
+    event.keyCode === monaco.KeyCode.Tab,
+  CMD_RIGHT_ARROW: (monaco: Monaco, event: EditorKeyboardEvent) =>
+    event.keyCode === monaco.KeyCode.RightArrow && event.metaKey,
+} as const;
+
+interface CompletionHandlerParams {
   monaco: Monaco;
   event: EditorKeyboardEvent;
   state: EditorCompletionState;
   options: RegisterCompletionOptions;
-};
+}
+
+class CompletionKeyEventHandler {
+  constructor(
+    private readonly monaco: Monaco,
+    private readonly state: EditorCompletionState,
+    private readonly options: RegisterCompletionOptions,
+  ) {}
+
+  handleKeyEvent(event: EditorKeyboardEvent): void {
+    const params = {
+      monaco: this.monaco,
+      event,
+      state: this.state,
+      options: this.options,
+    };
+
+    this.handleCompletionAcceptance(params);
+    this.handleCompletionRejection(params);
+  }
+
+  private handleCompletionAcceptance(params: CompletionHandlerParams): boolean {
+    const shouldAcceptCompletion =
+      params.state.isCompletionVisible && this.isAcceptanceKey(params.event);
+
+    if (!shouldAcceptCompletion) {
+      params.state.isCompletionAccepted = false;
+      return false;
+    }
+
+    params.options.onCompletionAccepted?.();
+    params.state.isCompletionAccepted = true;
+    params.state.isCompletionVisible = false;
+    return true;
+  }
+
+  private handleCompletionRejection(params: CompletionHandlerParams): boolean {
+    if (!this.shouldRejectCompletion(params)) {
+      return false;
+    }
+
+    params.options.onCompletionRejected?.();
+    params.state.hasRejectedCurrentCompletion = true;
+    return true;
+  }
+
+  private shouldRejectCompletion(params: CompletionHandlerParams): boolean {
+    return (
+      params.state.isCompletionVisible &&
+      !params.state.hasRejectedCurrentCompletion &&
+      !params.state.isCompletionAccepted &&
+      !this.isAcceptanceKey(params.event)
+    );
+  }
+
+  private isAcceptanceKey(event: EditorKeyboardEvent): boolean {
+    return Object.values(ACCEPTANCE_KEYS).some(keyCheck =>
+      keyCheck(this.monaco, event),
+    );
+  }
+}
 
 export const createKeyDownListener = (
   monaco: Monaco,
@@ -19,56 +86,6 @@ export const createKeyDownListener = (
   state: EditorCompletionState,
   options: RegisterCompletionOptions,
 ) => {
-  return editor.onKeyDown(event => {
-    handleCompletionAcceptance({monaco, event, state, options});
-    handleCompletionRejection({monaco, event, state, options});
-  });
+  const handler = new CompletionKeyEventHandler(monaco, state, options);
+  return editor.onKeyDown(event => handler.handleKeyEvent(event));
 };
-
-const handleCompletionAcceptance = ({
-  monaco,
-  event,
-  state,
-  options,
-}: KeyEventHandlerParams): boolean => {
-  const shouldAcceptCompletion =
-    state.isCompletionVisible && isAcceptanceKey(monaco, event);
-
-  if (shouldAcceptCompletion) {
-    options.onCompletionAccepted?.();
-    state.isCompletionAccepted = true;
-    state.isCompletionVisible = false;
-    return true;
-  }
-
-  state.isCompletionAccepted = false;
-  return false;
-};
-
-const handleCompletionRejection = ({
-  monaco,
-  event,
-  state,
-  options,
-}: KeyEventHandlerParams): boolean => {
-  const isNonAcceptanceKey = !isAcceptanceKey(monaco, event);
-
-  const shouldRejectCompletion =
-    state.isCompletionVisible &&
-    !state.hasRejectedCurrentCompletion &&
-    !state.isCompletionAccepted &&
-    isNonAcceptanceKey;
-
-  if (shouldRejectCompletion) {
-    options.onCompletionRejected?.();
-    state.hasRejectedCurrentCompletion = true;
-    return true;
-  }
-
-  return false;
-};
-
-// Function to check if key event is Tab or Cmd+RightArrow
-const isAcceptanceKey = (monaco: Monaco, event: EditorKeyboardEvent): boolean =>
-  event.keyCode === monaco.KeyCode.Tab ||
-  (event.keyCode === monaco.KeyCode.RightArrow && event.metaKey);
