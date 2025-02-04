@@ -1,3 +1,17 @@
+
+
+## [0.18.3](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.2...v0.18.3) (2025-02-04)
+
+
+### 📚 Documentation
+
+* clarify request handler example ([aeb4a16](https://github.com/arshad-yaseen/monacopilot/commit/aeb4a16f2ee8de7256a960b745369c5fd71439db))
+
+
+### 🔧 CI/CD
+
+* use vite-tsconfig-paths ([59cf90f](https://github.com/arshad-yaseen/monacopilot/commit/59cf90fb387d3dc3343ce14599a526a59555d332))
+
 ## [0.18.2](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.1...v0.18.2) (2025-01-30)
 
 ### 🔧 Maintenance
