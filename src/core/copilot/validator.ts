@@ -1,8 +1,11 @@
-import {PROVIDER_MODEL_MAP, PROVIDERS} from '../../llm/base';
-import {CopilotOptions, CustomCopilotModel, Model, Provider} from '../../types';
-import {joinWithAnd} from '../../utils';
+import {PROVIDER_MODEL_MAP, PROVIDERS} from 'ai/base';
 
-export const validateParams = (
+import {Model, Provider} from 'types/ai';
+import {CopilotOptions, CustomCopilotModel} from 'types/copilot';
+
+import {joinWithAnd} from 'utils/text';
+
+export const _validateParams = (
   apiKey: string,
   options: CopilotOptions,
 ): void => {
@@ -18,7 +21,7 @@ export const validateParams = (
   }
 };
 
-export const validateInputs = (
+export const _validateInputs = (
   model: Model | CustomCopilotModel,
   provider?: Provider,
 ): void => {

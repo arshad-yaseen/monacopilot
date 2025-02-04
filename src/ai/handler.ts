@@ -1,11 +1,12 @@
-import {CompletionMetadata, PromptData} from '../types';
 import {
   Model,
   PickChatCompletion,
   PickChatCompletionCreateParams,
   PickModel,
   Provider,
-} from './types';
+} from 'types/ai';
+import {CompletionMetadata} from 'types/completion';
+import {PromptData} from 'types/copilot';
 
 export abstract class BaseProviderHandler<P extends Provider> {
   abstract createEndpoint(model: Model, apiKey?: string): string;

@@ -1,16 +1,18 @@
-import {CompletionMetadata, PromptData} from '../types';
+import {
+  ChatCompletion,
+  ChatCompletionCreateParams,
+  PickModel,
+  Provider,
+} from 'types/ai';
+import {CompletionMetadata} from 'types/completion';
+import {PromptData} from 'types/copilot';
+
 import {BaseProviderHandler} from './handler';
 import {AnthropicHandler} from './providers/anthropic';
 import {DeepseekHandler} from './providers/deepseek';
 import {GoogleHandler} from './providers/google';
 import {GroqHandler} from './providers/groq';
 import {OpenAIHandler} from './providers/openai';
-import {
-  ChatCompletion,
-  ChatCompletionCreateParams,
-  PickModel,
-  Provider,
-} from './types';
 
 const providerHandlers: {[P in Provider]: BaseProviderHandler<P>} = {
   openai: new OpenAIHandler(),

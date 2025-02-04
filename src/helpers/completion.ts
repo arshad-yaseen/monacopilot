@@ -2,22 +2,24 @@ import {
   CompletionMode,
   CompletionRequestBody,
   CompletionResponse,
+  RelatedFile,
+} from 'types/completion';
+import {
   ConstructCompletionMetadataParams,
-  CursorPosition,
-  EditorModel,
   FetchCompletionItemParams,
   FetchCompletionItemReturn,
-  RelatedFile,
-} from '../../types';
+} from 'types/completion/internal';
+import {CursorPosition, EditorModel} from 'types/monaco';
+
+import {CONTENT_TYPE_JSON} from 'constants/misc';
+
 import {
   getCharAfterCursor,
   getTextAfterCursor,
   getTextBeforeCursor,
-  HTTP,
-  keepNLines,
-} from '../../utils';
-
-const CONTENT_TYPE_JSON = 'application/json';
+} from 'utils/editor';
+import {HTTP} from 'utils/http';
+import {keepNLines} from 'utils/text';
 
 /**
  * Fetches a completion item from the API.

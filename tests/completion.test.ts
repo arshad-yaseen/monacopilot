@@ -1,9 +1,13 @@
+import {MODEL_IDS, PROVIDER_ENDPOINT_MAP} from 'ai/base';
+import {Copilot} from 'core/copilot/instance';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 
-import {CompletionMetadata, Copilot} from '../src';
-import {DEFAULT_COMPLETION_TEMPERATURE} from '../src/constants/completion';
-import {MODEL_IDS, PROVIDER_ENDPOINT_MAP} from '../src/llm/base';
-import {HTTP} from '../src/utils';
+import {CompletionMetadata} from 'types/completion';
+
+import {DEFAULT_COMPLETION_TEMPERATURE} from 'constants/completion';
+
+import {HTTP} from 'utils/http';
+
 import {
   MOCK_API_KEY,
   MOCK_COMPLETION,

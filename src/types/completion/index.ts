@@ -1,11 +1,13 @@
-import {PromptData} from './copilot';
+import {PromptData} from 'types/copilot';
 import {
   CursorPosition,
   EditorCancellationToken,
   EditorModel,
   EditorRange,
   Monaco,
-} from './monaco';
+} from 'types/monaco';
+
+import {FetchCompletionItemHandler} from './internal';
 
 export type Endpoint = string;
 export type Filename = string;
@@ -256,29 +258,4 @@ export interface CompletionMetadata {
      */
     completionMode: CompletionMode;
   };
-}
-
-export type FetchCompletionItemHandler = (
-  params: FetchCompletionItemParams,
-) => Promise<FetchCompletionItemReturn>;
-
-export type FetchCompletionItemReturn = {
-  completion: string | null;
-};
-
-export interface FetchCompletionItemParams {
-  endpoint: string;
-  body: CompletionRequestBody;
-}
-
-export interface ConstructCompletionMetadataParams {
-  mdl: EditorModel;
-  pos: CursorPosition;
-  options: RegisterCompletionOptions;
-}
-
-export interface CompletionCacheItem {
-  completion: string;
-  range: EditorRange;
-  textBeforeCursor: string;
 }

@@ -1,15 +1,5 @@
-import {StandaloneCodeEditor} from '../../types';
-
-export type EditorCompletionState = {
-  /** Whether the current completion suggestion has been accepted by the user */
-  isCompletionAccepted: boolean;
-  /** Whether a completion suggestion is currently being shown */
-  isCompletionVisible: boolean;
-  /** Whether completion was explicitly triggered by user action (vs automatic) */
-  isExplicitlyTriggered: boolean;
-  /** Whether the current completion suggestion was rejected by the user */
-  hasRejectedCurrentCompletion: boolean;
-};
+import {EditorCompletionState} from 'types/completion/internal';
+import {StandaloneCodeEditor} from 'types/monaco';
 
 const editorCompletionState = new WeakMap<
   StandaloneCodeEditor,

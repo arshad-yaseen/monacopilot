@@ -1,6 +1,7 @@
 import {vi} from 'vitest';
 
-import {CompletionMetadata, CursorPosition, EditorModel} from '../src/types';
+import {CompletionMetadata} from 'types/completion';
+import {CursorPosition, EditorModel} from 'types/monaco';
 
 export const MOCK_MODEL = {
   getLineContent: vi.fn(),

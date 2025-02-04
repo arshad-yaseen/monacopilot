@@ -1,26 +1,29 @@
-import {craftCompletionPrompt} from '../../helpers/prompt';
 import {
   createProviderEndpoint,
   createProviderHeaders,
   createRequestBody,
   parseProviderChatCompletion,
-} from '../../llm/operations';
-import {deprecated, report} from '../../logger';
+} from 'ai/operations';
+import {craftCompletionPrompt} from 'helpers/prompt';
+import {deprecated, report} from 'logger';
+
 import {
   ChatCompletion,
   ChatCompletionCreateParams,
+  Model,
+  Provider,
+} from 'types/ai';
+import {
   CompletionMetadata,
   CompletionRequest,
   CompletionResponse,
-  CopilotOptions,
-  CustomCopilotModel,
   CustomPrompt,
-  Model,
-  PromptData,
-  Provider,
-} from '../../types';
-import {HTTP} from '../../utils';
-import {validateInputs, validateParams} from './validator';
+} from 'types/completion';
+import {CopilotOptions, CustomCopilotModel, PromptData} from 'types/copilot';
+
+import {HTTP} from 'utils/http';
+
+import {_validateInputs, _validateParams} from './validator';
 
 export class Copilot {
   private readonly apiKey: string;
@@ -28,13 +31,13 @@ export class Copilot {
   private model: Model | CustomCopilotModel;
 
   constructor(apiKey: string, options: CopilotOptions) {
-    validateParams(apiKey, options);
+    _validateParams(apiKey, options);
 
     this.apiKey = apiKey;
     this.provider = options.provider;
     this.model = options.model;
 
-    validateInputs(this.model, this.provider);
+    _validateInputs(this.model, this.provider);
   }
 
   public async complete(

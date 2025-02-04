@@ -1,6 +1,9 @@
-import {CompletionCacheItem, CursorPosition, EditorModel} from '../types';
-import {getTextBeforeCursor} from '../utils/editor';
-import {Queue} from './queue';
+import {CompletionCacheItem} from 'types/completion/cache';
+import {CursorPosition, EditorModel} from 'types/monaco';
+
+import {getTextBeforeCursor} from 'utils/editor';
+
+import {Queue} from '../queue';
 
 /**
  * Manages a cache of code completions with FIFO eviction policy.

@@ -1,8 +1,9 @@
+import {PROVIDER_MODEL_MAP, PROVIDERS} from 'ai/base';
+import {Copilot} from 'core/copilot/instance';
 import {describe, expect, it, vi} from 'vitest';
 
-import {Copilot} from '../src/core/copilot/instance';
-import {PROVIDER_MODEL_MAP, PROVIDERS} from '../src/llm/base';
-import {joinWithAnd} from '../src/utils';
+import {joinWithAnd} from 'utils/text';
+
 import {MOCK_API_KEY, TEST_PROVIDER} from './mock';
 
 describe('Copilot', () => {

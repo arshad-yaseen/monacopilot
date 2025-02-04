@@ -1,23 +1,23 @@
+import {CompletionCache} from 'classes/completion/cache';
+import {CompletionFormatter} from 'classes/completion/formatter';
+import {CompletionRange} from 'classes/completion/range';
 import {
-  CompletionCache,
-  CompletionFormatter,
-  CompletionRange,
-} from '../../classes';
-import {constructCompletionMetadata, fetchCompletionItem} from '../../helpers';
-import {warn} from '../../logger';
+  constructCompletionMetadata,
+  fetchCompletionItem,
+} from 'helpers/completion';
+import {warn} from 'logger';
+
 import {
   CompletionMetadata,
-  EditorInlineCompletionsResult,
-  FetchCompletionItemHandler,
   InlineCompletionProcessorParams,
   TriggerType,
-} from '../../types';
-import {
-  getTextBeforeCursor,
-  getTextBeforeCursorInLine,
-  typingDebouncedAsync,
-} from '../../utils';
-import {createInlineCompletionResult} from '../../utils/completion';
+} from 'types/completion';
+import {FetchCompletionItemHandler} from 'types/completion/internal';
+import {EditorInlineCompletionsResult} from 'types/monaco';
+
+import {createInlineCompletionResult} from 'utils/completion';
+import {typingDebouncedAsync} from 'utils/debounce';
+import {getTextBeforeCursor, getTextBeforeCursorInLine} from 'utils/editor';
 
 /**
  * Returns a set of debounced functions for each trigger type.

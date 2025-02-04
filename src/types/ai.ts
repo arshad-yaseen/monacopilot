@@ -6,6 +6,7 @@ import type {
   GenerateContentRequest as GoogleChatCompletionCreateParamsBase,
   GenerateContentResponse as GoogleChatCompletionType,
 } from '@google/generative-ai';
+import {MODEL_IDS} from 'ai/base';
 import type {
   ChatCompletionCreateParamsBase as GroqChatCompletionCreateParamsBase,
   ChatCompletion as GroqChatCompletionType,
@@ -15,8 +16,8 @@ import type {
   ChatCompletion as OpenAIChatCompletionType,
 } from 'openai/resources/chat/completions';
 
-import {CompletionMetadata, PromptData} from '../types';
-import {MODEL_IDS} from './base';
+import {CompletionMetadata} from './completion';
+import {PromptData} from './copilot';
 
 /**
  * Providers supported by Copilot.

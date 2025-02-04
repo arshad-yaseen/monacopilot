@@ -1,15 +1,18 @@
-import {
-  DEFAULT_COMPLETION_MAX_TOKENS,
-  DEFAULT_COMPLETION_TEMPERATURE,
-} from '../../constants/completion';
-import {CompletionMetadata, PromptData} from '../../types';
-import {MODEL_IDS, PROVIDER_ENDPOINT_MAP} from '../base';
-import {BaseProviderHandler} from '../handler';
+import {MODEL_IDS, PROVIDER_ENDPOINT_MAP} from 'ai/base';
+import {BaseProviderHandler} from 'ai/handler';
+
 import {
   PickChatCompletion,
   PickChatCompletionCreateParams,
   PickModel,
-} from '../types';
+} from 'types/ai';
+import {CompletionMetadata} from 'types/completion';
+import {PromptData} from 'types/copilot';
+
+import {
+  DEFAULT_COMPLETION_MAX_TOKENS,
+  DEFAULT_COMPLETION_TEMPERATURE,
+} from 'constants/completion';
 
 export class DeepseekHandler extends BaseProviderHandler<'deepseek'> {
   createEndpoint(): string {

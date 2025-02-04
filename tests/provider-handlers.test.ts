@@ -1,7 +1,7 @@
+import {parseProviderChatCompletion} from 'ai/operations';
 import {describe, expect, it} from 'vitest';
 
-import {parseProviderChatCompletion} from '../src/llm/operations';
-import {ChatCompletion} from '../src/types';
+import {ChatCompletion} from 'types/ai';
 
 describe('Provider Handler Functions', () => {
   describe('parseProviderChatCompletion', () => {

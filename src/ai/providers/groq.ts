@@ -1,15 +1,17 @@
-import {
-  DEFAULT_COMPLETION_MAX_TOKENS,
-  DEFAULT_COMPLETION_TEMPERATURE,
-} from '../../constants/completion';
-import {PromptData} from '../../types';
-import {MODEL_IDS, PROVIDER_ENDPOINT_MAP} from '../base';
-import {BaseProviderHandler} from '../handler';
+import {MODEL_IDS, PROVIDER_ENDPOINT_MAP} from 'ai/base';
+import {BaseProviderHandler} from 'ai/handler';
+
 import {
   PickChatCompletion,
   PickChatCompletionCreateParams,
   PickModel,
-} from '../types';
+} from 'types/ai';
+import {PromptData} from 'types/copilot';
+
+import {
+  DEFAULT_COMPLETION_MAX_TOKENS,
+  DEFAULT_COMPLETION_TEMPERATURE,
+} from 'constants/completion';
 
 export class GroqHandler extends BaseProviderHandler<'groq'> {
   createEndpoint(): string {

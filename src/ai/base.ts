@@ -1,4 +1,4 @@
-import {Model, Provider} from './types';
+import {Model, Provider} from 'types/ai';
 
 export const PROVIDERS = [
   'groq',

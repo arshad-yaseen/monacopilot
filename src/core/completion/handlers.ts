@@ -1,10 +1,8 @@
-import {warn} from '../../logger';
-import {
-  Monaco,
-  RegisterCompletionOptions,
-  StandaloneCodeEditor,
-  TriggerType,
-} from '../../types';
+import {warn} from 'logger';
+
+import {RegisterCompletionOptions, TriggerType} from 'types/completion';
+import {Monaco, StandaloneCodeEditor} from 'types/monaco';
+
 import {processInlineCompletions} from './processor';
 import {getEditorState} from './state';
 

@@ -1,4 +1,4 @@
-import {CursorPosition, EditorModel} from '../types';
+import {CursorPosition, EditorModel} from 'types/monaco';
 
 /**
  * Gets the character before the cursor.

@@ -43,6 +43,7 @@
   - [Caching Completions](#caching-completions)
   - [Handling Errors](#handling-errors)
   - [Custom Request Handler](#custom-request-handler)
+    - [Request Handler Example](#request-handler-example)
   - [Completion Event Handlers](#completion-event-handlers)
     - [onCompletionShown](#oncompletionshown)
     - [onCompletionAccepted](#oncompletionaccepted)
@@ -383,47 +384,99 @@ The `requestHandler` should return an object with the following property:
 | ------------ | ------------------ | ------------------------------------------------------------------------------------------------ |
 | `completion` | `string` or `null` | The completion text to be inserted into the editor. Return `null` if no completion is available. |
 
-#### Example
+#### Request Handler Example
 
-The example below demonstrates how to use the `requestHandler` function for more customized handling:
+Here's a practical example demonstrating how to let users select different models for AI auto-completion, We use the `requestHandler` option to attach the selected model to the request body and use it in the server-side API handler.
+
+Client-side implementation:
 
 ```javascript
+const selectedModel = 'gpt-4'; // Example of model selected by user via UI (e.g. dropdown, settings panel)
+
 registerCompletion(monaco, editor, {
   endpoint: 'https://api.example.com/complete',
-  // ... other options
   requestHandler: async ({endpoint, body}) => {
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Request-ID': generateUniqueId(),
-        },
-        body: JSON.stringify({
-          ...body,
-          additionalProperty: 'value',
-        }),
-      });
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ...body,
+        model: selectedModel, // Attach selected model to request body
+      }),
+    });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      if (data.error) {
-        console.error('API Error:', data.error);
-        return {completion: null};
-      }
-
-      return {completion: data.completion.trim()};
-    } catch (error) {
-      console.error('Fetch error:', error);
-      return {completion: null};
-    }
+    const data = await response.json();
+    return {
+      completion: data.completion,
+    };
   },
 });
 ```
+
+Server-side implementation (Example using Express.js): This is the server-side API handler that the `endpoint` parameter points to in the `registerCompletion` function.
+
+```javascript
+import express from 'express';
+import {Copilot} from 'monacopilot';
+
+const app = express();
+
+// Initialize different copilot instances for different models
+const copilotInstances = {
+  'gpt-4o': new Copilot(process.env.OPENAI_API_KEY, {
+    provider: 'openai',
+    model: 'gpt-4o',
+  }),
+  'sonnet-3.5': new Copilot(process.env.ANTHROPIC_API_KEY, {
+    provider: 'anthropic',
+    model: 'claude-3-5-sonnet',
+  }),
+  'llama-3': new Copilot(process.env.GROQ_API_KEY, {
+    provider: 'groq',
+    model: 'llama-3-70b',
+  }),
+};
+
+app.post('/complete', async (req, res) => {
+  try {
+    // Get the selected model from the request body
+    const {model, ...completionBody} = req.body;
+
+    // Use the appropriate copilot instance based on selected model
+    const copilot = copilotInstances[model];
+    if (!copilot) {
+      return res.status(400).json({
+        completion: null,
+        error: 'Invalid model selected',
+      });
+    }
+
+    const {completion, error} = await copilot.complete({
+      body: completionBody,
+    });
+
+    if (error) {
+      return res.status(500).json({
+        completion: null,
+        error,
+      });
+    }
+
+    res.json({completion});
+  } catch (err) {
+    res.status(500).json({
+      completion: null,
+      error: err.message,
+    });
+  }
+});
+
+app.listen(3000);
+```
+
+The server maintains a map of Copilot instances configured with different providers and models, allowing for flexible model selection while keeping API keys secure on the server side.
 
 ### Completion Event Handlers
 
@@ -444,8 +497,8 @@ registerCompletion(monaco, editor, {
 
 **Parameters:**
 
-- `completion` (string): The completion text that is being shown
-- `range` (EditorRange | undefined): The editor range where the completion will be inserted
+- `completion`: The completion text that is being shown
+- `range`: The editor range object where the completion will be inserted
 
 #### onCompletionAccepted
 

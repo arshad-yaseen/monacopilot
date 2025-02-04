@@ -1,7 +1,8 @@
+import {Copilot} from 'core/copilot/instance';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 
-import {Copilot} from '../src';
-import {HTTP} from '../src/utils';
+import {HTTP} from 'utils/http';
+
 import {MOCK_API_KEY, MOCK_COMPLETION_METADATA} from './mock';
 
 describe('Copilot with model', () => {

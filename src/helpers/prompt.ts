@@ -1,5 +1,7 @@
-import {CompletionMetadata, PromptData, RelatedFile} from '../types';
-import {capitalizeFirstLetter, joinWithAnd} from '../utils';
+import {CompletionMetadata, RelatedFile} from 'types/completion';
+import {PromptData} from 'types/copilot';
+
+import {capitalizeFirstLetter, joinWithAnd} from 'utils/text';
 
 const compileRelatedFiles = (files?: RelatedFile[]): string => {
   if (!files || files.length === 0) {

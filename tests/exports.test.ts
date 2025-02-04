@@ -1,6 +1,5 @@
+import * as MonacoPilot from 'index';
 import {describe, expect, it} from 'vitest';
-
-import * as MonacoPilot from '../src';
 
 describe('MonacoPilot exports', () => {
   it('should export registerCompletion function', () => {

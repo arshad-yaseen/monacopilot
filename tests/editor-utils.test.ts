@@ -1,13 +1,15 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 
-import {CursorPosition, EditorModel} from '../src/types';
-import {keepNLines} from '../src/utils';
+import {CursorPosition, EditorModel} from 'types/monaco';
+
 import {
   getCharAfterCursor,
   getCharBeforeCursor,
   getTextAfterCursorInLine,
   getTextBeforeCursorInLine,
-} from '../src/utils/editor';
+} from 'utils/editor';
+import {keepNLines} from 'utils/text';
+
 import {MOCK_MODEL} from './mock';
 
 describe('Editor Utilities', () => {

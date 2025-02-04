@@ -1,4 +1,4 @@
-import {Provider, ProviderImplementationMap} from '../llm/types';
+import {Provider, ProviderImplementationMap} from './ai';
 
 /**
  * Data structure representing the prompt data.

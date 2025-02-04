@@ -1,11 +1,11 @@
-import {report, warn} from '../../logger';
+import {report, warn} from 'logger';
+
 import {
   CompletionRegistration,
-  Disposable,
-  Monaco,
   RegisterCompletionOptions,
-  StandaloneCodeEditor,
-} from '../../types';
+} from 'types/completion';
+import {Disposable, Monaco, StandaloneCodeEditor} from 'types/monaco';
+
 import {
   createInlineCompletionsProvider,
   handleTriggerCompletion,

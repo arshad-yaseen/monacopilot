@@ -1,6 +1,6 @@
+import {CompletionFormatter} from 'classes/completion/formatter';
 import {describe, expect, it} from 'vitest';
 
-import {CompletionFormatter} from '../src/classes/completion-formatter';
 import {MOCK_COMPLETION_POS} from './mock';
 
 describe('CompletionFormatter', () => {

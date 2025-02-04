@@ -1,4 +1,4 @@
-import {CursorPosition, EditorModel, EditorRange, Monaco} from '../types';
+import {CursorPosition, EditorModel, EditorRange, Monaco} from 'types/monaco';
 
 export class CompletionRange {
   constructor(private monaco: Monaco) {}

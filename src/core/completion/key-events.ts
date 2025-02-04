@@ -1,10 +1,9 @@
+import {RegisterCompletionOptions} from 'types/completion';
 import {
-  EditorKeyboardEvent,
-  Monaco,
-  RegisterCompletionOptions,
-  StandaloneCodeEditor,
-} from '../../types';
-import {EditorCompletionState} from './state';
+  CompletionKeyEventHandlerParams,
+  EditorCompletionState,
+} from 'types/completion/internal';
+import {EditorKeyboardEvent, Monaco, StandaloneCodeEditor} from 'types/monaco';
 
 const ACCEPTANCE_KEYS = {
   TAB: (monaco: Monaco, event: EditorKeyboardEvent) =>
@@ -12,13 +11,6 @@ const ACCEPTANCE_KEYS = {
   CMD_RIGHT_ARROW: (monaco: Monaco, event: EditorKeyboardEvent) =>
     event.keyCode === monaco.KeyCode.RightArrow && event.metaKey,
 } as const;
-
-interface CompletionHandlerParams {
-  monaco: Monaco;
-  event: EditorKeyboardEvent;
-  state: EditorCompletionState;
-  options: RegisterCompletionOptions;
-}
 
 class CompletionKeyEventHandler {
   constructor(
@@ -39,7 +31,9 @@ class CompletionKeyEventHandler {
     this.handleCompletionRejection(params);
   }
 
-  private handleCompletionAcceptance(params: CompletionHandlerParams): boolean {
+  private handleCompletionAcceptance(
+    params: CompletionKeyEventHandlerParams,
+  ): boolean {
     const shouldAcceptCompletion =
       params.state.isCompletionVisible && this.isAcceptanceKey(params.event);
 
@@ -54,7 +48,9 @@ class CompletionKeyEventHandler {
     return true;
   }
 
-  private handleCompletionRejection(params: CompletionHandlerParams): boolean {
+  private handleCompletionRejection(
+    params: CompletionKeyEventHandlerParams,
+  ): boolean {
     if (!this.shouldRejectCompletion(params)) {
       return false;
     }
@@ -64,7 +60,9 @@ class CompletionKeyEventHandler {
     return true;
   }
 
-  private shouldRejectCompletion(params: CompletionHandlerParams): boolean {
+  private shouldRejectCompletion(
+    params: CompletionKeyEventHandlerParams,
+  ): boolean {
     return (
       params.state.isCompletionVisible &&
       !params.state.hasRejectedCurrentCompletion &&
