@@ -1,25 +1,25 @@
 {
-  "name": "test",
-  "version": "0.1.8",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "tsc": "tsc --noEmit --incremental false"
-  },
-  "dependencies": {
-    "@monaco-editor/react": "^4.6.0",
-    "monacopilot": "workspace:*",
-    "next": "14.2.10",
-    "react": "^18",
-    "react-dom": "^18"
-  },
-  "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "typescript": "^5"
-  }
+    "name": "test",
+    "version": "0.1.8",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint",
+        "tsc": "tsc --noEmit --incremental false"
+    },
+    "dependencies": {
+        "@monaco-editor/react": "^4.6.0",
+        "monacopilot": "workspace:*",
+        "next": "14.2.10",
+        "react": "^18",
+        "react-dom": "^18"
+    },
+    "devDependencies": {
+        "@types/node": "^20",
+        "@types/react": "^18",
+        "@types/react-dom": "^18",
+        "typescript": "^5"
+    }
 }

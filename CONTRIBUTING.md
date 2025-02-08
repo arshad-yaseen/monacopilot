@@ -9,13 +9,13 @@ If you have any questions or need assistance, feel free to open an issue on GitH
 - [About This Repository](#about-this-repository)
 - [Repository Structure](#repository-structure)
 - [Development](#development)
-  - [Fork the Repository](#fork-the-repository)
-  - [Clone the Repository](#clone-the-repository)
-  - [Navigate to Project Directory](#navigate-to-project-directory)
-  - [Create a New Branch](#create-a-new-branch)
-  - [Install Dependencies](#install-dependencies)
-  - [Building the Package](#building-the-package)
-  - [Running in Development Mode](#running-in-development-mode)
+    - [Fork the Repository](#fork-the-repository)
+    - [Clone the Repository](#clone-the-repository)
+    - [Navigate to Project Directory](#navigate-to-project-directory)
+    - [Create a New Branch](#create-a-new-branch)
+    - [Install Dependencies](#install-dependencies)
+    - [Building the Package](#building-the-package)
+    - [Running in Development Mode](#running-in-development-mode)
 - [Testing Monacopilot Locally](#testing-monacopilot-locally)
 - [Documentation](#documentation)
 - [Commit Conventions](#commit-conventions)
@@ -98,23 +98,23 @@ To test Monacopilot locally, follow these steps:
 
 1. **Set Up Environment Variables**
 
-   You need to set the [OpenAI API key](https://platform.openai.com/api-keys) as an environment variable. Create a `.env.local` file in the `tests/ui` directory with the following content:
+    You need to set the [OpenAI API key](https://platform.openai.com/api-keys) as an environment variable. Create a `.env.local` file in the `tests/ui` directory with the following content:
 
-   ```plaintext
-   OPENAI_API_KEY=your_api_key
-   ```
+    ```plaintext
+    OPENAI_API_KEY=your_api_key
+    ```
 
-   Replace `your_api_key` with your actual OpenAI API key.
+    Replace `your_api_key` with your actual OpenAI API key.
 
 2. **Run the Test UI**
 
-   Execute the following command to start the testing environment:
+    Execute the following command to start the testing environment:
 
-   ```bash
-   pnpm dev:test-ui
-   ```
+    ```bash
+    pnpm dev:test-ui
+    ```
 
-   This will launch the UI in a local development environment, allowing you to test changes in real-time.
+    This will launch the UI in a local development environment, allowing you to test changes in real-time.
 
 ## Documentation
 
@@ -162,8 +162,8 @@ If you have ideas for new features or components, we’d love to hear them!
 
 1. **Open an Issue:**
 
-   - Navigate to the [Issues](https://github.com/arshad-yaseen/monacopilot/issues) section of the repository.
-   - Click on **New Issue** and provide a clear and detailed description of your request.
+    - Navigate to the [Issues](https://github.com/arshad-yaseen/monacopilot/issues) section of the repository.
+    - Click on **New Issue** and provide a clear and detailed description of your request.
 
 ## Testing
 
@@ -193,18 +193,18 @@ pnpm test
 
 1. **Commit Your Changes:**
 
-   Ensure your commits follow the [Commit Conventions](#commit-conventions) outlined above.
+    Ensure your commits follow the [Commit Conventions](#commit-conventions) outlined above.
 
 2. **Push to Your Fork:**
 
-   ```bash
-   git push origin my-new-feature
-   ```
+    ```bash
+    git push origin my-new-feature
+    ```
 
 3. **Create a Pull Request:**
 
-   - Navigate to your forked repository on GitHub.
-   - Click on **Compare & pull request**.
-   - Provide a clear description of your changes and submit the pull request.
+    - Navigate to your forked repository on GitHub.
+    - Click on **Compare & pull request**.
+    - Provide a clear description of your changes and submit the pull request.
 
 Thank you for contributing to Monacopilot! Your efforts help make the project better for everyone.

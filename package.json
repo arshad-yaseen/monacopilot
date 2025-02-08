@@ -1,66 +1,66 @@
 {
-  "name": "monacopilot",
-  "version": "0.18.10",
-  "description": "AI auto-completion plugin for Monaco Editor",
-  "main": "./build/index.js",
-  "module": "./build/index.mjs",
-  "types": "./build/index.d.ts",
-  "files": [
-    "build"
-  ],
-  "scripts": {
-    "build": "tsup src/index.ts",
-    "dev": "tsup src/index.ts --watch",
-    "test": "vitest run",
-    "dev:test-ui": "pnpm -C tests/ui dev",
-    "tsc": "tsc --noEmit",
-    "lint": "eslint . --ext .ts,.tsx --fix",
-    "lint:test-ui": "pnpm -C tests/ui lint",
-    "validate": "pnpm build && pnpm format && pnpm tsc && pnpm lint && pnpm lint:test-ui",
-    "format": "prettier --write .",
-    "release": "release-it",
-    "prepare": "husky"
-  },
-  "devDependencies": {
-    "@anthropic-ai/sdk": "^0.27.3",
-    "@commitlint/cli": "^19.5.0",
-    "@commitlint/config-conventional": "^19.5.0",
-    "@google/generative-ai": "^0.21.0",
-    "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
-    "@release-it/conventional-changelog": "^8.0.2",
-    "@typescript-eslint/eslint-plugin": "^7.3.1",
-    "eslint": "^8.57.0",
-    "groq-sdk": "^0.3.2",
-    "husky": "^9.1.6",
-    "monaco-editor": "^0.52.0",
-    "openai": "^4.60.1",
-    "prettier": "^3.2.5",
-    "release-it": "^17.6.0",
-    "tsup": "^8.0.2",
-    "typescript": "^5.4.3",
-    "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^2.0.5"
-  },
-  "keywords": [
-    "monaco-editor",
-    "monaco",
-    "ai",
-    "auto-completion",
-    "code-completion",
-    "copilot",
-    "github-copilot"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/arshad-yaseen/monacopilot.git"
-  },
-  "maintainers": [
-    {
-      "name": "Arshad Yaseen",
-      "email": "m@arshadyaseen.com",
-      "url": "https://arshadyaseen.com"
-    }
-  ],
-  "license": "MIT",
-  "author": "Arshad Yaseen <m@arshadyaseen.com> (https://arshadyaseen.com)"
+    "name": "monacopilot",
+    "version": "0.18.10",
+    "description": "AI auto-completion plugin for Monaco Editor",
+    "main": "./build/index.js",
+    "module": "./build/index.mjs",
+    "types": "./build/index.d.ts",
+    "files": [
+        "build"
+    ],
+    "scripts": {
+        "build": "tsup src/index.ts",
+        "dev": "tsup src/index.ts --watch",
+        "test": "vitest run",
+        "dev:test-ui": "pnpm -C tests/ui dev",
+        "tsc": "tsc --noEmit",
+        "lint": "eslint . --ext .ts,.tsx --fix",
+        "lint:test-ui": "pnpm -C tests/ui lint",
+        "validate": "pnpm build && pnpm format && pnpm tsc && pnpm lint && pnpm lint:test-ui",
+        "format": "prettier --write .",
+        "release": "release-it",
+        "prepare": "husky"
+    },
+    "devDependencies": {
+        "@anthropic-ai/sdk": "^0.27.3",
+        "@commitlint/cli": "^19.5.0",
+        "@commitlint/config-conventional": "^19.5.0",
+        "@google/generative-ai": "^0.21.0",
+        "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
+        "@release-it/conventional-changelog": "^8.0.2",
+        "@typescript-eslint/eslint-plugin": "^7.3.1",
+        "eslint": "^8.57.0",
+        "groq-sdk": "^0.3.2",
+        "husky": "^9.1.6",
+        "monaco-editor": "^0.52.0",
+        "openai": "^4.60.1",
+        "prettier": "^3.2.5",
+        "release-it": "^17.6.0",
+        "tsup": "^8.0.2",
+        "typescript": "^5.4.3",
+        "vite-tsconfig-paths": "^5.1.4",
+        "vitest": "^2.0.5"
+    },
+    "keywords": [
+        "monaco-editor",
+        "monaco",
+        "ai",
+        "auto-completion",
+        "code-completion",
+        "copilot",
+        "github-copilot"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/arshad-yaseen/monacopilot.git"
+    },
+    "maintainers": [
+        {
+            "name": "Arshad Yaseen",
+            "email": "m@arshadyaseen.com",
+            "url": "https://arshadyaseen.com"
+        }
+    ],
+    "license": "MIT",
+    "author": "Arshad Yaseen <m@arshadyaseen.com> (https://arshadyaseen.com)"
 }

@@ -1,79 +1,79 @@
 {
-  "git": {
-    "requireBranch": "main",
-    "commitMessage": "chore(release): v${version} [skip-release]",
-    "publish": true,
-    "requireCommits": true,
-    "requireCleanWorkingDir": false,
-    "tagAnnotation": "v${version}"
-  },
-  "hooks": {
-    "before:init": ["pnpm validate"]
-  },
-  "github": {
-    "release": true,
-    "comments": {
-      "submit": false,
-      "issue": ":rocket: _This issue has been resolved in v${version}. See [${releaseName}](${releaseUrl}) for release notes._",
-      "pr": ":rocket: _This pull request is included in v${version}. See [${releaseName}](${releaseUrl}) for release notes._"
+    "git": {
+        "requireBranch": "main",
+        "commitMessage": "chore(release): v${version} [skip-release]",
+        "publish": true,
+        "requireCommits": true,
+        "requireCleanWorkingDir": false,
+        "tagAnnotation": "v${version}"
     },
-    "releaseName": "v${version}"
-  },
-  "npm": {
-    "publish": true
-  },
-  "plugins": {
-    "@release-it/conventional-changelog": {
-      "infile": "CHANGELOG.md",
-      "preset": {
-        "name": "conventionalcommits",
-        "types": [
-          {
-            "type": "feat",
-            "section": "🚀 Features"
-          },
-          {
-            "type": "fix",
-            "section": "🐛 Bug Fixes"
-          },
-          {
-            "type": "docs",
-            "section": "📚 Documentation"
-          },
-          {
-            "type": "style",
-            "section": "💅 Styling"
-          },
-          {
-            "type": "refactor",
-            "section": "🔄 Refactoring"
-          },
-          {
-            "type": "perf",
-            "section": "⚡️ Performance"
-          },
-          {
-            "type": "test",
-            "section": "🧪 Testing"
-          },
-          {
-            "type": "build",
-            "section": "🛠️ Build System"
-          },
-          {
-            "type": "ci",
-            "section": "🔧 CI/CD"
-          },
-          {
-            "type": "chore",
-            "section": "🔧 Maintenance"
-          },
-          {
-            "type": "breaking",
-            "section": "💥 Breaking Changes"
-          }
-        ]
-      }
+    "hooks": {
+        "before:init": ["pnpm validate"]
+    },
+    "github": {
+        "release": true,
+        "comments": {
+            "submit": false,
+            "issue": ":rocket: _This issue has been resolved in v${version}. See [${releaseName}](${releaseUrl}) for release notes._",
+            "pr": ":rocket: _This pull request is included in v${version}. See [${releaseName}](${releaseUrl}) for release notes._"
+        },
+        "releaseName": "v${version}"
+    },
+    "npm": {
+        "publish": true
+    },
+    "plugins": {
+        "@release-it/conventional-changelog": {
+            "infile": "CHANGELOG.md",
+            "preset": {
+                "name": "conventionalcommits",
+                "types": [
+                    {
+                        "type": "feat",
+                        "section": "🚀 Features"
+                    },
+                    {
+                        "type": "fix",
+                        "section": "🐛 Bug Fixes"
+                    },
+                    {
+                        "type": "docs",
+                        "section": "📚 Documentation"
+                    },
+                    {
+                        "type": "style",
+                        "section": "💅 Styling"
+                    },
+                    {
+                        "type": "refactor",
+                        "section": "🔄 Refactoring"
+                    },
+                    {
+                        "type": "perf",
+                        "section": "⚡️ Performance"
+                    },
+                    {
+                        "type": "test",
+                        "section": "🧪 Testing"
+                    },
+                    {
+                        "type": "build",
+                        "section": "🛠️ Build System"
+                    },
+                    {
+                        "type": "ci",
+                        "section": "🔧 CI/CD"
+                    },
+                    {
+                        "type": "chore",
+                        "section": "🔧 Maintenance"
+                    },
+                    {
+                        "type": "breaking",
+                        "section": "💥 Breaking Changes"
+                    }
+                ]
+            }
+        }
     }
-  }
 }

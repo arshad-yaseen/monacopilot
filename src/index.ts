@@ -6,31 +6,31 @@ export {registerCompletion, Copilot};
 export type {Monaco, StandaloneCodeEditor} from 'types/monaco';
 
 export type {
-  CopilotOptions,
-  CustomCopilotModel,
-  CustomCopilotModelConfig,
-  CustomCopilotModelTransformResponse,
+    CopilotOptions,
+    CustomCopilotModel,
+    CustomCopilotModelConfig,
+    CustomCopilotModelTransformResponse,
 } from 'types/copilot';
 
 export type {
-  CompletionMetadata,
-  CompletionRequest,
-  CompletionRequestBody,
-  CompletionRequestOptions,
-  RegisterCompletionOptions,
-  CompletionRegistration,
+    CompletionMetadata,
+    CompletionRequest,
+    CompletionRequestBody,
+    CompletionRequestOptions,
+    RegisterCompletionOptions,
+    CompletionRegistration,
 } from 'types/completion';
 
 export type {
-  Provider,
-  Model,
-  OpenAIModel,
-  GroqModel,
-  AnthropicModel,
-  GoogleModel,
-  DeepSeekModel,
-  OpenAIChatCompletion,
-  DeepSeekChatCompletion,
-  GroqChatCompletion,
-  AnthropicChatCompletion,
+    Provider,
+    Model,
+    OpenAIModel,
+    GroqModel,
+    AnthropicModel,
+    GoogleModel,
+    DeepSeekModel,
+    OpenAIChatCompletion,
+    DeepSeekChatCompletion,
+    GroqChatCompletion,
+    AnthropicChatCompletion,
 } from 'types/ai';

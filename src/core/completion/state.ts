@@ -2,28 +2,28 @@ import {EditorCompletionState} from 'types/completion/internal';
 import {StandaloneCodeEditor} from 'types/monaco';
 
 const editorCompletionState = new WeakMap<
-  StandaloneCodeEditor,
-  EditorCompletionState
+    StandaloneCodeEditor,
+    EditorCompletionState
 >();
 
 export const getEditorState = (editor: StandaloneCodeEditor) => {
-  return editorCompletionState.get(editor);
+    return editorCompletionState.get(editor);
 };
 
 export const setEditorState = (
-  editor: StandaloneCodeEditor,
-  state: EditorCompletionState,
+    editor: StandaloneCodeEditor,
+    state: EditorCompletionState,
 ) => {
-  editorCompletionState.set(editor, state);
+    editorCompletionState.set(editor, state);
 };
 
 export const deleteEditorState = (editor: StandaloneCodeEditor) => {
-  editorCompletionState.delete(editor);
+    editorCompletionState.delete(editor);
 };
 
 export const createInitialState = (): EditorCompletionState => ({
-  isCompletionAccepted: false,
-  isCompletionVisible: false,
-  isExplicitlyTriggered: false,
-  hasRejectedCurrentCompletion: false,
+    isCompletionAccepted: false,
+    isCompletionVisible: false,
+    isExplicitlyTriggered: false,
+    hasRejectedCurrentCompletion: false,
 });

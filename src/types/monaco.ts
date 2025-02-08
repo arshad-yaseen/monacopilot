@@ -10,8 +10,8 @@ export type EditorInlineCompletion = monaco.languages.InlineCompletion;
 export type EditorThemeData = monaco.editor.IStandaloneThemeData;
 export type EditorCancellationToken = monaco.CancellationToken;
 export type EditorInlineCompletionContext =
-  monaco.languages.InlineCompletionContext;
+    monaco.languages.InlineCompletionContext;
 export type EditorInlineCompletionsResult =
-  monaco.languages.InlineCompletions<monaco.languages.InlineCompletion>;
+    monaco.languages.InlineCompletions<monaco.languages.InlineCompletion>;
 export type Disposable = monaco.IDisposable;
 export type EditorKeyboardEvent = monaco.IKeyboardEvent;

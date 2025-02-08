@@ -1,12 +1,12 @@
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <head>
-        <style>{`
+    return (
+        <html lang="en">
+            <head>
+                <style>{`
           *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
@@ -25,8 +25,8 @@ export default function RootLayout({
             -webkit-font-smoothing: antialiased;
           }
         `}</style>
-      </head>
-      <body>{children}</body>
-    </html>
-  );
+            </head>
+            <body>{children}</body>
+        </html>
+    );
 }

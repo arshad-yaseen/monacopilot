@@ -36,13 +36,13 @@ import * as monaco from 'monaco-editor';
 import {registerCompletion} from 'monacopilot';
 
 const editor = monaco.editor.create(document.getElementById('container'), {
-  language: 'javascript',
+    language: 'javascript',
 });
 
 registerCompletion(monaco, editor, {
-  language: 'javascript',
-  // Your API endpoint for handling completion requests
-  endpoint: 'https://api.example.com/code-completion',
+    language: 'javascript',
+    // Your API endpoint for handling completion requests
+    endpoint: 'https://api.example.com/code-completion',
 });
 ```
 
@@ -56,23 +56,23 @@ Example using Express.js:
 import {Copilot} from 'monacopilot';
 
 const copilot = new Copilot(OPENAI_API_KEY, {
-  provider: 'openai',
-  model: 'gpt-4o',
+    provider: 'openai',
+    model: 'gpt-4o',
 });
 
 app.post('/code-completion', async (req, res) => {
-  const {completion, error, raw} = await copilot.complete({body: req.body});
+    const {completion, error, raw} = await copilot.complete({body: req.body});
 
-  // Optional: Use raw response for analytics or token counting
-  if (raw) {
-    calculateCost(raw.usage.input_tokens);
-  }
+    // Optional: Use raw response for analytics or token counting
+    if (raw) {
+        calculateCost(raw.usage.input_tokens);
+    }
 
-  if (error) {
-    return res.status(500).json({completion: null, error});
-  }
+    if (error) {
+        return res.status(500).json({completion: null, error});
+    }
 
-  res.json({completion});
+    res.json({completion});
 });
 ```
 
@@ -86,8 +86,8 @@ app.post('/code-completion', async (req, res) => {
 Here are some examples of how to integrate Monacopilot into your project:
 
 - Next.js
-  - [App Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/app)
-  - [Pages Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/pages)
+    - [App Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/app)
+    - [Pages Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/pages)
 - [Remix](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/remix)
 - [Vue](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/vue)
 
@@ -107,32 +107,32 @@ Expand the table of contents below to navigate to your desired section.
 <summary>Table of Contents</summary>
 
 - [Register Completion Options](#register-completion-options)
-  - [Trigger Mode](#trigger-mode)
-  - [Manually Trigger Completions](#manually-trigger-completions)
-    - [Trigger Completions with a Keyboard Shortcut](#trigger-completions-with-a-keyboard-shortcut)
-    - [Trigger Completions with an Editor Action](#trigger-completions-with-an-editor-action)
-  - [Multi-File Context](#multi-file-context)
-  - [Filename](#filename)
-  - [Completions for Specific Technologies](#completions-for-specific-technologies)
-  - [Max Context Lines](#max-context-lines)
-  - [Caching Completions](#caching-completions)
-  - [Handling Errors](#handling-errors)
-  - [Custom Request Handler](#custom-request-handler)
-    - [Request Handler Example](#request-handler-example)
-  - [Completion Event Handlers](#completion-event-handlers)
-    - [onCompletionShown](#oncompletionshown)
-    - [onCompletionAccepted](#oncompletionaccepted)
-    - [onCompletionRejected](#oncompletionrejected)
+    - [Trigger Mode](#trigger-mode)
+    - [Manually Trigger Completions](#manually-trigger-completions)
+        - [Trigger Completions with a Keyboard Shortcut](#trigger-completions-with-a-keyboard-shortcut)
+        - [Trigger Completions with an Editor Action](#trigger-completions-with-an-editor-action)
+    - [Multi-File Context](#multi-file-context)
+    - [Filename](#filename)
+    - [Completions for Specific Technologies](#completions-for-specific-technologies)
+    - [Max Context Lines](#max-context-lines)
+    - [Caching Completions](#caching-completions)
+    - [Handling Errors](#handling-errors)
+    - [Custom Request Handler](#custom-request-handler)
+        - [Request Handler Example](#request-handler-example)
+    - [Completion Event Handlers](#completion-event-handlers)
+        - [onCompletionShown](#oncompletionshown)
+        - [onCompletionAccepted](#oncompletionaccepted)
+        - [onCompletionRejected](#oncompletionrejected)
 - [Copilot Options](#copilot-options)
-  - [Changing the Provider and Model](#changing-the-provider-and-model)
-  - [Custom Model](#custom-model)
+    - [Changing the Provider and Model](#changing-the-provider-and-model)
+    - [Custom Model](#custom-model)
 - [Completion Request Options](#completion-request-options)
-  - [Custom Headers for LLM Requests](#custom-headers-for-llm-requests)
-  - [Custom Prompt](#custom-prompt)
+    - [Custom Headers for LLM Requests](#custom-headers-for-llm-requests)
+    - [Custom Prompt](#custom-prompt)
 - [Cross-Language API Handler Implementation](#cross-language-api-handler-implementation)
 - [Security](#security)
 - [Contributing](#contributing)
-</details>
+  </details>
 
 ## Register Completion Options
 
@@ -142,7 +142,7 @@ The `trigger` option determines when the completion service provides code comple
 
 ```javascript
 registerCompletion(monaco, editor, {
-  trigger: 'onTyping',
+    trigger: 'onTyping',
 });
 ```
 
@@ -163,7 +163,7 @@ If you prefer not to trigger completions automatically (e.g., on typing or on id
 
 ```javascript
 const completion = registerCompletion(monaco, editor, {
-  trigger: 'onDemand',
+    trigger: 'onDemand',
 });
 
 completion.trigger();
@@ -177,14 +177,14 @@ You can set up completions to trigger when the `Ctrl+Shift+Space` keyboard short
 
 ```javascript
 const completion = registerCompletion(monaco, editor, {
-  trigger: 'onDemand',
+    trigger: 'onDemand',
 });
 
 editor.addCommand(
-  monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.Space,
-  () => {
-    completion.trigger();
-  },
+    monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.Space,
+    () => {
+        completion.trigger();
+    },
 );
 ```
 
@@ -196,19 +196,19 @@ You can add a custom editor action to trigger completions manually.
 
 ```javascript
 const completion = registerCompletion(monaco, editor, {
-  trigger: 'onDemand',
+    trigger: 'onDemand',
 });
 
 monaco.editor.addEditorAction({
-  id: 'monacopilot.triggerCompletion',
-  label: 'Complete Code',
-  contextMenuGroupId: 'navigation',
-  keybindings: [
-    monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.Space,
-  ],
-  run: () => {
-    completion.trigger();
-  },
+    id: 'monacopilot.triggerCompletion',
+    label: 'Complete Code',
+    contextMenuGroupId: 'navigation',
+    keybindings: [
+        monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.Space,
+    ],
+    run: () => {
+        completion.trigger();
+    },
 });
 ```
 
@@ -218,13 +218,13 @@ Improve the quality and relevance of Copilot's suggestions by providing addition
 
 ```javascript
 registerCompletion(monaco, editor, {
-  relatedFiles: [
-    {
-      path: './utils.js',
-      content:
-        'export const reverse = (str) => str.split("").reverse().join("")',
-    },
-  ],
+    relatedFiles: [
+        {
+            path: './utils.js',
+            content:
+                'export const reverse = (str) => str.split("").reverse().join("")',
+        },
+    ],
 });
 ```
 
@@ -236,7 +236,7 @@ Specify the name of the file being edited to receive more contextually relevant 
 
 ```javascript
 registerCompletion(monaco, editor, {
-  filename: 'utils.js', // e.g., "index.js", "utils/objects.js"
+    filename: 'utils.js', // e.g., "index.js", "utils/objects.js"
 });
 ```
 
@@ -248,7 +248,7 @@ Enable completions tailored to specific technologies by using the `technologies`
 
 ```javascript
 registerCompletion(monaco, editor, {
-  technologies: ['react', 'next.js', 'tailwindcss'],
+    technologies: ['react', 'next.js', 'tailwindcss'],
 });
 ```
 
@@ -262,7 +262,7 @@ For example, if there's a chance that the code in your editor may exceed `500+ l
 
 ```javascript
 registerCompletion(monaco, editor, {
-  maxContextLines: 80,
+    maxContextLines: 80,
 });
 ```
 
@@ -275,7 +275,7 @@ Monacopilot caches completions by default. It uses a FIFO (First In First Out) s
 
 ```javascript
 registerCompletion(monaco, editor, {
-  enableCaching: false,
+    enableCaching: false,
 });
 ```
 
@@ -287,9 +287,9 @@ You can provide this callback to handle errors yourself, which will disable the 
 
 ```javascript
 registerCompletion(monaco, editor, {
-  onError: error => {
-    console.error(error);
-  },
+    onError: error => {
+        console.error(error);
+    },
 });
 ```
 
@@ -299,23 +299,23 @@ The `requestHandler` option in the `registerCompletion` function allows you to h
 
 ```javascript
 registerCompletion(monaco, editor, {
-  endpoint: 'https://api.example.com/complete',
-  // ... other options
-  requestHandler: async ({endpoint, body}) => {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    });
+    endpoint: 'https://api.example.com/complete',
+    // ... other options
+    requestHandler: async ({endpoint, body}) => {
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    return {
-      completion: data.completion,
-    };
-  },
+        return {
+            completion: data.completion,
+        };
+    },
 });
 ```
 
@@ -331,8 +331,8 @@ The `requestHandler` function takes an object with `endpoint` and `body` as para
 >
 > ```javascript
 > const customBody = {
->   ...body,
->   myCustomProperty: 'value',
+>     ...body,
+>     myCustomProperty: 'value',
 > };
 > ```
 
@@ -352,24 +352,24 @@ Client-side implementation:
 const selectedModel = 'gpt-4'; // Example of model selected by user via UI (e.g. dropdown, settings panel)
 
 registerCompletion(monaco, editor, {
-  endpoint: 'https://api.example.com/complete',
-  requestHandler: async ({endpoint, body}) => {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ...body,
-        model: selectedModel, // Attach selected model to request body
-      }),
-    });
+    endpoint: 'https://api.example.com/complete',
+    requestHandler: async ({endpoint, body}) => {
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                ...body,
+                model: selectedModel, // Attach selected model to request body
+            }),
+        });
 
-    const data = await response.json();
-    return {
-      completion: data.completion,
-    };
-  },
+        const data = await response.json();
+        return {
+            completion: data.completion,
+        };
+    },
 });
 ```
 
@@ -383,52 +383,52 @@ const app = express();
 
 // Initialize different copilot instances for different models
 const copilotInstances = {
-  'gpt-4o': new Copilot(process.env.OPENAI_API_KEY, {
-    provider: 'openai',
-    model: 'gpt-4o',
-  }),
-  'sonnet-3.5': new Copilot(process.env.ANTHROPIC_API_KEY, {
-    provider: 'anthropic',
-    model: 'claude-3-5-sonnet',
-  }),
-  'llama-3': new Copilot(process.env.GROQ_API_KEY, {
-    provider: 'groq',
-    model: 'llama-3-70b',
-  }),
+    'gpt-4o': new Copilot(process.env.OPENAI_API_KEY, {
+        provider: 'openai',
+        model: 'gpt-4o',
+    }),
+    'sonnet-3.5': new Copilot(process.env.ANTHROPIC_API_KEY, {
+        provider: 'anthropic',
+        model: 'claude-3-5-sonnet',
+    }),
+    'llama-3': new Copilot(process.env.GROQ_API_KEY, {
+        provider: 'groq',
+        model: 'llama-3-70b',
+    }),
 };
 
 app.post('/complete', async (req, res) => {
-  try {
-    // Get the selected model from the request body
-    const {model, ...completionBody} = req.body;
+    try {
+        // Get the selected model from the request body
+        const {model, ...completionBody} = req.body;
 
-    // Use the appropriate copilot instance based on selected model
-    const copilot = copilotInstances[model];
-    if (!copilot) {
-      return res.status(400).json({
-        completion: null,
-        error: 'Invalid model selected',
-      });
+        // Use the appropriate copilot instance based on selected model
+        const copilot = copilotInstances[model];
+        if (!copilot) {
+            return res.status(400).json({
+                completion: null,
+                error: 'Invalid model selected',
+            });
+        }
+
+        const {completion, error} = await copilot.complete({
+            body: completionBody,
+        });
+
+        if (error) {
+            return res.status(500).json({
+                completion: null,
+                error,
+            });
+        }
+
+        res.json({completion});
+    } catch (err) {
+        res.status(500).json({
+            completion: null,
+            error: err.message,
+        });
     }
-
-    const {completion, error} = await copilot.complete({
-      body: completionBody,
-    });
-
-    if (error) {
-      return res.status(500).json({
-        completion: null,
-        error,
-      });
-    }
-
-    res.json({completion});
-  } catch (err) {
-    res.status(500).json({
-      completion: null,
-      error: err.message,
-    });
-  }
 });
 
 app.listen(3000);
@@ -446,10 +446,10 @@ This event is triggered when a completion suggestion is shown to the user. You c
 
 ```javascript
 registerCompletion(monaco, editor, {
-  // ... other options
-  onCompletionShown: (completion, range) => {
-    console.log('Completion suggestion:', {completion, range});
-  },
+    // ... other options
+    onCompletionShown: (completion, range) => {
+        console.log('Completion suggestion:', {completion, range});
+    },
 });
 ```
 
@@ -464,10 +464,10 @@ Event triggered when a completion suggestion is accepted by the user.
 
 ```javascript
 registerCompletion(monaco, editor, {
-  // ... other options
-  onCompletionAccepted: () => {
-    console.log('Completion accepted');
-  },
+    // ... other options
+    onCompletionAccepted: () => {
+        console.log('Completion accepted');
+    },
 });
 ```
 
@@ -477,10 +477,10 @@ Event triggered when a completion suggestion is rejected by the user.
 
 ```javascript
 registerCompletion(monaco, editor, {
-  // ... other options
-  onCompletionRejected: () => {
-    console.log('Completion rejected');
-  },
+    // ... other options
+    onCompletionRejected: () => {
+        console.log('Completion rejected');
+    },
 });
 ```
 
@@ -492,8 +492,8 @@ You can specify a different provider and model by setting the `provider` and `mo
 
 ```javascript
 const copilot = new Copilot(process.env.ANTHROPIC_API_KEY, {
-  provider: 'anthropic',
-  model: 'claude-3-5-haiku',
+    provider: 'anthropic',
+    model: 'claude-3-5-haiku',
 });
 ```
 
@@ -517,27 +517,27 @@ Please ensure you are using a high-quality model, especially for coding tasks, t
 
 ```javascript
 const copilot = new Copilot(process.env.HUGGINGFACE_API_KEY, {
-  // You don't need to set the provider if you are using a custom model.
-  // provider: 'huggingface',
-  model: {
-    config: (apiKey, prompt) => ({
-      endpoint:
-        'https://api-inference.huggingface.co/models/openai-community/gpt2',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: {
-        inputs: prompt.user,
-        parameters: {
-          max_length: 100,
-          num_return_sequences: 1,
-          temperature: 0.7,
-        },
-      },
-    }),
-    transformResponse: response => ({text: response[0].generated_text}),
-  },
+    // You don't need to set the provider if you are using a custom model.
+    // provider: 'huggingface',
+    model: {
+        config: (apiKey, prompt) => ({
+            endpoint:
+                'https://api-inference.huggingface.co/models/openai-community/gpt2',
+            headers: {
+                Authorization: `Bearer ${apiKey}`,
+                'Content-Type': 'application/json',
+            },
+            body: {
+                inputs: prompt.user,
+                parameters: {
+                    max_length: 100,
+                    num_return_sequences: 1,
+                    temperature: 0.7,
+                },
+            },
+        }),
+        transformResponse: response => ({text: response[0].generated_text}),
+    },
 });
 ```
 
@@ -568,11 +568,11 @@ You can add custom headers to the provider's completion requests. For example, i
 
 ```javascript
 copilot.complete({
-  options: {
-    headers: {
-      'X-Custom-Header': 'custom-value',
+    options: {
+        headers: {
+            'X-Custom-Header': 'custom-value',
+        },
     },
-  },
 });
 ```
 
@@ -584,12 +584,12 @@ You can customize the prompt used for generating completions by providing a `cus
 
 ```javascript
 copilot.complete({
-  options: {
-    customPrompt: metadata => ({
-      system: 'Your custom system prompt here',
-      user: 'Your custom user prompt here',
-    }),
-  },
+    options: {
+        customPrompt: metadata => ({
+            system: 'Your custom system prompt here',
+            user: 'Your custom user prompt here',
+        }),
+    },
 });
 ```
 
@@ -597,12 +597,11 @@ The `system` and `user` prompts in the `customPrompt` function are optional. If 
 
 ```javascript
 copilot.complete({
-  options: {
-    customPrompt: metadata => ({
-      system:
-        'You are an AI assistant specialized in writing React components, focusing on creating clean...',
-    }),
-  },
+    options: {
+        customPrompt: metadata => ({
+            system: 'You are an AI assistant specialized in writing React components, focusing on creating clean...',
+        }),
+    },
 });
 ```
 
@@ -646,9 +645,8 @@ Here's an example of a custom prompt that focuses on generating React component 
 
 ```javascript
 const customPrompt = ({textBeforeCursor, textAfterCursor}) => ({
-  system:
-    'You are an AI assistant specialized in writing React components. Focus on creating clean, reusable, and well-structured components.',
-  user: `Please complete the following React component:
+    system: 'You are an AI assistant specialized in writing React components. Focus on creating clean, reusable, and well-structured components.',
+    user: `Please complete the following React component:
 
     ${textBeforeCursor}
     // Cursor position
@@ -658,7 +656,7 @@ const customPrompt = ({textBeforeCursor, textAfterCursor}) => ({
 });
 
 copilot.complete({
-  options: {customPrompt},
+    options: {customPrompt},
 });
 ```
 
@@ -674,20 +672,20 @@ While the example in this documentation uses JavaScript/Node.js (which is recomm
 4. Send the prompt to your chosen LLM and get the completion.
 5. Return a JSON response with the following structure:
 
-   ```json
-   {
-     "completion": "Generated completion text"
-   }
-   ```
+    ```json
+    {
+        "completion": "Generated completion text"
+    }
+    ```
 
-   Or in case of an error:
+    Or in case of an error:
 
-   ```json
-   {
-     "completion": null,
-     "error": "Error message"
-   }
-   ```
+    ```json
+    {
+        "completion": null,
+        "error": "Error message"
+    }
+    ```
 
 ### Key Considerations
 
@@ -742,8 +740,8 @@ Now, Monacopilot is set up to send completion requests to the `/complete` endpoi
 
 ```javascript
 registerCompletion(monaco, editor, {
-  endpoint: 'https://my-python-api.com/complete',
-  // ... other options
+    endpoint: 'https://my-python-api.com/complete',
+    // ... other options
 });
 ```
 

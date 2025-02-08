@@ -1,83 +1,83 @@
 name: CI
 on:
-  push:
-    branches:
-      - 'main'
-  pull_request: {}
+    push:
+        branches:
+            - 'main'
+    pull_request: {}
 
 jobs:
-  ci:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        node-version: [20.x]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    ci:
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macos-latest, windows-latest]
+                node-version: [20.x]
+        runs-on: ${{ matrix.os }}
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ matrix.node-version }}
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: latest
+            - name: Install pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                  version: latest
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
 
-      - name: Run validation
-        run: pnpm validate
+            - name: Run validation
+              run: pnpm validate
 
-      - name: Run tests
-        run: pnpm test
-  release:
-    runs-on: ubuntu-latest
-    needs: ci
-    permissions:
-      contents: write
-      issues: write
-      pull-requests: write
-      id-token: write
-    if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip-release]')
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GH_TOKEN }}
+            - name: Run tests
+              run: pnpm test
+    release:
+        runs-on: ubuntu-latest
+        needs: ci
+        permissions:
+            contents: write
+            issues: write
+            pull-requests: write
+            id-token: write
+        if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip-release]')
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  token: ${{ secrets.GH_TOKEN }}
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.x
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20.x
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: latest
+            - name: Install pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                  version: latest
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
 
-      - name: Run validation
-        run: pnpm validate
+            - name: Run validation
+              run: pnpm validate
 
-      - name: Configure NPM authentication
-        run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+            - name: Configure NPM authentication
+              run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
+              env:
+                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Configure Git
-        run: |
-          git config user.name "${GITHUB_ACTOR}"
-          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+            - name: Configure Git
+              run: |
+                  git config user.name "${GITHUB_ACTOR}"
+                  git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
-      - name: Execute Release
-        run: pnpm release --ci
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+            - name: Execute Release
+              run: pnpm release --ci
+              env:
+                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+                  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
