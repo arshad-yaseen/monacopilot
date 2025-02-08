@@ -52,6 +52,8 @@ registerCompletion(monaco, editor, {
 // in the `registerCompletion` function
 // to handle completion requests from the editor
 
+// Example using Express.js
+
 import {Copilot} from 'monacopilot';
 
 const copilot = new Copilot(OPENAI_API_KEY, {
