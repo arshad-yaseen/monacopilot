@@ -11,3 +11,7 @@ build/
 examples/
 
 CHANGELOG.md
+
+docs/.vitepress/cache/
+
+docs/.vitepress/dist/

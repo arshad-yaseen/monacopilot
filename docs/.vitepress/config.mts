@@ -3,8 +3,8 @@ import {defineConfig} from 'vitepress';
 import {version} from '../../package.json';
 
 export default defineConfig({
-    title: 'Monacopilot Docs',
-    description: 'The official documentation for monacopilot',
+    title: 'Monacopilot',
+    description: 'AI auto-completion plugin for Monaco Editor',
     themeConfig: {
         logo: '/logo.svg',
         nav: [
