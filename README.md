@@ -21,13 +21,13 @@ Add GitHub Copilot-style AI completions to your Monaco Editor in minutes! 🚀
 
 ### Quick Start (3 Simple Steps)
 
-1. **Install the package**
+#### Install the package
 
 ```bash
 npm install monacopilot
 ```
 
-2. **Register the AI completion to your editor**
+#### Register the AI completion to your editor
 
 In your frontend code:
 
@@ -46,7 +46,7 @@ registerCompletion(monaco, editor, {
 });
 ```
 
-3. **Create your completion API handler**
+#### Create your completion API handler
 
 Create an API handler for the endpoint (e.g. /code-completion) you provided in the `registerCompletion` function to handle completion requests from the editor.
 
