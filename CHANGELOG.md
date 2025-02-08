@@ -1,5 +1,12 @@
 
 
+## [0.18.4](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.3...v0.18.4) (2025-02-08)
+
+
+### 📚 Documentation
+
+* simplify intro ([c5aa20d](https://github.com/arshad-yaseen/monacopilot/commit/c5aa20d9cc323770caaab95992fd1d897039a808))
+
 ## [0.18.3](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.2...v0.18.3) (2025-02-04)
 
 
