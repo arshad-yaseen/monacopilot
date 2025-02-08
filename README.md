@@ -53,7 +53,6 @@ registerCompletion(monaco, editor, {
 // to handle completion requests from the editor
 
 // Example using Express.js
-
 import {Copilot} from 'monacopilot';
 
 const copilot = new Copilot(OPENAI_API_KEY, {
@@ -61,7 +60,6 @@ const copilot = new Copilot(OPENAI_API_KEY, {
   model: 'gpt-4o',
 });
 
-// Handle completion requests
 app.post('/code-completion', async (req, res) => {
   const {completion, error, raw} = await copilot.complete({body: req.body});
 
@@ -70,7 +68,6 @@ app.post('/code-completion', async (req, res) => {
     calculateCost(raw.usage.input_tokens);
   }
 
-  // Handle any errors gracefully
   if (error) {
     return res.status(500).json({completion: null, error});
   }
