@@ -1,4 +1,4 @@
-![Monacopilot Banner](https://i.postimg.cc/GhpGVjVG/monacopilot-banner.png)
+![Monacopilot Banner](https://copilot.arshadyaseen.com/og.png)
 
 ### Features
 
@@ -11,7 +11,7 @@
 - 🔌 Custom Model Support
 - 🎮 Manual Trigger Support
 
-### See it in action
+### Demo
 
 [Inline Completions Demo Video](https://github.com/user-attachments/assets/f2ec4ae1-f658-4002-af9c-c6b1bbad70d9)
 
