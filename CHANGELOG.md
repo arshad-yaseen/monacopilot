@@ -1,5 +1,12 @@
 
 
+## [0.18.15](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.14...v0.18.15) (2025-02-08)
+
+
+### 🔧 CI/CD
+
+* vitepress base ([ea7e7fc](https://github.com/arshad-yaseen/monacopilot/commit/ea7e7fc7a342a502813098777c4f48e746900774))
+
 ## [0.18.14](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.13...v0.18.14) (2025-02-08)
 
 
