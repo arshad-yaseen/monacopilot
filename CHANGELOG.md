@@ -1,5 +1,12 @@
 
 
+## [0.18.13](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.12...v0.18.13) (2025-02-08)
+
+
+### 🔧 CI/CD
+
+* fix pnpm install ([1214db7](https://github.com/arshad-yaseen/monacopilot/commit/1214db7b1231472244d52e047f2b3d264e28f878))
+
 ## [0.18.12](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.11...v0.18.12) (2025-02-08)
 
 
