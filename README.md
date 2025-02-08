@@ -29,8 +29,9 @@ npm install monacopilot
 
 2. **Register the AI completion to your editor**
 
+In your frontend code:
+
 ```javascript
-// In your frontend code
 import * as monaco from 'monaco-editor';
 import {registerCompletion} from 'monacopilot';
 
@@ -47,12 +48,11 @@ registerCompletion(monaco, editor, {
 
 3. **Create your completion API handler**
 
-```javascript
-// Create an API handler for the endpoint (e.g. /code-completion) you provided
-// in the `registerCompletion` function
-// to handle completion requests from the editor
+Create an API handler for the endpoint (e.g. /code-completion) you provided in the `registerCompletion` function to handle completion requests from the editor.
 
-// Example using Express.js
+Example using Express.js:
+
+```javascript
 import {Copilot} from 'monacopilot';
 
 const copilot = new Copilot(OPENAI_API_KEY, {
@@ -76,9 +76,10 @@ app.post('/code-completion', async (req, res) => {
 });
 ```
 
-You can use any backend framework or programming language for your API handler, as long as the endpoint is accessible from the browser. For non-JavaScript implementations, see [Cross-Language API Handler Implementation](#cross-language-api-handler-implementation).
+**That's it! Your Monaco Editor now has AI-powered completions! 🎉**
 
-That's it! Your Monaco Editor now has AI-powered completions! 🎉
+> [!NOTE]
+> You can use any backend framework or programming language for your API handler, as long as the endpoint is accessible from the browser. For non-JavaScript implementations, see [Cross-Language API Handler Implementation](#cross-language-api-handler-implementation).
 
 ### Examples
 
