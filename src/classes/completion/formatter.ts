@@ -1,7 +1,3 @@
-/**
- * This class is responsible for formatting code completions
- * to ensure that they are displayed correctly in the editor.
- */
 export class CompletionFormatter {
   private formattedCompletion = '';
   private currentColumn = 0;

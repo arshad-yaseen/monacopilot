@@ -5,7 +5,7 @@ import {
   parseProviderChatCompletion,
 } from 'ai/operations';
 import {craftCompletionPrompt} from 'helpers/prompt';
-import {deprecated, report} from 'logger';
+import {report} from 'logger';
 
 import {
   ChatCompletion,
@@ -120,7 +120,7 @@ export class Copilot {
     requestBody: ChatCompletionCreateParams,
     headers: Record<string, string>,
   ): Promise<ChatCompletion> {
-    return HTTP.POST<ChatCompletion, ChatCompletionCreateParams>(
+    return HTTP.post<ChatCompletion, ChatCompletionCreateParams>(
       endpoint,
       requestBody,
       {headers},
@@ -133,16 +133,8 @@ export class Copilot {
     if (typeof this.model === 'object' && 'transformResponse' in this.model) {
       // Handle custom model case
       const transformedResponse = this.model.transformResponse(chatCompletion);
-      if ('completion' in transformedResponse) {
-        deprecated(
-          'completion',
-          'text',
-          'Copilot.options.model.transformResponse',
-        );
-      }
       return {
-        completion:
-          transformedResponse.text ?? transformedResponse.completion ?? null,
+        completion: transformedResponse.text ?? null,
         raw: chatCompletion,
       };
     } else {

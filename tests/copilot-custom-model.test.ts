@@ -31,7 +31,7 @@ describe('Copilot with model', () => {
       },
     });
 
-    vi.spyOn(HTTP, 'POST').mockResolvedValue({custom: 'response'});
+    vi.spyOn(HTTP, 'post').mockResolvedValue({custom: 'response'});
 
     const result = await copilot.complete({
       body: {
@@ -40,7 +40,7 @@ describe('Copilot with model', () => {
     });
 
     expect(customConfig).toHaveBeenCalledWith(MOCK_API_KEY, expect.any(Object));
-    expect(HTTP.POST).toHaveBeenCalledWith(
+    expect(HTTP.post).toHaveBeenCalledWith(
       'https://custom-api.com/v1/chat/completions',
       {custom: 'data'},
       expect.objectContaining({
@@ -69,7 +69,7 @@ describe('Copilot with model', () => {
       },
     });
 
-    vi.spyOn(HTTP, 'POST').mockResolvedValue({custom: 'response'});
+    vi.spyOn(HTTP, 'post').mockResolvedValue({custom: 'response'});
 
     const result = await copilot.complete({
       body: {

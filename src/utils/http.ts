@@ -57,14 +57,7 @@ const request = async <
   return response.json() as Promise<ResponseType>;
 };
 
-const GET = <ResponseType>(
-  url: string,
-  options?: RequestOptions<undefined, 'GET'>,
-) => {
-  return request<ResponseType, undefined, 'GET'>(url, 'GET', options);
-};
-
-const POST = <ResponseType, BodyType>(
+const post = <ResponseType, BodyType>(
   url: string,
   body: BodyType,
   options?: RequestOptions<BodyType, 'POST'>,
@@ -75,15 +68,6 @@ const POST = <ResponseType, BodyType>(
   });
 };
 
-/**
- * HTTP utility functions for making GET and POST requests.
- * @example
- * import {HTTP} from './utils/http';
- *
- * const response = await HTTP.GET<{message: string}>('https://example.com');
- * console.log(response.message);
- */
 export const HTTP = {
-  GET,
-  POST,
+  post,
 };

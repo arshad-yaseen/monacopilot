@@ -1,12 +1,3 @@
-/**
- * Creates a debounced version of a function that returns a promise.
- * Adjusts delay based on typing speed - shorter delay after pauses.
- * Ensures that if a function call is in progress, new calls wait until it finishes.
- *
- * @param func - Function to debounce
- * @param baseWait - Max delay in ms (default: 600)
- * @param threshold - Pause threshold in ms (default: 200)
- */
 export const typingDebouncedAsync = <
   T extends (...args: any[]) => Promise<any>,
 >(

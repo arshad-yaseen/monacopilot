@@ -21,20 +21,12 @@ import {
 import {HTTP} from 'utils/http';
 import {keepNLines} from 'utils/text';
 
-/**
- * Fetches a completion item from the API.
- * @param {Object} params - The parameters for the completion request.
- * @param {string} params.endpoint - The endpoint to fetch the completion item from.
- * @param {CompletionRequestBody} params.body - The body of the completion item request.
- * @returns {Promise<string | null>} The completion item or null if an error occurs.
- * @throws {Error} If there's an error during the fetch operation.
- */
 export const fetchCompletionItem = async (
   params: FetchCompletionItemParams,
 ): Promise<FetchCompletionItemReturn> => {
   const {endpoint, body} = params;
 
-  const {completion, error} = await HTTP.POST<
+  const {completion, error} = await HTTP.post<
     CompletionResponse,
     CompletionRequestBody
   >(endpoint, body, {
@@ -51,9 +43,6 @@ export const fetchCompletionItem = async (
   return {completion};
 };
 
-/**
- * Constructs the metadata required for fetching a completion item.
- */
 export const constructCompletionMetadata = ({
   pos,
   mdl,
@@ -125,12 +114,6 @@ export const constructCompletionMetadata = ({
   };
 };
 
-/**
- * Determines the completion mode based on the cursor position and editor model.
- * @param {CursorPosition} pos - The cursor position in the editor.
- * @param {EditorModel} mdl - The editor model.
- * @returns {CompletionMode} The determined completion mode.
- */
 const determineCompletionMode = (
   pos: CursorPosition,
   mdl: EditorModel,

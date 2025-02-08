@@ -19,11 +19,6 @@ import {createInlineCompletionResult} from 'utils/completion';
 import {typingDebouncedAsync} from 'utils/debounce';
 import {getTextBeforeCursor, getTextBeforeCursorInLine} from 'utils/editor';
 
-/**
- * Returns a set of debounced functions for each trigger type.
- * @param fn - The function to debounce.
- * @returns An object mapping trigger types to debounced functions.
- */
 const getDebouncedFunctionPerTrigger = (
   fn: FetchCompletionItemHandler,
 ): Record<
@@ -39,11 +34,6 @@ const getDebouncedFunctionPerTrigger = (
 
 export const completionCache = new CompletionCache();
 
-/**
- * Processes inline completions for the editor.
- * @param params - Inline completion handler parameters.
- * @returns A promise resolving to EditorInlineCompletionsResult.
- */
 export const processInlineCompletions = async ({
   monaco,
   mdl,

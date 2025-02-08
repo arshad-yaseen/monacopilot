@@ -5,9 +5,6 @@ import {getTextBeforeCursor} from 'utils/editor';
 
 import {Queue} from '../queue';
 
-/**
- * Manages a cache of code completions with FIFO eviction policy.
- */
 export class CompletionCache {
   private static readonly MAX_CACHE_SIZE = 10;
   private cache: Queue<CompletionCacheItem>;
@@ -33,9 +30,6 @@ export class CompletionCache {
     this.cache.clear();
   }
 
-  /**
-   * Determines if a cached completion item is valid based on the current cursor position and editor model.
-   */
   private isValidCacheItem(
     cacheItem: Readonly<CompletionCacheItem>,
     pos: Readonly<CursorPosition>,
@@ -57,9 +51,6 @@ export class CompletionCache {
     return this.isPositionValid(cacheItem, pos, currentRangeValue);
   }
 
-  /**
-   * Checks if the cursor position is valid for the given cached completion item.
-   */
   private isPositionValid(
     cacheItem: Readonly<CompletionCacheItem>,
     pos: Readonly<CursorPosition>,

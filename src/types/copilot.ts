@@ -26,8 +26,6 @@ export type CustomCopilotModelConfig = (
 export type CustomCopilotModelTransformResponse = (response: unknown) => {
   /** The generated text */
   text: string | null;
-  /** @deprecated Use `text` instead */
-  completion?: string | null;
 };
 
 export interface CustomCopilotModel {

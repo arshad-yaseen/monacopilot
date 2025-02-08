@@ -28,11 +28,7 @@ export const warn = (message: string, error?: unknown): void => {
   );
 };
 
-export const log = (message: string): void => {
-  console.log(`${BOLD}[MONACOPILOT] ${message}${RESET}`);
-};
-
-export const deprecated = (
+export const warnDeprecated = (
   oldFeature: string,
   newFeature: string,
   location?: string,

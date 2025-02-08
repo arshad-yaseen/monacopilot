@@ -35,7 +35,7 @@ describe('Completion', () => {
   });
 
   it('should successfully return a completion', async () => {
-    vi.spyOn(HTTP, 'POST').mockResolvedValue(MOCK_COMPLETION);
+    vi.spyOn(HTTP, 'post').mockResolvedValue(MOCK_COMPLETION);
 
     const result = await copilot.complete({
       body: {
@@ -47,7 +47,7 @@ describe('Completion', () => {
       completion: MOCK_COMPLETION_CONTENT,
       raw: MOCK_COMPLETION,
     });
-    expect(HTTP.POST).toHaveBeenCalledWith(
+    expect(HTTP.post).toHaveBeenCalledWith(
       PROVIDER_ENDPOINT_MAP[TEST_PROVIDER],
       expect.objectContaining({
         model: MODEL_IDS[TEST_MODEL],
@@ -64,7 +64,7 @@ describe('Completion', () => {
   });
 
   it('should handle API errors and return an error response', async () => {
-    vi.spyOn(HTTP, 'POST').mockRejectedValue(MOCK_ERROR);
+    vi.spyOn(HTTP, 'post').mockRejectedValue(MOCK_ERROR);
 
     const result = await copilot.complete({
       body: {
@@ -83,7 +83,7 @@ describe('Completion', () => {
       provider: 'openai',
       model: 'gpt-4o',
     });
-    vi.spyOn(HTTP, 'POST').mockResolvedValue(MOCK_COMPLETION);
+    vi.spyOn(HTTP, 'post').mockResolvedValue(MOCK_COMPLETION);
 
     await customCopilot.complete({
       body: {
@@ -91,7 +91,7 @@ describe('Completion', () => {
       },
     });
 
-    expect(HTTP.POST).toHaveBeenCalledWith(
+    expect(HTTP.post).toHaveBeenCalledWith(
       PROVIDER_ENDPOINT_MAP['openai'],
       expect.objectContaining({
         model: MODEL_IDS['gpt-4o'],
@@ -102,7 +102,7 @@ describe('Completion', () => {
 
   it('should handle network errors', async () => {
     MOCK_ERROR.name = 'NetworkError';
-    vi.spyOn(HTTP, 'POST').mockRejectedValue(MOCK_NETWORK_ERROR);
+    vi.spyOn(HTTP, 'post').mockRejectedValue(MOCK_NETWORK_ERROR);
 
     const result = await copilot.complete({
       body: {
@@ -118,7 +118,7 @@ describe('Completion', () => {
 
   it('should use custom headers in API requests', async () => {
     const customHeaders = {'X-Custom-Header': 'test-value'};
-    vi.spyOn(HTTP, 'POST').mockResolvedValue(MOCK_COMPLETION);
+    vi.spyOn(HTTP, 'post').mockResolvedValue(MOCK_COMPLETION);
 
     await copilot.complete({
       body: {
@@ -129,7 +129,7 @@ describe('Completion', () => {
       },
     });
 
-    expect(HTTP.POST).toHaveBeenCalledWith(
+    expect(HTTP.post).toHaveBeenCalledWith(
       expect.any(String),
       expect.any(Object),
       expect.objectContaining({
@@ -143,7 +143,7 @@ describe('Completion', () => {
       system: 'Custom system prompt',
       user: `Custom user prompt: ${metadata.textBeforeCursor}`,
     });
-    vi.spyOn(HTTP, 'POST').mockResolvedValue(MOCK_COMPLETION);
+    vi.spyOn(HTTP, 'post').mockResolvedValue(MOCK_COMPLETION);
 
     await copilot.complete({
       body: {
@@ -154,7 +154,7 @@ describe('Completion', () => {
       },
     });
 
-    expect(HTTP.POST).toHaveBeenCalledWith(
+    expect(HTTP.post).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
         messages: [
@@ -170,7 +170,7 @@ describe('Completion', () => {
   });
 
   it('should use default prompt when custom prompt is not provided', async () => {
-    vi.spyOn(HTTP, 'POST').mockResolvedValue(MOCK_COMPLETION);
+    vi.spyOn(HTTP, 'post').mockResolvedValue(MOCK_COMPLETION);
 
     await copilot.complete({
       body: {
@@ -178,7 +178,7 @@ describe('Completion', () => {
       },
     });
 
-    expect(HTTP.POST).toHaveBeenCalledWith(
+    expect(HTTP.post).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
         messages: [{role: 'user', content: expect.any(String)}],
@@ -189,7 +189,7 @@ describe('Completion', () => {
   });
 
   it('should use custom system prompt while retaining default user prompt', async () => {
-    vi.spyOn(HTTP, 'POST').mockResolvedValue(MOCK_COMPLETION);
+    vi.spyOn(HTTP, 'post').mockResolvedValue(MOCK_COMPLETION);
 
     await copilot.complete({
       body: {
@@ -203,7 +203,7 @@ describe('Completion', () => {
       },
     });
 
-    expect(HTTP.POST).toHaveBeenCalledWith(
+    expect(HTTP.post).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
         messages: [{role: 'user', content: expect.any(String)}],

@@ -3,14 +3,6 @@ import {CursorPosition, EditorModel, EditorRange, Monaco} from 'types/monaco';
 export class CompletionRange {
   constructor(private monaco: Monaco) {}
 
-  /**
-   * Calculates the range where the completion should be inserted in the editor.
-   *
-   * @param pos - The current cursor position in the editor.
-   * @param completion - The text of the completion to be inserted.
-   * @param mdl - The Monaco editor text model.
-   * @returns The range where the completion should be inserted.
-   */
   public computeInsertionRange(
     pos: CursorPosition,
     completion: string,
@@ -113,12 +105,6 @@ export class CompletionRange {
     );
   }
 
-  /**
-   * Calculates the range for caching when there's no overlap with existing text.
-   * @param pos - The current cursor position.
-   * @param completion - The completion text.
-   * @returns The range for caching the completion.
-   */
   public computeCacheRange(
     pos: CursorPosition,
     completion: string,
