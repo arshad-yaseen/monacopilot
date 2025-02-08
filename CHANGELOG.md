@@ -1,5 +1,12 @@
 
 
+## [0.18.18](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.17...v0.18.18) (2025-02-08)
+
+
+### 🔧 CI/CD
+
+* remove vitepress base ([5892286](https://github.com/arshad-yaseen/monacopilot/commit/5892286fda836c7c5ebd1358e6a6a5284ad97ed9))
+
 ## [0.18.17](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.16...v0.18.17) (2025-02-08)
 
 
