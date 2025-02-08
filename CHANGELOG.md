@@ -1,5 +1,12 @@
 
 
+## [0.18.17](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.16...v0.18.17) (2025-02-08)
+
+
+### 🔧 Maintenance
+
+* update documentation website urls ([28b71a7](https://github.com/arshad-yaseen/monacopilot/commit/28b71a7370b80cb13e8a4bf64ada99c2bc438226))
+
 ## [0.18.16](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.15...v0.18.16) (2025-02-08)
 
 
