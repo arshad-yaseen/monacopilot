@@ -104,7 +104,7 @@ export default defineConfig({
             'meta',
             {
                 property: 'og:image',
-                content: 'https://monacopilot.arshadyaseen.com/og.png',
+                content: 'https://copilot.arshadyaseen.com/og.png',
             },
         ],
         [
@@ -120,7 +120,7 @@ export default defineConfig({
             'meta',
             {
                 name: 'twitter:image',
-                content: 'https://monacopilot.arshadyaseen.com/og.png',
+                content: 'https://copilot.arshadyaseen.com/og.png',
             },
         ],
         [

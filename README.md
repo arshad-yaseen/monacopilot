@@ -17,7 +17,7 @@
 
 ## Documentation
 
-Go to the [documentation](https://monacopilot.arshadyaseen.com) to get started with Monacopilot.
+Go to the [documentation](https://copilot.arshadyaseen.com) to get started with Monacopilot.
 
 ## Contributing
 
