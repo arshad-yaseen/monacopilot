@@ -1,5 +1,12 @@
 
 
+## [0.18.12](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.11...v0.18.12) (2025-02-08)
+
+
+### 📚 Documentation
+
+* new documentation website ([b3b0882](https://github.com/arshad-yaseen/monacopilot/commit/b3b0882578d90353343675e229bf2592ed4f2156))
+
 ## [0.18.11](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.10...v0.18.11) (2025-02-08)
 
 
