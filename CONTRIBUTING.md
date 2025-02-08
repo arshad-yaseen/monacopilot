@@ -118,14 +118,33 @@ To test Monacopilot locally, follow these steps:
 
 ## Documentation
 
-Comprehensive documentation is essential.
+### Viewing Documentation Locally
 
-- **Location:** The documentation is located within the `README.md` file at the root of the repository.
-- **Format:** Documentation is written using Markdown.
+To preview the documentation on your local machine:
 
-### Viewing Documentation
+1. Start the documentation development server:
 
-To view the documentation, simply open the `README.md` file in your preferred text editor or view it directly on GitHub.
+    ```bash
+    pnpm dev:docs
+    ```
+
+2. Visit `http://localhost:5173` in your web browser to view the documentation.
+
+The documentation server supports hot reloading, so any changes you make will be reflected immediately in the browser.
+
+### Contributing to Documentation
+
+The documentation is written in Markdown and follows a structured, file-based organization:
+
+1. All documentation files are located in the `docs` directory
+2. The documentation uses a clear, hierarchical structure for easy navigation
+3. To make changes:
+    - Locate the relevant Markdown file in the `docs` directory
+    - Make your desired edits
+    - Preview changes in real-time using `pnpm dev:docs`
+    - Verify that your changes render correctly and maintain consistent formatting
+    - Ensure all links and references are working properly
+    - Check that your changes align with the existing documentation style
 
 ## Commit Conventions
 

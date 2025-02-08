@@ -13,6 +13,8 @@
         "dev": "tsup src/index.ts --watch",
         "test": "vitest run",
         "dev:test-ui": "pnpm -C tests/ui dev",
+        "dev:docs": "pnpm -C docs dev",
+        "build:docs": "pnpm -C docs build",
         "tsc": "tsc --noEmit",
         "lint": "eslint . --ext .ts,.tsx --fix",
         "lint:test-ui": "pnpm -C tests/ui lint",
