@@ -1,5 +1,12 @@
 
 
+## [0.18.6](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.5...v0.18.6) (2025-02-08)
+
+
+### 📚 Documentation
+
+* split lines ([856b0b8](https://github.com/arshad-yaseen/monacopilot/commit/856b0b8eaedd2282d16c732379143ac7b98b03e0))
+
 ## [0.18.5](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.4...v0.18.5) (2025-02-08)
 
 
