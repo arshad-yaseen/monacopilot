@@ -1,1 +1,2 @@
 pnpm validate
+pnpm test

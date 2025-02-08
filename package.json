@@ -11,7 +11,7 @@
   "scripts": {
     "build": "tsup src/index.ts",
     "dev": "tsup src/index.ts --watch",
-    "test": "vitest",
+    "test": "vitest run",
     "dev:test-ui": "pnpm -C tests/ui dev",
     "tsc": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx --fix",
