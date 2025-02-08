@@ -5,6 +5,7 @@ import {version} from '../../package.json';
 export default defineConfig({
     title: 'Monacopilot Docs',
     description: 'The official documentation for monacopilot',
+    base: '/monacopilot/',
     themeConfig: {
         logo: '/logo.svg',
         nav: [
