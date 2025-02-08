@@ -39,7 +39,7 @@ const editor = monaco.editor.create(document.getElementById('container'), {
 });
 
 registerCompletion(monaco, editor, {
-  endpoint: '/api/complete',
+  endpoint: 'https://api.example.com/code-completion', // Your API endpoint for handling completion requests
   language: 'javascript',
 });
 ```
@@ -47,17 +47,18 @@ registerCompletion(monaco, editor, {
 3. **Create your completion API handler**
 
 ```javascript
-// Create an API handler for the `/api/complete` endpoint (e.g. using Express.js)
+// Create an API handler for the endpoint (e.g. /code-completion) you provided in the `registerCompletion` function
 // to handle completion requests from the editor
 
 import {Copilot} from 'monacopilot';
 
 const copilot = new Copilot(OPENAI_API_KEY, {
-  provider: 'openai', // or 'anthropic', 'google', etc.
+  provider: 'openai', // or 'anthropic', 'google', etc.,
+  model: 'gpt-4o', // or 'claude-3-5-haiku', 'gpt-4o-mini', etc.
 });
 
 // Handle completion requests
-app.post('/api/complete', async (req, res) => {
+app.post('/code-completion', async (req, res) => {
   const {completion, error, raw} = await copilot.complete({body: req.body});
 
   // Optional: Use raw response for analytics or token counting
@@ -264,7 +265,7 @@ registerCompletion(monaco, editor, {
 ```
 
 > [!NOTE]
-> If you're using `Groq` as your provider, it's recommended to set `maxContextLines` to `60` or less due to its low rate limits and lack of pay-as-you-go pricing. However, `Groq` is expected to offer pay-as-you-go pricing in the near future.
+> If you're using `groq` as your provider, it's recommended to set `maxContextLines` to `60` or less due to its low rate limits and lack of pay-as-you-go pricing. However, Groq is expected to offer pay-as-you-go pricing in the near future.
 
 ### Caching Completions
 
@@ -488,9 +489,9 @@ registerCompletion(monaco, editor, {
 You can specify a different provider and model by setting the `provider` and `model` parameters in the `Copilot` instance.
 
 ```javascript
-const copilot = new Copilot(process.env.OPENAI_API_KEY, {
-  provider: 'openai',
-  model: 'gpt-4o',
+const copilot = new Copilot(process.env.ANTHROPIC_API_KEY, {
+  provider: 'anthropic',
+  model: 'claude-3-5-haiku',
 });
 ```
 
