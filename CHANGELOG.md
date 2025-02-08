@@ -1,5 +1,12 @@
 
 
+## [0.18.14](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.13...v0.18.14) (2025-02-08)
+
+
+### 🔧 Maintenance
+
+* add docs to workspace ([0d6ed74](https://github.com/arshad-yaseen/monacopilot/commit/0d6ed74fbac72d32bb08df4029c9a606829dce54))
+
 ## [0.18.13](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.12...v0.18.13) (2025-02-08)
 
 
