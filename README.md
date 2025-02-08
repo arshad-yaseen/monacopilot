@@ -2,11 +2,11 @@
 [![License](https://img.shields.io/npm/l/monacopilot.svg)](https://github.com/arshad-yaseen/monacopilot/blob/main/LICENSE)
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/monacopilot)](https://bundlephobia.com/package/monacopilot)
 
-![Monacopilot Banner](https://i.postimg.cc/GhpGVjVG/monacopilot-banner.png)
-
 # Monacopilot
 
-**Monacopilot** is a powerful and customizable AI auto-completion plugin for the Monaco Editor. Inspired by GitHub Copilot.
+Add GitHub Copilot-style AI completions to your Monaco Editor in minutes! 🚀
+
+![Monacopilot Banner](https://i.postimg.cc/GhpGVjVG/monacopilot-banner.png)
 
 ### Features
 
@@ -19,18 +19,90 @@
 - 🔌 Custom Model Support
 - 🎮 Manual Trigger Support
 
-### Motivation
+### Quick Start (3 Simple Steps)
 
-![Monacopilot Motivation](https://i.postimg.cc/c4GM7q3Z/motivation.png)
+1. **Install the package**
 
-### Table of Contents
+```bash
+npm install monacopilot
+```
 
-- [Examples](#examples)
-- [Demo](#demo)
-- [Installation](#installation)
-- [Usage](#usage)
-  - [API Handler](#api-handler)
-  - [Register Completion with the Monaco Editor](#register-completion-with-the-monaco-editor)
+2. **Register the AI completion to your editor**
+
+```javascript
+// In your frontend code
+import * as monaco from 'monaco-editor';
+import {registerCompletion} from 'monacopilot';
+
+const editor = monaco.editor.create(document.getElementById('container'), {
+  language: 'javascript',
+});
+
+registerCompletion(monaco, editor, {
+  endpoint: '/api/complete',
+  language: 'javascript',
+});
+```
+
+3. **Create your completion API handler**
+
+```javascript
+// Create an API handler for the `/api/complete` endpoint (e.g. using Express.js)
+// to handle completion requests from the editor
+
+import {Copilot} from 'monacopilot';
+
+const copilot = new Copilot(OPENAI_API_KEY, {
+  provider: 'openai', // or 'anthropic', 'google', etc.
+});
+
+// Handle completion requests
+app.post('/api/complete', async (req, res) => {
+  const {completion, error, raw} = await copilot.complete({body: req.body});
+
+  // Optional: Use raw response for analytics or token counting
+  if (raw) {
+    calculateCost(raw.usage.input_tokens);
+  }
+
+  // Handle any errors gracefully
+  if (error) {
+    return res.status(500).json({completion: null, error});
+  }
+
+  res.json({completion});
+});
+```
+
+You can use any backend framework or programming language for your API handler, as long as the endpoint is accessible from the browser. For non-JavaScript implementations, see [Cross-Language API Handler Implementation](#cross-language-api-handler-implementation).
+
+That's it! Your Monaco Editor now has AI-powered completions! 🎉
+
+### Examples
+
+Here are some examples of how to integrate Monacopilot into your project:
+
+- Next.js
+  - [App Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/app)
+  - [Pages Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/pages)
+- [Remix](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/remix)
+- [Vue](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/vue)
+
+### See it in action
+
+[Inline Completions Demo Video](https://github.com/user-attachments/assets/f2ec4ae1-f658-4002-af9c-c6b1bbad70d9)
+
+In the demo, we are using the `onTyping` trigger mode with the Groq model, which is why you see such quick and fast completions. Groq provides very fast response times.
+
+---
+
+The above is all you need to get started with Monacopilot. Read the rest of the documentation for more advanced features.
+
+Expand the table of contents below to navigate to your desired section.
+
+<details>
+<summary>Table of Contents</summary>
+
 - [Register Completion Options](#register-completion-options)
   - [Trigger Mode](#trigger-mode)
   - [Manually Trigger Completions](#manually-trigger-completions)
@@ -57,124 +129,7 @@
 - [Cross-Language API Handler Implementation](#cross-language-api-handler-implementation)
 - [Security](#security)
 - [Contributing](#contributing)
-
-### Examples
-
-Here are some examples of how to integrate Monacopilot into your project:
-
-- Next.js
-  - [App Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/app)
-  - [Pages Router](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/nextjs/pages)
-- [Remix](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/remix)
-- [Vue](https://github.com/arshad-yaseen/monacopilot/tree/main/examples/vue)
-
-### Demo
-
-[Inline Completions Demo Video](https://github.com/user-attachments/assets/f2ec4ae1-f658-4002-af9c-c6b1bbad70d9)
-
-In the demo, we are using the `onTyping` trigger mode with the Groq model, which is why you see such quick and fast completions. Groq provides very fast response times.
-
-### Installation
-
-To install Monacopilot, run:
-
-```bash
-npm install monacopilot
-```
-
-### Usage
-
-#### API Handler
-
-Set up an API handler to manage auto-completion requests. An example using Express.js:
-
-```javascript
-import express from 'express';
-import {Copilot} from 'monacopilot';
-
-const app = express();
-const port = process.env.PORT || 3000;
-const copilot = new Copilot(process.env.GROQ_API_KEY, {
-  provider: 'groq',
-  model: 'llama-3-70b',
-});
-
-app.use(express.json());
-
-app.post('/complete', async (req, res) => {
-  const {completion, error, raw} = await copilot.complete({
-    body: req.body,
-  });
-
-  // Process raw LLM response if needed
-  // `raw` can be undefined if an error occurred, which happens when `error` is present
-  if (raw) {
-    calculateCost(raw.usage.input_tokens);
-  }
-
-  // Handle errors if present
-  if (error) {
-    console.error('Completion error:', error);
-    res.status(500).json({completion: null, error});
-  }
-
-  res.status(200).json({completion});
-});
-
-app.listen(port);
-```
-
-The handler should return a JSON response with the following structure:
-
-```json
-{
-  "completion": "Generated completion text"
-}
-```
-
-Or in case of an error:
-
-```json
-{
-  "completion": null,
-  "error": "Error message"
-}
-```
-
-If you prefer to use a different programming language for your API handler in cases where your backend is not in JavaScript, please refer to the section [Cross-Language API Handler Implementation](#cross-language-api-handler-implementation) for guidance on implementing the handler in your chosen language.
-
-Now, Monacopilot is set up to send completion requests to the `/complete` endpoint and receive completions in response.
-
-The `copilot.complete` method processes the request body sent by Monacopilot and returns the corresponding completion.
-
-#### Register Completion with the Monaco Editor
-
-Now, let's integrate AI auto-completion into your Monaco editor. Here's how you can do it:
-
-```javascript
-import * as monaco from 'monaco-editor';
-import {registerCompletion} from 'monacopilot';
-
-const editor = monaco.editor.create(document.getElementById('container'), {
-  language: 'javascript',
-});
-
-registerCompletion(monaco, editor, {
-  // Examples:
-  // - '/api/complete' if you're using the Next.js (API handler) or similar frameworks.
-  // - 'https://api.example.com/complete' for a separate API server
-  // Ensure this can be accessed from the browser.
-  endpoint: 'https://api.example.com/complete',
-  // The language of the editor.
-  language: 'javascript',
-});
-```
-
-> [!NOTE]
-> The `registerCompletion` function returns a `completion` object with a `deregister` method. This method should be used to clean up the completion functionality when it's no longer needed.
-> For example, in a React component, you can call `completion.deregister()` within the `useEffect` cleanup function to ensure proper disposal when the component unmounts.
-
-🎉 Congratulations! The AI auto-completion is now connected to the Monaco Editor. Start typing and see completions in the editor.
+</details>
 
 ## Register Completion Options
 
