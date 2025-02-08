@@ -1,8 +1,3 @@
----
-title: Monacopilot
-description: AI auto-completion plugin for Monaco Editor, inspired by GitHub Copilot.
----
-
 # Quick Start
 
 Add GitHub Copilot-style AI completions to your Monaco Editor in in just 3 simple steps 🚀
