@@ -15,8 +15,6 @@
 
 [Inline Completions Demo Video](https://github.com/user-attachments/assets/f2ec4ae1-f658-4002-af9c-c6b1bbad70d9)
 
-In the demo, we are using the `onTyping` trigger mode with the Groq model, which is why you see such quick and fast completions. Groq provides very fast response times.
-
 ## Documentation
 
 Go to the [documentation](https://monacopilot.arshadyaseen.com) to get started with Monacopilot.
