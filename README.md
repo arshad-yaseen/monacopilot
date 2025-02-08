@@ -39,22 +39,24 @@ const editor = monaco.editor.create(document.getElementById('container'), {
 });
 
 registerCompletion(monaco, editor, {
-  endpoint: 'https://api.example.com/code-completion', // Your API endpoint for handling completion requests
   language: 'javascript',
+  // Your API endpoint for handling completion requests
+  endpoint: 'https://api.example.com/code-completion',
 });
 ```
 
 3. **Create your completion API handler**
 
 ```javascript
-// Create an API handler for the endpoint (e.g. /code-completion) you provided in the `registerCompletion` function
+// Create an API handler for the endpoint (e.g. /code-completion) you provided
+// in the `registerCompletion` function
 // to handle completion requests from the editor
 
 import {Copilot} from 'monacopilot';
 
 const copilot = new Copilot(OPENAI_API_KEY, {
-  provider: 'openai', // or 'anthropic', 'google', etc.,
-  model: 'gpt-4o', // or 'claude-3-5-haiku', 'gpt-4o-mini', etc.
+  provider: 'openai',
+  model: 'gpt-4o',
 });
 
 // Handle completion requests
