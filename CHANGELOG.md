@@ -1,5 +1,19 @@
 
 
+## [0.18.9](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.7...v0.18.9) (2025-02-08)
+
+
+### 📚 Documentation
+
+* convert numbered list to level 4 headings ([6d02c68](https://github.com/arshad-yaseen/monacopilot/commit/6d02c68c507c0ae4743a3b58c31d7bceb08c606b))
+* make /code-completion inline code ([0c50783](https://github.com/arshad-yaseen/monacopilot/commit/0c50783e5b226329d3017740e5cb253de4145b8f))
+* move explanations to outside the code block ([c16aab2](https://github.com/arshad-yaseen/monacopilot/commit/c16aab2418abe56dca35787dbcdeac886f755c00))
+
+
+### 🔧 Maintenance
+
+* patch version ([cc21bfe](https://github.com/arshad-yaseen/monacopilot/commit/cc21bfed58840d7cf043122ad3a38fae67d1b021))
+
 ## [0.18.7](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.6...v0.18.7) (2025-02-08)
 
 
