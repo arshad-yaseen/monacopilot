@@ -1,5 +1,12 @@
 
 
+## [0.18.5](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.4...v0.18.5) (2025-02-08)
+
+
+### 📚 Documentation
+
+* add model ([fd0864a](https://github.com/arshad-yaseen/monacopilot/commit/fd0864a0f844706517baea60701457142025212c))
+
 ## [0.18.4](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.3...v0.18.4) (2025-02-08)
 
 
