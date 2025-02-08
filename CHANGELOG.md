@@ -1,5 +1,18 @@
 
 
+## [0.18.7](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.6...v0.18.7) (2025-02-08)
+
+
+### 📚 Documentation
+
+* update ([7568ab8](https://github.com/arshad-yaseen/monacopilot/commit/7568ab8d6ecc420a3915e7692915aeacf9db5e1a))
+* update ([c70a1c4](https://github.com/arshad-yaseen/monacopilot/commit/c70a1c472d099288461dfe6971bda620d5793ec9))
+
+
+### 🔧 CI/CD
+
+* vitest run ([e08bf86](https://github.com/arshad-yaseen/monacopilot/commit/e08bf863d669c0f8ea6ba7c850642fd269e55a3c))
+
 ## [0.18.6](https://github.com/arshad-yaseen/monacopilot/compare/v0.18.5...v0.18.6) (2025-02-08)
 
 
