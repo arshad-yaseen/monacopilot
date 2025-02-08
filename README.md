@@ -132,7 +132,7 @@ Expand the table of contents below to navigate to your desired section.
 - [Cross-Language API Handler Implementation](#cross-language-api-handler-implementation)
 - [Security](#security)
 - [Contributing](#contributing)
-  </details>
+      </details>
 
 ## Register Completion Options
 
