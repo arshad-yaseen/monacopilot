@@ -42,7 +42,7 @@ import {CompletionCopilot, type CompletionRequestBody} from 'monacopilot';
 
 const copilot = new CompletionCopilot(process.env.OPENAI_API_KEY!, {
     provider: 'openai',
-    model: 'gpt-4',
+    model: 'gpt-4o',
 });
 
 export async function POST(req: NextRequest) {
@@ -67,7 +67,7 @@ import {CompletionCopilot} from 'monacopilot';
 
 const copilot = new CompletionCopilot(process.env.OPENAI_API_KEY!, {
     provider: 'openai',
-    model: 'gpt-4',
+    model: 'gpt-4o',
 });
 
 export default async function handler(
@@ -218,7 +218,8 @@ your-project/
 ## Running the Example
 
 1. Install dependencies:
-   ::: code-group
+
+::: code-group
 
 ```bash [npm]
 npm install
@@ -239,7 +240,8 @@ bun install
 :::
 
 2. Start the development server:
-   ::: code-group
+
+::: code-group
 
 ```bash [npm]
 npm run dev

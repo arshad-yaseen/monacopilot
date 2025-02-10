@@ -38,7 +38,7 @@ import {CompletionCopilot, type CompletionRequestBody} from 'monacopilot';
 
 const copilot = new CompletionCopilot(process.env.OPENAI_API_KEY!, {
     provider: 'openai',
-    model: 'gpt-4',
+    model: 'gpt-4o',
 });
 
 export const action = async ({request}: ActionFunctionArgs) => {
@@ -144,7 +144,8 @@ your-remix-project/
 ## Running the Example
 
 1. Install dependencies:
-   ::: code-group
+
+::: code-group
 
 ```bash [npm]
 npm install
@@ -165,7 +166,8 @@ bun install
 :::
 
 2. Start the development server:
-   ::: code-group
+
+::: code-group
 
 ```bash [npm]
 npm run dev

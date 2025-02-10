@@ -1,229 +1,152 @@
 # Contributing to Monacopilot
 
-Thank you for your interest in contributing to Monacopilot! We're thrilled to have you on board. By contributing, you’re helping to make Monacopilot better for everyone. Please take a moment to review this guide before getting started.
-
-If you have any questions or need assistance, feel free to open an issue on GitHub.
+Thank you for your interest in contributing to Monacopilot! We're thrilled to have you on board. This guide will help you get started with contributing to our monorepo project.
 
 ## Table of Contents
 
-- [About This Repository](#about-this-repository)
-- [Repository Structure](#repository-structure)
-- [Development](#development)
-    - [Fork the Repository](#fork-the-repository)
-    - [Clone the Repository](#clone-the-repository)
-    - [Navigate to Project Directory](#navigate-to-project-directory)
-    - [Create a New Branch](#create-a-new-branch)
-    - [Install Dependencies](#install-dependencies)
-    - [Building the Package](#building-the-package)
-    - [Running in Development Mode](#running-in-development-mode)
-- [Testing Monacopilot Locally](#testing-monacopilot-locally)
-- [Documentation](#documentation)
-- [Commit Conventions](#commit-conventions)
-- [Requesting New Features or Components](#requesting-new-features-or-components)
+- [Project Structure](#project-structure)
+- [Development Setup](#development-setup)
+- [Development Workflow](#development-workflow)
 - [Testing](#testing)
-- [Final Steps](#final-steps)
+- [Documentation](#documentation)
+- [Commit Guidelines](#commit-guidelines)
+- [Pull Request Process](#pull-request-process)
 
-## About This Repository
+## Project Structure
 
-Here's a quick overview of the technologies we use:
+Monacopilot is organized as a monorepo using PNPM workspaces:
 
-- **[PNPM Workspaces](https://pnpm.io/workspaces):** For managing monorepos.
-- **[Tsup](https://tsup.egoist.dev/):** A TypeScript bundler for building the project.
-- **[Vitest](https://vitest.dev):** Our testing framework.
-
-## Development
-
-Follow these steps to set up your development environment and start contributing to Monacopilot.
-
-### Fork the Repository
-
-1. Navigate to the [Monacopilot GitHub repository](https://github.com/arshad-yaseen/monacopilot).
-2. Click the **Fork** button in the top-right corner to create a copy of the repository under your GitHub account.
-
-### Clone the Repository
-
-Clone your forked repository to your local machine using the following command:
-
-```bash
-git clone https://github.com/arshad-yaseen/monacopilot.git
+```
+packages/
+  ├── core/           # Core functionality and provider implementations
+  └── monacopilot/    # Main Monaco Editor integration package
+docs/                 # Documentation website
 ```
 
-### Navigate to Project Directory
+## Development Setup
 
-Move into the project directory:
+1. **Prerequisites**
 
-```bash
-cd monacopilot
-```
+    - Node.js (v16 or higher)
+    - PNPM (v9.15.4 or higher)
 
-### Create a New Branch
-
-Create a new branch for your work to keep changes organized:
-
-```bash
-git checkout -b my-new-feature
-```
-
-### Install Dependencies
-
-Monacopilot uses PNPM for managing dependencies. Install them by running:
-
-```bash
-pnpm install
-```
-
-### Building the Package
-
-To build the package, execute the following command:
-
-```bash
-pnpm build
-```
-
-This command uses [Tsup](https://tsup.egoist.dev/) to bundle the project.
-
-#### Alternative: Start Development Mode
-
-For automatic rebuilds on file changes, start the watch mode with:
-
-```bash
-pnpm dev
-```
-
-This is useful for continuous development and testing.
-
-## Testing Monacopilot Locally
-
-To test Monacopilot locally, follow these steps:
-
-1. **Set Up Environment Variables**
-
-    You need to set the [OpenAI API key](https://platform.openai.com/api-keys) as an environment variable. Create a `.env.local` file in the `tests/ui` directory with the following content:
-
-    ```plaintext
-    OPENAI_API_KEY=your_api_key
-    ```
-
-    Replace `your_api_key` with your actual OpenAI API key.
-
-2. **Run the Test UI**
-
-    Execute the following command to start the testing environment:
+2. **Clone and Install**
 
     ```bash
-    pnpm dev:test-ui
+    git clone https://github.com/arshad-yaseen/monacopilot.git
+    cd monacopilot
+    pnpm install
     ```
 
-    This will launch the UI in a local development environment, allowing you to test changes in real-time.
+3. **Build**
+    ```bash
+    pnpm build
+    ```
 
-## Documentation
+## Development Workflow
 
-### Viewing Documentation Locally
-
-To preview the documentation on your local machine:
-
-1. Start the documentation development server:
+1. **Start Development Mode**
 
     ```bash
+    # For core package
+    pnpm dev:core
+
+    # For monacopilot package
+    pnpm dev
+
+    # For documentation
     pnpm dev:docs
     ```
 
-2. Visit `http://localhost:5173` in your web browser to view the documentation.
+2. **Code Formatting**
+   Before committing your changes, run:
 
-The documentation server supports hot reloading, so any changes you make will be reflected immediately in the browser.
+    ```bash
+    pnpm format
+    ```
 
-### Contributing to Documentation
+3. **Type Checking**
 
-The documentation is written in Markdown and follows a structured, file-based organization:
+    ```bash
+    pnpm tsc
+    ```
 
-1. All documentation files are located in the `docs` directory
-2. The documentation uses a clear, hierarchical structure for easy navigation
-3. To make changes:
-    - Locate the relevant Markdown file in the `docs` directory
-    - Make your desired edits
-    - Preview changes in real-time using `pnpm dev:docs`
-    - Verify that your changes render correctly and maintain consistent formatting
-    - Ensure all links and references are working properly
-    - Check that your changes align with the existing documentation style
+4. **Linting**
 
-## Commit Conventions
+    ```bash
+    pnpm lint
+    ```
 
-Adhering to a consistent commit message format helps maintain a clear project history and facilitates collaboration.
-
-**Commit Message Format:**
-
-```plaintext
-category(scope): message
-```
-
-**Categories:**
-
-- `feat` / `feature`: Introduces new features or functionality.
-- `fix`: Addresses and resolves bugs.
-- `refactor`: Code changes that neither fix a bug nor add a feature.
-- `docs`: Updates or additions to documentation.
-- `build`: Changes related to the build process or dependencies.
-- `test`: Adding or modifying tests.
-- `ci`: Changes to continuous integration configurations.
-- `chore`: Miscellaneous tasks that do not fit into the above categories.
-
-**Examples:**
-
-- `feat(completion): add new inline completion provider`
-- `fix(core): resolve token handling issue in completion handler`
-- `docs: update API usage guide for Monacopilot`
-
-For detailed guidelines, refer to the [Conventional Commits](https://www.conventionalcommits.org/) specification.
-
-## Requesting New Features or Components
-
-If you have ideas for new features or components, we’d love to hear them!
-
-1. **Open an Issue:**
-
-    - Navigate to the [Issues](https://github.com/arshad-yaseen/monacopilot/issues) section of the repository.
-    - Click on **New Issue** and provide a clear and detailed description of your request.
+5. **Testing**
+   Run all tests, only push if tests pass:
+    ```bash
+    pnpm test
+    ```
 
 ## Testing
 
-Ensuring that your contributions do not introduce regressions is crucial.
-
-### Running Tests
-
-Monacopilot uses [Vitest](https://vitest.dev) for testing. To run all tests, execute:
+We use Vitest for testing. Run tests with:
 
 ```bash
 pnpm test
 ```
 
-### Writing Tests
+When adding new features, please include corresponding tests in the appropriate `tests` directory.
 
-When adding new features or components, include corresponding tests to maintain code quality.
+## Documentation
 
-### Ensuring Tests Pass
+The documentation is built using VitePress and is located in the `docs` directory.
 
-Before submitting a pull request, ensure all tests pass:
+To preview documentation locally:
 
 ```bash
-pnpm test
+pnpm dev:docs
 ```
 
-## Final Steps
+## Commit Guidelines
 
-1. **Commit Your Changes:**
+We follow [Conventional Commits](https://www.conventionalcommits.org/) specification:
 
-    Ensure your commits follow the [Commit Conventions](#commit-conventions) outlined above.
+```
+type(scope): description
 
-2. **Push to Your Fork:**
+[optional body]
 
+[optional footer]
+```
+
+Types:
+
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation changes
+- `style`: Code style changes (formatting, etc.)
+- `refactor`: Code refactoring
+- `test`: Adding or modifying tests
+- `chore`: Maintenance tasks
+
+Example:
+
+```
+feat(core): add support for DeepSeek provider
+```
+
+## Pull Request Process
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Run all checks:
     ```bash
-    git push origin my-new-feature
+    pnpm validate
+    pnpm test
     ```
+5. Commit your changes following our commit guidelines
+6. Push to your fork
+7. Open a Pull Request
 
-3. **Create a Pull Request:**
+## Need Help?
 
-    - Navigate to your forked repository on GitHub.
-    - Click on **Compare & pull request**.
-    - Provide a clear description of your changes and submit the pull request.
+Feel free to open an issue or join our community discussions if you need any assistance.
 
-Thank you for contributing to Monacopilot! Your efforts help make the project better for everyone.
+Thank you for contributing to Monacopilot! ❤️
