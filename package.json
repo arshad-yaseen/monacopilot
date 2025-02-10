@@ -1,10 +1,10 @@
 {
-    "version": "0.19.0-beta.1",
+    "version": "0.19.0-beta.2",
     "scripts": {
         "build": "pnpm -r build",
         "dev": "pnpm -C packages/completion dev",
         "dev:core": "pnpm -C packages/core dev",
-        "publish:ci": "pnpm -C packages/completion publish --access public --no-git-checks && pnpm -C packages/core publish --access public --no-git-checks",
+        "publish:ci": "pnpm -C packages/completion publish && pnpm -C packages/core publish",
         "release": "bumpp",
         "test": "vitest run",
         "dev:docs": "pnpm -C docs dev",
