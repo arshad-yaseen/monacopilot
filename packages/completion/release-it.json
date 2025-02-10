@@ -1,7 +1,7 @@
 {
     "git": {
         "publish": false,
-        "requireCommits": false,
+        "requireCommits": true,
         "requireCleanWorkingDir": false
     },
     "github": {
