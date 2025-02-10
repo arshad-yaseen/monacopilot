@@ -42,5 +42,8 @@
     "author": "Arshad Yaseen <m@arshadyaseen.com> (https://arshadyaseen.com)",
     "dependencies": {
         "@monacopilot/core": "workspace:*"
+    },
+    "peerDependencies": {
+        "monaco-editor": "^0.41.0"
     }
 }
