@@ -7,6 +7,7 @@ Learn how to integrate Monacopilot with Next.js using either the App Router or P
 First, install the required dependencies:
 
 ::: code-group
+
 ```bash [npm]
 npm install monacopilot @monaco-editor/react
 ```
@@ -22,6 +23,7 @@ pnpm add monacopilot @monaco-editor/react
 ```bash [bun]
 bun add monacopilot @monaco-editor/react
 ```
+
 :::
 
 ## Implementation
@@ -31,55 +33,59 @@ bun add monacopilot @monaco-editor/react
 First, create an API route to handle completion requests:
 
 ::: code-group
+
 ```ts [App Router]
 // app/api/code-completion/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-import { Copilot, type CompletionRequestBody } from 'monacopilot';
+import {NextRequest, NextResponse} from 'next/server';
+
+import {Copilot, type CompletionRequestBody} from 'monacopilot';
 
 const copilot = new Copilot(process.env.OPENAI_API_KEY!, {
-  provider: 'openai',
-  model: 'gpt-4',
+    provider: 'openai',
+    model: 'gpt-4',
 });
 
 export async function POST(req: NextRequest) {
-  const body: CompletionRequestBody = await req.json();
-  const { completion, error } = await copilot.complete({
-    body,
-  });
+    const body: CompletionRequestBody = await req.json();
+    const {completion, error} = await copilot.complete({
+        body,
+    });
 
-  if (error) {
-    return NextResponse.json({ completion: null, error }, { status: 500 });
-  }
+    if (error) {
+        return NextResponse.json({completion: null, error}, {status: 500});
+    }
 
-  return NextResponse.json({ completion }, { status: 200 });
+    return NextResponse.json({completion}, {status: 200});
 }
 ```
 
 ```ts [Pages Router]
 // pages/api/code-completion.ts
-import { NextApiRequest, NextApiResponse } from 'next';
-import { Copilot } from 'monacopilot';
+import {NextApiRequest, NextApiResponse} from 'next';
+
+import {Copilot} from 'monacopilot';
 
 const copilot = new Copilot(process.env.OPENAI_API_KEY!, {
-  provider: 'openai',
-  model: 'gpt-4',
+    provider: 'openai',
+    model: 'gpt-4',
 });
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
+    req: NextApiRequest,
+    res: NextApiResponse,
 ) {
-  const { completion, error } = await copilot.complete({
-    body: req.body,
-  });
+    const {completion, error} = await copilot.complete({
+        body: req.body,
+    });
 
-  if (error) {
-    res.status(500).json({ completion: null, error });
-  }
+    if (error) {
+        res.status(500).json({completion: null, error});
+    }
 
-  res.status(200).json({ completion });
+    res.status(200).json({completion});
 }
 ```
+
 :::
 
 ### Editor Component
@@ -90,42 +96,43 @@ Create a Editor component:
 // components/Editor.tsx
 'use client';
 
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
+
 import MonacoEditor from '@monaco-editor/react';
 import {
-  registerCompletion,
-  type Monaco,
-  type StandaloneCodeEditor,
+    registerCompletion,
+    type Monaco,
+    type StandaloneCodeEditor,
 } from 'monacopilot';
 
 export default function Editor() {
-  const [editor, setEditor] = useState<StandaloneCodeEditor | null>(null);
-  const [monaco, setMonaco] = useState<Monaco | null>(null);
+    const [editor, setEditor] = useState<StandaloneCodeEditor | null>(null);
+    const [monaco, setMonaco] = useState<Monaco | null>(null);
 
-  useEffect(() => {
-    if (!monaco || !editor) return;
+    useEffect(() => {
+        if (!monaco || !editor) return;
 
-    const completion = registerCompletion(monaco, editor, {
-      endpoint: '/api/code-completion',
-      language: 'javascript',
-    });
+        const completion = registerCompletion(monaco, editor, {
+            endpoint: '/api/code-completion',
+            language: 'javascript',
+        });
 
-    return () => {
-      completion.deregister();
-    };
-  }, [monaco, editor]);
+        return () => {
+            completion.deregister();
+        };
+    }, [monaco, editor]);
 
-  return (
-    <MonacoEditor
-      language="javascript"
-      height={'100vh'}
-      width={'100%'}
-      onMount={(editor, monaco) => {
-        setEditor(editor);
-        setMonaco(monaco);
-      }}
-    />
-  );
+    return (
+        <MonacoEditor
+            language="javascript"
+            height={'100vh'}
+            width={'100%'}
+            onMount={(editor, monaco) => {
+                setEditor(editor);
+                setMonaco(monaco);
+            }}
+        />
+    );
 }
 ```
 
@@ -134,18 +141,19 @@ export default function Editor() {
 Use the Editor component in your page:
 
 ::: code-group
+
 ```tsx [App Router]
 // app/page.tsx
 import Editor from '@/components/Editor';
 
 export default function Home() {
-  return (
-    <main className="h-screen w-screen">
-      <h1>Monacopilot Next.js Example</h1>
+    return (
+        <main className="h-screen w-screen">
+            <h1>Monacopilot Next.js Example</h1>
 
-      <Editor />
-    </main>
-  );
+            <Editor />
+        </main>
+    );
 }
 ```
 
@@ -154,15 +162,16 @@ export default function Home() {
 import Editor from '@/components/Editor';
 
 export default function Home() {
-  return (
-    <main className="h-screen w-screen">
-      <h1>Monacopilot Next.js Example</h1>
+    return (
+        <main className="h-screen w-screen">
+            <h1>Monacopilot Next.js Example</h1>
 
-      <Editor />
-    </main>
-  );
+            <Editor />
+        </main>
+    );
 }
 ```
+
 :::
 
 ### Environment Variables
@@ -178,6 +187,7 @@ OPENAI_API_KEY=your_openai_api_key_here
 Here's the complete project structure for both routing approaches:
 
 ::: code-group
+
 ```txt [App Router]
 your-project/
 ├── app/
@@ -202,12 +212,14 @@ your-project/
 ├── .env.local
 └── package.json
 ```
+
 :::
 
 ## Running the Example
 
 1. Install dependencies:
-::: code-group
+   ::: code-group
+
 ```bash [npm]
 npm install
 ```
@@ -223,10 +235,12 @@ pnpm install
 ```bash [bun]
 bun install
 ```
+
 :::
 
 2. Start the development server:
-::: code-group
+   ::: code-group
+
 ```bash [npm]
 npm run dev
 ```
@@ -242,6 +256,7 @@ pnpm dev
 ```bash [bun]
 bun dev
 ```
+
 :::
 
 3. Open `http://localhost:3000` in your browser.
