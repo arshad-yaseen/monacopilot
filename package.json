@@ -1,5 +1,5 @@
 {
-    "version": "0.19.0-beta.8",
+    "version": "0.19.0-beta.9",
     "scripts": {
         "build": "pnpm -r build",
         "dev:core": "pnpm -C packages/core dev",
