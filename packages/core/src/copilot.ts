@@ -11,39 +11,34 @@ import type {
     CustomPrompt,
     PromptData,
 } from './types/copilot';
-import type {CopilotResponse, MakeAIRequestOptions} from './types/internal';
+import type {CopilotResponse} from './types/internal';
 import type {
     ChatCompletion,
     ChatCompletionCreateParams,
     Model,
-    PickChatCompletion,
     Provider,
 } from './types/llm';
 import {HTTP} from './utils/http';
-import {_validateInputs, _validateParams} from './validator';
+import validate from './validator';
 
-export abstract class Copilot<
-    P extends Provider = Provider,
-    M extends Model | CustomCopilotModel = Model | CustomCopilotModel,
-    Meta = unknown,
-> {
+export abstract class Copilot<Meta> {
     protected readonly apiKey: string;
-    protected provider: P | undefined;
-    protected model: M | CustomCopilotModel;
+    protected provider: Provider | undefined;
+    protected model: Model | CustomCopilotModel;
 
-    constructor(apiKey: string, options: CopilotOptions<P, M>) {
-        _validateParams(apiKey, options);
+    constructor(apiKey: string, options: CopilotOptions) {
+        validate.params(apiKey, options);
         this.apiKey = apiKey;
         this.provider = options.provider;
         this.model = options.model;
-        _validateInputs(this.model, this.provider);
+        validate.inputs(this.model, this.provider);
     }
 
     protected abstract getDefaultPrompt(metadata: Meta): PromptData;
 
     protected generatePrompt(
         metadata: Meta,
-        customPrompt: CustomPrompt<Meta> | undefined,
+        customPrompt?: CustomPrompt<Meta>,
     ): PromptData {
         const defaultPrompt = this.getDefaultPrompt(metadata);
         return customPrompt
@@ -53,8 +48,11 @@ export abstract class Copilot<
 
     protected async makeAIRequest(
         metadata: Meta,
-        options: MakeAIRequestOptions<Meta> = {},
-    ): Promise<CopilotResponse<P>> {
+        options: {
+            customPrompt?: CustomPrompt<Meta>;
+            customHeaders?: Record<string, string>;
+        } = {},
+    ): Promise<CopilotResponse> {
         try {
             const {customHeaders = {}} = options;
             const prompt = this.generatePrompt(metadata, options.customPrompt);
@@ -70,16 +68,9 @@ export abstract class Copilot<
         }
     }
 
-    private async prepareRequest(prompt: PromptData): Promise<{
-        endpoint: string;
-        requestBody: ChatCompletionCreateParams;
-        headers: Record<string, string>;
-    }> {
+    private async prepareRequest(prompt: PromptData) {
         if (this.isCustomModel()) {
-            const customConfig = (this.model as CustomCopilotModel).config(
-                this.apiKey,
-                prompt,
-            );
+            const customConfig = this.model.config(this.apiKey, prompt);
             return {
                 endpoint: customConfig.endpoint,
                 requestBody: customConfig.body as ChatCompletionCreateParams,
@@ -106,13 +97,9 @@ export abstract class Copilot<
         };
     }
 
-    private processResponse(
-        response: PickChatCompletion<P>,
-    ): CopilotResponse<P> {
+    private processResponse(response: unknown): CopilotResponse {
         if (this.isCustomModel()) {
-            const transformed = (
-                this.model as CustomCopilotModel
-            ).transformResponse(response);
+            const transformed = this.model.transformResponse(response);
             return {
                 text: transformed.text ?? null,
                 raw: response,
@@ -132,7 +119,10 @@ export abstract class Copilot<
         };
     }
 
-    private isCustomModel(): this is Copilot<P, CustomCopilotModel, Meta> {
+    private isCustomModel(): this is {
+        model: CustomCopilotModel;
+        provider: undefined;
+    } {
         return typeof this.model === 'object' && 'config' in this.model;
     }
 
@@ -140,17 +130,11 @@ export abstract class Copilot<
         endpoint: string,
         requestBody: ChatCompletionCreateParams,
         headers: Record<string, string>,
-    ): Promise<PickChatCompletion<P>> {
-        return HTTP.post<PickChatCompletion<P>, ChatCompletionCreateParams>(
-            endpoint,
-            requestBody,
-            {
-                headers,
-            },
-        );
+    ) {
+        return HTTP.post(endpoint, requestBody, {headers});
     }
 
-    protected handleError(error: unknown): CopilotResponse<P> {
+    protected handleError(error: unknown): CopilotResponse {
         const errorDetails = logger.report(error);
         return {
             text: null,

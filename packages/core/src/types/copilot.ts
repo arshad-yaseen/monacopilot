@@ -1,4 +1,4 @@
-import type {Model, Provider} from './llm';
+import type {Provider, ProviderImplementationMap} from './llm';
 
 /**
  * Data structure representing the prompt data.
@@ -47,15 +47,15 @@ type CustomOptions = {
     model: CustomCopilotModel;
 };
 
-export type CopilotOptions<
-    P extends Provider = Provider,
-    M extends Model | CustomCopilotModel = Model | CustomCopilotModel,
-> = ProviderOptions<P, M> | CustomOptions;
+export type CopilotOptions =
+    | ProviderOptions<'openai'>
+    | ProviderOptions<'groq'>
+    | ProviderOptions<'anthropic'>
+    | ProviderOptions<'google'>
+    | ProviderOptions<'deepseek'>
+    | CustomOptions;
 
-export type ProviderOptions<
-    P extends Provider,
-    M extends Model | CustomCopilotModel,
-> = {
-    provider: P;
-    model: M;
+export type ProviderOptions<T extends Provider> = {
+    provider: T;
+    model: ProviderImplementationMap[T]['Model'];
 };

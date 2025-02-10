@@ -21,42 +21,51 @@ const request = async <
     options: RequestOptions<BodyType, MethodType> = {},
 ): Promise<ResponseType> => {
     const timeoutMs = options.timeout ?? 30000; // 30s
-    const timeoutSignal = AbortSignal.timeout(timeoutMs);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(
+        () => controller.abort('Request timed out'),
+        timeoutMs,
+    );
 
-    // Combine timeout signal with user provided signal if it exists
-    const signal = options.signal
-        ? AbortSignal.any([timeoutSignal, options.signal])
-        : timeoutSignal;
+    try {
+        // Combine timeout controller with user provided signal if it exists
+        const signal = options.signal
+            ? AbortSignal.any([controller.signal, options.signal])
+            : controller.signal;
 
-    const headers = {
-        'Content-Type': 'application/json',
-        ...options.headers,
-    };
+        const headers = {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        };
 
-    const body =
-        method === 'POST' && options.body
-            ? JSON.stringify(options.body)
-            : undefined;
+        const body =
+            method === 'POST' && options.body
+                ? JSON.stringify(options.body)
+                : undefined;
 
-    const response = await fetch(url, {
-        method: method,
-        headers,
-        body,
-        signal,
-    });
+        const response = await fetch(url, {
+            method: method,
+            headers,
+            body,
+            signal,
+        });
 
-    if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        const formattedError = errorData
-            ? `\n${JSON.stringify(errorData, null, 2)}`
-            : '';
-        const errorMessage = options.fallbackError || 'Network request failed';
-        throw new Error(
-            `${errorMessage} (${response.status})${formattedError}`,
-        );
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => null);
+            const formattedError = errorData
+                ? `\n${JSON.stringify(errorData, null, 2)}`
+                : '';
+            const errorMessage =
+                options.fallbackError || 'Network request failed';
+            throw new Error(
+                `${errorMessage} (${response.status})${formattedError}`,
+            );
+        }
+
+        return response.json() as Promise<ResponseType>;
+    } finally {
+        clearTimeout(timeoutId);
     }
-
-    return response.json() as Promise<ResponseType>;
 };
 
 const post = <ResponseType, BodyType>(

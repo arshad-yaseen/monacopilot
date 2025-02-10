@@ -1,5 +1,5 @@
 # @monacopilot/core
 
-The core package provides essential functionality and shared utilities for MonacoPilot.
+The core package provides essential functionality and shared utilities for monacopilot.
 
-It handles AI provider integrations and implements the core copilot engine.
+It handles llm provider integrations and implements the core copilot engine.

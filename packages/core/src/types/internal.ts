@@ -1,13 +1,5 @@
-import type {CustomPrompt} from './copilot';
-import type {PickChatCompletion, Provider} from './llm';
-
-export type CopilotResponse<P extends Provider> = {
+export type CopilotResponse = {
     text: string | null;
-    raw?: PickChatCompletion<P>;
+    raw?: unknown;
     error?: string;
-};
-
-export type MakeAIRequestOptions<Meta> = {
-    customPrompt?: CustomPrompt<Meta>;
-    customHeaders?: Record<string, string>;
 };

@@ -1,142 +1,106 @@
 import {describe, expect, it} from 'vitest';
 
-import {parseProviderChatCompletion} from '../src/llm/operations';
-import type {ChatCompletion} from '../src/types/llm';
+import {
+    DEFAULT_COPILOT_MAX_TOKENS,
+    DEFAULT_COPILOT_TEMPERATURE,
+} from '../src/constants';
+import {AnthropicHandler} from '../src/llm/providers/anthropic';
+import {GroqHandler} from '../src/llm/providers/groq';
+import {OpenAIHandler} from '../src/llm/providers/openai';
 
-describe('Provider Handler Functions', () => {
-    describe('parseProviderChatCompletion', () => {
-        it('should call the correct handler for OpenAI', () => {
-            const mockCompletion = {
-                choices: [{message: {content: 'OpenAI response'}}],
-            } as unknown as ChatCompletion;
-            const result = parseProviderChatCompletion(
-                mockCompletion as ChatCompletion,
-                'openai',
-            );
-            expect(result).toEqual('OpenAI response');
+describe('Provider Handlers - Creation Methods', () => {
+    describe('AnthropicHandler', () => {
+        const handler = new AnthropicHandler();
+        const apiKey = 'test-key';
+
+        it('should create correct endpoint', () => {
+            const endpoint = handler.createEndpoint();
+            expect(endpoint).toBe('https://api.anthropic.com/v1/messages');
         });
 
-        it('should call the correct handler for Groq', () => {
-            const mockCompletion = {
-                choices: [{message: {content: 'Groq response'}}],
-            };
-            const result = parseProviderChatCompletion(
-                mockCompletion as ChatCompletion,
-                'groq',
-            );
-            expect(result).toEqual('Groq response');
+        it('should create correct headers', () => {
+            const headers = handler.createHeaders(apiKey);
+            expect(headers).toEqual({
+                'Content-Type': 'application/json',
+                'x-api-key': apiKey,
+                'anthropic-version': '2023-06-01',
+            });
         });
 
-        it('should call the correct handler for Anthropic', () => {
-            const mockCompletion = {
-                content: [{type: 'text', text: "Hi, I'm Claude."}],
-            };
-            const result = parseProviderChatCompletion(
-                mockCompletion as unknown as ChatCompletion,
-                'anthropic',
-            );
-            expect(result).toEqual("Hi, I'm Claude.");
-        });
-    });
+        it('should create correct request body', () => {
+            const model = 'claude-3-haiku';
+            const prompt = {system: 'system prompt', user: 'user prompt'};
+            const body = handler.createRequestBody(model, prompt);
 
-    describe('parseOpenAICompletion', () => {
-        it('should parse a valid OpenAI completion', () => {
-            const mockCompletion = {
-                choices: [{message: {content: 'OpenAI response'}}],
-            } as unknown as ChatCompletion;
-            const result = parseProviderChatCompletion(
-                mockCompletion,
-                'openai',
-            );
-            expect(result).toEqual('OpenAI response');
-        });
-
-        it('should handle empty choices array', () => {
-            const mockCompletion = {
-                choices: [],
-            } as unknown as ChatCompletion;
-            const result = parseProviderChatCompletion(
-                mockCompletion,
-                'openai',
-            );
-            expect(result).toEqual(null);
-        });
-
-        it('should handle undefined choices', () => {
-            const mockCompletion = {} as unknown as ChatCompletion;
-            const result = parseProviderChatCompletion(
-                mockCompletion,
-                'openai',
-            );
-            expect(result).toEqual(null);
+            expect(body).toEqual({
+                model: 'claude-3-haiku-20240307',
+                temperature: DEFAULT_COPILOT_TEMPERATURE,
+                system: prompt.system,
+                messages: [{role: 'user', content: prompt.user}],
+                max_tokens: DEFAULT_COPILOT_MAX_TOKENS,
+            });
         });
     });
 
-    describe('parseGroqCompletion', () => {
-        it('should parse a valid Groq completion', () => {
-            const mockCompletion = {
-                choices: [{message: {content: 'Groq response'}}],
-            } as unknown as ChatCompletion;
-            const result = parseProviderChatCompletion(mockCompletion, 'groq');
-            expect(result).toEqual('Groq response');
+    describe('OpenAIHandler', () => {
+        const handler = new OpenAIHandler();
+        const apiKey = 'test-key';
+
+        it('should create correct endpoint', () => {
+            const endpoint = handler.createEndpoint();
+            expect(endpoint).toBe('https://api.openai.com/v1/chat/completions');
         });
 
-        it('should handle empty choices array', () => {
-            const mockCompletion = {
-                choices: [],
-            } as unknown as ChatCompletion;
-            const result = parseProviderChatCompletion(mockCompletion, 'groq');
-            expect(result).toEqual(null);
+        it('should create correct headers', () => {
+            const headers = handler.createHeaders(apiKey);
+            expect(headers).toEqual({
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${apiKey}`,
+            });
         });
 
-        it('should handle undefined choices', () => {
-            const mockCompletion = {} as unknown as ChatCompletion;
-            const result = parseProviderChatCompletion(mockCompletion, 'groq');
-            expect(result).toEqual(null);
+        it('should handle O1 model differently in request body', () => {
+            const model = 'o1-mini';
+            const prompt = {system: 'system prompt', user: 'user prompt'};
+            const body = handler.createRequestBody(model, prompt);
+
+            expect(body.temperature).toBeUndefined();
         });
     });
 
-    describe('parseAnthropicCompletion', () => {
-        it('should parse a valid Anthropic completion', () => {
-            const mockCompletion = {
-                content: [{type: 'text', text: "Hi, I'm Claude."}],
-            } as unknown as ChatCompletion;
-            const result = parseProviderChatCompletion(
-                mockCompletion,
-                'anthropic',
+    describe('GroqHandler', () => {
+        const handler = new GroqHandler();
+        const apiKey = 'test-key';
+
+        it('should create correct endpoint', () => {
+            const endpoint = handler.createEndpoint();
+            expect(endpoint).toBe(
+                'https://api.groq.com/openai/v1/chat/completions',
             );
-            expect(result).toEqual("Hi, I'm Claude.");
         });
 
-        it('should handle missing content', () => {
-            const mockCompletion = {} as unknown as ChatCompletion;
-            const result = parseProviderChatCompletion(
-                mockCompletion,
-                'anthropic',
-            );
-            expect(result).toEqual(null);
+        it('should create correct headers', () => {
+            const headers = handler.createHeaders(apiKey);
+            expect(headers).toEqual({
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${apiKey}`,
+            });
         });
 
-        it('should handle non-string content', () => {
-            const mockCompletion = {
-                content: {invalid: 'object'},
-            } as unknown as ChatCompletion;
-            const result = parseProviderChatCompletion(
-                mockCompletion,
-                'anthropic',
-            );
-            expect(result).toEqual(null);
-        });
+        it('should create correct request body for llama model', () => {
+            const model = 'llama-3-70b';
+            const prompt = {system: 'system prompt', user: 'user prompt'};
+            const body = handler.createRequestBody(model, prompt);
 
-        it('should handle empty string content', () => {
-            const mockCompletion = {
-                content: '',
-            } as unknown as ChatCompletion;
-            const result = parseProviderChatCompletion(
-                mockCompletion,
-                'anthropic',
-            );
-            expect(result).toEqual(null);
+            expect(body).toEqual({
+                model: 'llama3-70b-8192',
+                temperature: DEFAULT_COPILOT_TEMPERATURE,
+                max_tokens: DEFAULT_COPILOT_MAX_TOKENS,
+                messages: [
+                    {role: 'system', content: prompt.system},
+                    {role: 'user', content: prompt.user},
+                ],
+            });
         });
     });
 });

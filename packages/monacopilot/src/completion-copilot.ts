@@ -1,4 +1,4 @@
-import {Copilot, Model, Provider, type PromptData} from '@monacopilot/core';
+import {Copilot, type PromptData} from '@monacopilot/core';
 
 import {craftCompletionPrompt} from './prompt';
 import type {
@@ -7,11 +7,7 @@ import type {
     CompletionResponse,
 } from './types';
 
-export class CompletionCopilot extends Copilot<
-    Provider,
-    Model,
-    CompletionMetadata
-> {
+export class CompletionCopilot extends Copilot<CompletionMetadata> {
     public async complete(
         request: CompletionRequest,
     ): Promise<CompletionResponse> {
