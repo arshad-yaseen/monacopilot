@@ -13,21 +13,25 @@
         "dev": "tsup src/index.ts --watch",
         "release": "release-it"
     },
-    "dependencies": {
+    "devDependencies": {
+        "tsup": "^8.0.2",
+        "typescript": "^5.4.3",
+        "release-it": "^17.6.0",
         "@anthropic-ai/sdk": "^0.27.3",
         "@google/generative-ai": "^0.21.0",
         "groq-sdk": "^0.3.2",
         "openai": "^4.60.1"
     },
-    "devDependencies": {
-        "tsup": "^8.0.2",
-        "typescript": "^5.4.3",
-        "release-it": "^17.6.0"
-    },
     "keywords": [
         "monacopilot",
         "core"
     ],
+    "publishConfig": {
+      "access": "public"
+    },
+    "release-it": {
+    "git": false
+  },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/arshad-yaseen/monacopilot.git"

@@ -10,16 +10,15 @@
     ],
     "scripts": {
         "build": "tsup src/index.ts",
-        "dev": "tsup src/index.ts --watch"
-    },
-    "dependencies": {
-        "@monacopilot/core": "workspace:*"
+        "dev": "tsup src/index.ts --watch",
+        "release": "release-it"
     },
     "devDependencies": {
+        "@release-it/bumper": "^7.0.1",
         "monaco-editor": "^0.52.0",
+        "release-it": "^17.6.0",
         "tsup": "^8.0.2",
-        "typescript": "^5.4.3",
-        "release-it": "^17.6.0"
+        "typescript": "^5.4.3"
     },
     "keywords": [
         "monaco-editor",
@@ -43,5 +42,21 @@
         }
     ],
     "license": "MIT",
-    "author": "Arshad Yaseen <m@arshadyaseen.com> (https://arshadyaseen.com)"
+    "author": "Arshad Yaseen <m@arshadyaseen.com> (https://arshadyaseen.com)",
+    "release-it": {
+        "git": false,
+        "plugins": {
+            "@release-it/bumper": {
+                "out": {
+                    "file": "package.json",
+                    "path": [
+                        "dependencies.@monacopilot/core"
+                    ]
+                }
+            }
+        }
+    },
+    "dependencies": {
+        "@monacopilot/core": "^0.18.19"
+    }
 }
