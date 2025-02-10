@@ -10,7 +10,7 @@
         "lint": "eslint . --ext .ts,.tsx --fix",
         "validate": "pnpm build && pnpm format && pnpm tsc && pnpm lint",
         "format": "prettier --write .",
-        "release": "pnpm release --workspaces && release-it",
+        "release": "pnpm -C packages/core release && pnpm -C packages/completion release && release-it",
         "prepare": "husky"
     },
     "devDependencies": {
@@ -25,9 +25,5 @@
         "release-it": "^17.6.0",
         "typescript": "^5.4.3",
         "vitest": "^2.0.5"
-    },
-    "workspaces": [
-        "packages/core",
-        "packages/completion"
-    ]
+    }
 }
