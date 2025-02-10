@@ -1,6 +1,6 @@
 {
     "name": "monacopilot",
-    "version": "0.18.19",
+    "version": "0.18.20",
     "description": "AI auto-completion plugin for Monaco Editor",
     "main": "./build/index.js",
     "module": "./build/index.mjs",
@@ -10,13 +10,10 @@
     ],
     "scripts": {
         "build": "tsup src/index.ts",
-        "dev": "tsup src/index.ts --watch",
-        "release": "release-it"
+        "dev": "tsup src/index.ts --watch"
     },
     "devDependencies": {
-        "@release-it/bumper": "^7.0.1",
         "monaco-editor": "^0.52.0",
-        "release-it": "^17.6.0",
         "tsup": "^8.0.2",
         "typescript": "^5.4.3"
     },
@@ -43,20 +40,7 @@
     ],
     "license": "MIT",
     "author": "Arshad Yaseen <m@arshadyaseen.com> (https://arshadyaseen.com)",
-    "release-it": {
-        "git": false,
-        "plugins": {
-            "@release-it/bumper": {
-                "out": {
-                    "file": "package.json",
-                    "path": [
-                        "dependencies.@monacopilot/core"
-                    ]
-                }
-            }
-        }
-    },
     "dependencies": {
-        "@monacopilot/core": "^0.18.19"
+        "@monacopilot/core": "workspace:*"
     }
 }

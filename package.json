@@ -1,8 +1,11 @@
 {
-    "version": "0.18.19",
+    "version": "0.18.20",
     "scripts": {
-        "build": "pnpm -C packages/core build && pnpm -C packages/completion build",
-        "dev": "pnpm -C packages/core dev && pnpm -C packages/completion dev",
+        "build": "pnpm -r build",
+        "dev": "pnpm -C packages/completion dev",
+        "dev:core": "pnpm -C packages/core dev",
+        "publish:ci": "pnpm -r publish --access public --no-git-checks",
+        "release": "bumpp",
         "test": "vitest run",
         "dev:docs": "pnpm -C docs dev",
         "build:docs": "pnpm -C docs build",
@@ -10,7 +13,6 @@
         "lint": "eslint . --ext .ts,.tsx --fix",
         "validate": "pnpm build && pnpm format && pnpm tsc && pnpm lint",
         "format": "prettier --write .",
-        "release": "pnpm -C packages/core release && pnpm -C packages/completion release && release-it",
         "prepare": "husky"
     },
     "devDependencies": {
@@ -19,10 +21,10 @@
         "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
         "@release-it/conventional-changelog": "^8.0.2",
         "@typescript-eslint/eslint-plugin": "^7.3.1",
+        "bumpp": "^10.0.2",
         "eslint": "^8.57.0",
         "husky": "^9.1.6",
         "prettier": "^3.2.5",
-        "release-it": "^17.6.0",
         "typescript": "^5.4.3",
         "vitest": "^2.0.5"
     }
