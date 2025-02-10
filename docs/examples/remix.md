@@ -7,6 +7,7 @@ Learn how to integrate Monacopilot with Remix.
 First, install the required dependencies:
 
 ::: code-group
+
 ```bash [npm]
 npm install monacopilot @monaco-editor/react
 ```
@@ -22,6 +23,7 @@ pnpm add monacopilot @monaco-editor/react
 ```bash [bun]
 bun add monacopilot @monaco-editor/react
 ```
+
 :::
 
 ## Implementation
@@ -31,23 +33,23 @@ bun add monacopilot @monaco-editor/react
 Create a route handler for completions in `app/routes/code-completion.tsx`:
 
 ```tsx
-import { json, type ActionFunctionArgs } from '@remix-run/node';
-import { Copilot, type CompletionRequestBody } from 'monacopilot';
+import {json, type ActionFunctionArgs} from '@remix-run/node';
+import {CompletionCopilot, type CompletionRequestBody} from 'monacopilot';
 
-const copilot = new Copilot(process.env.OPENAI_API_KEY!, {
-  provider: 'openai',
-  model: 'gpt-4',
+const copilot = new CompletionCopilot(process.env.OPENAI_API_KEY!, {
+    provider: 'openai',
+    model: 'gpt-4',
 });
 
-export const action = async ({ request }: ActionFunctionArgs) => {
-  const body: CompletionRequestBody = await request.json();
-  const { completion, error } = await copilot.complete({ body });
-  
-  if (error) {
-    return json({ completion: null, error }, { status: 500 });
-  }
-  
-  return json(completion);
+export const action = async ({request}: ActionFunctionArgs) => {
+    const body: CompletionRequestBody = await request.json();
+    const {completion, error} = await copilot.complete({body});
+
+    if (error) {
+        return json({completion: null, error}, {status: 500});
+    }
+
+    return json(completion);
 };
 ```
 
@@ -56,42 +58,43 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 Create a Editor component in `app/components/Editor.tsx`:
 
 ```tsx
-import { useEffect, useState } from 'react';
-import { Editor as MonacoEditor } from '@monaco-editor/react';
+import {useEffect, useState} from 'react';
+
+import {Editor as MonacoEditor} from '@monaco-editor/react';
 import {
-  Monaco,
-  registerCompletion,
-  type StandaloneCodeEditor,
+    Monaco,
+    registerCompletion,
+    type StandaloneCodeEditor,
 } from 'monacopilot';
 
 export default function Editor() {
-  const [editor, setEditor] = useState<StandaloneCodeEditor | null>(null);
-  const [monaco, setMonaco] = useState<Monaco | null>(null);
+    const [editor, setEditor] = useState<StandaloneCodeEditor | null>(null);
+    const [monaco, setMonaco] = useState<Monaco | null>(null);
 
-  useEffect(() => {
-    if (!monaco || !editor) return;
+    useEffect(() => {
+        if (!monaco || !editor) return;
 
-    const completion = registerCompletion(monaco, editor, {
-      endpoint: '/code-completion',
-      language: 'javascript',
-    });
+        const completion = registerCompletion(monaco, editor, {
+            endpoint: '/code-completion',
+            language: 'javascript',
+        });
 
-    return () => {
-      completion.deregister();
-    };
-  }, [monaco, editor]);
+        return () => {
+            completion.deregister();
+        };
+    }, [monaco, editor]);
 
-  return (
-    <MonacoEditor
-      language="javascript"
-      height={'100vh'}
-      width={'100%'}
-      onMount={(editor, monaco) => {
-        setEditor(editor);
-        setMonaco(monaco);
-      }}
-    />
-  );
+    return (
+        <MonacoEditor
+            language="javascript"
+            height={'100vh'}
+            width={'100%'}
+            onMount={(editor, monaco) => {
+                setEditor(editor);
+                setMonaco(monaco);
+            }}
+        />
+    );
 }
 ```
 
@@ -103,13 +106,13 @@ Create your page component in `app/routes/_index.tsx`:
 import Editor from '~/components/Editor';
 
 export default function Index() {
-  return (
-    <main className="h-screen w-screen">
-      <h1>Monacopilot Remix Example</h1>
+    return (
+        <main className="h-screen w-screen">
+            <h1>Monacopilot Remix Example</h1>
 
-      <Editor />
-    </main>
-  );
+            <Editor />
+        </main>
+    );
 }
 ```
 
@@ -141,7 +144,8 @@ your-remix-project/
 ## Running the Example
 
 1. Install dependencies:
-::: code-group
+   ::: code-group
+
 ```bash [npm]
 npm install
 ```
@@ -157,10 +161,12 @@ pnpm install
 ```bash [bun]
 bun install
 ```
+
 :::
 
 2. Start the development server:
-::: code-group
+   ::: code-group
+
 ```bash [npm]
 npm run dev
 ```
@@ -176,6 +182,7 @@ pnpm dev
 ```bash [bun]
 bun dev
 ```
+
 :::
 
 3. Open `http://localhost:3000` in your browser.
@@ -183,6 +190,7 @@ bun dev
 You should now see a full-screen Monaco Editor with AI-powered completions working!
 
 ::: tip
+
 - Make sure you have set up your environment variables correctly before running the example.
 - Remix uses file-based routing, so the `/code-completion` endpoint is automatically created from the `code-completion.tsx` route file.
-:::
+  :::

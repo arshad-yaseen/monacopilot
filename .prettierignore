@@ -8,8 +8,6 @@ build/
 
 .vscode/
 
-examples/
-
 CHANGELOG.md
 
 docs/.vitepress/cache/

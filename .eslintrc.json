@@ -11,14 +11,9 @@
         },
         "ecmaVersion": "latest",
         "sourceType": "module",
-        "project": "./tsconfig.json"
+        "project": ["./packages/*/tsconfig.json"]
     },
-    "ignorePatterns": [
-        "node_modules/**/*",
-        "build/**/*",
-        "examples/**/*",
-        "tests/ui/**/*"
-    ],
+    "ignorePatterns": ["node_modules/**/*", "build/**/*"],
     "plugins": ["@typescript-eslint"],
     "rules": {
         "@typescript-eslint/no-unused-vars": "warn",

@@ -4,12 +4,12 @@ title: Custom Model
 
 # Custom Model
 
-You can use a custom LLM that isn't built into Monacopilot by setting up a `model` when you create a new Copilot. This feature lets you connect to LLMs from other services or your own custom-built models.
+You can use a custom LLM that isn't built into Monacopilot by setting up a `model` when you create a new CompletionCopilot. This feature lets you connect to LLMs from other services or your own custom-built models.
 
 ## Example
 
 ```javascript
-const copilot = new Copilot(process.env.HUGGINGFACE_API_KEY, {
+const copilot = new CompletionCopilot(process.env.HUGGINGFACE_API_KEY, {
     // You don't need to set the provider if you are using a custom model.
     // provider: 'huggingface',
     model: {

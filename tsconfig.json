@@ -12,18 +12,12 @@
         "noEmit": true,
         "outDir": "dist",
         "resolveJsonModule": true,
-        "types": ["vitest/globals"],
-        "baseUrl": "src",
-        "paths": {
-            "core/*": ["core/*"],
-            "types/*": ["types/*"],
-            "utils/*": ["utils/*"],
-            "logger/*": ["logger/*"],
-            "helpers/*": ["helpers/*"],
-            "ai/*": ["ai/*"],
-            "constants/*": ["constants/*"]
-        }
+        "types": ["vitest/globals"]
     },
-    "include": ["src", "tests", "tsup.config.ts"],
-    "exclude": ["node_modules", "build", "examples", "tests/ui"]
+    "include": [
+        "packages/*/src",
+        "packages/*/tests",
+        "packages/*/tsup.config.ts"
+    ],
+    "exclude": ["node_modules", "dist"]
 }

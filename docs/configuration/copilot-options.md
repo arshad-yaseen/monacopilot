@@ -4,14 +4,14 @@ title: Copilot Options
 
 # Copilot Options
 
-Configure your Copilot instance with different providers, models and custom options to get the best code completions for your needs.
+Configure your `CompletionCopilot` instance with different providers, models and custom options to get the best code completions for your needs.
 
 ## Changing the Provider and Model
 
-You can specify a different provider and model by setting the `provider` and `model` parameters in the `Copilot` instance.
+You can specify a different provider and model by setting the `provider` and `model` parameters in the `CompletionCopilot` instance.
 
 ```javascript
-const copilot = new Copilot(process.env.ANTHROPIC_API_KEY, {
+const copilot = new CompletionCopilot(process.env.ANTHROPIC_API_KEY, {
     provider: 'anthropic',
     model: 'claude-3-5-haiku',
 });
