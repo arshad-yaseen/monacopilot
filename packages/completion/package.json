@@ -31,6 +31,9 @@
         "type": "git",
         "url": "git+https://github.com/arshad-yaseen/monacopilot.git"
     },
+    "publishConfig": {
+        "access": "public"
+    },
     "homepage": "https://copilot.arshadyaseen.com",
     "maintainers": [
         {
