@@ -115,6 +115,16 @@ describe('CompletionFormatter', () => {
             const result = formatter.removeMarkdownCodeSyntax().build();
             expect(result).toBe('```\nconst incomplete = true;');
         });
+
+        it('should keep starting whitespaces', () => {
+            const formatter = new CompletionFormatter(
+                ' 3.14159;',
+                MOCK_COMPLETION_POS.column,
+                '',
+            );
+            const result = formatter.removeMarkdownCodeSyntax().build();
+            expect(result).toBe(' 3.14159;');
+        });
     });
 
     describe('removeExcessiveNewlines', () => {
