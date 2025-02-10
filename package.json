@@ -1,5 +1,5 @@
 {
-    "version": "0.18.22",
+    "version": "0.18.23",
     "scripts": {
         "build": "pnpm -r build",
         "dev": "pnpm -C packages/completion dev",
