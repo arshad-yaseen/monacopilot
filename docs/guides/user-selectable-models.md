@@ -44,21 +44,21 @@ Server-side implementation (Example using Express.js): This is the server-side A
 
 ```javascript
 import express from 'express';
-import {Copilot} from 'monacopilot';
+import {CompletionCopilot} from 'monacopilot';
 
 const app = express();
 
 // Initialize different copilot instances for different models
 const copilotInstances = {
-    'gpt-4o': new Copilot(process.env.OPENAI_API_KEY, {
+    'gpt-4o': new CompletionCopilot(process.env.OPENAI_API_KEY, {
         provider: 'openai',
         model: 'gpt-4o',
     }),
-    'sonnet-3-5-sonnet': new Copilot(process.env.ANTHROPIC_API_KEY, {
+    'sonnet-3-5-sonnet': new CompletionCopilot(process.env.ANTHROPIC_API_KEY, {
         provider: 'anthropic',
         model: 'claude-3-5-sonnet',
     }),
-    'llama-3-70b': new Copilot(process.env.GROQ_API_KEY, {
+    'llama-3-70b': new CompletionCopilot(process.env.GROQ_API_KEY, {
         provider: 'groq',
         model: 'llama-3-70b',
     }),
@@ -101,4 +101,4 @@ app.post('/code-completion', async (req, res) => {
 app.listen(3000);
 ```
 
-The server maintains a map of Copilot instances configured with different providers and models, allowing for flexible model selection while keeping API keys secure on the server side.
+The server maintains a map of CompletionCopilot instances configured with different providers and models, allowing for flexible model selection while keeping API keys secure on the server side.

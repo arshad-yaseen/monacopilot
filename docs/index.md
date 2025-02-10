@@ -50,9 +50,9 @@ Create an API handler for the endpoint (e.g. `/code-completion`) you provided in
 In our example, we are using Express.js:
 
 ```typescript
-import {Copilot} from 'monacopilot';
+import {CompletionCopilot} from 'monacopilot';
 
-const copilot = new Copilot(OPENAI_API_KEY, {
+const copilot = new CompletionCopilot(OPENAI_API_KEY, {
     provider: 'openai',
     model: 'gpt-4o',
 });

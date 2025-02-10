@@ -34,9 +34,9 @@ Create a route handler for completions in `app/routes/code-completion.tsx`:
 
 ```tsx
 import {json, type ActionFunctionArgs} from '@remix-run/node';
-import {Copilot, type CompletionRequestBody} from 'monacopilot';
+import {CompletionCopilot, type CompletionRequestBody} from 'monacopilot';
 
-const copilot = new Copilot(process.env.OPENAI_API_KEY!, {
+const copilot = new CompletionCopilot(process.env.OPENAI_API_KEY!, {
     provider: 'openai',
     model: 'gpt-4',
 });

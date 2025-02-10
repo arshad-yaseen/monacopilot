@@ -38,9 +38,9 @@ First, create an API route to handle completion requests:
 // app/api/code-completion/route.ts
 import {NextRequest, NextResponse} from 'next/server';
 
-import {Copilot, type CompletionRequestBody} from 'monacopilot';
+import {CompletionCopilot, type CompletionRequestBody} from 'monacopilot';
 
-const copilot = new Copilot(process.env.OPENAI_API_KEY!, {
+const copilot = new CompletionCopilot(process.env.OPENAI_API_KEY!, {
     provider: 'openai',
     model: 'gpt-4',
 });
@@ -63,9 +63,9 @@ export async function POST(req: NextRequest) {
 // pages/api/code-completion.ts
 import {NextApiRequest, NextApiResponse} from 'next';
 
-import {Copilot} from 'monacopilot';
+import {CompletionCopilot} from 'monacopilot';
 
-const copilot = new Copilot(process.env.OPENAI_API_KEY!, {
+const copilot = new CompletionCopilot(process.env.OPENAI_API_KEY!, {
     provider: 'openai',
     model: 'gpt-4',
 });
