@@ -1,6 +1,6 @@
 {
     "name": "monacopilot",
-    "version": "0.19.0-beta.6",
+    "version": "0.19.0-beta.7",
     "description": "AI auto-completion plugin for Monaco Editor",
     "main": "./build/index.js",
     "module": "./build/index.mjs",
@@ -10,8 +10,7 @@
     ],
     "scripts": {
         "build": "tsup src/index.ts",
-        "dev": "tsup src/index.ts --watch",
-        "publish": "npm publish"
+        "dev": "tsup src/index.ts --watch"
     },
     "devDependencies": {
         "monaco-editor": "^0.52.0",
@@ -30,9 +29,6 @@
     "repository": {
         "type": "git",
         "url": "git+https://github.com/arshad-yaseen/monacopilot.git"
-    },
-    "publishConfig": {
-        "access": "public"
     },
     "homepage": "https://copilot.arshadyaseen.com",
     "maintainers": [
