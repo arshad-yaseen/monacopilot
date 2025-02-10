@@ -11,7 +11,7 @@
         "build:docs": "pnpm -C docs build",
         "tsc": "tsc --noEmit",
         "lint": "eslint . --ext .ts,.tsx --fix",
-        "validate": "pnpm build && pnpm format && pnpm tsc && pnpm lint",
+        "validate": "pnpm build && pnpm tsc && pnpm lint",
         "format": "prettier --write .",
         "prepare": "husky"
     },
