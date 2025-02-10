@@ -27,11 +27,11 @@
         "core"
     ],
     "publishConfig": {
-      "access": "public"
+        "access": "public"
     },
     "release-it": {
-    "git": false
-  },
+        "git": false
+    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/arshad-yaseen/monacopilot.git"
