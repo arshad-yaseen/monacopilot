@@ -11,7 +11,7 @@
     "scripts": {
         "build": "tsup src/index.ts",
         "dev": "tsup src/index.ts --watch",
-        "publish": "pnpm publish"
+        "publish": "npm publish"
     },
     "devDependencies": {
         "tsup": "^8.0.2",
