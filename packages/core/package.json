@@ -1,6 +1,6 @@
 {
     "name": "@monacopilot/core",
-    "version": "0.19.7",
+    "version": "0.19.8",
     "description": "Core package for monacopilot - AI copilot for monaco editor",
     "main": "./build/index.js",
     "module": "./build/index.mjs",
