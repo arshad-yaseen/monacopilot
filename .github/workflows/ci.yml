@@ -27,7 +27,7 @@ jobs:
                   version: latest
 
             - name: Install dependencies
-              run: pnpm install --frozen-lockfile
+              run: pnpm install --no-frozen-lockfile
 
             - name: Run validation
               run: pnpm validate

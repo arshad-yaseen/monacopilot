@@ -47,22 +47,6 @@ importers:
                 specifier: ^1.6.3
                 version: 1.6.3(@algolia/client-search@5.20.1)(@types/node@22.13.1)(postcss@8.5.1)(search-insights@2.17.3)(typescript@5.7.3)
 
-    packages/completion:
-        dependencies:
-            '@monacopilot/core':
-                specifier: workspace:*
-                version: link:../core
-        devDependencies:
-            monaco-editor:
-                specifier: ^0.52.0
-                version: 0.52.2
-            tsup:
-                specifier: ^8.0.2
-                version: 8.3.6(jiti@2.4.2)(postcss@8.5.1)(typescript@5.7.3)
-            typescript:
-                specifier: ^5.4.3
-                version: 5.7.3
-
     packages/core:
         devDependencies:
             '@anthropic-ai/sdk':
@@ -77,6 +61,22 @@ importers:
             openai:
                 specifier: ^4.60.1
                 version: 4.83.0
+            tsup:
+                specifier: ^8.0.2
+                version: 8.3.6(jiti@2.4.2)(postcss@8.5.1)(typescript@5.7.3)
+            typescript:
+                specifier: ^5.4.3
+                version: 5.7.3
+
+    packages/monacopilot:
+        dependencies:
+            '@monacopilot/core':
+                specifier: workspace:*
+                version: link:../core
+        devDependencies:
+            monaco-editor:
+                specifier: ^0.52.0
+                version: 0.52.2
             tsup:
                 specifier: ^8.0.2
                 version: 8.3.6(jiti@2.4.2)(postcss@8.5.1)(typescript@5.7.3)
@@ -8182,7 +8182,7 @@ snapshots:
             ky: 1.7.4
             registry-auth-token: 5.1.0
             registry-url: 6.0.1
-            semver: 7.7.1
+            semver: 7.6.3
 
     package-manager-detector@0.2.9: {}
 
@@ -8783,7 +8783,7 @@ snapshots:
             is-npm: 6.0.0
             latest-version: 9.0.0
             pupa: 3.1.0
-            semver: 7.7.1
+            semver: 7.6.3
             xdg-basedir: 5.1.0
 
     uri-js@4.4.1:
