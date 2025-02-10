@@ -1,13 +1,13 @@
 import type {CustomPrompt} from '@monacopilot/core';
 
+import {FetchCompletionItemHandler} from './internal';
 import type {
     CursorPosition,
     EditorCancellationToken,
     EditorModel,
     EditorRange,
     Monaco,
-} from '../types/monaco';
-import {FetchCompletionItemHandler} from './internal';
+} from './monaco';
 
 export type Endpoint = string;
 export type Filename = string;

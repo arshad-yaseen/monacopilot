@@ -3,7 +3,7 @@
     "scripts": {
         "build": "pnpm -r build",
         "dev:core": "pnpm -C packages/core dev",
-        "dev": "pnpm -C packages/completion dev",
+        "dev": "pnpm -C packages/monacopilot dev",
         "publish:ci": "pnpm -r --filter '!docs' publish --access public --no-git-checks",
         "release": "bumpp",
         "test": "vitest run",

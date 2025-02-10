@@ -4,7 +4,7 @@ import type {
     EditorKeyboardEvent,
     EditorModel,
     Monaco,
-} from '../types/monaco';
+} from './monaco';
 
 export type EditorCompletionState = {
     /** Whether the current completion suggestion has been accepted by the user */
