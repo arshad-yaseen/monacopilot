@@ -65,7 +65,7 @@ export class CompletionFormatter {
             result = result.replace(codeBlock, codeContent);
         }
 
-        return result.trim();
+        return result.replace(/^\n+|\n+$/g, '');
     }
 
     public removeExcessiveNewlines(): CompletionFormatter {
