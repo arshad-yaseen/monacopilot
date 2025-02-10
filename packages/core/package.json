@@ -1,0 +1,45 @@
+{
+    "name": "@monacopilot/core",
+    "version": "0.18.19",
+    "description": "Core package for monacopilot - AI copilot for monaco editor",
+    "main": "./build/index.js",
+    "module": "./build/index.mjs",
+    "types": "./build/index.d.ts",
+    "files": [
+        "build"
+    ],
+    "scripts": {
+        "build": "tsup src/index.ts",
+        "dev": "tsup src/index.ts --watch",
+        "release": "release-it"
+    },
+    "dependencies": {
+        "@anthropic-ai/sdk": "^0.27.3",
+        "@google/generative-ai": "^0.21.0",
+        "groq-sdk": "^0.3.2",
+        "openai": "^4.60.1"
+    },
+    "devDependencies": {
+        "tsup": "^8.0.2",
+        "typescript": "^5.4.3",
+        "release-it": "^17.6.0"
+    },
+    "keywords": [
+        "monacopilot",
+        "core"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/arshad-yaseen/monacopilot.git"
+    },
+    "homepage": "https://copilot.arshadyaseen.com",
+    "maintainers": [
+        {
+            "name": "Arshad Yaseen",
+            "email": "m@arshadyaseen.com",
+            "url": "https://arshadyaseen.com"
+        }
+    ],
+    "license": "MIT",
+    "author": "Arshad Yaseen <m@arshadyaseen.com> (https://arshadyaseen.com)"
+}
