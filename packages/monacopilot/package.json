@@ -44,6 +44,6 @@
         "@monacopilot/core": "workspace:*"
     },
     "peerDependencies": {
-        "monaco-editor": "^0.41.0"
+        "monaco-editor": ">=0.41.0"
     }
 }
