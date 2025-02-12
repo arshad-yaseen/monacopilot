@@ -64,8 +64,7 @@ export class CompletionFormatter {
             const codeContent = codeBlock.split('\n').slice(1, -1).join('\n');
             result = result.replace(codeBlock, codeContent);
         }
-
-        return result.replace(/^\n+|\n+$/g, '');
+        return result;
     }
 
     public removeExcessiveNewlines(): CompletionFormatter {

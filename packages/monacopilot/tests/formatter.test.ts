@@ -125,6 +125,26 @@ describe('CompletionFormatter', () => {
             const result = formatter.removeMarkdownCodeSyntax().build();
             expect(result).toBe(' 3.14159;');
         });
+
+        it('should keep leading newlines', () => {
+            const formatter = new CompletionFormatter(
+                '\nconst PI = 3.14159;',
+                MOCK_COMPLETION_POS.column,
+                '',
+            );
+            const result = formatter.removeMarkdownCodeSyntax().build();
+            expect(result).toBe('\nconst PI = 3.14159;');
+        });
+
+        it('should preserve leading newline with code block', () => {
+            const formatter = new CompletionFormatter(
+                '\n```\nconst x = 5;\n```',
+                MOCK_COMPLETION_POS.column,
+                '',
+            );
+            const result = formatter.removeMarkdownCodeSyntax().build();
+            expect(result).toBe('\nconst x = 5;');
+        });
     });
 
     describe('removeExcessiveNewlines', () => {
@@ -180,6 +200,16 @@ describe('CompletionFormatter', () => {
             );
             const result = formatter.removeExcessiveNewlines().build();
             expect(result).toBe('\n\n');
+        });
+
+        it('should maintain single leading newline', () => {
+            const formatter = new CompletionFormatter(
+                '\nconst x = 10;\n\nconst y = 20;',
+                MOCK_COMPLETION_POS.column,
+                '',
+            );
+            const result = formatter.removeExcessiveNewlines().build();
+            expect(result).toBe('\nconst x = 10;\n\nconst y = 20;');
         });
     });
 
