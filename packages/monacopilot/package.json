@@ -1,6 +1,6 @@
 {
     "name": "monacopilot",
-    "version": "0.19.9",
+    "version": "0.19.10",
     "description": "AI auto-completion plugin for Monaco Editor",
     "main": "./build/index.js",
     "module": "./build/index.mjs",
@@ -44,6 +44,6 @@
         "@monacopilot/core": "workspace:*"
     },
     "peerDependencies": {
-        "monaco-editor": "^0.41.0"
+        "monaco-editor": ">=0.41.0"
     }
 }
