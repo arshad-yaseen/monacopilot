@@ -21,7 +21,7 @@ jobs:
                   node-version: lts/*
                   registry-url: https://registry.npmjs.org/
             - uses: pnpm/action-setup@v4
-            - run: pnpm install --no-frozen-lockfile
+            - run: pnpm install
             - run: pnpm build
             - run: npx changelogithub
               continue-on-error: true

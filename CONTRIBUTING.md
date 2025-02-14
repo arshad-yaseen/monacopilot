@@ -7,7 +7,7 @@ Thank you for your interest in contributing to Monacopilot! We're thrilled to ha
 - [Project Structure](#project-structure)
 - [Development Setup](#development-setup)
 - [Development Workflow](#development-workflow)
-- [Testing](#testing)
+- [Testing Changes](#testing-changes)
 - [Documentation](#documentation)
 - [Commit Guidelines](#commit-guidelines)
 - [Pull Request Process](#pull-request-process)
@@ -21,6 +21,7 @@ packages/
   ├── core/           # Core functionality and provider implementations
   └── monacopilot/    # Main Monaco Editor integration package
 docs/                 # Documentation website
+playground/           # NextJS app for testing changes in real-time
 ```
 
 ## Development Setup
@@ -38,11 +39,6 @@ docs/                 # Documentation website
     pnpm install
     ```
 
-3. **Build**
-    ```bash
-    pnpm build
-    ```
-
 ## Development Workflow
 
 1. **Start Development Mode**
@@ -52,11 +48,13 @@ docs/                 # Documentation website
     pnpm dev:core
 
     # For monacopilot package
-    pnpm dev
+    pnpm dev:monacopilot
 
     # For documentation
     pnpm dev:docs
     ```
+
+    Note: The development mode includes automatic rebuilding on code changes, so you don't need to run `pnpm build` manually after each change.
 
 2. **Code Formatting**
    Before committing your changes, run:
@@ -77,21 +75,19 @@ docs/                 # Documentation website
     pnpm lint
     ```
 
-5. **Testing**
-   Run all tests, only push if tests pass:
-    ```bash
-    pnpm test
-    ```
+## Testing Changes
 
-## Testing
+We provide a playground environment to test your changes in real-time:
 
-We use Vitest for testing. Run tests with:
+- The `playground/` directory contains a NextJS app that automatically reflects changes made to the packages
+- When you run `pnpm dev:monacopilot` or `pnpm dev:core`, your changes will be immediately visible in the playground
+- Use this playground to verify your changes and test functionality before submitting a PR
+
+To run tests:
 
 ```bash
 pnpm test
 ```
-
-When adding new features, please include corresponding tests in the appropriate `tests` directory.
 
 ## Documentation
 
@@ -136,14 +132,15 @@ feat(core): add support for DeepSeek provider
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Make your changes
-4. Run all checks:
+4. Test your changes using the playground
+5. Run all checks:
     ```bash
     pnpm validate
     pnpm test
     ```
-5. Commit your changes following our commit guidelines
-6. Push to your fork
-7. Open a Pull Request
+6. Commit your changes following our commit guidelines
+7. Push to your fork
+8. Open a Pull Request
 
 ## Need Help?
 
