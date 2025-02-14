@@ -12,6 +12,8 @@
         "lint": "eslint . --ext .ts,.tsx --fix",
         "validate": "pnpm build && pnpm tsc && pnpm lint",
         "format": "prettier --write .",
+        "release": "bumpp",
+        "publish:ci": "pnpm -r --filter '!docs' --filter '!playground' publish --access public --no-git-checks",
         "prepare": "husky"
     },
     "devDependencies": {
