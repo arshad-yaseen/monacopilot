@@ -3,7 +3,10 @@ import type {CopilotOptions, CustomCopilotModel} from './types/copilot';
 import type {Model, Provider} from './types/llm';
 import {joinWithAnd} from './utils/text';
 
-const _validateParams = (apiKey: string, options: CopilotOptions): void => {
+const _validateParams = (
+    apiKey: string | undefined,
+    options: CopilotOptions,
+): void => {
     if (!apiKey) {
         throw new Error('Please provide an API key.');
     }

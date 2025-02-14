@@ -40,7 +40,7 @@ import {NextRequest, NextResponse} from 'next/server';
 
 import {CompletionCopilot, type CompletionRequestBody} from 'monacopilot';
 
-const copilot = new CompletionCopilot(process.env.OPENAI_API_KEY!, {
+const copilot = new CompletionCopilot(process.env.OPENAI_API_KEY, {
     provider: 'openai',
     model: 'gpt-4o',
 });
@@ -65,7 +65,7 @@ import {NextApiRequest, NextApiResponse} from 'next';
 
 import {CompletionCopilot} from 'monacopilot';
 
-const copilot = new CompletionCopilot(process.env.OPENAI_API_KEY!, {
+const copilot = new CompletionCopilot(process.env.OPENAI_API_KEY, {
     provider: 'openai',
     model: 'gpt-4o',
 });

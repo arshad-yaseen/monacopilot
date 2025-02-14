@@ -26,9 +26,9 @@ export abstract class Copilot<Meta> {
     protected provider: Provider | undefined;
     protected model: Model | CustomCopilotModel;
 
-    constructor(apiKey: string, options: CopilotOptions) {
+    constructor(apiKey: string | undefined, options: CopilotOptions) {
         validate.params(apiKey, options);
-        this.apiKey = apiKey;
+        this.apiKey = apiKey ?? '';
         this.provider = options.provider;
         this.model = options.model;
         validate.inputs(this.model, this.provider);
