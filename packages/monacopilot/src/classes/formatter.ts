@@ -31,18 +31,14 @@ export class CompletionFormatter {
     }
 
     public indentByColumn(): CompletionFormatter {
-        // Split completion into lines
         const lines = this.formattedCompletion.split('\n');
 
-        // Skip indentation if there's only one line or if there's text before cursor in the line
         if (lines.length <= 1 || this.textBeforeCursorInLine.trim() !== '') {
             return this;
         }
 
-        // Create indentation string based on current column position
         const indentation = ' '.repeat(this.currentColumn - 1);
 
-        // Keep first line as is, indent all subsequent lines
         this.formattedCompletion =
             lines[0] +
             '\n' +
@@ -55,16 +51,28 @@ export class CompletionFormatter {
     }
 
     private removeMarkdownCodeBlocks(text: string): string {
-        const codeBlockRegex = /```[\s\S]*?```/g;
-        let result = text;
-        let match: RegExpExecArray | null;
+        const lines = text.split('\n');
+        const result: string[] = [];
+        let inCodeBlock = false;
 
-        while ((match = codeBlockRegex.exec(text)) !== null) {
-            const codeBlock = match[0];
-            const codeContent = codeBlock.split('\n').slice(1, -1).join('\n');
-            result = result.replace(codeBlock, codeContent);
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            const isCodeBlockStart = line.trim().startsWith('```');
+
+            if (isCodeBlockStart && !inCodeBlock) {
+                inCodeBlock = true;
+                continue;
+            }
+
+            if (isCodeBlockStart && inCodeBlock) {
+                inCodeBlock = false;
+                continue;
+            }
+
+            result.push(line);
         }
-        return result;
+
+        return result.join('\n');
     }
 
     public removeExcessiveNewlines(): CompletionFormatter {
