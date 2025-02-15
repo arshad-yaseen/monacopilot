@@ -20,6 +20,7 @@ const Editor = () => {
         const completion = registerCompletion(monaco, editor, {
             endpoint: '/api/code-completion',
             language: 'javascript',
+            trigger: 'onTyping',
         });
 
         return () => {

@@ -62,6 +62,18 @@ describe('CompletionFormatter', () => {
             );
         });
 
+        it('should remove markdown code block in the middle of the text', () => {
+            const formatter = new CompletionFormatter(
+                'calculate the factorial of a given number using recursion\n```javascript\nfunction calculateFactorial(n) {\n    // Base case: factorial of 0 or 1 is 1\n    if (n === 0 || n === 1) {\n        return 1;\n    ',
+                MOCK_COMPLETION_POS.column,
+                '',
+            );
+            const result = formatter.removeMarkdownCodeSyntax().build();
+            expect(result).toBe(
+                'calculate the factorial of a given number using recursion\nfunction calculateFactorial(n) {\n    // Base case: factorial of 0 or 1 is 1\n    if (n === 0 || n === 1) {\n        return 1;\n    ',
+            );
+        });
+
         it('should remove multiple markdown code blocks', () => {
             const formatter = new CompletionFormatter(
                 '```\nfunction greet(name) {\n  return `Hello, ${name}!`;\n}\n```\nSome text\n```\nconst result = greet("Alice");\nconsole.log(result);\n```',
@@ -113,7 +125,7 @@ describe('CompletionFormatter', () => {
                 '',
             );
             const result = formatter.removeMarkdownCodeSyntax().build();
-            expect(result).toBe('```\nconst incomplete = true;');
+            expect(result).toBe('const incomplete = true;');
         });
 
         it('should keep starting whitespaces', () => {

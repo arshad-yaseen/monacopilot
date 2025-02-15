@@ -11,14 +11,10 @@ const compileRelatedFiles = (files?: RelatedFile[]): string => {
     return files
         .map(({path, content}) => {
             return `
-<related_file>
-  <filePath>${path}</filePath>
-  <fileContent>
+### ${path}
 \`\`\`
 ${content}
-\`\`\`
-  </fileContent>
-</related_file>`.trim();
+\`\`\``.trim();
         })
         .join('\n\n');
 };
@@ -60,7 +56,7 @@ ${textBeforeCursor}<cursor>${textAfterCursor}
 
 ${capitalizeFirstLetter(completionMode)} the code at <cursor>.
 
-Output only the raw code to be inserted at the cursor location without any additional text or comments.`;
+Output only the raw code to be inserted at the cursor location without any additional text, comments, or code block syntax.`;
 
     return {
         system: systemInstruction,
