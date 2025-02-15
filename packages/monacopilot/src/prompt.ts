@@ -11,7 +11,7 @@ const compileRelatedFiles = (files?: RelatedFile[]): string => {
     return files
         .map(({path, content}) => {
             return `
-### ${path}
+### Path: ${path}
 \`\`\`
 ${content}
 \`\`\``.trim();
@@ -19,7 +19,9 @@ ${content}
         .join('\n\n');
 };
 
-export const craftCompletionPrompt = (meta: CompletionMetadata): PromptData => {
+export const craftCompletionPrompt = (
+    metadata: CompletionMetadata,
+): PromptData => {
     const {
         technologies = [],
         filename,
@@ -28,7 +30,7 @@ export const craftCompletionPrompt = (meta: CompletionMetadata): PromptData => {
         textBeforeCursor = '',
         textAfterCursor = '',
         editorState: {completionMode},
-    } = meta;
+    } = metadata;
 
     const mergedTechStack = joinWithAnd(
         [language, ...technologies].filter(
@@ -37,7 +39,7 @@ export const craftCompletionPrompt = (meta: CompletionMetadata): PromptData => {
     );
 
     const systemInstruction = `
-You are an expert code completion assistant.
+You are an EXCELLENT code completion assistant.
 
 **Context:**
 File: ${filename || 'Untitled'}
@@ -56,7 +58,11 @@ ${textBeforeCursor}<cursor>${textAfterCursor}
 
 ${capitalizeFirstLetter(completionMode)} the code at <cursor>.
 
-Output only the raw code to be inserted at the cursor location without any additional text, comments, or code block syntax.`;
+**Completion Constraints**
+1. MUST start with: "${textBeforeCursor.slice(-1)}"
+2. MUST end before: "${textAfterCursor.slice(0, 1)}"
+
+Output ONLY the raw code to be inserted at the cursor location without any additional text, comments, or code block syntax.`;
 
     return {
         system: systemInstruction,
