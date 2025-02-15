@@ -58,9 +58,9 @@ ${textBeforeCursor}<cursor>${textAfterCursor}
 
 ${capitalizeFirstLetter(completionMode)} the code at <cursor>.
 
-**Completion Constraints**
-1. MUST start with: "${textBeforeCursor.slice(-1)}"
-2. MUST end before: "${textAfterCursor.slice(0, 1)}"
+**Completion Constraints (MUST)**
+1. MUST start after: "${textBeforeCursor.slice(-3)}"
+2. MUST end before: "${textAfterCursor.slice(0, 3)}"
 
 Output ONLY the raw code to be inserted at the cursor location without any additional text, comments, or code block syntax.`;
 
