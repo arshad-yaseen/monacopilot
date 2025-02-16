@@ -23,4 +23,4 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
-/docs/.vitepress/cache/
+cache
