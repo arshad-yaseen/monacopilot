@@ -3,29 +3,26 @@ import {logger} from '@monacopilot/core';
 import {CompletionCache} from './classes/cache';
 import {CompletionFormatter} from './classes/formatter';
 import {CompletionRange} from './classes/range';
-import {constructCompletionMetadata, fetchCompletionItem} from './helpers';
+import {
+    constructCompletionMetadata,
+    fetchCompletionItem,
+    isCancellationError,
+} from './helpers';
 import {
     CompletionMetadata,
     InlineCompletionProcessorParams,
     TriggerType,
 } from './types';
-import type {FetchCompletionItemHandler} from './types/internal';
 import type {EditorInlineCompletionsResult} from './types/monaco';
 import {typingDebouncedAsync} from './utils/debounce';
 import {getTextBeforeCursor, getTextBeforeCursorInLine} from './utils/editor';
 import {createInlineCompletionResult} from './utils/inline-completion';
 
-const getDebouncedFunctionPerTrigger = (
-    fn: FetchCompletionItemHandler,
-): Record<
-    TriggerType,
-    ReturnType<typeof typingDebouncedAsync<FetchCompletionItemHandler>>
-> => {
-    return {
-        [TriggerType.OnTyping]: typingDebouncedAsync(fn, 600, 200),
-        [TriggerType.OnIdle]: typingDebouncedAsync(fn, 600, 400),
-        [TriggerType.OnDemand]: typingDebouncedAsync(fn, 0, 0),
-    };
+// [base delay, typing threshold]
+const TYPING_DEBOUNCE_PARAMS = {
+    [TriggerType.OnTyping]: [600, 120],
+    [TriggerType.OnIdle]: [600, 400],
+    [TriggerType.OnDemand]: [0, 0],
 };
 
 export const completionCache = new CompletionCache();
@@ -46,7 +43,6 @@ export const processInlineCompletions = async ({
         requestHandler,
     } = options;
 
-    // Attempt to retrieve cached completions if caching is enabled
     if (enableCaching) {
         const cachedCompletions = completionCache.get(pos, mdl).map(cache => ({
             insertText: cache.completion,
@@ -63,14 +59,11 @@ export const processInlineCompletions = async ({
     }
 
     try {
-        // Create a debounced fetch function based on the trigger type
-        const debouncedFetchCompletion = getDebouncedFunctionPerTrigger(
+        const fetchCompletion = typingDebouncedAsync(
             requestHandler ?? fetchCompletionItem,
+            ...TYPING_DEBOUNCE_PARAMS[trigger],
         );
 
-        const fetchCompletion = debouncedFetchCompletion[trigger];
-
-        // Handle cancellation
         token.onCancellationRequested(() => {
             fetchCompletion.cancel();
         });
@@ -140,13 +133,4 @@ export const processInlineCompletions = async ({
     }
 
     return createInlineCompletionResult([]);
-};
-
-const isCancellationError = (err: unknown): boolean => {
-    if (typeof err === 'string') {
-        return err === 'Cancelled' || err === 'AbortError';
-    } else if (err instanceof Error) {
-        return err.message === 'Cancelled' || err.name === 'AbortError';
-    }
-    return false;
 };

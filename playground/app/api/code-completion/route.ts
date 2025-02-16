@@ -2,9 +2,9 @@ import {NextRequest, NextResponse} from 'next/server';
 
 import {CompletionCopilot} from 'monacopilot';
 
-const copilot = new CompletionCopilot(process.env.OPENAI_API_KEY, {
-    provider: 'openai',
-    model: 'gpt-4o-mini',
+const copilot = new CompletionCopilot(process.env.GROQ_API_KEY, {
+    provider: 'groq',
+    model: 'llama-3-70b',
 });
 
 export async function POST(req: NextRequest) {
