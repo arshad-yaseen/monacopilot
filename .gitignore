@@ -7,7 +7,7 @@
 *.log
 yalc.lock
 
-.vitepress/cache
+docs/.vitepress/cache
 
 .vercel/
 .turbo/
