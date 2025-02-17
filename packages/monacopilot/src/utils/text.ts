@@ -16,11 +16,15 @@ export const capitalizeFirstLetter = (str: string): string => {
     return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-export const keepNLines = (
+export type TruncateTextToMaxLinesOptions = {
+    truncateDirection?: 'keepStart' | 'keepEnd';
+};
+
+export const truncateTextToMaxLines = (
     text: string,
     maxLinesCount: number,
     options: {
-        from?: 'start' | 'end';
+        truncateDirection?: 'keepStart' | 'keepEnd';
     } = {},
 ): string => {
     if (maxLinesCount <= 0) {
@@ -34,7 +38,7 @@ export const keepNLines = (
         return text;
     }
 
-    if (options.from === 'end') {
+    if (options.truncateDirection === 'keepEnd') {
         const linesToKeep = lines.slice(-maxLinesCount);
         if (linesToKeep.every(line => line === '')) {
             return '\n'.repeat(maxLinesCount);

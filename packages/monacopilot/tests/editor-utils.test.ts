@@ -7,7 +7,7 @@ import {
     getTextAfterCursorInLine,
     getTextBeforeCursorInLine,
 } from '../src/utils/editor';
-import {keepNLines} from '../src/utils/text';
+import {truncateTextToMaxLines} from '../src/utils/text';
 import {MOCK_MODEL} from './mock';
 
 describe('Editor Utilities', () => {
@@ -110,63 +110,65 @@ describe('Editor Utilities', () => {
         });
     });
 
-    describe('keepNLines', () => {
+    describe('truncateTextToMaxLines', () => {
         it('should keep the specified number of lines from the start', () => {
             const text = 'Line 1\nLine 2\nLine 3\nLine 4\nLine 5';
-            const result = keepNLines(text, 3);
+            const result = truncateTextToMaxLines(text, 3);
             expect(result).toBe('Line 1\nLine 2\nLine 3');
         });
 
         it('should keep the specified number of lines from the end', () => {
             const text = 'Line 1\nLine 2\nLine 3\nLine 4\nLine 5';
-            const result = keepNLines(text, 3, {from: 'end'});
+            const result = truncateTextToMaxLines(text, 3, {
+                truncateDirection: 'keepEnd',
+            });
             expect(result).toBe('Line 3\nLine 4\nLine 5');
         });
 
         it('should return the entire text if maxLinesCount is greater than the number of lines', () => {
             const text = 'Line 1\nLine 2\nLine 3';
-            const result = keepNLines(text, 5);
+            const result = truncateTextToMaxLines(text, 5);
             expect(result).toBe(text);
         });
 
         it('should handle empty string input', () => {
-            const result = keepNLines('', 3);
+            const result = truncateTextToMaxLines('', 3);
             expect(result).toBe('');
         });
 
         it('should handle single-line input', () => {
             const text = 'Single line';
-            const result = keepNLines(text, 3);
+            const result = truncateTextToMaxLines(text, 3);
             expect(result).toBe(text);
         });
 
         it('should handle input with trailing newline', () => {
             const text = 'Line 1\nLine 2\nLine 3\n';
-            const result = keepNLines(text, 2);
+            const result = truncateTextToMaxLines(text, 2);
             expect(result).toBe('Line 1\nLine 2');
         });
 
         it('should handle maxLinesCount of 0', () => {
             const text = 'Line 1\nLine 2\nLine 3';
-            const result = keepNLines(text, 0);
+            const result = truncateTextToMaxLines(text, 0);
             expect(result).toBe('');
         });
 
         it('should handle negative maxLinesCount', () => {
             const text = 'Line 1\nLine 2\nLine 3';
-            const result = keepNLines(text, -2);
+            const result = truncateTextToMaxLines(text, -2);
             expect(result).toBe('');
         });
 
         it('should handle text with empty lines', () => {
             const text = 'Line 1\n\nLine 3\n\nLine 5';
-            const result = keepNLines(text, 3);
+            const result = truncateTextToMaxLines(text, 3);
             expect(result).toBe('Line 1\n\nLine 3');
         });
 
         it('should handle text with only newlines', () => {
             const text = '\n\n\n\n';
-            const result = keepNLines(text, 2);
+            const result = truncateTextToMaxLines(text, 2);
             expect(result).toBe('\n\n');
         });
     });

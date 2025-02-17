@@ -76,6 +76,8 @@ export interface RegisterCompletionOptions {
      * The maximum number of lines of code to include in the completion request.
      * This limits the request size to the model to prevent `429 Too Many Requests` errors
      * and reduce costs for long code.
+     *
+     * @default 100
      */
     maxContextLines?: number;
     /**
