@@ -12,7 +12,7 @@ The `trigger` option determines when the completion service provides code comple
 
 ```javascript
 registerCompletion(monaco, editor, {
-    trigger: 'onTyping', // Only recommended for low-latency and low-cost models
+    trigger: 'onTyping',
 });
 ```
 
@@ -27,13 +27,13 @@ registerCompletion(monaco, editor, {
 ::: info
 For the best experience with `onTyping` mode:
 
-- Use fast, cost-effective models like Groq's `llama-3-70b` or OpenAI's `gpt-4o-mini` for real-time completions
+- Use super fast, cost-effective models like Groq's `llama-3-70b` for real-time completions
 - For higher accuracy needs, consider using `onIdle` mode with models like `claude-3-5-sonnet`, `claude-3-5-haiku`, etc.
-- The `onTyping` mode makes more API calls to provide instant suggestions, so choose your model accordingly
+- The `onTyping` mode makes more API calls in the background to provide instant suggestions, so choose your model accordingly
   :::
 
 ::: tip
-We recommend using `onTyping` mode with Groq's `llama-3-70b` for super fast, realtime completions while you type.
+Use `onTyping` mode with Groq's `llama-3-70b` for super fast, realtime completions while you type.
 :::
 
 ## Manually Trigger Completions

@@ -20,7 +20,7 @@ import {createInlineCompletionResult} from './utils/inline-completion';
 
 // [base delay, typing threshold]
 const TYPING_DEBOUNCE_PARAMS = {
-    [TriggerType.OnTyping]: [600, 120],
+    [TriggerType.OnTyping]: [500, 100],
     [TriggerType.OnIdle]: [600, 400],
     [TriggerType.OnDemand]: [0, 0],
 };
@@ -95,22 +95,14 @@ export const processInlineCompletions = async ({
                 .build();
 
             const completionRange = new CompletionRange(monaco);
-            const completionInsertionRange =
-                completionRange.computeInsertionRange(
-                    pos,
-                    formattedCompletion,
-                    mdl,
-                );
-
-            const cacheRange = completionRange.computeCacheRange(
-                pos,
-                formattedCompletion,
-            );
 
             if (enableCaching) {
                 completionCache.add({
                     completion: formattedCompletion,
-                    range: cacheRange,
+                    range: completionRange.computeCacheRange(
+                        pos,
+                        formattedCompletion,
+                    ),
                     textBeforeCursor: getTextBeforeCursor(pos, mdl),
                 });
             }
@@ -118,7 +110,10 @@ export const processInlineCompletions = async ({
             return createInlineCompletionResult([
                 {
                     insertText: formattedCompletion,
-                    range: completionInsertionRange,
+                    range: completionRange.computeCacheRange(
+                        pos,
+                        formattedCompletion,
+                    ),
                 },
             ]);
         }
