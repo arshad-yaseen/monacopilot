@@ -12,17 +12,29 @@ The `trigger` option determines when the completion service provides code comple
 
 ```javascript
 registerCompletion(monaco, editor, {
-    trigger: 'onTyping', // Only recommended for low-latency and low-cost models
+    trigger: 'onTyping',
 });
 ```
 
-| Trigger              | Description                                         | Notes                                                                                                                                                                                                     |
-| -------------------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `'onIdle'` (default) | Provides completions after a brief pause in typing. | This approach is less resource-intensive, as it only initiates a request when the editor is idle.                                                                                                         |
-| `'onTyping'`         | Provides completions in real-time as you type.      | Best suited for models with low response latency, such as Groq models. This trigger mode initiates additional background requests to deliver real-time suggestions, a method known as predictive caching. |
-| `'onDemand'`         | Does not provide completions automatically.         | Completions are triggered manually using the `trigger` function from the `registerCompletion` return. This allows for precise control over when completions are provided.                                 |
+| Trigger              | Description                                         | Notes                                                                                                                                                                     |
+| -------------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `'onIdle'` (default) | Provides completions after a brief pause in typing. | This approach is less resource-intensive, as it only initiates a request when the editor is idle.                                                                         |
+| `'onTyping'`         | Provides completions in real-time as you type.      |                                                                                                                                                                           |
+| `'onDemand'`         | Does not provide completions automatically.         | Completions are triggered manually using the `trigger` function from the `registerCompletion` return. This allows for precise control over when completions are provided. |
 
 [OnTyping Demo](https://github.com/user-attachments/assets/22c2ce44-334c-4963-b853-01b890b8e39f)
+
+::: info
+For the best experience with `onTyping` mode:
+
+- Use super fast, cost-effective models like Groq's `llama-3-70b` for real-time completions
+- For higher accuracy needs, consider using `onIdle` mode with models like `claude-3-5-sonnet`, `claude-3-5-haiku`, etc.
+- The `onTyping` mode makes more API calls in the background to provide instant suggestions, so choose your model accordingly
+  :::
+
+::: tip
+Use `onTyping` mode with Groq's `llama-3-70b` for super fast, realtime completions while you type.
+:::
 
 ## Manually Trigger Completions
 

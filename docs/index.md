@@ -75,5 +75,6 @@ app.post('/code-completion', async (req, res) => {
 
 **That's it! Your Monaco Editor now has AI-powered completions! 🎉**
 
-> [!TIP]
-> You can use any backend framework or programming language for your API handler, as long as the endpoint is accessible from the browser. For non-JavaScript implementations, see [Cross-Language API Handler Implementation](/advanced/cross-language).
+::: info
+You can use any backend framework or programming language for your API handler, as long as the endpoint is accessible from the browser. For non-JavaScript implementations, see [Cross-Language API Handler Implementation](/advanced/cross-language).
+:::

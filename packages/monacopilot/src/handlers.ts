@@ -35,8 +35,6 @@ export const createInlineCompletionsProvider = (
                 });
             },
             handleItemDidShow: (_, item, completion) => {
-                // Reset the explicit trigger flag to prevent automatic completions
-                // This ensures completions only show when explicitly requested by the user
                 state.isExplicitlyTriggered = false;
                 state.hasRejectedCurrentCompletion = false;
 

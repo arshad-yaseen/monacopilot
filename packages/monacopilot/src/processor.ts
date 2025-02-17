@@ -3,30 +3,20 @@ import {logger} from '@monacopilot/core';
 import {CompletionCache} from './classes/cache';
 import {CompletionFormatter} from './classes/formatter';
 import {CompletionRange} from './classes/range';
-import {constructCompletionMetadata, fetchCompletionItem} from './helpers';
+import {
+    constructCompletionMetadata,
+    fetchCompletionItem,
+    isCancellationError,
+} from './helpers';
 import {
     CompletionMetadata,
     InlineCompletionProcessorParams,
     TriggerType,
 } from './types';
-import type {FetchCompletionItemHandler} from './types/internal';
 import type {EditorInlineCompletionsResult} from './types/monaco';
 import {typingDebouncedAsync} from './utils/debounce';
 import {getTextBeforeCursor, getTextBeforeCursorInLine} from './utils/editor';
 import {createInlineCompletionResult} from './utils/inline-completion';
-
-const getDebouncedFunctionPerTrigger = (
-    fn: FetchCompletionItemHandler,
-): Record<
-    TriggerType,
-    ReturnType<typeof typingDebouncedAsync<FetchCompletionItemHandler>>
-> => {
-    return {
-        [TriggerType.OnTyping]: typingDebouncedAsync(fn, 600, 200),
-        [TriggerType.OnIdle]: typingDebouncedAsync(fn, 600, 400),
-        [TriggerType.OnDemand]: typingDebouncedAsync(fn, 0, 0),
-    };
-};
 
 export const completionCache = new CompletionCache();
 
@@ -46,7 +36,6 @@ export const processInlineCompletions = async ({
         requestHandler,
     } = options;
 
-    // Attempt to retrieve cached completions if caching is enabled
     if (enableCaching) {
         const cachedCompletions = completionCache.get(pos, mdl).map(cache => ({
             insertText: cache.completion,
@@ -63,14 +52,16 @@ export const processInlineCompletions = async ({
     }
 
     try {
-        // Create a debounced fetch function based on the trigger type
-        const debouncedFetchCompletion = getDebouncedFunctionPerTrigger(
+        const fetchCompletion = typingDebouncedAsync(
             requestHandler ?? fetchCompletionItem,
+            ...{
+                // [base delay, typing threshold]
+                [TriggerType.OnTyping]: [500, 100],
+                [TriggerType.OnIdle]: [600, 400],
+                [TriggerType.OnDemand]: [0, 0],
+            }[trigger],
         );
 
-        const fetchCompletion = debouncedFetchCompletion[trigger];
-
-        // Handle cancellation
         token.onCancellationRequested(() => {
             fetchCompletion.cancel();
         });
@@ -102,22 +93,14 @@ export const processInlineCompletions = async ({
                 .build();
 
             const completionRange = new CompletionRange(monaco);
-            const completionInsertionRange =
-                completionRange.computeInsertionRange(
-                    pos,
-                    formattedCompletion,
-                    mdl,
-                );
-
-            const cacheRange = completionRange.computeCacheRange(
-                pos,
-                formattedCompletion,
-            );
 
             if (enableCaching) {
                 completionCache.add({
                     completion: formattedCompletion,
-                    range: cacheRange,
+                    range: completionRange.computeCacheRange(
+                        pos,
+                        formattedCompletion,
+                    ),
                     textBeforeCursor: getTextBeforeCursor(pos, mdl),
                 });
             }
@@ -125,7 +108,11 @@ export const processInlineCompletions = async ({
             return createInlineCompletionResult([
                 {
                     insertText: formattedCompletion,
-                    range: completionInsertionRange,
+                    range: completionRange.computeInsertionRange(
+                        pos,
+                        formattedCompletion,
+                        mdl,
+                    ),
                 },
             ]);
         }
@@ -140,13 +127,4 @@ export const processInlineCompletions = async ({
     }
 
     return createInlineCompletionResult([]);
-};
-
-const isCancellationError = (err: unknown): boolean => {
-    if (typeof err === 'string') {
-        return err === 'Cancelled' || err === 'AbortError';
-    } else if (err instanceof Error) {
-        return err.message === 'Cancelled' || err.name === 'AbortError';
-    }
-    return false;
 };
