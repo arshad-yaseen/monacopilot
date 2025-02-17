@@ -18,13 +18,6 @@ import {typingDebouncedAsync} from './utils/debounce';
 import {getTextBeforeCursor, getTextBeforeCursorInLine} from './utils/editor';
 import {createInlineCompletionResult} from './utils/inline-completion';
 
-// [base delay, typing threshold]
-const TYPING_DEBOUNCE_PARAMS = {
-    [TriggerType.OnTyping]: [500, 100],
-    [TriggerType.OnIdle]: [600, 400],
-    [TriggerType.OnDemand]: [0, 0],
-};
-
 export const completionCache = new CompletionCache();
 
 export const processInlineCompletions = async ({
@@ -61,7 +54,12 @@ export const processInlineCompletions = async ({
     try {
         const fetchCompletion = typingDebouncedAsync(
             requestHandler ?? fetchCompletionItem,
-            ...TYPING_DEBOUNCE_PARAMS[trigger],
+            ...{
+                // [base delay, typing threshold]
+                [TriggerType.OnTyping]: [500, 100],
+                [TriggerType.OnIdle]: [600, 400],
+                [TriggerType.OnDemand]: [0, 0],
+            }[trigger],
         );
 
         token.onCancellationRequested(() => {
@@ -110,9 +108,10 @@ export const processInlineCompletions = async ({
             return createInlineCompletionResult([
                 {
                     insertText: formattedCompletion,
-                    range: completionRange.computeCacheRange(
+                    range: completionRange.computeInsertionRange(
                         pos,
                         formattedCompletion,
+                        mdl,
                     ),
                 },
             ]);

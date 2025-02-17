@@ -12,9 +12,7 @@ const compileRelatedFiles = (files?: RelatedFile[]): string => {
         .map(({path, content}) => {
             return `
 ### Path: ${path}
-\`\`\`
-${content}
-\`\`\``.trim();
+${content}`.trim();
         })
         .join('\n\n');
 };
