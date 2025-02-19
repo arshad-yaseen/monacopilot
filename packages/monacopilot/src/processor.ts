@@ -3,11 +3,8 @@ import {logger} from '@monacopilot/core';
 import {CompletionCache} from './classes/cache';
 import {CompletionFormatter} from './classes/formatter';
 import {CompletionRange} from './classes/range';
-import {
-    constructCompletionMetadata,
-    fetchCompletionItem,
-    isCancellationError,
-} from './helpers';
+import {DEFAULT_ENABLE_CACHING, DEFAULT_TRIGGER} from './defaults';
+import {buildCompletionMetadata, fetchCompletionItem} from './fetch-completion';
 import {
     CompletionMetadata,
     InlineCompletionProcessorParams,
@@ -16,7 +13,8 @@ import {
 import type {EditorInlineCompletionsResult} from './types/monaco';
 import {typingDebouncedAsync} from './utils/debounce';
 import {getTextBeforeCursor, getTextBeforeCursorInLine} from './utils/editor';
-import {createInlineCompletionResult} from './utils/inline-completion';
+import {isCancellationError} from './utils/error';
+import {createInlineCompletionResult} from './utils/result';
 
 export const completionCache = new CompletionCache();
 
@@ -29,9 +27,9 @@ export const processInlineCompletions = async ({
     options,
 }: InlineCompletionProcessorParams): Promise<EditorInlineCompletionsResult> => {
     const {
-        trigger = TriggerType.OnIdle,
+        trigger = DEFAULT_TRIGGER,
         endpoint,
-        enableCaching = true,
+        enableCaching = DEFAULT_ENABLE_CACHING,
         onError,
         requestHandler,
     } = options;
@@ -66,12 +64,11 @@ export const processInlineCompletions = async ({
             fetchCompletion.cancel();
         });
 
-        const completionMetadata: CompletionMetadata =
-            constructCompletionMetadata({
-                pos,
-                mdl,
-                options,
-            });
+        const completionMetadata: CompletionMetadata = buildCompletionMetadata({
+            pos,
+            mdl,
+            options,
+        });
 
         const {completion} = await fetchCompletion({
             endpoint,

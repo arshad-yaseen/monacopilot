@@ -18,7 +18,6 @@ import type {
     Model,
     Provider,
 } from './types/llm';
-import {HTTP} from './utils/http';
 import validate from './validator';
 
 export abstract class Copilot<Meta> {
@@ -131,7 +130,20 @@ export abstract class Copilot<Meta> {
         requestBody: ChatCompletionCreateParams,
         headers: Record<string, string>,
     ) {
-        return HTTP.post(endpoint, requestBody, {headers});
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                ...headers,
+            },
+            body: JSON.stringify(requestBody),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
     }
 
     protected handleError(error: unknown): CopilotResponse {

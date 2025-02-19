@@ -1,9 +1,6 @@
 import {logger} from '@monacopilot/core';
 
-import {
-    createInlineCompletionsProvider,
-    handleTriggerCompletion,
-} from './handlers';
+import {createInlineCompletionsProvider} from './completions-provider';
 import {createKeyDownListener} from './key-events';
 import {completionCache} from './processor';
 import {
@@ -99,6 +96,18 @@ export const registerCompletion = (
             trigger: () => {},
         };
     }
+};
+
+export const handleTriggerCompletion = (editor: StandaloneCodeEditor) => {
+    const state = getEditorState(editor);
+    if (!state) {
+        logger.warn(
+            'Completion is not registered. Use `registerCompletion` to register completion first.',
+        );
+        return;
+    }
+    state.isExplicitlyTriggered = true;
+    editor.trigger('keyboard', 'editor.action.inlineSuggest.trigger', {});
 };
 
 const createEmptyRegistration = (): CompletionRegistration => {

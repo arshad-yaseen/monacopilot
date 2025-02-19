@@ -32,7 +32,6 @@ const Editor = () => {
             height="400px"
             width="800px"
             language="javascript"
-            defaultValue="// Start coding here"
             className="rounded-lg border border-slate-200 dark:border-slate-800"
             options={DEFAULT_MONACO_EDITOR_OPTIONS}
             onMount={(editor, monaco) => {

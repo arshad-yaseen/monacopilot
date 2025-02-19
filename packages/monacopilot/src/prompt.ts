@@ -1,23 +1,25 @@
 import type {PromptData} from '@monacopilot/core';
 
-import type {CompletionMetadata, RelatedFile} from './types';
+import type {CompletionMetadata} from './types';
 import {joinWithAnd} from './utils/text';
 
-const compileRelatedFiles = (files?: RelatedFile[]): string => {
-    if (!files || files.length === 0) {
-        return '';
-    }
-
-    return files
-        .map(({path, content}) => {
-            return `
-### Path: ${path}
-${content}`.trim();
-        })
-        .join('\n\n');
+const CURSOR_PLACEHOLDER = '<|user_cursor_is_here|>';
+const COMPLETION_MODE_TEXTS = {
+    insert: {
+        noun: 'insertion',
+        verb: 'Insert',
+    },
+    complete: {
+        noun: 'completion',
+        verb: 'Complete',
+    },
+    continue: {
+        noun: 'continuation',
+        verb: 'Continue',
+    },
 };
 
-export const craftCompletionPrompt = (
+export const buildDefaultPrompt = (
     metadata: CompletionMetadata,
 ): PromptData => {
     const {
@@ -30,48 +32,34 @@ export const craftCompletionPrompt = (
         editorState: {completionMode},
     } = metadata;
 
-    const mergedTechStack = joinWithAnd(
+    const {noun, verb} = COMPLETION_MODE_TEXTS[completionMode];
+
+    const techStack = joinWithAnd(
         [language, ...technologies].filter(
             (item): item is string => typeof item === 'string' && !!item,
         ),
     );
 
-    const systemInstruction = `
-You are an EXCELLENT predictive code completion assistant.
+    const relatedFilesText =
+        !relatedFiles || relatedFiles.length === 0
+            ? ''
+            : relatedFiles
+                  .map(({path, content}) => `### ${path}\n${content}`)
+                  .join('\n\n');
 
-Your goal is to predict and complete the next logical code segment that the developer would write, making their coding experience more efficient and enjoyable.
+    const systemInstruction = `You are an expert code ${noun} assistant. ${verb} code naturally as if you were the developer, following their patterns and style. Use ${techStack || 'appropriate'} best practices. Focus on writing concise, accurate code that matches the context perfectly. Do not include explanations or comments.`;
 
-You should:
-1. Provide complete, functional code segments with full implementation details
-2. Complete entire functions or logical blocks when appropriate
-3. Consider common patterns and best practices
-4. Ensure the output is immediately useful and runnable
+    const userInstruction = `${relatedFilesText}
 
-**Context:**
-File: ${filename || 'Untitled'}
-Language: ${language || 'Undetermined'} 
+File: ${filename || 'unknown'}
 Mode: ${completionMode}
-Stack: ${mergedTechStack || 'None'}`;
 
-    const userInstruction = `
-**Related Files:**
-${compileRelatedFiles(relatedFiles)}
-
-**Source:**
+Here is the code context. The ${CURSOR_PLACEHOLDER} indicates where you should ${noun.toLowerCase()}:
 \`\`\`
-${textBeforeCursor}<cursor>${textAfterCursor}
+${textBeforeCursor}${CURSOR_PLACEHOLDER}${textAfterCursor}
 \`\`\`
 
-Complete the code at <cursor> position.
-
-Guidelines:
-1. Start after: "${textBeforeCursor.slice(-5)}"
-2. End before: "${textAfterCursor.slice(0, 5)}"
-3. Provide complete, working implementations
-4. Follow established patterns
-5. Ensure code is production-ready
-
-Output ONLY the implementation without additional text or syntax.`;
+${verb} the code at the cursor position. Provide only the exact code that should be inserted, without any additional text, explanation, or syntax highlighting. Your response will be directly inserted into the code.`;
 
     return {
         system: systemInstruction,

@@ -1,6 +1,6 @@
 import {Copilot, type PromptData} from '@monacopilot/core';
 
-import {craftCompletionPrompt} from './prompt';
+import {buildDefaultPrompt} from './prompt';
 import type {
     CompletionMetadata,
     CompletionRequest,
@@ -27,6 +27,6 @@ export class CompletionCopilot extends Copilot<CompletionMetadata> {
     }
 
     protected getDefaultPrompt(metadata: CompletionMetadata): PromptData {
-        return craftCompletionPrompt(metadata);
+        return buildDefaultPrompt(metadata);
     }
 }

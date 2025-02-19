@@ -1,11 +1,5 @@
-import {HTTP} from '@monacopilot/core';
-
-import type {
-    CompletionMode,
-    CompletionRequestBody,
-    CompletionResponse,
-    RelatedFile,
-} from './types';
+import {DEFAULT_MAX_CONTEXT_LINES} from './defaults';
+import type {CompletionMode, CompletionResponse, RelatedFile} from './types';
 import type {
     ConstructCompletionMetadataParams,
     FetchCompletionItemParams,
@@ -17,22 +11,29 @@ import {
     getTextAfterCursor,
     getTextBeforeCursor,
 } from './utils/editor';
-import {keepNLines} from './utils/text';
+import {
+    truncateTextToMaxLines,
+    TruncateTextToMaxLinesOptions,
+} from './utils/text';
 
 export const fetchCompletionItem = async (
     params: FetchCompletionItemParams,
 ): Promise<FetchCompletionItemReturn> => {
     const {endpoint, body} = params;
 
-    const {completion, error} = await HTTP.post<
-        CompletionResponse,
-        CompletionRequestBody
-    >(endpoint, body, {
+    const response = await fetch(endpoint, {
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        fallbackError: 'Error while fetching completion item',
+        body: JSON.stringify(body),
     });
+
+    if (!response.ok) {
+        throw new Error('Error while fetching completion item');
+    }
+
+    const {completion, error} = (await response.json()) as CompletionResponse;
 
     if (error) {
         throw new Error(error);
@@ -41,30 +42,38 @@ export const fetchCompletionItem = async (
     return {completion};
 };
 
-export const constructCompletionMetadata = ({
+export const buildCompletionMetadata = ({
     pos,
     mdl,
     options,
 }: ConstructCompletionMetadataParams) => {
-    const {filename, language, technologies, relatedFiles, maxContextLines} =
-        options;
+    const {
+        filename,
+        language,
+        technologies,
+        relatedFiles,
+        maxContextLines = DEFAULT_MAX_CONTEXT_LINES,
+    } = options;
 
     const completionMode = determineCompletionMode(pos, mdl);
 
-    // Determine the divisor based on the presence of related files
-    const hasRelatedFiles = !!relatedFiles?.length;
-    const divisor = hasRelatedFiles ? 3 : 2;
+    const hasRelatedFiles = relatedFiles && relatedFiles.length > 0;
+
+    const contextLinesDivisor = hasRelatedFiles ? 3 : 2;
+
     const adjustedMaxContextLines = maxContextLines
-        ? Math.floor(maxContextLines / divisor)
+        ? Math.floor(maxContextLines / contextLinesDivisor)
         : undefined;
 
     const limitText = (
         getTextFn: (pos: CursorPosition, mdl: EditorModel) => string,
         maxLines?: number,
-        options?: {from?: 'start' | 'end'},
+        options?: TruncateTextToMaxLinesOptions,
     ): string => {
         const text = getTextFn(pos, mdl);
-        return maxLines ? keepNLines(text, maxLines, options) : text;
+        return maxLines
+            ? truncateTextToMaxLines(text, maxLines, options)
+            : text;
     };
 
     const processRelatedFiles = (
@@ -73,26 +82,28 @@ export const constructCompletionMetadata = ({
     ): RelatedFile[] | undefined => {
         if (!files || !maxLines) return files;
 
-        return files.map(({content, ...rest}) => ({
-            ...rest,
-            content: keepNLines(content, maxLines),
+        return files.map(({content, ...otherProps}) => ({
+            ...otherProps,
+            content: truncateTextToMaxLines(content, maxLines),
         }));
     };
 
-    // Retrieve and limit text around the cursor position
     const textBeforeCursor = limitText(
         getTextBeforeCursor,
         adjustedMaxContextLines,
         {
-            from: 'end',
+            truncateDirection: 'keepEnd',
         },
     );
+
     const textAfterCursor = limitText(
         getTextAfterCursor,
         adjustedMaxContextLines,
+        {
+            truncateDirection: 'keepStart',
+        },
     );
 
-    // Process related files with the adjusted maximum lines
     const limitedRelatedFiles = processRelatedFiles(
         relatedFiles,
         adjustedMaxContextLines,
@@ -128,13 +139,4 @@ const determineCompletionMode = (
     }
 
     return 'continue';
-};
-
-export const isCancellationError = (err: unknown): boolean => {
-    if (typeof err === 'string') {
-        return err === 'Cancelled' || err === 'AbortError';
-    } else if (err instanceof Error) {
-        return err.message === 'Cancelled' || err.name === 'AbortError';
-    }
-    return false;
 };

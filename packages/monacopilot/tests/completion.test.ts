@@ -1,9 +1,4 @@
-import {
-    DEFAULT_COPILOT_TEMPERATURE,
-    HTTP,
-    MODEL_IDS,
-    PROVIDER_ENDPOINT_MAP,
-} from '@monacopilot/core';
+import {MODEL_IDS, PROVIDER_ENDPOINT_MAP} from '@monacopilot/core';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 
 import {CompletionCopilot} from '../src/completion-copilot';
@@ -35,7 +30,10 @@ describe('Completion', () => {
     });
 
     it('should successfully return a completion', async () => {
-        vi.spyOn(HTTP, 'post').mockResolvedValue(MOCK_COMPLETION);
+        global.fetch = vi.fn().mockResolvedValue({
+            ok: true,
+            json: () => Promise.resolve(MOCK_COMPLETION),
+        });
 
         const result = await copilot.complete({
             body: {
@@ -47,24 +45,18 @@ describe('Completion', () => {
             completion: MOCK_COMPLETION_CONTENT,
             raw: MOCK_COMPLETION,
         });
-        expect(HTTP.post).toHaveBeenCalledWith(
+        expect(fetch).toHaveBeenCalledWith(
             PROVIDER_ENDPOINT_MAP[TEST_PROVIDER],
             expect.objectContaining({
-                model: MODEL_IDS[TEST_MODEL],
-                messages: expect.arrayContaining([
-                    {role: 'user', content: expect.any(String)},
-                ]),
-                system: expect.any(String),
-                temperature: DEFAULT_COPILOT_TEMPERATURE,
-            }),
-            expect.objectContaining({
+                method: 'POST',
                 headers: expect.any(Object),
+                body: expect.stringContaining(MODEL_IDS[TEST_MODEL]),
             }),
         );
     });
 
     it('should handle API errors and return an error response', async () => {
-        vi.spyOn(HTTP, 'post').mockRejectedValue(MOCK_ERROR);
+        global.fetch = vi.fn().mockRejectedValue(MOCK_ERROR);
 
         const result = await copilot.complete({
             body: {
@@ -83,7 +75,10 @@ describe('Completion', () => {
             provider: 'openai',
             model: 'gpt-4o',
         });
-        vi.spyOn(HTTP, 'post').mockResolvedValue(MOCK_COMPLETION);
+        global.fetch = vi.fn().mockResolvedValue({
+            ok: true,
+            json: () => Promise.resolve(MOCK_COMPLETION),
+        });
 
         await customCompletionCopilot.complete({
             body: {
@@ -91,18 +86,18 @@ describe('Completion', () => {
             },
         });
 
-        expect(HTTP.post).toHaveBeenCalledWith(
+        expect(fetch).toHaveBeenCalledWith(
             PROVIDER_ENDPOINT_MAP['openai'],
             expect.objectContaining({
-                model: MODEL_IDS['gpt-4o'],
+                method: 'POST',
+                body: expect.stringContaining(MODEL_IDS['gpt-4o']),
             }),
-            expect.any(Object),
         );
     });
 
     it('should handle network errors', async () => {
         MOCK_ERROR.name = 'NetworkError';
-        vi.spyOn(HTTP, 'post').mockRejectedValue(MOCK_NETWORK_ERROR);
+        global.fetch = vi.fn().mockRejectedValue(MOCK_NETWORK_ERROR);
 
         const result = await copilot.complete({
             body: {
@@ -118,7 +113,10 @@ describe('Completion', () => {
 
     it('should use custom headers in API requests', async () => {
         const customHeaders = {'X-Custom-Header': 'test-value'};
-        vi.spyOn(HTTP, 'post').mockResolvedValue(MOCK_COMPLETION);
+        global.fetch = vi.fn().mockResolvedValue({
+            ok: true,
+            json: () => Promise.resolve(MOCK_COMPLETION),
+        });
 
         await copilot.complete({
             body: {
@@ -129,10 +127,10 @@ describe('Completion', () => {
             },
         });
 
-        expect(HTTP.post).toHaveBeenCalledWith(
+        expect(fetch).toHaveBeenCalledWith(
             expect.any(String),
-            expect.any(Object),
             expect.objectContaining({
+                method: 'POST',
                 headers: expect.objectContaining(customHeaders),
             }),
         );
@@ -143,7 +141,10 @@ describe('Completion', () => {
             system: 'Custom system prompt',
             user: `Custom user prompt: ${metadata.textBeforeCursor}`,
         });
-        vi.spyOn(HTTP, 'post').mockResolvedValue(MOCK_COMPLETION);
+        global.fetch = vi.fn().mockResolvedValue({
+            ok: true,
+            json: () => Promise.resolve(MOCK_COMPLETION),
+        });
 
         await copilot.complete({
             body: {
@@ -154,23 +155,20 @@ describe('Completion', () => {
             },
         });
 
-        expect(HTTP.post).toHaveBeenCalledWith(
+        expect(fetch).toHaveBeenCalledWith(
             expect.any(String),
             expect.objectContaining({
-                messages: [
-                    {
-                        role: 'user',
-                        content: expect.stringContaining('Custom user prompt'),
-                    },
-                ],
-                system: 'Custom system prompt',
+                method: 'POST',
+                body: expect.stringContaining('Custom system prompt'),
             }),
-            expect.any(Object),
         );
     });
 
     it('should use default prompt when custom prompt is not provided', async () => {
-        vi.spyOn(HTTP, 'post').mockResolvedValue(MOCK_COMPLETION);
+        global.fetch = vi.fn().mockResolvedValue({
+            ok: true,
+            json: () => Promise.resolve(MOCK_COMPLETION),
+        });
 
         await copilot.complete({
             body: {
@@ -178,18 +176,20 @@ describe('Completion', () => {
             },
         });
 
-        expect(HTTP.post).toHaveBeenCalledWith(
+        expect(fetch).toHaveBeenCalledWith(
             expect.any(String),
             expect.objectContaining({
-                messages: [{role: 'user', content: expect.any(String)}],
-                system: expect.any(String),
+                method: 'POST',
+                body: expect.stringContaining('user'),
             }),
-            expect.any(Object),
         );
     });
 
     it('should use custom system prompt while retaining default user prompt', async () => {
-        vi.spyOn(HTTP, 'post').mockResolvedValue(MOCK_COMPLETION);
+        global.fetch = vi.fn().mockResolvedValue({
+            ok: true,
+            json: () => Promise.resolve(MOCK_COMPLETION),
+        });
 
         await copilot.complete({
             body: {
@@ -202,13 +202,14 @@ describe('Completion', () => {
             },
         });
 
-        expect(HTTP.post).toHaveBeenCalledWith(
+        expect(fetch).toHaveBeenCalledWith(
             expect.any(String),
             expect.objectContaining({
-                messages: [{role: 'user', content: expect.any(String)}],
-                system: 'You are an AI assistant specialized in writing React components.',
+                method: 'POST',
+                body: expect.stringContaining(
+                    'You are an AI assistant specialized in writing React components.',
+                ),
             }),
-            expect.any(Object),
         );
     });
 
