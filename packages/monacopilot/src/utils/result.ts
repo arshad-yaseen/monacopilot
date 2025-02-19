@@ -6,6 +6,8 @@ import type {
 export const createInlineCompletionResult = (
     items: EditorInlineCompletion[],
 ): EditorInlineCompletionsResult => ({
-    items,
-    enableForwardStability: true,
+    items: items.map(item => ({
+        completeBracketPairs: true,
+        ...item,
+    })),
 });
