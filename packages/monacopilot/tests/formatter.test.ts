@@ -225,7 +225,7 @@ describe('CompletionFormatter', () => {
         });
     });
 
-    describe('CompletionFormatter.indentByColumn', () => {
+    describe('indentByColumn', () => {
         it('should not modify a single-line completion', () => {
             const input = 'Hello world';
             const formatter = new CompletionFormatter(input, 5, '');
