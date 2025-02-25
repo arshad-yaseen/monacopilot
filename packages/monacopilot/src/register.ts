@@ -37,7 +37,6 @@ export const registerCompletion = (
     editor.updateOptions({
         inlineSuggest: {
             enabled: true,
-            mode: 'subwordSmart',
         },
     });
 

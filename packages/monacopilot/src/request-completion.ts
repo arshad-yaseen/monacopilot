@@ -16,7 +16,7 @@ import {
     TruncateTextToMaxLinesOptions,
 } from './utils/text';
 
-export const fetchCompletionItem = async (
+export const requestCompletionItem = async (
     params: FetchCompletionItemParams,
 ): Promise<FetchCompletionItemReturn> => {
     const {endpoint, body} = params;
