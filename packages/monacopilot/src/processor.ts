@@ -3,15 +3,24 @@ import {logger} from '@monacopilot/core';
 import {CompletionCache} from './classes/cache';
 import {CompletionFormatter} from './classes/formatter';
 import {CompletionRange} from './classes/range';
-import {DEFAULT_ENABLE_CACHING, DEFAULT_TRIGGER} from './defaults';
-import {buildCompletionMetadata, fetchCompletionItem} from './fetch-completion';
+import {
+    DEFAULT_ENABLE_CACHING,
+    DEFAULT_ON_DEMAND_DEBOUNCE,
+    DEFAULT_ON_IDLE_DEBOUNCE,
+    DEFAULT_ON_TYPING_DEBOUNCE,
+    DEFAULT_TRIGGER,
+} from './defaults';
+import {
+    buildCompletionMetadata,
+    requestCompletionItem,
+} from './request-completion';
 import {
     CompletionMetadata,
     InlineCompletionProcessorParams,
     TriggerType,
 } from './types';
 import type {EditorInlineCompletionsResult} from './types/monaco';
-import {typingDebouncedAsync} from './utils/debounce';
+import {asyncDebounce} from './utils/async-debounce';
 import {getTextBeforeCursor, getTextBeforeCursorInLine} from './utils/editor';
 import {isCancellationError} from './utils/error';
 import {createInlineCompletionResult} from './utils/result';
@@ -50,18 +59,17 @@ export const processInlineCompletions = async ({
     }
 
     try {
-        const fetchCompletion = typingDebouncedAsync(
-            requestHandler ?? fetchCompletionItem,
-            ...{
-                // [base delay, typing threshold]
-                [TriggerType.OnTyping]: [500, 100],
-                [TriggerType.OnIdle]: [600, 400],
-                [TriggerType.OnDemand]: [0, 0],
+        const requestCompletion = asyncDebounce(
+            requestHandler ?? requestCompletionItem,
+            {
+                [TriggerType.OnTyping]: DEFAULT_ON_TYPING_DEBOUNCE,
+                [TriggerType.OnIdle]: DEFAULT_ON_IDLE_DEBOUNCE,
+                [TriggerType.OnDemand]: DEFAULT_ON_DEMAND_DEBOUNCE,
             }[trigger],
         );
 
         token.onCancellationRequested(() => {
-            fetchCompletion.cancel();
+            requestCompletion.cancel();
         });
 
         const completionMetadata: CompletionMetadata = buildCompletionMetadata({
@@ -70,7 +78,7 @@ export const processInlineCompletions = async ({
             options,
         });
 
-        const {completion} = await fetchCompletion({
+        const {completion} = await requestCompletion({
             endpoint,
             body: {
                 completionMetadata,

@@ -33,18 +33,33 @@ export class CompletionFormatter {
     public indentByColumn(): CompletionFormatter {
         const lines = this.formattedCompletion.split('\n');
 
-        if (lines.length <= 1 || this.textBeforeCursorInLine.trim() !== '') {
+        if (this.textBeforeCursorInLine.trim() !== '') {
             return this;
         }
 
-        const indentation = ' '.repeat(this.currentColumn - 1);
+        const firstLine = lines[0].trimStart();
+        const firstLineIndent = lines[0].length - firstLine.length;
+
+        if (lines.length === 1) {
+            this.formattedCompletion = firstLine;
+            return this;
+        }
 
         this.formattedCompletion =
-            lines[0] +
+            firstLine +
             '\n' +
             lines
                 .slice(1)
-                .map(line => indentation + line)
+                .map(line => {
+                    const currentLineIndent =
+                        line.length - line.trimStart().length;
+                    const trimAmount = Math.min(
+                        firstLineIndent,
+                        currentLineIndent,
+                    );
+                    const trimmedStart = line.slice(trimAmount);
+                    return ' '.repeat(this.currentColumn - 1) + trimmedStart;
+                })
                 .join('\n');
 
         return this;

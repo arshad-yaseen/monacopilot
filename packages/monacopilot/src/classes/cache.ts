@@ -38,13 +38,30 @@ export class CompletionCache {
         pos: Readonly<CursorPosition>,
         mdl: Readonly<EditorModel>,
     ): boolean {
-        const currentRangeValue = mdl.getValueInRange(cacheItem.range);
+        const cachedPrefix = cacheItem.textBeforeCursor.trim();
         const textBeforeCursor = getTextBeforeCursor(pos, mdl);
+        let extendedTextBeforeCursor = textBeforeCursor;
 
-        if (!textBeforeCursor.includes(cacheItem.textBeforeCursor)) {
+        const currentLineContent = mdl.getLineContent(pos.lineNumber);
+        if (
+            pos.column === currentLineContent.length + 1 &&
+            pos.lineNumber < mdl.getLineCount()
+        ) {
+            const nextLineContent = mdl.getLineContent(pos.lineNumber + 1);
+            extendedTextBeforeCursor =
+                textBeforeCursor + '\n' + nextLineContent;
+        }
+
+        if (
+            !(
+                extendedTextBeforeCursor.trim().includes(cachedPrefix) ||
+                cachedPrefix.includes(extendedTextBeforeCursor.trim())
+            )
+        ) {
             return false;
         }
 
+        const currentRangeValue = mdl.getValueInRange(cacheItem.range);
         if (!this.isPartialMatch(currentRangeValue, cacheItem.completion)) {
             return false;
         }
@@ -53,7 +70,12 @@ export class CompletionCache {
     }
 
     private isPartialMatch(current: string, cached: string): boolean {
-        return cached.startsWith(current) || current.startsWith(cached);
+        const currentTrim = current.trim();
+        const cachedTrim = cached.trim();
+        return (
+            cachedTrim.startsWith(currentTrim) ||
+            currentTrim.startsWith(cachedTrim)
+        );
     }
 
     private isPositionValid(
@@ -64,13 +86,11 @@ export class CompletionCache {
         const {startLineNumber, startColumn, endLineNumber, endColumn} = range;
         const {lineNumber, column} = pos;
 
-        const isInLineRange =
-            lineNumber >= startLineNumber && lineNumber <= endLineNumber;
-        if (!isInLineRange) {
+        if (lineNumber < startLineNumber || lineNumber > endLineNumber) {
             return false;
         }
 
-        if (lineNumber === startLineNumber && lineNumber === endLineNumber) {
+        if (startLineNumber === endLineNumber) {
             return column >= startColumn - 1 && column <= endColumn + 1;
         }
 

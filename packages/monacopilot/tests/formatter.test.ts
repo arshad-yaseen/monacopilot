@@ -226,48 +226,114 @@ describe('CompletionFormatter', () => {
     });
 
     describe('indentByColumn', () => {
-        it('should indent subsequent lines by the current column position', () => {
-            const formatter = new CompletionFormatter(
-                'const numbers = [\n1,\n2,\n3\n];',
-                4,
-                '',
-            );
-            const result = formatter.indentByColumn().build();
-            expect(result).toBe('const numbers = [\n   1,\n   2,\n   3\n   ];');
+        it('should not modify a single-line completion', () => {
+            const input = 'Hello world';
+            const formatter = new CompletionFormatter(input, 5, '');
+            formatter.indentByColumn();
+            expect(formatter.build()).toBe('Hello world');
         });
 
-        it('should not modify single line text', () => {
-            const formatter = new CompletionFormatter('const x = 42;', 3, '');
-            const result = formatter.indentByColumn().build();
-            expect(result).toBe('const x = 42;');
+        it('should not modify multi-line completions if textBeforeCursorInLine is non-empty', () => {
+            const input = 'First line\nSecond line';
+            const formatter = new CompletionFormatter(input, 5, 'non-empty');
+            formatter.indentByColumn();
+            expect(formatter.build()).toBe(input);
         });
 
-        it('should handle empty string', () => {
-            const formatter = new CompletionFormatter('', 5, '');
-            const result = formatter.indentByColumn().build();
-            expect(result).toBe('');
+        it('should correctly indent multi-line completion when textBeforeCursorInLine is empty', () => {
+            const input =
+                '    function test() {' +
+                '\n        console.log("hello");' +
+                '\n    }';
+            const formatter = new CompletionFormatter(input, 5, '');
+            formatter.indentByColumn();
+            const expected =
+                'function test() {' +
+                '\n' +
+                '    ' +
+                '    console.log("hello");' +
+                '\n' +
+                '    ' +
+                '}';
+            expect(formatter.build()).toBe(expected);
         });
 
-        it('should handle text with existing indentation', () => {
-            const formatter = new CompletionFormatter(
-                'function test() {\n  const x = 1;\n    return x;\n}',
-                6,
-                '',
-            );
-            const result = formatter.indentByColumn().build();
-            expect(result).toBe(
-                'function test() {\n       const x = 1;\n         return x;\n     }',
-            );
+        it('should handle case where first line indent is larger than subsequent line indent', () => {
+            const input = '        First line' + '\n' + '    Second line';
+            const formatter = new CompletionFormatter(input, 3, '');
+            formatter.indentByColumn();
+            const expected = 'First line' + '\n' + '  ' + 'Second line';
+            expect(formatter.build()).toBe(expected);
         });
 
-        it('should not indent when there is text before cursor in same line', () => {
-            const formatter = new CompletionFormatter(
-                '= [\n1,\n2\n];',
-                8,
-                'const x ',
-            );
-            const result = formatter.indentByColumn().build();
-            expect(result).toBe('= [\n1,\n2\n];');
+        it('should handle case where first line indent is smaller than subsequent line indent', () => {
+            const input = '  First line' + '\n' + '      Second line';
+            const formatter = new CompletionFormatter(input, 4, '');
+            formatter.indentByColumn();
+            const expected = 'First line' + '\n' + '   ' + '    Second line';
+            expect(formatter.build()).toBe(expected);
+        });
+
+        it('should work correctly with empty subsequent lines', () => {
+            const input = '    First line' + '\n    ' + '\n    Third line';
+            const formatter = new CompletionFormatter(input, 6, '');
+            formatter.indentByColumn();
+            const expected =
+                'First line' +
+                '\n' +
+                '     ' +
+                '' +
+                '\n' +
+                '     ' +
+                'Third line';
+            expect(formatter.build()).toBe(expected);
+        });
+
+        it('should work correctly when currentColumn is 1 (no extra prefix added)', () => {
+            const input = '  Test' + '\n' + '    Line';
+            const formatter = new CompletionFormatter(input, 1, '');
+            formatter.indentByColumn();
+            const expected = 'Test' + '\n' + '  Line';
+            expect(formatter.build()).toBe(expected);
+        });
+
+        it('should preserve newlines while adjusting indentations', () => {
+            const input = 'First line\nSecond line\nThird line';
+            const formatter = new CompletionFormatter(input, 4, '');
+            formatter.indentByColumn();
+            const expected =
+                'First line' +
+                '\n' +
+                '   ' +
+                'Second line' +
+                '\n' +
+                '   ' +
+                'Third line';
+            expect(formatter.build()).toBe(expected);
+        });
+
+        it('should handle when the first line is only whitespace', () => {
+            const input = '    ' + '\n' + '        Text after blank first line';
+            const formatter = new CompletionFormatter(input, 3, '');
+            formatter.indentByColumn();
+            const expected =
+                '' + '\n' + '  ' + '    Text after blank first line';
+            expect(formatter.build()).toBe(expected);
+        });
+
+        it('should not alter an empty string', () => {
+            const input = '';
+            const formatter = new CompletionFormatter(input, 4, '');
+            formatter.indentByColumn();
+            expect(formatter.build()).toBe('');
+        });
+
+        it('should treat textBeforeCursorInLine as empty when it contains only whitespace', () => {
+            const input = '    Alpha' + '\n' + '        Beta';
+            const formatter = new CompletionFormatter(input, 5, '   ');
+            formatter.indentByColumn();
+            const expected = 'Alpha' + '\n' + '    ' + '    Beta';
+            expect(formatter.build()).toBe(expected);
         });
     });
 
