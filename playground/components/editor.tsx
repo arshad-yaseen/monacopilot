@@ -19,14 +19,13 @@ const Editor = () => {
         <MonacoEditor
             height="400px"
             width="800px"
-            language="python"
+            language="javascript"
             className="rounded-lg border border-slate-200 dark:border-slate-800"
             options={DEFAULT_MONACO_EDITOR_OPTIONS}
             onMount={(editor, monaco) => {
                 completionRef.current = registerCompletion(monaco, editor, {
                     endpoint: '/api/code-completion',
-                    language: 'python',
-                    trigger: 'onTyping',
+                    language: 'javascript',
                 });
             }}
         />
