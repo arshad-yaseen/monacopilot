@@ -1,4 +1,7 @@
-import {DEFAULT_COPILOT_TEMPERATURE} from '../../constants';
+import {
+    DEFAULT_COPILOT_MAX_TOKENS,
+    DEFAULT_COPILOT_STOP_SEQUENCE,
+} from '../../defaults';
 import type {PromptData} from '../../types/copilot';
 import type {
     PickCompletion,
@@ -21,10 +24,12 @@ export class MistralHandler extends BaseProviderHandler<'mistral'> {
     ): PickCompletionCreateParams<'mistral'> {
         return {
             model: MODEL_IDS[model],
-            temperature: DEFAULT_COPILOT_TEMPERATURE,
-            prompt: `${prompt.context}\n${prompt.instruction}\n\n${metadata.textBeforeCursor}`,
+            prompt: `${prompt.context}\n${prompt.instruction}\n${metadata.textBeforeCursor}`,
+            max_tokens: DEFAULT_COPILOT_MAX_TOKENS,
+            stop: DEFAULT_COPILOT_STOP_SEQUENCE,
             suffix: metadata.textAfterCursor,
             stream: false,
+            top_p: 0.9,
         };
     }
 

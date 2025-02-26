@@ -1,16 +1,8 @@
 export class CompletionFormatter {
     private formattedCompletion = '';
-    private currentColumn = 0;
-    private textBeforeCursorInLine = '';
 
-    constructor(
-        completion: string,
-        currentColumn: number,
-        textBeforeCursorInLine: string,
-    ) {
+    constructor(completion: string) {
         this.formattedCompletion = completion;
-        this.currentColumn = currentColumn;
-        this.textBeforeCursorInLine = textBeforeCursorInLine;
     }
 
     public setCompletion(completion: string): CompletionFormatter {
@@ -27,41 +19,6 @@ export class CompletionFormatter {
         this.formattedCompletion = this.removeMarkdownCodeBlocks(
             this.formattedCompletion,
         );
-        return this;
-    }
-
-    public indentByColumn(): CompletionFormatter {
-        const lines = this.formattedCompletion.split('\n');
-
-        if (this.textBeforeCursorInLine.trim() !== '') {
-            return this;
-        }
-
-        const firstLine = lines[0].trimStart();
-        const firstLineIndent = lines[0].length - firstLine.length;
-
-        if (lines.length === 1) {
-            this.formattedCompletion = firstLine;
-            return this;
-        }
-
-        this.formattedCompletion =
-            firstLine +
-            '\n' +
-            lines
-                .slice(1)
-                .map(line => {
-                    const currentLineIndent =
-                        line.length - line.trimStart().length;
-                    const trimAmount = Math.min(
-                        firstLineIndent,
-                        currentLineIndent,
-                    );
-                    const trimmedStart = line.slice(trimAmount);
-                    return ' '.repeat(this.currentColumn - 1) + trimmedStart;
-                })
-                .join('\n');
-
         return this;
     }
 

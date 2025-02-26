@@ -1,6 +1,6 @@
 import {
     FIMCompletionResponse as MistralFIMCompletion,
-    FIMCompletionRequest as MistralFIMCompletionCreateParams,
+    FIMCompletionRequest$Outbound as MistralFIMCompletionCreateParams,
 } from '@mistralai/mistralai/models/components';
 
 import type {PromptData} from './copilot';

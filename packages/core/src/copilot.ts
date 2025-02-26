@@ -19,6 +19,7 @@ import type {
     Provider,
 } from './types/llm';
 import {BaseCopilotMetadata} from './types/metadata';
+import {fetchWithTimeout} from './utils/fetch-with-timeout';
 import validate from './validator';
 
 export abstract class Copilot<Metadata> {
@@ -139,7 +140,7 @@ export abstract class Copilot<Metadata> {
         requestBody: CompletionCreateParams,
         headers: Record<string, string>,
     ) {
-        const response = await fetch(endpoint, {
+        const response = await fetchWithTimeout(endpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

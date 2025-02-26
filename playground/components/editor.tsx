@@ -26,6 +26,7 @@ const Editor = () => {
                 completionRef.current = registerCompletion(monaco, editor, {
                     endpoint: '/api/code-completion',
                     language: 'python',
+                    trigger: 'onTyping',
                 });
             }}
         />
