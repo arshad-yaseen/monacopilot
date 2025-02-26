@@ -74,6 +74,12 @@ export default defineConfig({
                 ],
             },
             {
+                text: 'Guides',
+                items: [
+                    {text: 'Upgrade to v1.0.0', link: '/guides/upgrade-to-v1'},
+                ],
+            },
+            {
                 text: 'Examples',
                 items: [
                     {text: 'Next.js', link: '/examples/nextjs'},
