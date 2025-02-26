@@ -60,21 +60,16 @@ export default defineConfig({
                 items: [
                     {text: 'Custom Model', link: '/advanced/custom-model'},
                     {
+                        text: 'Custom Prompt',
+                        link: '/advanced/custom-prompt',
+                    },
+                    {
                         text: 'Custom Request Handler',
                         link: '/advanced/custom-request-handler',
                     },
                     {
                         text: 'Cross-Language Implementation',
                         link: '/advanced/cross-language',
-                    },
-                ],
-            },
-            {
-                text: 'Guides',
-                items: [
-                    {
-                        text: 'User-Selectable Models',
-                        link: '/guides/user-selectable-models',
                     },
                 ],
             },

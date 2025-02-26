@@ -1,16 +1,14 @@
+import type {RelatedFile} from '@monacopilot/core';
+
 import {DEFAULT_MAX_CONTEXT_LINES} from './defaults';
-import type {CompletionMode, CompletionResponse, RelatedFile} from './types';
+import type {CompletionMetadata, CompletionResponse} from './types';
 import type {
     ConstructCompletionMetadataParams,
     FetchCompletionItemParams,
     FetchCompletionItemReturn,
 } from './types/internal';
 import type {CursorPosition, EditorModel} from './types/monaco';
-import {
-    getCharAfterCursor,
-    getTextAfterCursor,
-    getTextBeforeCursor,
-} from './utils/editor';
+import {getTextAfterCursor, getTextBeforeCursor} from './utils/editor';
 import {
     truncateTextToMaxLines,
     TruncateTextToMaxLinesOptions,
@@ -30,7 +28,9 @@ export const requestCompletionItem = async (
     });
 
     if (!response.ok) {
-        throw new Error('Error while fetching completion item');
+        throw new Error(
+            `Error while fetching completion item: ${response.statusText}`,
+        );
     }
 
     const {completion, error} = (await response.json()) as CompletionResponse;
@@ -46,7 +46,7 @@ export const buildCompletionMetadata = ({
     pos,
     mdl,
     options,
-}: ConstructCompletionMetadataParams) => {
+}: ConstructCompletionMetadataParams): CompletionMetadata => {
     const {
         filename,
         language,
@@ -54,8 +54,6 @@ export const buildCompletionMetadata = ({
         relatedFiles,
         maxContextLines = DEFAULT_MAX_CONTEXT_LINES,
     } = options;
-
-    const completionMode = determineCompletionMode(pos, mdl);
 
     const hasRelatedFiles = relatedFiles && relatedFiles.length > 0;
 
@@ -117,26 +115,5 @@ export const buildCompletionMetadata = ({
         textBeforeCursor,
         textAfterCursor,
         cursorPosition: pos,
-        editorState: {
-            completionMode,
-        },
     };
-};
-
-const determineCompletionMode = (
-    pos: CursorPosition,
-    mdl: EditorModel,
-): CompletionMode => {
-    const charAfterCursor = getCharAfterCursor(pos, mdl);
-    const textAfterCursor = getTextAfterCursor(pos, mdl);
-
-    if (charAfterCursor) {
-        return 'insert';
-    }
-
-    if (textAfterCursor.trim()) {
-        return 'complete';
-    }
-
-    return 'continue';
 };

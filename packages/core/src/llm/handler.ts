@@ -1,11 +1,12 @@
 import type {PromptData} from '../types/copilot';
 import type {
     Model,
-    PickChatCompletion,
-    PickChatCompletionCreateParams,
+    PickCompletion,
+    PickCompletionCreateParams,
     PickModel,
     Provider,
 } from '../types/llm';
+import {BaseCopilotMetadata} from '../types/metadata';
 
 export abstract class BaseProviderHandler<P extends Provider> {
     abstract createEndpoint(model: Model, apiKey?: string): string;
@@ -13,9 +14,10 @@ export abstract class BaseProviderHandler<P extends Provider> {
     abstract createRequestBody(
         model: PickModel<P>,
         prompt: PromptData,
-    ): PickChatCompletionCreateParams<P>;
+        metadata: BaseCopilotMetadata,
+    ): PickCompletionCreateParams<P>;
 
     abstract createHeaders(apiKey: string): Record<string, string>;
 
-    abstract parseCompletion(completion: PickChatCompletion<P>): string | null;
+    abstract parseCompletion(completion: PickCompletion<P>): string | null;
 }

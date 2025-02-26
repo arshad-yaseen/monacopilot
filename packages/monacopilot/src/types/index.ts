@@ -1,4 +1,11 @@
-import type {CustomPrompt} from '@monacopilot/core';
+import type {
+    BaseCopilotMetadata,
+    CustomPrompt,
+    Endpoint,
+    Filename,
+    RelatedFile,
+    Technologies,
+} from '@monacopilot/core';
 
 import {FetchCompletionItemHandler} from './internal';
 import type {
@@ -9,25 +16,7 @@ import type {
     Monaco,
 } from './monaco';
 
-export type Endpoint = string;
-export type Filename = string;
-export type Technologies = string[];
-export type RelatedFile = {
-    /**
-     * The relative path from the current editing code in the editor to an external file.
-     *
-     * Examples:
-     * - To include a file `utils.js` in the same directory, set as `./utils.js`.
-     * - To include a file `utils.js` in the parent directory, set as `../utils.js`.
-     * - To include a file `utils.js` in the child directory, set as `./child/utils.js`.
-     */
-    path: string;
-
-    /**
-     * The content of the external file as a string.
-     */
-    content: string;
-};
+export type CompletionMetadata = BaseCopilotMetadata;
 
 export interface RegisterCompletionOptions {
     /**
@@ -44,7 +33,6 @@ export interface RegisterCompletionOptions {
      * Options:
      * - `'onIdle'`: Provides completions after a brief pause in typing.
      * - `'onTyping'`: Provides completions in real-time as you type.
-     *   - *Note:* Best suited for models with low response latency (e.g., Groq).
      *   - *Consideration:* May initiate additional background requests to deliver real-time suggestions.
      * - `'onDemand'`: Completions are not provided automatically. You need to trigger the completion manually, possibly by using the `trigger` function from `registerCompletion` return.
      *
@@ -186,11 +174,12 @@ export interface CompletionRequestOptions {
     headers?: Record<string, string>;
     /**
      * Custom prompt generator function for the completion request.
-     * This function allows you to override the default system and user prompts
+     * This function allows you to override the default prompt
      * used in the completion request, providing more control over the AI's context and behavior.
      *
      * @param completionMetadata - Metadata about the current completion context
-     * @returns An object containing custom 'system' and 'user' prompts
+     * @returns A partial PromptData object that can override context and/or instruction
+     * @see {@link https://github.com/arshad-yaseen/monacopilot/blob/main/packages/monacopilot/src/prompt.ts | Monacopilot default prompt implementation}
      */
     customPrompt?: CustomPrompt<CompletionMetadata>;
 }
@@ -208,49 +197,4 @@ export interface CompletionResponse {
      * The raw response from the LLM.
      */
     raw?: unknown;
-}
-
-export type CompletionMode = 'insert' | 'complete' | 'continue';
-
-export interface CompletionMetadata {
-    /**
-     * The programming language of the code.
-     */
-    language: string | undefined;
-    /**
-     * The name of the file being edited.
-     */
-    filename: Filename | undefined;
-    /**
-     * The technologies used in the completion.
-     */
-    technologies: Technologies | undefined;
-    /**
-     * Additional context from related files.
-     */
-    relatedFiles: RelatedFile[] | undefined;
-    /**
-     * The text that appears after the cursor.
-     */
-    textAfterCursor: string;
-    /**
-     * The text that appears before the cursor.
-     */
-    textBeforeCursor: string;
-    /**
-     * The current cursor position.
-     */
-    cursorPosition: CursorPosition;
-    /**
-     * The current state of the editor.
-     */
-    editorState: {
-        /**
-         * The mode of the completion.
-         * - `insert`: Indicates that there is a character immediately after the cursor. In this mode, the LLM will generate content to be inserted at the cursor position.
-         * - `complete`: Indicates that there is a character after the cursor but not immediately. In this mode, the LLM will generate content to complete the text from the cursor position.
-         * - `continue`: Indicates that there is no character after the cursor. In this mode, the LLM will generate content to continue the text from the cursor position.
-         */
-        completionMode: CompletionMode;
-    };
 }

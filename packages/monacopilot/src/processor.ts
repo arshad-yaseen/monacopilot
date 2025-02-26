@@ -43,7 +43,7 @@ export const processInlineCompletions = async ({
         requestHandler,
     } = options;
 
-    if (enableCaching) {
+    if (enableCaching && !isCompletionAccepted) {
         const cachedCompletions = completionCache.get(pos, mdl).map(cache => ({
             insertText: cache.completion,
             range: cache.range,
@@ -54,7 +54,7 @@ export const processInlineCompletions = async ({
         }
     }
 
-    if (token.isCancellationRequested || isCompletionAccepted) {
+    if (token.isCancellationRequested) {
         return createInlineCompletionResult([]);
     }
 

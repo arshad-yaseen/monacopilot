@@ -1,23 +1,16 @@
 import type {PromptData} from '../types/copilot';
 import type {
-    ChatCompletion,
-    ChatCompletionCreateParams,
+    Completion,
+    CompletionCreateParams,
     PickModel,
     Provider,
 } from '../types/llm';
+import type {BaseCopilotMetadata} from '../types/metadata';
 import {BaseProviderHandler} from './handler';
-import {AnthropicHandler} from './providers/anthropic';
-import {DeepseekHandler} from './providers/deepseek';
-import {GoogleHandler} from './providers/google';
-import {GroqHandler} from './providers/groq';
-import {OpenAIHandler} from './providers/openai';
+import {MistralHandler} from './providers/mistral';
 
 const providerHandlers: {[P in Provider]: BaseProviderHandler<P>} = {
-    openai: new OpenAIHandler(),
-    groq: new GroqHandler(),
-    anthropic: new AnthropicHandler(),
-    google: new GoogleHandler(),
-    deepseek: new DeepseekHandler(),
+    mistral: new MistralHandler(),
 };
 
 export const createProviderEndpoint = <P extends Provider>(
@@ -30,15 +23,16 @@ export const createRequestBody = <P extends Provider>(
     model: PickModel<P>,
     provider: P,
     prompt: PromptData,
-): ChatCompletionCreateParams =>
-    providerHandlers[provider].createRequestBody(model, prompt);
+    metadata: BaseCopilotMetadata,
+): CompletionCreateParams =>
+    providerHandlers[provider].createRequestBody(model, prompt, metadata);
 
 export const createProviderHeaders = <P extends Provider>(
     apiKey: string,
     provider: P,
 ): Record<string, string> => providerHandlers[provider].createHeaders(apiKey);
 
-export const parseProviderChatCompletion = <P extends Provider>(
-    completion: ChatCompletion,
+export const parseProviderCompletion = <P extends Provider>(
+    completion: Completion,
     provider: P,
 ): string | null => providerHandlers[provider].parseCompletion(completion);
