@@ -104,6 +104,6 @@ When working with different models, you'll need to format the prompt data approp
     }
     ```
 
-::: note
+::: tip
 Please ensure you are using a high-quality model, especially for coding tasks, to get the best and most accurate completions. The example above shows how to integrate with Hugging Face's GPT-2, but it's important to note that GPT-2 is not recommended for code completion and is shown only as an implementation example. For production use, choose specialized code-optimized models. Also, use a model with very low response latency (preferably under 1 seconds) to enjoy a great experience and utilize the full power of Monacopilot.
 :::
