@@ -24,16 +24,8 @@ registerCompletion(monaco, editor, {
 
 [OnTyping Demo](https://github.com/user-attachments/assets/22c2ce44-334c-4963-b853-01b890b8e39f)
 
-::: info
-For the best experience with `onTyping` mode:
-
-- Use super fast, cost-effective models like Groq's `llama-3-70b` for real-time completions
-- For higher accuracy needs, consider using `onIdle` mode with models like `claude-3-5-sonnet`, `claude-3-5-haiku`, etc.
-- The `onTyping` mode makes more API calls in the background to provide instant suggestions, so choose your model accordingly
-  :::
-
 ::: tip
-Use `onTyping` mode with Groq's `llama-3-70b` for super fast, realtime completions while you type.
+If you are using `mistral` models with the `onTyping` trigger, it is recommended to use Mistral's pay-as-you-go plan. This ensures you will never hit rate limit errors and allows you to experience super fast and accurate completions.
 :::
 
 ## Manually Trigger Completions
@@ -93,13 +85,13 @@ monaco.editor.addEditorAction({
 
 ## Multi-File Context
 
-Improve the quality and relevance of Copilot's suggestions by providing additional code context from other files in your project. This feature allows Copilot to understand the broader scope of your codebase, resulting in more accurate and contextually appropriate completions.
+Improve Copilot's suggestions by providing code context from other files in your project. This helps Copilot understand your broader codebase and offer more relevant completions.
 
 ```javascript
 registerCompletion(monaco, editor, {
     relatedFiles: [
         {
-            path: './utils.js',
+            path: './utils.js', // The exact path you'd use when importing
             content:
                 'export const reverse = (str) => str.split("").reverse().join("")',
         },
@@ -107,7 +99,7 @@ registerCompletion(monaco, editor, {
 });
 ```
 
-For instance, if you begin typing `const isPalindrome = ` in your current file, Copilot will recognize the `reverse` function from the `utils.js` file you provided earlier. It will then suggest a completion that utilizes this function.
+The `path` value should match how you actually import the file in your code. After registering, when you type `const isPalindrome = `, Copilot will suggest code that properly imports and uses the `reverse` function from your utils.js file.
 
 ## Filename
 

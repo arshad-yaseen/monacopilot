@@ -2,7 +2,6 @@
 
 ### Features
 
-- 🎯 Multiple AI Provider Support (Anthropic, OpenAI, Groq, Google, DeepSeek)
 - 🔄 Real-time Code Completions
 - ⚡️ Efficient Caching System
 - 🎨 Context-Aware Suggestions

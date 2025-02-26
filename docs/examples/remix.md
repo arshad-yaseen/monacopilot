@@ -36,9 +36,9 @@ Create a route handler for completions in `app/routes/code-completion.tsx`:
 import {json, type ActionFunctionArgs} from '@remix-run/node';
 import {CompletionCopilot, type CompletionRequestBody} from 'monacopilot';
 
-const copilot = new CompletionCopilot(process.env.OPENAI_API_KEY, {
-    provider: 'openai',
-    model: 'gpt-4o',
+const copilot = new CompletionCopilot(process.env.MISTRAL_API_KEY, {
+    provider: 'mistral',
+    model: 'codestral',
 });
 
 export const action = async ({request}: ActionFunctionArgs) => {
@@ -58,40 +58,29 @@ export const action = async ({request}: ActionFunctionArgs) => {
 Create a Editor component in `app/components/Editor.tsx`:
 
 ```tsx
-import {useEffect, useState} from 'react';
+import {useEffect, useRef} from 'react';
 
-import {Editor as MonacoEditor} from '@monaco-editor/react';
-import {
-    Monaco,
-    registerCompletion,
-    type StandaloneCodeEditor,
-} from 'monacopilot';
+import MonacoEditor from '@monaco-editor/react';
+import {registerCompletion, type CompletionRegistration} from 'monacopilot';
 
 export default function Editor() {
-    const [editor, setEditor] = useState<StandaloneCodeEditor | null>(null);
-    const [monaco, setMonaco] = useState<Monaco | null>(null);
+    const completionRef = useRef<CompletionRegistration | null>(null);
 
     useEffect(() => {
-        if (!monaco || !editor) return;
-
-        const completion = registerCompletion(monaco, editor, {
-            endpoint: '/code-completion',
-            language: 'javascript',
-        });
-
         return () => {
-            completion.deregister();
+            completionRef.current?.deregister();
         };
-    }, [monaco, editor]);
+    }, []);
 
     return (
         <MonacoEditor
             language="javascript"
-            height={'100vh'}
-            width={'100%'}
             onMount={(editor, monaco) => {
-                setEditor(editor);
-                setMonaco(monaco);
+                completionRef.current = registerCompletion(monaco, editor, {
+                    endpoint: '/code-completion',
+                    language: 'javascript',
+                    trigger: 'onTyping',
+                });
             }}
         />
     );
@@ -121,8 +110,14 @@ export default function Index() {
 Create a `.env` file in your project root:
 
 ```bash
-OPENAI_API_KEY=your_openai_api_key_here
+MISTRAL_API_KEY=your_mistral_api_key_here
 ```
+
+Obtain your Mistral API Key from the [Mistral AI Console](https://console.mistral.ai/api-keys).
+
+Monacopilot supports multiple AI providers and models. For details on available options and configuration, see the [Changing the Provider and Model](/configuration/copilot-options#changing-the-provider-and-model) documentation.
+
+Obtain your Mistral API Key from the [Mistral AI Console](https://console.mistral.ai/api-keys).
 
 ## Project Structure
 
@@ -189,7 +184,7 @@ bun dev
 
 3. Open `http://localhost:3000` in your browser.
 
-You should now see a full-screen Monaco Editor with AI-powered completions working!
+You should now see a Monaco Editor with AI-powered completions working!
 
 ::: tip
 

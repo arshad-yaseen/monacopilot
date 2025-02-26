@@ -21,7 +21,7 @@ import {
 } from './types';
 import type {EditorInlineCompletionsResult} from './types/monaco';
 import {asyncDebounce} from './utils/async-debounce';
-import {getTextBeforeCursor, getTextBeforeCursorInLine} from './utils/editor';
+import {getTextBeforeCursor} from './utils/editor';
 import {isCancellationError} from './utils/error';
 import {createInlineCompletionResult} from './utils/result';
 
@@ -43,7 +43,7 @@ export const processInlineCompletions = async ({
         requestHandler,
     } = options;
 
-    if (enableCaching) {
+    if (enableCaching && !isCompletionAccepted) {
         const cachedCompletions = completionCache.get(pos, mdl).map(cache => ({
             insertText: cache.completion,
             range: cache.range,
@@ -54,7 +54,7 @@ export const processInlineCompletions = async ({
         }
     }
 
-    if (token.isCancellationRequested || isCompletionAccepted) {
+    if (token.isCancellationRequested) {
         return createInlineCompletionResult([]);
     }
 
@@ -86,15 +86,10 @@ export const processInlineCompletions = async ({
         });
 
         if (completion) {
-            const formattedCompletion = new CompletionFormatter(
-                completion,
-                pos.column,
-                getTextBeforeCursorInLine(pos, mdl),
-            )
+            const formattedCompletion = new CompletionFormatter(completion)
                 .removeMarkdownCodeSyntax()
                 .removeExcessiveNewlines()
                 .removeInvalidLineBreaks()
-                .indentByColumn()
                 .build();
 
             const completionRange = new CompletionRange(monaco);

@@ -52,9 +52,9 @@ In our example, we are using Express.js:
 ```typescript
 import {CompletionCopilot} from 'monacopilot';
 
-const copilot = new CompletionCopilot(OPENAI_API_KEY, {
-    provider: 'openai',
-    model: 'gpt-4o',
+const copilot = new CompletionCopilot(MISTRAL_API_KEY, {
+    provider: 'mistral',
+    model: 'codestral',
 });
 
 app.post('/code-completion', async (req, res) => {
@@ -72,6 +72,10 @@ app.post('/code-completion', async (req, res) => {
     res.json({completion});
 });
 ```
+
+Obtain your Mistral API Key from the [Mistral AI Console](https://console.mistral.ai/api-keys).
+
+Monacopilot supports multiple AI providers and models. For details on available options and configuration, see the [Changing the Provider and Model](/configuration/copilot-options#changing-the-provider-and-model) documentation.
 
 **That's it! Your Monaco Editor now has AI-powered completions! 🎉**
 

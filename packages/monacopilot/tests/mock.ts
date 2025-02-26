@@ -20,9 +20,6 @@ export const MOCK_COMPLETION_METADATA: CompletionMetadata = {
     relatedFiles: [{path: './utils.js', content: 'function test() {}'}],
     textAfterCursor: 'console.log(',
     textBeforeCursor: 'function hello() {',
-    editorState: {
-        completionMode: 'complete',
-    },
 };
 
 export const MOCK_COMPLETION_POS: CursorPosition = {
@@ -39,5 +36,5 @@ export const MOCK_COMPLETION = {
 export const MOCK_ERROR = new Error('API Error');
 export const MOCK_NETWORK_ERROR = new Error('Network error');
 
-export const TEST_PROVIDER = 'anthropic';
-export const TEST_MODEL = 'claude-3-5-haiku';
+export const TEST_PROVIDER = 'mistral';
+export const TEST_MODEL = 'codestral';

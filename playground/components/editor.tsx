@@ -1,31 +1,19 @@
 'use client';
 
-import {useEffect, useState} from 'react';
+import {useEffect, useRef} from 'react';
 
 import {DEFAULT_MONACO_EDITOR_OPTIONS} from '@/constants/editor';
 import MonacoEditor from '@monaco-editor/react';
-import {
-    registerCompletion,
-    type Monaco,
-    type StandaloneCodeEditor,
-} from 'monacopilot';
+import {CompletionRegistration, registerCompletion} from 'monacopilot';
 
 const Editor = () => {
-    const [monaco, setMonaco] = useState<Monaco | null>(null);
-    const [editor, setEditor] = useState<StandaloneCodeEditor | null>(null);
+    const completionRef = useRef<CompletionRegistration | null>(null);
 
     useEffect(() => {
-        if (!monaco || !editor) return;
-
-        const completion = registerCompletion(monaco, editor, {
-            endpoint: '/api/code-completion',
-            language: 'javascript',
-        });
-
         return () => {
-            completion.deregister();
+            completionRef.current?.deregister();
         };
-    }, [monaco, editor]);
+    }, []);
 
     return (
         <MonacoEditor
@@ -35,8 +23,10 @@ const Editor = () => {
             className="rounded-lg border border-slate-200 dark:border-slate-800"
             options={DEFAULT_MONACO_EDITOR_OPTIONS}
             onMount={(editor, monaco) => {
-                setEditor(editor);
-                setMonaco(monaco);
+                completionRef.current = registerCompletion(monaco, editor, {
+                    endpoint: '/api/code-completion',
+                    language: 'javascript',
+                });
             }}
         />
     );

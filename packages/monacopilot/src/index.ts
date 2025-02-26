@@ -13,11 +13,7 @@ export type {
     CustomCopilotModel,
     Provider,
     Model,
-    OpenAIModel,
-    GroqModel,
-    AnthropicModel,
-    GoogleModel,
-    DeepSeekModel,
+    MistralModel,
 } from '@monacopilot/core';
 
 export type {

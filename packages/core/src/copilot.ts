@@ -2,7 +2,7 @@ import {
     createProviderEndpoint,
     createProviderHeaders,
     createRequestBody,
-    parseProviderChatCompletion,
+    parseProviderCompletion,
 } from './llm/operations';
 import {logger} from './logger';
 import type {
@@ -13,14 +13,16 @@ import type {
 } from './types/copilot';
 import type {CopilotResponse} from './types/internal';
 import type {
-    ChatCompletion,
-    ChatCompletionCreateParams,
+    Completion,
+    CompletionCreateParams,
     Model,
     Provider,
 } from './types/llm';
+import {BaseCopilotMetadata} from './types/metadata';
+import {fetchWithTimeout} from './utils/fetch-with-timeout';
 import validate from './validator';
 
-export abstract class Copilot<Meta> {
+export abstract class Copilot<Metadata> {
     protected readonly apiKey: string;
     protected provider: Provider | undefined;
     protected model: Model | CustomCopilotModel;
@@ -33,11 +35,11 @@ export abstract class Copilot<Meta> {
         validate.inputs(this.model, this.provider);
     }
 
-    protected abstract getDefaultPrompt(metadata: Meta): PromptData;
+    protected abstract getDefaultPrompt(metadata: Metadata): PromptData;
 
     protected generatePrompt(
-        metadata: Meta,
-        customPrompt?: CustomPrompt<Meta>,
+        metadata: Metadata,
+        customPrompt?: CustomPrompt<Metadata>,
     ): PromptData {
         const defaultPrompt = this.getDefaultPrompt(metadata);
         return customPrompt
@@ -46,33 +48,40 @@ export abstract class Copilot<Meta> {
     }
 
     protected async makeAIRequest(
-        metadata: Meta,
+        metadata: Metadata,
         options: {
-            customPrompt?: CustomPrompt<Meta>;
+            customPrompt?: CustomPrompt<Metadata>;
             customHeaders?: Record<string, string>;
         } = {},
     ): Promise<CopilotResponse> {
         try {
             const {customHeaders = {}} = options;
             const prompt = this.generatePrompt(metadata, options.customPrompt);
-            const requestDetails = await this.prepareRequest(prompt);
+            const requestDetails = await this.prepareRequest(
+                prompt,
+                metadata as BaseCopilotMetadata,
+            );
             const response = await this.sendRequest(
                 requestDetails.endpoint,
                 requestDetails.requestBody,
                 {...requestDetails.headers, ...customHeaders},
             );
+
             return this.processResponse(response);
         } catch (error) {
             return this.handleError(error);
         }
     }
 
-    private async prepareRequest(prompt: PromptData) {
+    private async prepareRequest(
+        prompt: PromptData,
+        metadata: BaseCopilotMetadata,
+    ) {
         if (this.isCustomModel()) {
             const customConfig = this.model.config(this.apiKey, prompt);
             return {
                 endpoint: customConfig.endpoint,
-                requestBody: customConfig.body as ChatCompletionCreateParams,
+                requestBody: customConfig.body as CompletionCreateParams,
                 headers: customConfig.headers ?? {},
             };
         }
@@ -92,6 +101,7 @@ export abstract class Copilot<Meta> {
                 this.model as Model,
                 this.provider,
                 prompt,
+                metadata,
             ),
         };
     }
@@ -110,8 +120,8 @@ export abstract class Copilot<Meta> {
         }
 
         return {
-            text: parseProviderChatCompletion(
-                response as ChatCompletion,
+            text: parseProviderCompletion(
+                response as Completion,
                 this.provider,
             ),
             raw: response,
@@ -127,10 +137,10 @@ export abstract class Copilot<Meta> {
 
     protected async sendRequest(
         endpoint: string,
-        requestBody: ChatCompletionCreateParams,
+        requestBody: CompletionCreateParams,
         headers: Record<string, string>,
     ) {
-        const response = await fetch(endpoint, {
+        const response = await fetchWithTimeout(endpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -140,7 +150,7 @@ export abstract class Copilot<Meta> {
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(await response.text());
         }
 
         return response.json();

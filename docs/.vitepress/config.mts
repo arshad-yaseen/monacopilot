@@ -60,6 +60,10 @@ export default defineConfig({
                 items: [
                     {text: 'Custom Model', link: '/advanced/custom-model'},
                     {
+                        text: 'Custom Prompt',
+                        link: '/advanced/custom-prompt',
+                    },
+                    {
                         text: 'Custom Request Handler',
                         link: '/advanced/custom-request-handler',
                     },
@@ -72,10 +76,7 @@ export default defineConfig({
             {
                 text: 'Guides',
                 items: [
-                    {
-                        text: 'User-Selectable Models',
-                        link: '/guides/user-selectable-models',
-                    },
+                    {text: 'Upgrade to v1.0.0', link: '/guides/upgrade-to-v1'},
                 ],
             },
             {

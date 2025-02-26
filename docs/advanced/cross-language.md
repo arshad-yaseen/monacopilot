@@ -38,7 +38,7 @@ Check out the [prompt.ts](https://github.com/arshad-yaseen/monacopilot/blob/main
 
 ## Metadata Overview
 
-The request body's `completionMetadata` object contains essential information for crafting a prompt for the LLM to generate accurate completions. See the [Completion Metadata](/configuration/request-options.html#completion-metadata) section for more details.
+The request body's `completionMetadata` object contains essential information for crafting a prompt for the LLM to generate accurate completions. See the [Completion Metadata](/advanced/custom-prompt#completion-metadata) section for more details.
 
 ## Example Implementation (Python with FastAPI)
 

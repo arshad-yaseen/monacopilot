@@ -20,8 +20,8 @@ describe('Validator', () => {
         it('should not throw with valid params', () => {
             expect(() =>
                 validator.params('key', {
-                    provider: 'openai',
-                    model: 'gpt-4o',
+                    provider: 'mistral',
+                    model: 'codestral',
                 }),
             ).not.toThrow();
         });
@@ -37,7 +37,7 @@ describe('Validator', () => {
         };
 
         it('should throw if provider specified with custom model', () => {
-            expect(() => validator.inputs(customModel, 'openai')).toThrow(
+            expect(() => validator.inputs(customModel, 'mistral')).toThrow(
                 'Provider should not be specified when using a custom model.',
             );
         });
@@ -49,19 +49,22 @@ describe('Validator', () => {
         });
 
         it('should throw if provider not specified for built-in model', () => {
-            expect(() => validator.inputs('gpt-4o')).toThrow(
+            expect(() => validator.inputs('codestral')).toThrow(
                 'Provider must be specified and supported',
             );
         });
 
         it('should throw if model not supported by provider', () => {
-            expect(() => validator.inputs('gpt-4o', 'anthropic')).toThrow(
-                'Model "gpt-4o" is not supported by the "anthropic" provider',
+            // @ts-expect-error - model is not supported by the provider
+            expect(() => validator.inputs('codestrals', 'mistral')).toThrow(
+                'Model "codestrals" is not supported by the "mistral" provider',
             );
         });
 
         it('should not throw with valid built-in model and provider', () => {
-            expect(() => validator.inputs('gpt-4o', 'openai')).not.toThrow();
+            expect(() =>
+                validator.inputs('codestral', 'mistral'),
+            ).not.toThrow();
         });
 
         it('should not throw with valid custom model', () => {
