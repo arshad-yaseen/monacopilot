@@ -1,5 +1,5 @@
 {
-    "version": "0.19.17",
+    "version": "1.0.0",
     "scripts": {
         "build": "pnpm -r --filter '!playground' build",
         "dev:core": "pnpm -C packages/core dev",
