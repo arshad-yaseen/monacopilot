@@ -61,10 +61,22 @@ Create a Editor component in `app/components/Editor.tsx`:
 import {useEffect, useRef} from 'react';
 
 import MonacoEditor from '@monaco-editor/react';
-import {registerCompletion, type CompletionRegistration} from 'monacopilot';
+import {
+    registerCompletion,
+    type CompletionRegistration,
+    type Monaco,
+    type StandaloneCodeEditor,
+} from 'monacopilot';
 
 export default function Editor() {
     const completionRef = useRef<CompletionRegistration | null>(null);
+
+    const handleMount = (editor: StandaloneCodeEditor, monaco: Monaco) => {
+        completionRef.current = registerCompletion(monaco, editor, {
+            endpoint: '/code-completion',
+            language: 'javascript',
+        });
+    };
 
     useEffect(() => {
         return () => {
@@ -72,18 +84,7 @@ export default function Editor() {
         };
     }, []);
 
-    return (
-        <MonacoEditor
-            language="javascript"
-            onMount={(editor, monaco) => {
-                completionRef.current = registerCompletion(monaco, editor, {
-                    endpoint: '/code-completion',
-                    language: 'javascript',
-                    trigger: 'onTyping',
-                });
-            }}
-        />
-    );
+    return <MonacoEditor language="javascript" onMount={handleMount} />;
 }
 ```
 

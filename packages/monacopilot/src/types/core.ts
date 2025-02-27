@@ -38,7 +38,7 @@ export interface RegisterCompletionOptions {
      *
      * @default 'onIdle'
      */
-    trigger?: 'onTyping' | 'onIdle' | 'onDemand';
+    trigger?: Trigger;
     /**
      * The name of the file you are editing. This is used to provide more relevant completions based on the file's purpose.
      * For example, if you are editing a file named `utils.js`, the completions will be more relevant to utility functions.
@@ -112,9 +112,26 @@ export interface RegisterCompletionOptions {
      * Callback function triggered when a completion is rejected by the user.
      */
     onCompletionRejected?: () => void;
+    /**
+     * Optional function to determine whether a completion should be triggered.
+     * This allows for custom logic to control when completions are shown.
+     *
+     * @param {object} params - Parameters for the trigger decision
+     * @param {string} params.text - The current text in the editor
+     * @param {CursorPosition} params.position - The current cursor position
+     * @param {Trigger} params.triggerType - The type of trigger that initiated the completion
+     * @returns {boolean} - Return true to allow the completion, false to prevent it
+     */
+    triggerIf?: (params: {
+        text: string;
+        position: CursorPosition;
+        triggerType: Trigger;
+    }) => boolean;
 }
 
-export enum TriggerType {
+export type Trigger = 'onTyping' | 'onIdle' | 'onDemand';
+
+export enum TriggerEnum {
     OnTyping = 'onTyping',
     OnIdle = 'onIdle',
     OnDemand = 'onDemand',

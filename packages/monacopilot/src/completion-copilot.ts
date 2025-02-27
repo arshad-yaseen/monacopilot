@@ -5,7 +5,7 @@ import type {
     CompletionMetadata,
     CompletionRequest,
     CompletionResponse,
-} from './types';
+} from './types/core';
 
 export class CompletionCopilot extends Copilot<CompletionMetadata> {
     public async complete(

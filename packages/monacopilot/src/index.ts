@@ -23,4 +23,4 @@ export type {
     CompletionRequestOptions,
     RegisterCompletionOptions,
     CompletionRegistration,
-} from './types';
+} from './types/core';

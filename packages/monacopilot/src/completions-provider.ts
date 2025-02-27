@@ -1,7 +1,9 @@
+import {DEFAULT_TRIGGER} from './defaults';
 import {processInlineCompletions} from './processor';
 import {getEditorState} from './state';
-import {RegisterCompletionOptions, TriggerType} from './types';
+import {RegisterCompletionOptions, TriggerEnum} from './types/core';
 import type {Monaco, StandaloneCodeEditor} from './types/monaco';
+import {getCurrentValue} from './utils/editor';
 
 export const createInlineCompletionsProvider = (
     monaco: Monaco,
@@ -15,10 +17,17 @@ export const createInlineCompletionsProvider = (
         options.language,
         {
             provideInlineCompletions: (mdl, pos, _, token) => {
-                // Skip completion if trigger is on-demand and not explicitly triggered by user
                 if (
-                    options.trigger === TriggerType.OnDemand &&
-                    !state.isExplicitlyTriggered
+                    // Skip completion if trigger is on-demand and not explicitly triggered by user
+                    (options.trigger === TriggerEnum.OnDemand &&
+                        !state.isExplicitlyTriggered) ||
+                    // Skip completion if triggerIf returns false
+                    (options.triggerIf &&
+                        !options.triggerIf({
+                            text: getCurrentValue(editor),
+                            position: pos,
+                            triggerType: options.trigger ?? DEFAULT_TRIGGER,
+                        }))
                 ) {
                     return;
                 }

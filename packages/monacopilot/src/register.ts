@@ -9,7 +9,10 @@ import {
     getEditorState,
     setEditorState,
 } from './state';
-import type {CompletionRegistration, RegisterCompletionOptions} from './types';
+import type {
+    CompletionRegistration,
+    RegisterCompletionOptions,
+} from './types/core';
 import type {Disposable, Monaco, StandaloneCodeEditor} from './types/monaco';
 
 let activeCompletionRegistration: CompletionRegistration | null = null;
