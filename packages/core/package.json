@@ -1,6 +1,6 @@
 {
     "name": "@monacopilot/core",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Core package for monacopilot",
     "main": "./build/index.js",
     "module": "./build/index.mjs",
