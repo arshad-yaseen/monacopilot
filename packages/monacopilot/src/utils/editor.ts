@@ -1,4 +1,8 @@
-import type {CursorPosition, EditorModel} from '../types/monaco';
+import type {
+    CursorPosition,
+    EditorModel,
+    StandaloneCodeEditor,
+} from '../types/monaco';
 
 export const getCharBeforeCursor = (
     pos: CursorPosition,
@@ -53,3 +57,7 @@ export const getTextAfterCursor = (
         endLineNumber: mdl.getLineCount(),
         endColumn: mdl.getLineMaxColumn(mdl.getLineCount()),
     });
+
+export const getCurrentValue = (editor: StandaloneCodeEditor) => {
+    return editor.getValue();
+};

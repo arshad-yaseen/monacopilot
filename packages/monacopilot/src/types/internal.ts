@@ -1,4 +1,4 @@
-import {CompletionRequestBody, RegisterCompletionOptions} from '.';
+import {CompletionRequestBody, RegisterCompletionOptions} from './core';
 import type {
     CursorPosition,
     EditorKeyboardEvent,

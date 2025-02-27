@@ -1,4 +1,4 @@
-import type {RegisterCompletionOptions} from './types';
+import type {RegisterCompletionOptions} from './types/core';
 import type {
     CompletionKeyEventHandlerParams,
     EditorCompletionState,

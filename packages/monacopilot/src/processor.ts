@@ -17,8 +17,8 @@ import {
 import {
     CompletionMetadata,
     InlineCompletionProcessorParams,
-    TriggerType,
-} from './types';
+    TriggerEnum,
+} from './types/core';
 import type {EditorInlineCompletionsResult} from './types/monaco';
 import {asyncDebounce} from './utils/async-debounce';
 import {getTextBeforeCursor} from './utils/editor';
@@ -62,9 +62,9 @@ export const processInlineCompletions = async ({
         const requestCompletion = asyncDebounce(
             requestHandler ?? requestCompletionItem,
             {
-                [TriggerType.OnTyping]: DEFAULT_ON_TYPING_DEBOUNCE,
-                [TriggerType.OnIdle]: DEFAULT_ON_IDLE_DEBOUNCE,
-                [TriggerType.OnDemand]: DEFAULT_ON_DEMAND_DEBOUNCE,
+                [TriggerEnum.OnTyping]: DEFAULT_ON_TYPING_DEBOUNCE,
+                [TriggerEnum.OnIdle]: DEFAULT_ON_IDLE_DEBOUNCE,
+                [TriggerEnum.OnDemand]: DEFAULT_ON_DEMAND_DEBOUNCE,
             }[trigger],
         );
 

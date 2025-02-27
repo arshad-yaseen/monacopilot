@@ -1,6 +1,6 @@
 import {vi} from 'vitest';
 
-import type {CompletionMetadata} from '../src/types';
+import type {CompletionMetadata} from '../src/types/core';
 import type {CursorPosition, EditorModel} from '../src/types/monaco';
 
 export const MOCK_MODEL = {

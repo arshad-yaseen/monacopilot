@@ -4,10 +4,22 @@ import {useEffect, useRef} from 'react';
 
 import {DEFAULT_MONACO_EDITOR_OPTIONS} from '@/constants/editor';
 import MonacoEditor from '@monaco-editor/react';
-import {CompletionRegistration, registerCompletion} from 'monacopilot';
+import {
+    registerCompletion,
+    type CompletionRegistration,
+    type Monaco,
+    type StandaloneCodeEditor,
+} from 'monacopilot';
 
 const Editor = () => {
     const completionRef = useRef<CompletionRegistration | null>(null);
+
+    const handleMount = (editor: StandaloneCodeEditor, monaco: Monaco) => {
+        completionRef.current = registerCompletion(monaco, editor, {
+            endpoint: '/api/code-completion',
+            language: 'javascript',
+        });
+    };
 
     useEffect(() => {
         return () => {
@@ -22,12 +34,7 @@ const Editor = () => {
             language="javascript"
             className="rounded-lg border border-slate-200 dark:border-slate-800"
             options={DEFAULT_MONACO_EDITOR_OPTIONS}
-            onMount={(editor, monaco) => {
-                completionRef.current = registerCompletion(monaco, editor, {
-                    endpoint: '/api/code-completion',
-                    language: 'javascript',
-                });
-            }}
+            onMount={handleMount}
         />
     );
 };

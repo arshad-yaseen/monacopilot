@@ -1,7 +1,7 @@
 import type {RelatedFile} from '@monacopilot/core';
 
 import {DEFAULT_MAX_CONTEXT_LINES} from './defaults';
-import type {CompletionMetadata, CompletionResponse} from './types';
+import type {CompletionMetadata, CompletionResponse} from './types/core';
 import type {
     ConstructCompletionMetadataParams,
     FetchCompletionItemParams,

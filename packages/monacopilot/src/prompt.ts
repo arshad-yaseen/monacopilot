@@ -1,6 +1,6 @@
 import type {PromptData} from '@monacopilot/core';
 
-import type {CompletionMetadata} from './types';
+import type {CompletionMetadata} from './types/core';
 import {joinWithAnd} from './utils/text';
 
 const CURSOR_PLACEHOLDER = '<|developer_cursor_is_here|>';

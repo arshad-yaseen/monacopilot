@@ -208,3 +208,25 @@ registerCompletion(monaco, editor, {
     },
 });
 ```
+
+## Conditional Completion Triggering
+
+Control when completions are triggered based on custom conditions using the `triggerIf` option.
+
+```javascript
+registerCompletion(monaco, editor, {
+    // ... other options
+    triggerIf: ({text, position, triggerType}) => {
+        // Only trigger completions when cursor is at the beginning of a line
+        return position.column === 1;
+    },
+});
+```
+
+The `triggerIf` function receives:
+
+- `text`: The current text in the editor
+- `position`: The current cursor position
+- `triggerType`: The type of trigger that initiated the completion ('onIdle', 'onTyping', or 'onDemand')
+
+Return `true` to allow the completion or `false` to prevent it.
