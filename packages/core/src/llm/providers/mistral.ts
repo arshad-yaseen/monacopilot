@@ -1,6 +1,9 @@
 import {
     DEFAULT_COPILOT_MAX_TOKENS,
     DEFAULT_COPILOT_STOP_SEQUENCE,
+    DEFAULT_COPILOT_STREAM,
+    DEFAULT_COPILOT_TEMPERATURE,
+    DEFAULT_COPILOT_TOP_P,
 } from '../../defaults';
 import type {PromptData} from '../../types/copilot';
 import type {
@@ -25,11 +28,12 @@ export class MistralHandler extends BaseProviderHandler<'mistral'> {
         return {
             model: MODEL_IDS[model],
             prompt: `${prompt.context}\n${prompt.instruction}\n${metadata.textBeforeCursor}`,
+            suffix: metadata.textAfterCursor,
+            stream: DEFAULT_COPILOT_STREAM,
+            top_p: DEFAULT_COPILOT_TOP_P,
+            temperature: DEFAULT_COPILOT_TEMPERATURE,
             max_tokens: DEFAULT_COPILOT_MAX_TOKENS,
             stop: DEFAULT_COPILOT_STOP_SEQUENCE,
-            suffix: metadata.textAfterCursor,
-            stream: false,
-            top_p: 0.9,
         };
     }
 
