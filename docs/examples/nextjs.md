@@ -1,4 +1,4 @@
-# Next.js Example
+# Next.js
 
 Learn how to integrate Monacopilot with Next.js using either the App Router or Pages Router.
 
@@ -47,15 +47,11 @@ const copilot = new CompletionCopilot(process.env.MISTRAL_API_KEY, {
 
 export async function POST(req: NextRequest) {
     const body: CompletionRequestBody = await req.json();
-    const {completion, error} = await copilot.complete({
+    const completion = await copilot.complete({
         body,
     });
 
-    if (error) {
-        return NextResponse.json({completion: null, error}, {status: 500});
-    }
-
-    return NextResponse.json({completion}, {status: 200});
+    return NextResponse.json(completion, {status: 200});
 }
 ```
 
@@ -74,15 +70,11 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse,
 ) {
-    const {completion, error} = await copilot.complete({
+    const completion = await copilot.complete({
         body: req.body,
     });
 
-    if (error) {
-        res.status(500).json({completion: null, error});
-    }
-
-    res.status(200).json({completion});
+    res.status(200).json(completion);
 }
 ```
 
@@ -90,10 +82,9 @@ export default async function handler(
 
 ### Editor Component
 
-Create a Editor component:
+Create a Editor component (`components/Editor.tsx`):
 
 ```jsx
-// components/Editor.tsx
 'use client';
 
 import {useEffect, useRef} from 'react';
