@@ -39,7 +39,7 @@ const editor = monaco.editor.create(document.getElementById('container'), {
 registerCompletion(monaco, editor, {
     language: 'javascript',
     // Your API endpoint for handling completion requests
-    endpoint: 'https://api.example.com/code-completion',
+    endpoint: 'https://your-api-url.com/code-completion',
 });
 ```
 
@@ -65,7 +65,7 @@ const copilot = new CompletionCopilot(process.env.MISTRAL_API_KEY, {
     model: 'codestral',
 });
 
-app.post('/completion', async (req, res) => {
+app.post('/code-completion', async (req, res) => {
     const completion = await copilot.complete({body: req.body});
 
     res.json(completion);
