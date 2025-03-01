@@ -1,4 +1,4 @@
-# Remix Example
+# Remix
 
 Learn how to integrate Monacopilot with Remix.
 
@@ -43,11 +43,7 @@ const copilot = new CompletionCopilot(process.env.MISTRAL_API_KEY, {
 
 export const action = async ({request}: ActionFunctionArgs) => {
     const body: CompletionRequestBody = await request.json();
-    const {completion, error} = await copilot.complete({body});
-
-    if (error) {
-        return json({completion: null, error}, {status: 500});
-    }
+    const completion = await copilot.complete({body});
 
     return json(completion);
 };

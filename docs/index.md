@@ -39,7 +39,7 @@ const editor = monaco.editor.create(document.getElementById('container'), {
 registerCompletion(monaco, editor, {
     language: 'javascript',
     // Your API endpoint for handling completion requests
-    endpoint: 'https://api.example.com/code-completion',
+    endpoint: 'https://your-api-url.com/code-completion',
 });
 ```
 
@@ -50,27 +50,28 @@ Create an API handler for the endpoint (e.g. `/code-completion`) you provided in
 In our example, we are using Express.js:
 
 ```typescript
+import 'dotenv/config';
+
+import cors from 'cors';
+import express from 'express';
 import {CompletionCopilot} from 'monacopilot';
 
-const copilot = new CompletionCopilot(MISTRAL_API_KEY, {
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+const copilot = new CompletionCopilot(process.env.MISTRAL_API_KEY, {
     provider: 'mistral',
     model: 'codestral',
 });
 
 app.post('/code-completion', async (req, res) => {
-    const {completion, error, raw} = await copilot.complete({body: req.body});
+    const completion = await copilot.complete({body: req.body});
 
-    // Optional: Use raw response for analytics or token counting
-    if (raw) {
-        calculateCost(raw.usage.input_tokens);
-    }
-
-    if (error) {
-        return res.status(500).json({completion: null, error});
-    }
-
-    res.json({completion});
+    res.json(completion);
 });
+
+app.listen(process.env.PORT || 3000);
 ```
 
 Obtain your Mistral API Key from the [Mistral AI Console](https://console.mistral.ai/api-keys).

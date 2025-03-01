@@ -10,16 +10,9 @@ const copilot = new CompletionCopilot(process.env.MISTRAL_API_KEY, {
 export async function POST(req: NextRequest) {
     const body = await req.json();
 
-    const {completion, error} = await copilot.complete({
+    const completion = await copilot.complete({
         body,
     });
 
-    if (error) {
-        return NextResponse.json(
-            {completion: null, error: error},
-            {status: 500},
-        );
-    }
-
-    return NextResponse.json({completion}, {status: 200});
+    return NextResponse.json(completion, {status: 200});
 }
