@@ -84,6 +84,9 @@ export default defineConfig({
                 items: [
                     {text: 'Next.js', link: '/examples/nextjs'},
                     {text: 'Remix', link: '/examples/remix'},
+                    {text: 'Gatsby', link: '/examples/gatsby'},
+                    {text: 'SvelteKit', link: '/examples/sveltekit'},
+                    {text: 'TanStack Start', link: '/examples/tanstack-start'},
                 ],
             },
         ],
