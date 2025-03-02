@@ -86,6 +86,7 @@ export default defineConfig({
                     {text: 'Remix', link: '/examples/remix'},
                     {text: 'Gatsby', link: '/examples/gatsby'},
                     {text: 'SvelteKit', link: '/examples/sveltekit'},
+                    {text: 'TanStack Start', link: '/examples/tanstack-start'},
                 ],
             },
         ],
