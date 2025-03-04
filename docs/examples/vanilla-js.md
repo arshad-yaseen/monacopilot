@@ -36,9 +36,9 @@ Create the main HTML structure that loads Monaco Editor and Monacopilot:
         <div id="editor"></div>
 
         <!-- load monaco-editor -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/loader.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.0/min/vs/loader.js"></script>
         <!-- load monacopilot -->
-        <script src="https://unpkg.com/monacopilot@1.1.8/build/index.global.js"></script>
+        <script src="https://unpkg.com/monacopilot@1.1.9/build/index.global.js"></script>
 
         <script src="app.js"></script>
     </body>
@@ -52,7 +52,7 @@ Initialize Monaco Editor and register Monacopilot for code completions:
 ```javascript
 require.config({
     paths: {
-        vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs',
+        vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.0/min/vs',
     },
 });
 
