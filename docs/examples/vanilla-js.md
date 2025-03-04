@@ -63,10 +63,14 @@ require(['vs/editor/editor.main'], function () {
         theme: 'vs-dark',
     });
 
-    monacopilot.registerCompletion(monaco, editor, {
+    const completion = monacopilot.registerCompletion(monaco, editor, {
         language: 'javascript',
         // URL to the API endpoint we'll create in server.js below
         endpoint: 'http://localhost:3000/code-completion',
+    });
+
+    window.addEventListener('beforeunload', () => {
+        completion.deregister();
     });
 });
 ```
@@ -76,11 +80,11 @@ require(['vs/editor/editor.main'], function () {
 Implement an API handler to process completion requests from the editor:
 
 ```typescript
-import 'dotenv/config';
+require('dotenv').config();
 
-import cors from 'cors';
-import express from 'express';
-import {CompletionCopilot} from 'monacopilot';
+const cors = require('cors');
+const express = require('express');
+const {CompletionCopilot} = require('monacopilot');
 
 const app = express();
 app.use(cors());
@@ -97,7 +101,9 @@ app.post('/code-completion', async (req, res) => {
     res.json(completion);
 });
 
-app.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT || 3000, () => {
+    console.log(`Server is running on port ${process.env.PORT || 3000}`);
+});
 ```
 
 ::: info
