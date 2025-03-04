@@ -27,6 +27,6 @@ export function updateDocsCdnUrls(version: string): void {
 
     execSync('git add docs/');
     execSync(
-        `git commit -m "chore: update docs CDN URLs to version ${version}"`,
+        `git commit --no-verify -m "chore: update docs CDN URLs to version ${version}"`,
     );
 }
