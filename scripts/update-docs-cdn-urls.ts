@@ -1,3 +1,4 @@
+import {execSync} from 'child_process';
 import {readFileSync, writeFileSync} from 'fs';
 import {join} from 'path';
 
@@ -23,4 +24,6 @@ export function updateDocsCdnUrls(version: string): void {
 
         writeFileSync(filePath, content);
     }
+
+    execSync('git add docs/');
 }
