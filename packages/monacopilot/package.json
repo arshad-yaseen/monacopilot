@@ -5,7 +5,6 @@
     "main": "./build/index.js",
     "module": "./build/index.mjs",
     "types": "./build/index.d.ts",
-    "browser": "./build/index.global.js",
     "files": [
         "build"
     ],
