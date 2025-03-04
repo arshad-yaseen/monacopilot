@@ -1,12 +1,27 @@
-import {defineConfig} from 'tsup';
+import {defineConfig, Options} from 'tsup';
 
-export default defineConfig({
+const COMMON_CONFIG: Options = {
     outDir: 'build',
     entry: ['src/index.ts'],
     target: 'es2021',
     minify: true,
-    format: ['esm', 'cjs'],
     clean: true,
     dts: true,
     treeshake: true,
-});
+};
+
+export default defineConfig([
+    {
+        ...COMMON_CONFIG,
+        name: 'monacopilot',
+        platform: 'node',
+        format: ['esm', 'cjs'],
+    },
+    {
+        ...COMMON_CONFIG,
+        name: 'monacopilot-browser',
+        globalName: 'monacopilot',
+        platform: 'browser',
+        format: ['iife'],
+    },
+]);
