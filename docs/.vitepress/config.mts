@@ -82,6 +82,7 @@ export default defineConfig({
             {
                 text: 'Examples',
                 items: [
+                    {text: 'Vanilla JS', link: '/examples/vanilla-js'},
                     {text: 'Next.js', link: '/examples/nextjs'},
                     {text: 'Remix', link: '/examples/remix'},
                     {text: 'Gatsby', link: '/examples/gatsby'},
