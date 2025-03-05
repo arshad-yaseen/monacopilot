@@ -75,6 +75,12 @@ export interface RegisterCompletionOptions {
      */
     enableCaching?: boolean;
     /**
+     * Controls whether follow-up completions are allowed immediately after accepting a completion.
+     * When enabled (default), the system will generate new completion right after accepting one.
+     * @default true
+     */
+    allowFollowUpCompletions?: boolean;
+    /**
      * When an error occurs during the completion process or requests, Monacopilot will log it to the console by default
      * rather than throwing errors. This ensures smooth editing even when completions are unavailable.
      * You can provide this callback to handle errors yourself, which will disable the default console logging.

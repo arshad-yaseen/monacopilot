@@ -6,7 +6,6 @@ export default defineConfig({
     title: 'Monacopilot',
     description: 'AI auto-completion plugin for Monaco Editor',
     themeConfig: {
-        logo: '/logo.svg',
         nav: [
             {
                 text: `v${version}`,

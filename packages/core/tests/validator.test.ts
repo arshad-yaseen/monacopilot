@@ -13,7 +13,7 @@ describe('Validator', () => {
 
         it('should throw error if options are missing', () => {
             expect(() => validator.params('key', {} as CopilotOptions)).toThrow(
-                'Please provide options.',
+                'Please provide required Copilot options, such as "model" and "provider".',
             );
         });
 
@@ -28,13 +28,9 @@ describe('Validator', () => {
     });
 
     describe('inputs validation', () => {
-        const customModel: CustomCopilotModel = {
-            config: () => ({
-                endpoint: 'test',
-                body: {},
-            }),
-            transformResponse: () => ({text: null}),
-        };
+        const customModel: CustomCopilotModel = () => ({
+            text: 'Hello, world!',
+        });
 
         it('should throw if provider specified with custom model', () => {
             expect(() => validator.inputs(customModel, 'mistral')).toThrow(
@@ -44,7 +40,7 @@ describe('Validator', () => {
 
         it('should throw if custom model missing required properties', () => {
             expect(() => validator.inputs({} as CustomCopilotModel)).toThrow(
-                'Please ensure both config and transformResponse are provided for custom model.',
+                'Provider must be specified and supported when using built-in models. Please choose from: mistral',
             );
         });
 

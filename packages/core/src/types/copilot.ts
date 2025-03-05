@@ -1,3 +1,4 @@
+import {Awaitable} from './internal';
 import type {Provider, ProviderImplementationMap} from './llm';
 
 /**
@@ -17,33 +18,26 @@ export interface PromptData {
 
 export type CustomPrompt<T> = (metadata: T) => Partial<PromptData>;
 
-export type CustomCopilotModelConfig = (
-    apiKey: string,
-    prompt: PromptData,
-) => {
-    /** The URL endpoint for the custom model's API */
-    endpoint: string;
-    /** Additional HTTP headers */
-    headers?: Record<string, string>;
-    /** Request body data */
-    body?: Record<string, unknown>;
-};
-
-export type CustomCopilotModelTransformResponse = (response: unknown) => {
-    /** The generated text */
-    text: string | null;
-};
-
-export interface CustomCopilotModel {
-    /** Configuration function */
-    config: CustomCopilotModelConfig;
-    /** Response transformer */
-    transformResponse: CustomCopilotModelTransformResponse;
-}
-
 type CustomOptions = {
+    /** Should be undefined when using a custom model */
     provider?: undefined;
+    /**
+     * Custom model implementation function.
+     * @param prompt - The prompt data used to generate the completion.
+     * @returns Object containing the generated text.
+     * @see {@link https://copilot.arshadyaseen.com/advanced/custom-model}
+     */
     model: CustomCopilotModel;
+};
+
+export type CustomCopilotModel = (
+    prompt: PromptData,
+) => Awaitable<CustomModelResponse>;
+
+type CustomModelResponse = {
+    /** The generated text content, or null if no text was generated for some reason.
+     * The text is used to insert into the editor directly. */
+    text: string | null;
 };
 
 export type CopilotOptions = ProviderOptions<'mistral'> | CustomOptions;

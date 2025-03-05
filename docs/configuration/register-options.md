@@ -147,6 +147,20 @@ registerCompletion(monaco, editor, {
 });
 ```
 
+## Follow-Up Completions
+
+By default, Monacopilot will automatically generate a new completion immediately after the user accepts a completion. This feature, controlled by the `allowFollowUpCompletions` option, enhances productivity by providing a continuous flow of suggestions (default: `true`).
+
+To disable follow-up completions:
+
+```javascript
+registerCompletion(monaco, editor, {
+    allowFollowUpCompletions: false,
+});
+```
+
+When disabled, the system will not automatically generate new completions after accepting one, giving you more control over when completions appear.
+
 ## Handling Errors
 
 When an error occurs during the completion process or requests, Monacopilot will log it to the console by default rather than throwing errors. This ensures smooth editing even when completions are unavailable.

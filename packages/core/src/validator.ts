@@ -7,15 +7,21 @@ const _validateParams = (
     apiKey: string | undefined,
     options: CopilotOptions,
 ): void => {
-    if (!apiKey) {
-        throw new Error('Please provide an API key.');
+    if (!apiKey && typeof options.model !== 'function') {
+        throw new Error(
+            options.provider
+                ? `Please provide the ${options.provider} API key.`
+                : 'Please provide an API key.',
+        );
     }
 
     if (
         !options ||
         (typeof options === 'object' && Object.keys(options).length === 0)
     ) {
-        throw new Error('Please provide options.');
+        throw new Error(
+            'Please provide required Copilot options, such as "model" and "provider".',
+        );
     }
 };
 
@@ -23,26 +29,16 @@ const _validateInputs = (
     model: Model | CustomCopilotModel,
     provider?: Provider,
 ): void => {
-    // Check if using a custom model (has config property)
-    if (typeof model === 'object') {
-        // Custom models cannot have a provider specified
-        if (provider !== undefined) {
-            throw new Error(
-                'Provider should not be specified when using a custom model.',
-            );
-        }
-
-        if (!('config' in model) || !('transformResponse' in model)) {
-            throw new Error(
-                'Please ensure both config and transformResponse are provided for custom model.',
-            );
-        }
-
-        return;
+    if (typeof model === 'function' && provider !== undefined) {
+        throw new Error(
+            'Provider should not be specified when using a custom model.',
+        );
     }
 
-    // Validate that a supported provider is specified for built-in models
-    if (!provider || !PROVIDERS.includes(provider)) {
+    if (
+        typeof model !== 'function' &&
+        (!provider || !PROVIDERS.includes(provider))
+    ) {
         throw new Error(
             `Provider must be specified and supported when using built-in models. Please choose from: ${joinWithAnd(
                 PROVIDERS,
@@ -50,9 +46,9 @@ const _validateInputs = (
         );
     }
 
-    // Validate that the model is supported by the specified provider
     if (
         typeof model === 'string' &&
+        provider !== undefined &&
         !PROVIDER_MODEL_MAP[provider].includes(model)
     ) {
         throw new Error(
