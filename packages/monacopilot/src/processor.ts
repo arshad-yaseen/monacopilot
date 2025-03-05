@@ -4,6 +4,7 @@ import {CompletionCache} from './classes/cache';
 import {CompletionFormatter} from './classes/formatter';
 import {CompletionRange} from './classes/range';
 import {
+    DEFAULT_ALLOW_FOLLOW_UP_COMPLETIONS,
     DEFAULT_ENABLE_CACHING,
     DEFAULT_ON_DEMAND_DEBOUNCE,
     DEFAULT_ON_IDLE_DEBOUNCE,
@@ -39,6 +40,7 @@ export const processInlineCompletions = async ({
         trigger = DEFAULT_TRIGGER,
         endpoint,
         enableCaching = DEFAULT_ENABLE_CACHING,
+        allowFollowUpCompletions = DEFAULT_ALLOW_FOLLOW_UP_COMPLETIONS,
         onError,
         requestHandler,
     } = options;
@@ -54,7 +56,10 @@ export const processInlineCompletions = async ({
         }
     }
 
-    if (token.isCancellationRequested) {
+    if (
+        token.isCancellationRequested ||
+        (!allowFollowUpCompletions && isCompletionAccepted)
+    ) {
         return createInlineCompletionResult([]);
     }
 
