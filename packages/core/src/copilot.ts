@@ -11,7 +11,7 @@ import type {
     CustomPrompt,
     PromptData,
 } from './types/copilot';
-import type {CopilotAIRequestResponse} from './types/internal';
+import type {CopilotAIResponse} from './types/internal';
 import type {
     Completion,
     CompletionCreateParams,
@@ -53,7 +53,7 @@ export abstract class Copilot<Metadata> {
             customPrompt?: CustomPrompt<Metadata>;
             customHeaders?: Record<string, string>;
         } = {},
-    ): Promise<CopilotAIRequestResponse> {
+    ): Promise<CopilotAIResponse> {
         try {
             const prompt = this.generatePrompt(metadata, options.customPrompt);
 
@@ -102,7 +102,7 @@ export abstract class Copilot<Metadata> {
         };
     }
 
-    private processResponse(response: unknown): CopilotAIRequestResponse {
+    private processResponse(response: unknown): CopilotAIResponse {
         if (!this.provider) {
             throw new Error('Provider is required for non-custom models');
         }
@@ -143,7 +143,7 @@ export abstract class Copilot<Metadata> {
         return response.json();
     }
 
-    protected handleError(error: unknown): CopilotAIRequestResponse {
+    protected handleError(error: unknown): CopilotAIResponse {
         const errorDetails = logger.report(error);
         return {
             text: null,
