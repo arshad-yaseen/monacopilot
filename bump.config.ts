@@ -3,7 +3,7 @@ import {defineConfig} from 'bumpp';
 import {updateDocsCdnUrls} from './scripts/update-docs-cdn-urls';
 
 export default defineConfig({
-    files: ['package.json', 'packages/*/package.json'],
+    files: ['package.json', 'packages/*/package.json', 'docs/package.json'],
     execute: ({results: {newVersion}}) => {
         updateDocsCdnUrls(newVersion);
     },

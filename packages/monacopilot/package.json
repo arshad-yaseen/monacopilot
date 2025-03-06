@@ -9,8 +9,8 @@
         "build"
     ],
     "scripts": {
-        "build": "tsup src/index.ts",
-        "dev": "tsup src/index.ts --watch"
+        "build": "tsup",
+        "dev": "tsup --watch"
     },
     "devDependencies": {
         "monaco-editor": "^0.52.0",
