@@ -16,7 +16,7 @@ const parseErrorMessage = (error: unknown): string => {
 const report = (error: unknown): {message: string; stack?: string} => {
     const errorMessage = parseErrorMessage(error);
 
-    const formattedError = `${RED}${BOLD}[MONACOPILOT ERROR] ${errorMessage}${RESET}`;
+    const formattedError = `${BOLD}[MONACOPILOT ERROR] ${errorMessage}${RESET}`;
     console.error(formattedError);
 
     return {message: errorMessage};
@@ -24,7 +24,7 @@ const report = (error: unknown): {message: string; stack?: string} => {
 
 const warn = (message: string, error?: unknown): void => {
     console.warn(
-        `${YELLOW}${BOLD}[MONACOPILOT WARN] ${message}${error ? `\n${parseErrorMessage(error)}` : ''}${RESET}`,
+        `${BOLD}[MONACOPILOT WARN] ${message}${error ? `\n${parseErrorMessage(error)}` : ''}${RESET}`,
     );
 };
 
@@ -34,7 +34,7 @@ const warnDeprecated = (
     location?: string,
 ): void =>
     console.warn(
-        `${YELLOW}${BOLD}[MONACOPILOT DEPRECATED] "${oldFeature}" is deprecated${location ? ` in ${location}` : ''}. ` +
+        `${BOLD}[MONACOPILOT DEPRECATED] "${oldFeature}" is deprecated${location ? ` in ${location}` : ''}. ` +
             `Please use "${newFeature}" instead. It will be removed in a future version.${RESET}`,
     );
 
