@@ -1,5 +1,3 @@
-const RED = '\x1b[91m';
-const YELLOW = '\x1b[93m';
 const RESET = '\x1b[0m';
 const BOLD = '\x1b[1m';
 
