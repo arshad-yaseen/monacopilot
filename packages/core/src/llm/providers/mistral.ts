@@ -50,7 +50,7 @@ export class MistralHandler extends BaseProviderHandler<'mistral'> {
         return Array.isArray(content)
             ? content
                   .filter(chunk => 'text' in chunk)
-                  .map(chunk => chunk.text)
+                  .map(chunk => (chunk as { text: string }).text)
                   .join('')
             : content;
     }
