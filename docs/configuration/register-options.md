@@ -223,6 +223,28 @@ registerCompletion(monaco, editor, {
 });
 ```
 
+### onCompletionRequested
+
+Event triggered when a completion is requested, before it is fetched. This allows you to track when completion requests are initiated and access the request parameters.
+
+```javascript
+registerCompletion(monaco, editor, {
+    // ... other options
+    onCompletionRequested: params => {
+        console.log('Completion requested:', {
+            endpoint: params.endpoint,
+            metadata: params.body.completionMetadata,
+        });
+    },
+});
+```
+
+**Parameters:**
+
+- `params`: An object containing:
+    - `endpoint`: The endpoint where the completion request will be sent
+    - `body`: The request body containing completion metadata
+
 ## Conditional Completion Triggering
 
 Control when completions are triggered based on custom conditions using the `triggerIf` option.

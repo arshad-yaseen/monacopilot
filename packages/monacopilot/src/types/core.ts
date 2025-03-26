@@ -7,7 +7,10 @@ import type {
     Technologies,
 } from '@monacopilot/core';
 
-import {FetchCompletionItemHandler} from './internal';
+import {
+    FetchCompletionItemHandler,
+    FetchCompletionItemParams,
+} from './internal';
 import type {
     CursorPosition,
     EditorCancellationToken,
@@ -118,6 +121,14 @@ export interface RegisterCompletionOptions {
      * Callback function triggered when a completion is rejected by the user.
      */
     onCompletionRejected?: () => void;
+    /**
+     * Callback function triggered when a completion is requested.
+     * This is called before the completion is fetched, allowing you to track when
+     * completion requests are initiated and access the request parameters.
+     * @param {FetchCompletionItemParams} params - The parameters being used for the completion request,
+     * including the endpoint and request body with completion metadata.
+     */
+    onCompletionRequested?: (params: FetchCompletionItemParams) => void;
     /**
      * Optional function to determine whether a completion should be triggered.
      * This allows for custom logic to control when completions are shown.
