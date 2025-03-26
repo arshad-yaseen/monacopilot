@@ -179,7 +179,7 @@ registerCompletion(monaco, editor, {
 
 The editor provides several events to handle completion suggestions. These events allow you to respond to different stages of the completion process, such as when a suggestion is shown or accepted by the user.
 
-### onCompletionShown
+### `onCompletionShown`
 
 This event is triggered when a completion suggestion is shown to the user. You can use this event to log or perform actions when a suggestion is displayed.
 
@@ -197,7 +197,7 @@ registerCompletion(monaco, editor, {
 - `completion`: The completion text that is being shown
 - `range`: The editor range object where the completion will be inserted
 
-### onCompletionAccepted
+### `onCompletionAccepted`
 
 Event triggered when a completion suggestion is accepted by the user.
 
@@ -210,7 +210,7 @@ registerCompletion(monaco, editor, {
 });
 ```
 
-### onCompletionRejected
+### `onCompletionRejected`
 
 Event triggered when a completion suggestion is rejected by the user.
 
@@ -223,7 +223,7 @@ registerCompletion(monaco, editor, {
 });
 ```
 
-### onCompletionRequested
+### `onCompletionRequested`
 
 Event triggered when a completion is requested, before it is fetched. This allows you to track when completion requests are initiated and access the request parameters.
 
