@@ -13,11 +13,12 @@
         "validate": "pnpm build && pnpm tsc && pnpm lint",
         "format": "prettier --write .",
         "release": "bumpp",
+        "fresh-deps": "pnpx taze -r -w",
         "publish:ci": "pnpm -r --filter '!docs' --filter '!playground' publish --access public --no-git-checks",
         "prepare": "husky"
     },
     "devDependencies": {
-        "@commitlint/cli": "^19.5.0",
+        "@commitlint/cli": "^19.8.0",
         "@commitlint/config-conventional": "^19.5.0",
         "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
         "@typescript-eslint/eslint-plugin": "^7.3.1",
@@ -28,5 +29,5 @@
         "typescript": "^5.4.3",
         "vitest": "^2.0.5"
     },
-    "packageManager": "pnpm@9.15.4"
+    "packageManager": "pnpm@9.15.9"
 }

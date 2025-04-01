@@ -13,7 +13,7 @@
         "dev": "tsup --watch"
     },
     "devDependencies": {
-        "@mistralai/mistralai": "^1.5.0",
+        "@mistralai/mistralai": "^1.5.2",
         "tsup": "^8.0.2",
         "typescript": "^5.4.3"
     },
