@@ -5,9 +5,7 @@
     "main": "./build/index.js",
     "module": "./build/index.mjs",
     "types": "./build/index.d.ts",
-    "files": [
-        "build"
-    ],
+    "files": ["build"],
     "scripts": {
         "build": "tsup",
         "dev": "tsup --watch"
@@ -17,12 +15,7 @@
         "tsup": "^8.0.2",
         "typescript": "^5.4.3"
     },
-    "keywords": [
-        "monacopilot",
-        "monaco",
-        "copilot",
-        "core"
-    ],
+    "keywords": ["monacopilot", "monaco", "copilot", "core"],
     "repository": {
         "type": "git",
         "url": "git+https://github.com/arshad-yaseen/monacopilot.git"

@@ -1,4 +1,4 @@
-import {TriggerEnum} from './types/core';
+import { TriggerEnum } from "./types/core";
 
 export const DEFAULT_MAX_CONTEXT_LINES = 100;
 export const DEFAULT_ENABLE_CACHING = true;

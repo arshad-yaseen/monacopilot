@@ -1,13 +1,13 @@
-import type {RegisterCompletionOptions} from './types/core';
+import type { RegisterCompletionOptions } from "./types/core";
 import type {
     CompletionKeyEventHandlerParams,
     EditorCompletionState,
-} from './types/internal';
+} from "./types/internal";
 import type {
     EditorKeyboardEvent,
     Monaco,
     StandaloneCodeEditor,
-} from './types/monaco';
+} from "./types/monaco";
 
 const ACCEPTANCE_KEYS = {
     TAB: (monaco: Monaco, event: EditorKeyboardEvent) =>
@@ -77,7 +77,7 @@ class CompletionKeyEventHandler {
     }
 
     private isAcceptanceKey(event: EditorKeyboardEvent): boolean {
-        return Object.values(ACCEPTANCE_KEYS).some(keyCheck =>
+        return Object.values(ACCEPTANCE_KEYS).some((keyCheck) =>
             keyCheck(this.monaco, event),
         );
     }
@@ -90,5 +90,5 @@ export const createKeyDownListener = (
     options: RegisterCompletionOptions,
 ) => {
     const handler = new CompletionKeyEventHandler(monaco, state, options);
-    return editor.onKeyDown(event => handler.handleKeyEvent(event));
+    return editor.onKeyDown((event) => handler.handleKeyEvent(event));
 };

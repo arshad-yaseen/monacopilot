@@ -1,10 +1,10 @@
-import {CompletionRequestBody, RegisterCompletionOptions} from './core';
+import type { CompletionRequestBody, RegisterCompletionOptions } from "./core";
 import type {
     CursorPosition,
     EditorKeyboardEvent,
     EditorModel,
     Monaco,
-} from './monaco';
+} from "./monaco";
 
 export type EditorCompletionState = {
     /** Whether the current completion suggestion has been accepted by the user */

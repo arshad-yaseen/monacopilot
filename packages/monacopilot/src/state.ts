@@ -1,5 +1,5 @@
-import type {EditorCompletionState} from './types/internal';
-import type {StandaloneCodeEditor} from './types/monaco';
+import type { EditorCompletionState } from "./types/internal";
+import type { StandaloneCodeEditor } from "./types/monaco";
 
 const editorCompletionState = new WeakMap<
     StandaloneCodeEditor,

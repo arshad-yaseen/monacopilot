@@ -1,25 +1,25 @@
-import {execSync} from 'child_process';
-import {readFileSync, writeFileSync} from 'fs';
-import {join} from 'path';
+import { execSync } from "node:child_process";
+import { readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 
 export function updateDocsCdnUrls(version: string): void {
-    const docsDir = join(process.cwd(), 'docs');
-    const files = ['index.md', 'examples/vanilla-js.md'];
+    const docsDir = join(process.cwd(), "docs");
+    const files = ["index.md", "examples/vanilla-js.md"];
 
     const packageJson = JSON.parse(
         readFileSync(
-            join(process.cwd(), 'packages/monacopilot/package.json'),
-            'utf-8',
+            join(process.cwd(), "packages/monacopilot/package.json"),
+            "utf-8",
         ),
     );
-    const monacoVersion = packageJson.devDependencies['monaco-editor'].replace(
-        '^',
-        '',
+    const monacoVersion = packageJson.devDependencies["monaco-editor"].replace(
+        "^",
+        "",
     );
 
     for (const file of files) {
         const filePath = join(docsDir, file);
-        let content = readFileSync(filePath, 'utf-8');
+        let content = readFileSync(filePath, "utf-8");
 
         content = content.replace(
             /https:\/\/unpkg\.com\/monacopilot@[^/]+/g,
@@ -39,7 +39,7 @@ export function updateDocsCdnUrls(version: string): void {
         writeFileSync(filePath, content);
     }
 
-    execSync('git add docs/');
+    execSync("git add docs/");
     execSync(
         `git commit --no-verify -m "chore: update docs CDN URLs to version ${version}"`,
     );

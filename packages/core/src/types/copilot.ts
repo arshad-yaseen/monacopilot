@@ -1,5 +1,5 @@
-import {Awaitable} from './internal';
-import type {Provider, ProviderImplementationMap} from './llm';
+import type { Awaitable } from "./internal";
+import type { Provider, ProviderImplementationMap } from "./llm";
 
 /**
  * Represents the structure of a prompt used for code completion.
@@ -40,9 +40,9 @@ type CustomModelResponse = {
     text: string | null;
 };
 
-export type CopilotOptions = ProviderOptions<'mistral'> | CustomOptions;
+export type CopilotOptions = ProviderOptions<"mistral"> | CustomOptions;
 
 export type ProviderOptions<T extends Provider> = {
     provider: T;
-    model: ProviderImplementationMap[T]['Model'];
+    model: ProviderImplementationMap[T]["Model"];
 };

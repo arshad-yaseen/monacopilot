@@ -1,19 +1,19 @@
-import {logger} from '@monacopilot/core';
+import { logger } from "@monacopilot/core";
 
-import {createInlineCompletionsProvider} from './completions-provider';
-import {createKeyDownListener} from './key-events';
-import {completionCache} from './processor';
+import { createInlineCompletionsProvider } from "./completions-provider";
+import { createKeyDownListener } from "./key-events";
+import { completionCache } from "./processor";
 import {
     createInitialState,
     deleteEditorState,
     getEditorState,
     setEditorState,
-} from './state';
+} from "./state";
 import type {
     CompletionRegistration,
     RegisterCompletionOptions,
-} from './types/core';
-import type {Disposable, Monaco, StandaloneCodeEditor} from './types/monaco';
+} from "./types/core";
+import type { Disposable, Monaco, StandaloneCodeEditor } from "./types/monaco";
 
 let activeCompletionRegistration: CompletionRegistration | null = null;
 
@@ -48,7 +48,7 @@ export const registerCompletion = (
 
         if (!state) {
             logger.warn(
-                'Completion is not registered properly. State not found.',
+                "Completion is not registered properly. State not found.",
             );
             return createEmptyRegistration();
         }
@@ -72,7 +72,9 @@ export const registerCompletion = (
 
         const registration: CompletionRegistration = {
             deregister: () => {
-                disposables.forEach(disposable => disposable.dispose());
+                for (const disposable of disposables) {
+                    disposable.dispose();
+                }
                 completionCache.clear();
                 deleteEditorState(editor);
                 activeCompletionRegistration = null;
@@ -91,7 +93,9 @@ export const registerCompletion = (
 
         return {
             deregister: () => {
-                disposables.forEach(disposable => disposable.dispose());
+                for (const disposable of disposables) {
+                    disposable.dispose();
+                }
                 deleteEditorState(editor);
                 activeCompletionRegistration = null;
             },
@@ -104,12 +108,12 @@ export const handleTriggerCompletion = (editor: StandaloneCodeEditor) => {
     const state = getEditorState(editor);
     if (!state) {
         logger.warn(
-            'Completion is not registered. Use `registerCompletion` to register completion first.',
+            "Completion is not registered. Use `registerCompletion` to register completion first.",
         );
         return;
     }
     state.isExplicitlyTriggered = true;
-    editor.trigger('keyboard', 'editor.action.inlineSuggest.trigger', {});
+    editor.trigger("keyboard", "editor.action.inlineSuggest.trigger", {});
 };
 
 const createEmptyRegistration = (): CompletionRegistration => {

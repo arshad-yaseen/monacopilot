@@ -1,21 +1,21 @@
-import {
+import type {
     FIMCompletionResponse as MistralFIMCompletion,
     FIMCompletionRequest$Outbound as MistralFIMCompletionCreateParams,
-} from '@mistralai/mistralai/models/components';
+} from "@mistralai/mistralai/models/components";
 
-import type {PromptData} from './copilot';
+import type { PromptData } from "./copilot";
 
 /**
  * Providers supported by Copilot.
  */
-export type Provider = 'mistral';
+export type Provider = "mistral";
 
 /**
  * Core type mapping for provider-specific implementations
  */
 export interface ProviderImplementationMap {
     mistral: {
-        Model: 'codestral';
+        Model: "codestral";
         Params: MistralFIMCompletionCreateParams;
         Completion: MistralFIMCompletion;
     };
@@ -24,33 +24,33 @@ export interface ProviderImplementationMap {
 /**
  * Models available for each provider (maintained as individual exports)
  */
-export type MistralModel = ProviderImplementationMap['mistral']['Model'];
+export type MistralModel = ProviderImplementationMap["mistral"]["Model"];
 
 /**
  * Union of all predefined Copilot models
  */
 export type Model = {
-    [K in Provider]: ProviderImplementationMap[K]['Model'];
+    [K in Provider]: ProviderImplementationMap[K]["Model"];
 }[Provider];
 
 /**
  * Utility types for provider-specific implementations
  */
 export type PickModel<P extends Provider> =
-    ProviderImplementationMap[P]['Model'];
+    ProviderImplementationMap[P]["Model"];
 export type PickCompletionCreateParams<P extends Provider> =
-    ProviderImplementationMap[P]['Params'];
+    ProviderImplementationMap[P]["Params"];
 export type PickCompletion<P extends Provider> =
-    ProviderImplementationMap[P]['Completion'];
+    ProviderImplementationMap[P]["Completion"];
 
 /**
  * Consolidated chat completion types (maintained as individual exports)
  */
 export type CompletionCreateParams = {
-    [K in Provider]: ProviderImplementationMap[K]['Params'];
+    [K in Provider]: ProviderImplementationMap[K]["Params"];
 }[Provider];
 export type Completion = {
-    [K in Provider]: ProviderImplementationMap[K]['Completion'];
+    [K in Provider]: ProviderImplementationMap[K]["Completion"];
 }[Provider];
 
 /**

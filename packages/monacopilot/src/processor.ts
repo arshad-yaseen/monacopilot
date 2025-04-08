@@ -1,8 +1,8 @@
-import {logger} from '@monacopilot/core';
+import { logger } from "@monacopilot/core";
 
-import {CompletionCache} from './classes/cache';
-import {CompletionFormatter} from './classes/formatter';
-import {CompletionRange} from './classes/range';
+import { CompletionCache } from "./classes/cache";
+import { CompletionFormatter } from "./classes/formatter";
+import { CompletionRange } from "./classes/range";
 import {
     DEFAULT_ALLOW_FOLLOW_UP_COMPLETIONS,
     DEFAULT_ENABLE_CACHING,
@@ -10,22 +10,22 @@ import {
     DEFAULT_ON_IDLE_DEBOUNCE,
     DEFAULT_ON_TYPING_DEBOUNCE,
     DEFAULT_TRIGGER,
-} from './defaults';
+} from "./defaults";
 import {
     buildCompletionMetadata,
     requestCompletionItem,
-} from './request-completion';
+} from "./request-completion";
 import {
-    CompletionMetadata,
-    InlineCompletionProcessorParams,
+    type CompletionMetadata,
+    type InlineCompletionProcessorParams,
     TriggerEnum,
-} from './types/core';
-import {FetchCompletionItemParams} from './types/internal';
-import type {EditorInlineCompletionsResult} from './types/monaco';
-import {asyncDebounce} from './utils/async-debounce';
-import {getTextBeforeCursor} from './utils/editor';
-import {isCancellationError} from './utils/error';
-import {createInlineCompletionResult} from './utils/result';
+} from "./types/core";
+import type { FetchCompletionItemParams } from "./types/internal";
+import type { EditorInlineCompletionsResult } from "./types/monaco";
+import { asyncDebounce } from "./utils/async-debounce";
+import { getTextBeforeCursor } from "./utils/editor";
+import { isCancellationError } from "./utils/error";
+import { createInlineCompletionResult } from "./utils/result";
 
 export const completionCache = new CompletionCache();
 
@@ -47,10 +47,12 @@ export const processInlineCompletions = async ({
     } = options;
 
     if (enableCaching && !isCompletionAccepted) {
-        const cachedCompletions = completionCache.get(pos, mdl).map(cache => ({
-            insertText: cache.completion,
-            range: cache.range,
-        }));
+        const cachedCompletions = completionCache
+            .get(pos, mdl)
+            .map((cache) => ({
+                insertText: cache.completion,
+                range: cache.range,
+            }));
 
         if (cachedCompletions.length > 0) {
             return createInlineCompletionResult(cachedCompletions);
@@ -89,7 +91,7 @@ export const processInlineCompletions = async ({
             options,
         });
 
-        const {completion} = await requestCompletion({
+        const { completion } = await requestCompletion({
             endpoint,
             body: {
                 completionMetadata,
@@ -133,7 +135,7 @@ export const processInlineCompletions = async ({
         } else if (onError) {
             onError(error as Error);
         } else {
-            logger.warn('Cannot provide completion', error);
+            logger.warn("Cannot provide completion", error);
         }
     }
 

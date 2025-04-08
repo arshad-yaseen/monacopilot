@@ -1,9 +1,9 @@
-import type {PromptData} from '@monacopilot/core';
+import type { PromptData } from "@monacopilot/core";
 
-import type {CompletionMetadata} from './types/core';
-import {joinWithAnd} from './utils/text';
+import type { CompletionMetadata } from "./types/core";
+import { joinWithAnd } from "./utils/text";
 
-const CURSOR_PLACEHOLDER = '<|developer_cursor_is_here|>';
+const CURSOR_PLACEHOLDER = "<|developer_cursor_is_here|>";
 
 export const buildPrompt = (metadata: CompletionMetadata): PromptData => {
     return {
@@ -14,11 +14,16 @@ export const buildPrompt = (metadata: CompletionMetadata): PromptData => {
 };
 
 const getInstruction = (): string => {
-    return `Provide concise and readable code completions that are syntactically and logically accurate, and seamlessly integrate with the existing context. Output only the raw code to be inserted at the cursor location without any additional text, comments, or text before or after the cursor.`;
+    return "Provide concise and readable code completions that are syntactically and logically accurate, and seamlessly integrate with the existing context. Output only the raw code to be inserted at the cursor location without any additional text, comments, or text before or after the cursor.";
 };
 
 const buildContext = (metadata: CompletionMetadata): string => {
-    const {technologies = [], filename, relatedFiles = [], language} = metadata;
+    const {
+        technologies = [],
+        filename,
+        relatedFiles = [],
+        language,
+    } = metadata;
 
     const techStack = joinWithAnd(
         [language, ...technologies].filter((item): item is string =>
@@ -28,23 +33,23 @@ const buildContext = (metadata: CompletionMetadata): string => {
 
     const relatedFilesText =
         relatedFiles.length === 0
-            ? ''
+            ? ""
             : relatedFiles
-                  .map(({path, content}) => `### ${path}\n${content}`)
-                  .join('\n\n');
+                  .map(({ path, content }) => `### ${path}\n${content}`)
+                  .join("\n\n");
 
     const contextHeader = [
-        techStack ? `Technology stack: ${techStack}` : '',
-        `File: ${filename || 'unknown'}`,
+        techStack ? `Technology stack: ${techStack}` : "",
+        `File: ${filename || "unknown"}`,
     ]
         .filter(Boolean)
-        .join('\n');
+        .join("\n");
 
-    return `${relatedFilesText ? `${relatedFilesText}\n\n` : ''}${contextHeader}`;
+    return `${relatedFilesText ? `${relatedFilesText}\n\n` : ""}${contextHeader}`;
 };
 
 const getFileContent = (metadata: CompletionMetadata): string => {
-    const {textBeforeCursor, textAfterCursor} = metadata;
+    const { textBeforeCursor, textAfterCursor } = metadata;
 
     return `**Current code:**
 \`\`\`

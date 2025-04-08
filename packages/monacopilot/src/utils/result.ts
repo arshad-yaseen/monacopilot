@@ -1,7 +1,7 @@
 import type {
     EditorInlineCompletion,
     EditorInlineCompletionsResult,
-} from '../types/monaco';
+} from "../types/monaco";
 
 export const createInlineCompletionResult = (
     items: EditorInlineCompletion[],

@@ -2,7 +2,7 @@ import type {
     CursorPosition,
     EditorModel,
     StandaloneCodeEditor,
-} from '../types/monaco';
+} from "../types/monaco";
 
 export const getCharBeforeCursor = (
     pos: CursorPosition,

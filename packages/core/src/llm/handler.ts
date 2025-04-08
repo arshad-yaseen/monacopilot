@@ -1,12 +1,12 @@
-import type {PromptData} from '../types/copilot';
+import type { PromptData } from "../types/copilot";
 import type {
     Model,
     PickCompletion,
     PickCompletionCreateParams,
     PickModel,
     Provider,
-} from '../types/llm';
-import {BaseCopilotMetadata} from '../types/metadata';
+} from "../types/llm";
+import type { BaseCopilotMetadata } from "../types/metadata";
 
 export abstract class BaseProviderHandler<P extends Provider> {
     abstract createEndpoint(model: Model, apiKey?: string): string;

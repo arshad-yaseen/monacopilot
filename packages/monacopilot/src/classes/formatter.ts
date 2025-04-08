@@ -1,5 +1,5 @@
 export class CompletionFormatter {
-    private formattedCompletion = '';
+    private formattedCompletion = "";
 
     constructor(completion: string) {
         this.formattedCompletion = completion;
@@ -23,13 +23,13 @@ export class CompletionFormatter {
     }
 
     private removeMarkdownCodeBlocks(text: string): string {
-        const lines = text.split('\n');
+        const lines = text.split("\n");
         const result: string[] = [];
         let inCodeBlock = false;
 
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
-            const isCodeBlockStart = line.trim().startsWith('```');
+            const isCodeBlockStart = line.trim().startsWith("```");
 
             if (isCodeBlockStart && !inCodeBlock) {
                 inCodeBlock = true;
@@ -44,13 +44,13 @@ export class CompletionFormatter {
             result.push(line);
         }
 
-        return result.join('\n');
+        return result.join("\n");
     }
 
     public removeExcessiveNewlines(): CompletionFormatter {
         this.formattedCompletion = this.formattedCompletion.replace(
             /\n{3,}/g,
-            '\n\n',
+            "\n\n",
         );
         return this;
     }

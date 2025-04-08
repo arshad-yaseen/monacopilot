@@ -1,11 +1,11 @@
-import {defineConfig} from 'tsup';
+import { defineConfig } from "tsup";
 
 export default defineConfig({
-    outDir: 'build',
-    entry: ['src/index.ts'],
-    target: 'es2021',
+    outDir: "build",
+    entry: ["src/index.ts"],
+    target: "es2021",
     minify: true,
-    format: ['esm', 'cjs'],
+    format: ["esm", "cjs"],
     clean: true,
     dts: true,
     treeshake: true,

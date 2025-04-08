@@ -146,7 +146,9 @@ feat(core): add support for DeepSeek provider
 4. Test your changes using the playground
 5. Run all checks:
     ```bash
-    pnpm validate
+    pnpm tsc
+    pnpm lint
+    pnpm format
     pnpm test
     ```
 6. Commit your changes following our commit guidelines

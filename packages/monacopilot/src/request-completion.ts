@@ -1,28 +1,28 @@
-import type {RelatedFile} from '@monacopilot/core';
+import type { RelatedFile } from "@monacopilot/core";
 
-import {DEFAULT_MAX_CONTEXT_LINES} from './defaults';
-import type {CompletionMetadata, CompletionResponse} from './types/core';
+import { DEFAULT_MAX_CONTEXT_LINES } from "./defaults";
+import type { CompletionMetadata, CompletionResponse } from "./types/core";
 import type {
     ConstructCompletionMetadataParams,
     FetchCompletionItemParams,
     FetchCompletionItemReturn,
-} from './types/internal';
-import type {CursorPosition, EditorModel} from './types/monaco';
-import {getTextAfterCursor, getTextBeforeCursor} from './utils/editor';
+} from "./types/internal";
+import type { CursorPosition, EditorModel } from "./types/monaco";
+import { getTextAfterCursor, getTextBeforeCursor } from "./utils/editor";
 import {
+    type TruncateTextToMaxLinesOptions,
     truncateTextToMaxLines,
-    TruncateTextToMaxLinesOptions,
-} from './utils/text';
+} from "./utils/text";
 
 export const requestCompletionItem = async (
     params: FetchCompletionItemParams,
 ): Promise<FetchCompletionItemReturn> => {
-    const {endpoint, body} = params;
+    const { endpoint, body } = params;
 
     const response = await fetch(endpoint, {
-        method: 'POST',
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
     });
@@ -33,13 +33,13 @@ export const requestCompletionItem = async (
         );
     }
 
-    const {completion, error} = (await response.json()) as CompletionResponse;
+    const { completion, error } = (await response.json()) as CompletionResponse;
 
     if (error) {
         throw new Error(error);
     }
 
-    return {completion};
+    return { completion };
 };
 
 export const buildCompletionMetadata = ({
@@ -80,7 +80,7 @@ export const buildCompletionMetadata = ({
     ): RelatedFile[] | undefined => {
         if (!files || !maxLines) return files;
 
-        return files.map(({content, ...otherProps}) => ({
+        return files.map(({ content, ...otherProps }) => ({
             ...otherProps,
             content: truncateTextToMaxLines(content, maxLines),
         }));
@@ -90,7 +90,7 @@ export const buildCompletionMetadata = ({
         getTextBeforeCursor,
         adjustedMaxContextLines,
         {
-            truncateDirection: 'keepEnd',
+            truncateDirection: "keepEnd",
         },
     );
 
@@ -98,7 +98,7 @@ export const buildCompletionMetadata = ({
         getTextAfterCursor,
         adjustedMaxContextLines,
         {
-            truncateDirection: 'keepStart',
+            truncateDirection: "keepStart",
         },
     );
 

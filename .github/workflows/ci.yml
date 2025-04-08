@@ -29,8 +29,8 @@ jobs:
             - name: Install dependencies
               run: pnpm install
 
-            - name: Run validation
-              run: pnpm validate
+            - name: Run CI
+              run: pnpm tsc && pnpm lint && pnpm format
 
             - name: Run tests
               run: pnpm test

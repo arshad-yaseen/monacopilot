@@ -1,7 +1,7 @@
-import type {CompletionCacheItem} from '../types/cache';
-import type {CursorPosition, EditorModel} from '../types/monaco';
-import {getTextBeforeCursor} from '../utils/editor';
-import {Queue} from './queue';
+import type { CompletionCacheItem } from "../types/cache";
+import type { CursorPosition, EditorModel } from "../types/monaco";
+import { getTextBeforeCursor } from "../utils/editor";
+import { Queue } from "./queue";
 
 export class CompletionCache {
     private static readonly MAX_CACHE_SIZE = 20;
@@ -19,7 +19,7 @@ export class CompletionCache {
     ): readonly CompletionCacheItem[] {
         return this.cache
             .getAll()
-            .filter(cacheItem => this.isValidCacheItem(cacheItem, pos, mdl));
+            .filter((cacheItem) => this.isValidCacheItem(cacheItem, pos, mdl));
     }
 
     public add(cacheItem: Readonly<CompletionCacheItem>): void {
@@ -48,8 +48,7 @@ export class CompletionCache {
             pos.lineNumber < mdl.getLineCount()
         ) {
             const nextLineContent = mdl.getLineContent(pos.lineNumber + 1);
-            extendedTextBeforeCursor =
-                textBeforeCursor + '\n' + nextLineContent;
+            extendedTextBeforeCursor = `${textBeforeCursor}\n${nextLineContent}`;
         }
 
         if (
@@ -82,9 +81,10 @@ export class CompletionCache {
         cacheItem: Readonly<CompletionCacheItem>,
         pos: Readonly<CursorPosition>,
     ): boolean {
-        const {range} = cacheItem;
-        const {startLineNumber, startColumn, endLineNumber, endColumn} = range;
-        const {lineNumber, column} = pos;
+        const { range } = cacheItem;
+        const { startLineNumber, startColumn, endLineNumber, endColumn } =
+            range;
+        const { lineNumber, column } = pos;
 
         if (lineNumber < startLineNumber || lineNumber > endLineNumber) {
             return false;

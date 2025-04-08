@@ -1,12 +1,12 @@
-import {CompletionCopilot} from './completion-copilot';
-import {registerCompletion} from './register';
+import { CompletionCopilot } from "./completion-copilot";
+import { registerCompletion } from "./register";
 
 /** @deprecated Use `CompletionCopilot` instead */
 export const Copilot = CompletionCopilot;
 
-export {registerCompletion, CompletionCopilot};
+export { registerCompletion, CompletionCopilot };
 
-export type {Monaco, StandaloneCodeEditor} from './types/monaco';
+export type { Monaco, StandaloneCodeEditor } from "./types/monaco";
 
 export type {
     CopilotOptions,
@@ -14,7 +14,7 @@ export type {
     Provider,
     Model,
     MistralModel,
-} from '@monacopilot/core';
+} from "@monacopilot/core";
 
 export type {
     CompletionMetadata,
@@ -23,4 +23,4 @@ export type {
     CompletionRequestOptions,
     RegisterCompletionOptions,
     CompletionRegistration,
-} from './types/core';
+} from "./types/core";

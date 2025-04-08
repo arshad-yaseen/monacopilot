@@ -1,8 +1,8 @@
 export class Queue<T> {
     private buffer: (T | undefined)[];
-    private head: number = 0;
-    private tail: number = 0;
-    private size: number = 0;
+    private head = 0;
+    private tail = 0;
+    private size = 0;
 
     constructor(private readonly capacity: number) {
         this.buffer = new Array(capacity);

@@ -1,6 +1,6 @@
 export const asyncDebounce = <T extends (...args: any[]) => Promise<any>>(
     func: T,
-    wait: number = 300,
+    wait = 300,
 ): {
     (...args: Parameters<T>): Promise<ReturnType<T>>;
     cancel: () => void;
@@ -65,7 +65,7 @@ export const asyncDebounce = <T extends (...args: any[]) => Promise<any>>(
             timer = null;
         }
         if (pending) {
-            pending.reject(new Error('Cancelled'));
+            pending.reject(new Error("Cancelled"));
             pending = null;
         }
     };

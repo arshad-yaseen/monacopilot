@@ -3,8 +3,8 @@ import type {
     EditorModel,
     EditorRange,
     Monaco,
-} from '../types/monaco';
-import {TextOverlapCalculator} from './text-overlap-calculator';
+} from "../types/monaco";
+import { TextOverlapCalculator } from "./text-overlap-calculator";
 
 export class CompletionRange {
     private textOverlapCalculator: TextOverlapCalculator;
@@ -34,7 +34,7 @@ export class CompletionRange {
             return this.createEmptyRange(pos);
         }
 
-        const {startOverlapLength, maxOverlapLength} =
+        const { startOverlapLength, maxOverlapLength } =
             this.textOverlapCalculator.findOverlaps(
                 completion,
                 textBeforeCursor,
@@ -62,7 +62,7 @@ export class CompletionRange {
     ): EditorRange {
         const startLineNumber = pos.lineNumber;
         const startColumn = pos.column;
-        const completionLines = completion.split('\n');
+        const completionLines = completion.split("\n");
         const lastLineIndex = completionLines.length - 1;
 
         const endLineNumber = startLineNumber + lastLineIndex;

@@ -5,19 +5,19 @@ import type {
     Filename,
     RelatedFile,
     Technologies,
-} from '@monacopilot/core';
+} from "@monacopilot/core";
 
-import {
+import type {
     FetchCompletionItemHandler,
     FetchCompletionItemParams,
-} from './internal';
+} from "./internal";
 import type {
     CursorPosition,
     EditorCancellationToken,
     EditorModel,
     EditorRange,
     Monaco,
-} from './monaco';
+} from "./monaco";
 
 export type CompletionMetadata = BaseCopilotMetadata;
 
@@ -146,12 +146,12 @@ export interface RegisterCompletionOptions {
     }) => boolean;
 }
 
-export type Trigger = 'onTyping' | 'onIdle' | 'onDemand';
+export type Trigger = "onTyping" | "onIdle" | "onDemand";
 
 export enum TriggerEnum {
-    OnTyping = 'onTyping',
-    OnIdle = 'onIdle',
-    OnDemand = 'onDemand',
+    OnTyping = "onTyping",
+    OnIdle = "onIdle",
+    OnDemand = "onDemand",
 }
 
 export interface CompletionRegistration {

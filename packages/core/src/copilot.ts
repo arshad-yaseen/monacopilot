@@ -3,24 +3,24 @@ import {
     createProviderHeaders,
     createRequestBody,
     parseProviderCompletion,
-} from './llm/operations';
-import {logger} from './logger';
+} from "./llm/operations";
+import { logger } from "./logger";
 import type {
     CopilotOptions,
     CustomCopilotModel,
     CustomPrompt,
     PromptData,
-} from './types/copilot';
-import type {CopilotAIResponse} from './types/internal';
+} from "./types/copilot";
+import type { CopilotAIResponse } from "./types/internal";
 import type {
     Completion,
     CompletionCreateParams,
     Model,
     Provider,
-} from './types/llm';
-import {BaseCopilotMetadata} from './types/metadata';
-import {fetchWithTimeout} from './utils/fetch-with-timeout';
-import validate from './validator';
+} from "./types/llm";
+import type { BaseCopilotMetadata } from "./types/metadata";
+import { fetchWithTimeout } from "./utils/fetch-with-timeout";
+import validate from "./validator";
 
 export abstract class Copilot<Metadata> {
     protected readonly apiKey: string;
@@ -29,7 +29,7 @@ export abstract class Copilot<Metadata> {
 
     constructor(apiKey: string | undefined, options: CopilotOptions) {
         validate.params(apiKey, options);
-        this.apiKey = apiKey ?? '';
+        this.apiKey = apiKey ?? "";
         this.provider = options.provider;
         this.model = options.model;
         validate.inputs(this.model, this.provider);
@@ -43,7 +43,7 @@ export abstract class Copilot<Metadata> {
     ): PromptData {
         const defaultPrompt = this.getDefaultPrompt(metadata);
         return customPrompt
-            ? {...defaultPrompt, ...customPrompt(metadata)}
+            ? { ...defaultPrompt, ...customPrompt(metadata) }
             : defaultPrompt;
     }
 
@@ -60,7 +60,7 @@ export abstract class Copilot<Metadata> {
             if (this.isCustomModel()) {
                 return this.model(prompt);
             } else {
-                const {customHeaders = {}} = options;
+                const { customHeaders = {} } = options;
                 const requestDetails = await this.prepareRequest(
                     prompt,
                     metadata as BaseCopilotMetadata,
@@ -68,7 +68,7 @@ export abstract class Copilot<Metadata> {
                 const response = await this.sendRequest(
                     requestDetails.endpoint,
                     requestDetails.requestBody,
-                    {...requestDetails.headers, ...customHeaders},
+                    { ...requestDetails.headers, ...customHeaders },
                 );
 
                 return this.processResponse(response);
@@ -83,7 +83,7 @@ export abstract class Copilot<Metadata> {
         metadata: BaseCopilotMetadata,
     ) {
         if (!this.provider) {
-            throw new Error('Provider is required for non-custom models');
+            throw new Error("Provider is required for non-custom models");
         }
 
         return {
@@ -104,7 +104,7 @@ export abstract class Copilot<Metadata> {
 
     private processResponse(response: unknown): CopilotAIResponse {
         if (!this.provider) {
-            throw new Error('Provider is required for non-custom models');
+            throw new Error("Provider is required for non-custom models");
         }
 
         return {
@@ -119,7 +119,7 @@ export abstract class Copilot<Metadata> {
     private isCustomModel(): this is {
         model: CustomCopilotModel;
     } {
-        return typeof this.model === 'function';
+        return typeof this.model === "function";
     }
 
     protected async sendRequest(
@@ -128,9 +128,9 @@ export abstract class Copilot<Metadata> {
         headers: Record<string, string>,
     ) {
         const response = await fetchWithTimeout(endpoint, {
-            method: 'POST',
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
                 ...headers,
             },
             body: JSON.stringify(requestBody),

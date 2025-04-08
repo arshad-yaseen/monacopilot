@@ -1,23 +1,23 @@
-'use client';
+"use client";
 
-import {useEffect, useRef} from 'react';
+import { useEffect, useRef } from "react";
 
-import {DEFAULT_MONACO_EDITOR_OPTIONS} from '@/constants/editor';
-import MonacoEditor from '@monaco-editor/react';
+import { DEFAULT_MONACO_EDITOR_OPTIONS } from "@/constants/editor";
+import MonacoEditor from "@monaco-editor/react";
 import {
-    registerCompletion,
     type CompletionRegistration,
     type Monaco,
     type StandaloneCodeEditor,
-} from 'monacopilot';
+    registerCompletion,
+} from "monacopilot";
 
 const Editor = () => {
     const completionRef = useRef<CompletionRegistration | null>(null);
 
     const handleMount = (editor: StandaloneCodeEditor, monaco: Monaco) => {
         completionRef.current = registerCompletion(monaco, editor, {
-            endpoint: '/api/code-completion',
-            language: 'javascript',
+            endpoint: "/api/code-completion",
+            language: "javascript",
         });
     };
 

@@ -1,4 +1,4 @@
-import type {EditorRange} from './monaco';
+import type { EditorRange } from "./monaco";
 
 export interface CompletionCacheItem {
     completion: string;

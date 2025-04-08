@@ -1,15 +1,15 @@
-import type {PromptData} from '../types/copilot';
+import type { PromptData } from "../types/copilot";
 import type {
     Completion,
     CompletionCreateParams,
     PickModel,
     Provider,
-} from '../types/llm';
-import type {BaseCopilotMetadata} from '../types/metadata';
-import {BaseProviderHandler} from './handler';
-import {MistralHandler} from './providers/mistral';
+} from "../types/llm";
+import type { BaseCopilotMetadata } from "../types/metadata";
+import type { BaseProviderHandler } from "./handler";
+import { MistralHandler } from "./providers/mistral";
 
-const providerHandlers: {[P in Provider]: BaseProviderHandler<P>} = {
+const providerHandlers: { [P in Provider]: BaseProviderHandler<P> } = {
     mistral: new MistralHandler(),
 };
 

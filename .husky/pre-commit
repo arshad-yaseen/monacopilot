@@ -1,3 +1,1 @@
-pnpm build:docs
-pnpm validate
-pnpm test
+pnpm tsc && pnpm lint && pnpm format
