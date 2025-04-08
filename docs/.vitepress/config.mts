@@ -135,4 +135,7 @@ export default defineConfig({
             },
         ],
     ],
+    sitemap: {
+        hostname: 'https://copilot.arshadyaseen.com',
+    },
 });
