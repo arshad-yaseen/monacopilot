@@ -29,6 +29,9 @@ jobs:
             - name: Install dependencies
               run: pnpm install
 
+            - name: Run build
+              run: pnpm build
+
             - name: Run CI
               run: pnpm tsc && pnpm lint && pnpm format
 
