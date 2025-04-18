@@ -245,6 +245,28 @@ registerCompletion(monaco, editor, {
     - `endpoint`: The endpoint where the completion request will be sent
     - `body`: The request body containing completion metadata
 
+### `onCompletionRequestFinished`
+
+Event triggered when a completion request has received a response. This allows you to access both the request parameters and the response received.
+
+```javascript
+registerCompletion(monaco, editor, {
+    // ... other options
+    onCompletionRequestFinished: (params, response) => {
+        console.log('Completion request finished:', {
+            endpoint: params.endpoint,
+            metadata: params.body.completionMetadata,
+            completion: response.completion
+        });
+    },
+});
+```
+
+**Parameters:**
+
+- `params`: The parameters that were used for the completion request, including the endpoint and request body
+- `response`: The response from the completion request, which includes the completion text
+
 ## Conditional Completion Triggering
 
 Control when completions are triggered based on custom conditions using the `triggerIf` option.

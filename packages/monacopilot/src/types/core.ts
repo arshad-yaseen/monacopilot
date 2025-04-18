@@ -10,6 +10,7 @@ import type {
 import type {
     FetchCompletionItemHandler,
     FetchCompletionItemParams,
+    FetchCompletionItemReturn,
 } from "./internal";
 import type {
     CursorPosition,
@@ -116,19 +117,34 @@ export interface RegisterCompletionOptions {
      * Callback function triggered when a completion is accepted by the user.
      */
     onCompletionAccepted?: () => void;
-
     /**
      * Callback function triggered when a completion is rejected by the user.
      */
     onCompletionRejected?: () => void;
     /**
      * Callback function triggered when a completion is requested.
-     * This is called before the completion is fetched, allowing you to track when
-     * completion requests are initiated and access the request parameters.
      * @param {FetchCompletionItemParams} params - The parameters being used for the completion request,
      * including the endpoint and request body with completion metadata.
      */
     onCompletionRequested?: (params: FetchCompletionItemParams) => void;
+    /**
+     * Callback function triggered when a completion request has finished.
+     * @param {FetchCompletionItemParams} params - The parameters that were used for the completion request,
+     * including the endpoint and request body with completion metadata.
+     * @param {FetchCompletionItemReturn} response - The response from the completion request, which includes the completion text.
+     * @example
+     * ```ts
+     * onCompletionRequestFinished: (params, response) => {
+     *     console.log(params);
+     *     console.log(`Completion text: ${response.completion}`);
+     * }
+     * ```
+     */
+    onCompletionRequestFinished?: (
+        params: FetchCompletionItemParams,
+        response: FetchCompletionItemReturn,
+    ) => void;
+
     /**
      * Optional function to determine whether a completion should be triggered.
      * This allows for custom logic to control when completions are shown.

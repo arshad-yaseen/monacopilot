@@ -68,11 +68,12 @@ export const processInlineCompletions = async ({
 
     try {
         const requestCompletion = asyncDebounce(
-            (params: FetchCompletionItemParams) => {
+            async (params: FetchCompletionItemParams) => {
                 options.onCompletionRequested?.(params);
-                return (
-                    requestHandler?.(params) ?? requestCompletionItem(params)
-                );
+                const response = await (requestHandler?.(params) ??
+                    requestCompletionItem(params));
+                options.onCompletionRequestFinished?.(params, response);
+                return response;
             },
             {
                 [TriggerEnum.OnTyping]: DEFAULT_ON_TYPING_DEBOUNCE,
