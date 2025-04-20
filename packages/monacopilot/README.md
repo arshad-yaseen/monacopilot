@@ -1,4 +1,4 @@
-![Monacopilot Banner](https://copilot.arshadyaseen.com/og.png)
+![Monacopilot Banner](https://monacopilot.dev/og.png)
 
 ### Features
 
@@ -16,7 +16,7 @@
 
 ## Documentation
 
-Go to the [documentation](https://copilot.arshadyaseen.com) to get started with Monacopilot.
+Go to the [documentation](https://monacopilot.dev) to get started with Monacopilot.
 
 ## Contributing
 

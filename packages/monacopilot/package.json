@@ -28,7 +28,7 @@
         "type": "git",
         "url": "git+https://github.com/arshad-yaseen/monacopilot.git"
     },
-    "homepage": "https://copilot.arshadyaseen.com",
+    "homepage": "https://monacopilot.dev",
     "maintainers": [
         {
             "name": "Arshad Yaseen",

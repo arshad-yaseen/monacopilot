@@ -113,7 +113,7 @@ export default defineConfig({
             "meta",
             {
                 property: "og:image",
-                content: "https://copilot.arshadyaseen.com/og.png",
+                content: "https://monacopilot.dev/og.png",
             },
         ],
         [
@@ -129,7 +129,7 @@ export default defineConfig({
             "meta",
             {
                 name: "twitter:image",
-                content: "https://copilot.arshadyaseen.com/og.png",
+                content: "https://monacopilot.dev/og.png",
             },
         ],
         [
@@ -142,6 +142,6 @@ export default defineConfig({
         ],
     ],
     sitemap: {
-        hostname: "https://copilot.arshadyaseen.com",
+        hostname: "https://monacopilot.dev",
     },
 });

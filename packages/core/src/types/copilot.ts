@@ -25,7 +25,7 @@ type CustomOptions = {
      * Custom model implementation function.
      * @param prompt - The prompt data used to generate the completion.
      * @returns Object containing the generated text.
-     * @see {@link https://copilot.arshadyaseen.com/advanced/custom-model}
+     * @see {@link https://monacopilot.dev/advanced/custom-model}
      */
     model: CustomCopilotModel;
 };

@@ -2,7 +2,7 @@
 
 Add GitHub Copilot-style AI completions to your Monaco Editor in in just 3 simple steps 🚀
 
-<img src="https://copilot.arshadyaseen.com/og.png" alt="Hero Image" style="border-radius: 10px;" />
+<img src="https://monacopilot.dev/og.png" alt="Hero Image" style="border-radius: 10px;" />
 
 ### Install the package
 
