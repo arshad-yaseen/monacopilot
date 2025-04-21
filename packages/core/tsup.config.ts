@@ -1,7 +1,7 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-    outDir: "build",
+    outDir: "dist",
     entry: ["src/index.ts"],
     target: "es2021",
     minify: true,

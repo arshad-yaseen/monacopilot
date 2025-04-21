@@ -14,7 +14,7 @@
                 "noUselessElse": "off"
             }
         },
-        "ignore": ["build", "node_modules", ".vitepress"]
+        "ignore": ["dist", "node_modules", ".vitepress"]
     },
     "vcs": {
         "enabled": true,
@@ -25,6 +25,6 @@
         "enabled": true,
         "indentStyle": "space",
         "indentWidth": 4,
-        "ignore": ["build", "node_modules", ".vitepress"]
+        "ignore": ["dist", "node_modules", ".vitepress"]
     }
 }

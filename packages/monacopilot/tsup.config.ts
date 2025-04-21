@@ -1,7 +1,7 @@
 import { type Options, defineConfig } from "tsup";
 
 const COMMON_CONFIG: Options = {
-    outDir: "build",
+    outDir: "dist",
     entry: ["src/index.ts"],
     target: "es2021",
     minify: true,
