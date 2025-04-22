@@ -8,7 +8,7 @@ import type { PromptData } from "./copilot";
 /**
  * Providers supported by Copilot.
  */
-export type Provider = "mistral";
+export type Provider = "mistral" | "DeepSeek";
 
 /**
  * Core type mapping for provider-specific implementations
@@ -19,12 +19,18 @@ export interface ProviderImplementationMap {
         Params: MistralFIMCompletionCreateParams;
         Completion: MistralFIMCompletion;
     };
+    DeepSeek: {
+        Model: "deepseek-coder";
+        Params: DeepSeekCompletionCreateParams;
+        Completion: DeepSeekCompletion;
+    };
 }
 
 /**
  * Models available for each provider (maintained as individual exports)
  */
 export type MistralModel = ProviderImplementationMap["mistral"]["Model"];
+export type DeepSeekModel = ProviderImplementationMap["DeepSeek"]["Model"];
 
 /**
  * Union of all predefined Copilot models
@@ -58,6 +64,31 @@ export type Completion = {
  */
 export type MistralCompletionCreateParams = MistralFIMCompletionCreateParams;
 export type MistralCompletion = MistralFIMCompletion;
+
+export interface DeepSeekCompletionCreateParams {
+    model: string;
+    prompt: string;
+    suffix?: string;
+    max_tokens?: number;
+    temperature?: number;
+    top_p?: number;
+    stream?: boolean;
+    stop?: string | string[];
+}
+
+export interface DeepSeekCompletionChoice {
+    text: string;
+    index: number;
+    finish_reason: string;
+}
+
+export interface DeepSeekCompletion {
+    id: string;
+    choices: DeepSeekCompletionChoice[];
+    created: number;
+    model: string;
+    object: string;
+}
 
 export interface ProviderHandler<P extends Provider> {
     createEndpoint(model: PickModel<P>, apiKey: string): string;

@@ -7,10 +7,12 @@ import type {
 } from "../types/llm";
 import type { BaseCopilotMetadata } from "../types/metadata";
 import type { BaseProviderHandler } from "./handler";
+import { DeepSeekHandler } from "./providers/DeepSeek";
 import { MistralHandler } from "./providers/mistral";
 
 const providerHandlers: { [P in Provider]: BaseProviderHandler<P> } = {
     mistral: new MistralHandler(),
+    DeepSeek: new DeepSeekHandler(),
 };
 
 export const createProviderEndpoint = <P extends Provider>(
