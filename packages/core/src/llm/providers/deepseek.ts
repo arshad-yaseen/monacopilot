@@ -15,16 +15,16 @@ import type { BaseCopilotMetadata } from "../../types/metadata";
 import { MODEL_IDS, PROVIDER_ENDPOINT_MAP } from "../base";
 import { BaseProviderHandler } from "../handler";
 
-export class DeepSeekHandler extends BaseProviderHandler<"DeepSeek"> {
+export class DeepSeekHandler extends BaseProviderHandler<"deepseek"> {
     createEndpoint(): string {
-        return PROVIDER_ENDPOINT_MAP.DeepSeek;
+        return PROVIDER_ENDPOINT_MAP.deepseek;
     }
 
     createRequestBody(
-        model: PickModel<"DeepSeek">,
+        model: PickModel<"deepseek">,
         prompt: PromptData,
         metadata: BaseCopilotMetadata,
-    ): PickCompletionCreateParams<"DeepSeek"> {
+    ): PickCompletionCreateParams<"deepseek"> {
         return {
             model: MODEL_IDS[model],
             prompt: `${prompt.context}\n${prompt.instruction}\n${metadata.textBeforeCursor}`,
@@ -44,7 +44,7 @@ export class DeepSeekHandler extends BaseProviderHandler<"DeepSeek"> {
         };
     }
 
-    parseCompletion(completion: PickCompletion<"DeepSeek">): string | null {
+    parseCompletion(completion: PickCompletion<"deepseek">): string | null {
         if (!completion.choices?.length) return null;
         return completion.choices[0].text || null;
     }

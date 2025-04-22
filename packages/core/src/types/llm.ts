@@ -8,7 +8,7 @@ import type { PromptData } from "./copilot";
 /**
  * Providers supported by Copilot.
  */
-export type Provider = "mistral" | "DeepSeek";
+export type Provider = "mistral" | "deepseek";
 
 /**
  * Core type mapping for provider-specific implementations
@@ -19,7 +19,7 @@ export interface ProviderImplementationMap {
         Params: MistralFIMCompletionCreateParams;
         Completion: MistralFIMCompletion;
     };
-    DeepSeek: {
+    deepseek: {
         Model: "deepseek-coder";
         Params: DeepSeekCompletionCreateParams;
         Completion: DeepSeekCompletion;
@@ -30,7 +30,7 @@ export interface ProviderImplementationMap {
  * Models available for each provider (maintained as individual exports)
  */
 export type MistralModel = ProviderImplementationMap["mistral"]["Model"];
-export type DeepSeekModel = ProviderImplementationMap["DeepSeek"]["Model"];
+export type DeepSeekModel = ProviderImplementationMap["deepseek"]["Model"];
 
 /**
  * Union of all predefined Copilot models

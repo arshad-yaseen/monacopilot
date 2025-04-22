@@ -1,6 +1,6 @@
 import type { Model, Provider } from "../types/llm";
 
-export const PROVIDERS = ["mistral", "DeepSeek"] as const;
+export const PROVIDERS = ["mistral", "deepseek"] as const;
 
 export const MODEL_IDS: Record<Model, string> = {
     codestral: "codestral-latest",
@@ -9,10 +9,10 @@ export const MODEL_IDS: Record<Model, string> = {
 
 export const PROVIDER_MODEL_MAP: Record<Provider, Model[]> = {
     mistral: ["codestral"],
-    DeepSeek: ["deepseek-coder"],
+    deepseek: ["deepseek-coder"],
 } as const;
 
 export const PROVIDER_ENDPOINT_MAP: Record<Provider, string> = {
     mistral: "https://api.mistral.ai/v1/fim/completions",
-    DeepSeek: "https://api.deepseek.com/v1/completions",
+    deepseek: "https://api.deepseek.com/v1/completions",
 } as const;
