@@ -1,5 +1,5 @@
 {
-    "name": "copilot-monaco",
+    "name": "@copilot/monaco",
     "version": "1.1.23",
     "scripts": {
         "build": "pnpm -r --filter '!playground' build",
