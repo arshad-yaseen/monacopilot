@@ -9,10 +9,12 @@ import type { BaseCopilotMetadata } from "../types/metadata";
 import type { BaseProviderHandler } from "./handler";
 import { DeepSeekHandler } from "./providers/deepseek";
 import { MistralHandler } from "./providers/mistral";
+import { OpenRouterHandler } from "./providers/openrouter";
 
 const providerHandlers: { [P in Provider]: BaseProviderHandler<P> } = {
     mistral: new MistralHandler(),
     deepseek: new DeepSeekHandler(),
+    openrouter: new OpenRouterHandler(),
 };
 
 export const createProviderEndpoint = <P extends Provider>(

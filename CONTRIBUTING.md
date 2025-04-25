@@ -83,11 +83,16 @@ playground/           # NextJS app for testing changes in real-time
 We provide a playground environment to test your changes in real-time:
 
 - The `playground/` directory contains a NextJS app that automatically reflects changes made to the packages
-- Before starting the playground, create a `.env.local` file in the `playground/` directory and add your Mistral API key:
+- Before starting the playground, create a `.env.local` file in the `playground/` directory and add your API keys:
     ```
-    MISTRAL_API_KEY=your_api_key_here
+    MISTRAL_API_KEY=your_mistral_api_key_here
+    DEEPSEEK_API_KEY=your_deepseek_api_key_here
+    OPENROUTER_API_KEY=your_openrouter_api_key_here
     ```
-    Obtain your Mistral API Key from the [Mistral AI Console](https://console.mistral.ai/api-keys).
+    Obtain your:
+    - Mistral API Key from the [Mistral AI Console](https://console.mistral.ai/api-keys)
+    - DeepSeek API Key from the [DeepSeek AI Platform](https://platform.deepseek.ai/)
+    - OpenRouter API Key from the [OpenRouter Dashboard](https://openrouter.ai/keys)
 - Run `pnpm dev:playground` to start the playground application
 - When you run `pnpm dev:monacopilot` or `pnpm dev:core`, your changes will be immediately visible in the playground
 - Use this playground to verify your changes and test functionality before submitting a PR

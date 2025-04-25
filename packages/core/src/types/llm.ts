@@ -8,7 +8,7 @@ import type { PromptData } from "./copilot";
 /**
  * Providers supported by Copilot.
  */
-export type Provider = "mistral" | "deepseek";
+export type Provider = "mistral" | "deepseek" | "openrouter";
 
 /**
  * Core type mapping for provider-specific implementations
@@ -24,6 +24,11 @@ export interface ProviderImplementationMap {
         Params: DeepSeekCompletionCreateParams;
         Completion: DeepSeekCompletion;
     };
+    openrouter: {
+        Model: "openrouter-gemini";
+        Params: OpenRouterCompletionCreateParams;
+        Completion: OpenRouterCompletion;
+    };
 }
 
 /**
@@ -31,6 +36,7 @@ export interface ProviderImplementationMap {
  */
 export type MistralModel = ProviderImplementationMap["mistral"]["Model"];
 export type DeepSeekModel = ProviderImplementationMap["deepseek"]["Model"];
+export type OpenRouterModel = ProviderImplementationMap["openrouter"]["Model"];
 
 /**
  * Union of all predefined Copilot models
@@ -85,6 +91,38 @@ export interface DeepSeekCompletionChoice {
 export interface DeepSeekCompletion {
     id: string;
     choices: DeepSeekCompletionChoice[];
+    created: number;
+    model: string;
+    object: string;
+}
+
+export interface OpenRouterMessage {
+    role: string;
+    content: string;
+}
+
+export interface OpenRouterCompletionCreateParams {
+    model: string;
+    messages: OpenRouterMessage[];
+    max_tokens?: number;
+    temperature?: number;
+    top_p?: number;
+    stream?: boolean;
+    stop?: string | string[];
+}
+
+export interface OpenRouterCompletionChoice {
+    message: {
+        content: string;
+        role: string;
+    };
+    index: number;
+    finish_reason: string;
+}
+
+export interface OpenRouterCompletion {
+    id: string;
+    choices: OpenRouterCompletionChoice[];
     created: number;
     model: string;
     object: string;
