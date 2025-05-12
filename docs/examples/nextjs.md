@@ -254,7 +254,3 @@ bun dev
 3. Open `http://localhost:3000` in your browser.
 
 You should now see a Monaco Editor with AI-powered completions working!
-
-::: tip
-Make sure you have set up your environment variables correctly before running the example.
-:::

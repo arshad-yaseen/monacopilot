@@ -182,9 +182,3 @@ bun dev
 3. Open `http://localhost:3000` in your browser.
 
 You should now see a Monaco Editor with AI-powered completions working!
-
-::: tip
-
-- Make sure you have set up your environment variables correctly before running the example.
-- Remix uses file-based routing, so the `/code-completion` endpoint is automatically created from the `code-completion.tsx` route file.
-  :::
