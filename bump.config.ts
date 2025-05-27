@@ -1,10 +1,10 @@
-import { defineConfig } from "bumpp";
+import { defineConfig } from 'bumpp'
 
-import { updateDocsCdnUrls } from "./scripts/update-docs-cdn-urls";
+import { updateDocsCdnUrls } from './scripts/update-docs-cdn-urls'
 
 export default defineConfig({
-    files: ["package.json", "packages/*/package.json", "docs/package.json"],
-    execute: ({ results: { newVersion } }) => {
-        updateDocsCdnUrls(newVersion);
-    },
-});
+	files: ['package.json', 'packages/*/package.json', 'docs/package.json'],
+	execute: ({ results: { newVersion } }) => {
+		updateDocsCdnUrls(newVersion)
+	},
+})

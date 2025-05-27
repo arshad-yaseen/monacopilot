@@ -1,31 +1,31 @@
 {
-    "version": "1.1.23",
-    "scripts": {
-        "build": "pnpm -r --filter '!playground' build",
-        "dev:core": "pnpm -C packages/core dev",
-        "dev:monacopilot": "pnpm -C packages/monacopilot dev",
-        "dev:docs": "pnpm -C docs dev",
-        "dev:playground": "pnpm -C playground dev",
-        "build:docs": "pnpm -C docs build",
-        "test": "vitest run",
-        "lint": "biome check .",
-        "lint:fix": "biome check --write .",
-        "format": "biome format .",
-        "format:fix": "biome format --write .",
-        "tsc": "tsc --noEmit",
-        "release": "bumpp",
-        "fresh-deps": "pnpx taze -r -w",
-        "publish:ci": "pnpm -r --filter '!docs' --filter '!playground' publish --access public --no-git-checks",
-        "prepare": "husky"
-    },
-    "devDependencies": {
-        "@biomejs/biome": "^1.9.4",
-        "@commitlint/cli": "^19.8.0",
-        "@commitlint/config-conventional": "^19.5.0",
-        "bumpp": "^10.0.2",
-        "husky": "^9.1.6",
-        "typescript": "^5.4.3",
-        "vitest": "^2.0.5"
-    },
-    "packageManager": "pnpm@10.8.1"
+	"version": "1.1.23",
+	"scripts": {
+		"build": "pnpm -r --filter '!playground' build",
+		"dev:core": "pnpm -C packages/core dev",
+		"dev:monacopilot": "pnpm -C packages/monacopilot dev",
+		"dev:docs": "pnpm -C docs dev",
+		"dev:playground": "pnpm -C playground dev",
+		"build:docs": "pnpm -C docs build",
+		"test": "vitest run",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"format": "biome format .",
+		"format:fix": "biome format --write .",
+		"tsc": "tsc --noEmit",
+		"release": "bumpp",
+		"fresh-deps": "pnpx taze -r -w",
+		"publish:ci": "pnpm -r --filter '!docs' --filter '!playground' publish --access public --no-git-checks",
+		"prepare": "husky"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@commitlint/cli": "^19.8.0",
+		"@commitlint/config-conventional": "^19.5.0",
+		"bumpp": "^10.0.2",
+		"husky": "^9.1.6",
+		"typescript": "^5.4.3",
+		"vitest": "^2.0.5"
+	},
+	"packageManager": "pnpm@10.8.1"
 }

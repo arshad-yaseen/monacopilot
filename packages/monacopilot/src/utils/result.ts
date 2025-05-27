@@ -1,11 +1,11 @@
 import type {
-    EditorInlineCompletion,
-    EditorInlineCompletionsResult,
-} from "../types/monaco";
+	EditorInlineCompletion,
+	EditorInlineCompletionsResult,
+} from '../types/monaco'
 
 export const createInlineCompletionResult = (
-    items: EditorInlineCompletion[],
+	items: EditorInlineCompletion[],
 ): EditorInlineCompletionsResult => ({
-    items,
-    enableForwardStability: true,
-});
+	items,
+	enableForwardStability: true,
+})
