@@ -15,8 +15,6 @@ import type {
 } from './types/core'
 import type { Disposable, Monaco, StandaloneCodeEditor } from './types/monaco'
 
-let activeCompletionRegistration: CompletionRegistration | null = null
-
 /**
  * Registers completion functionality with the Monaco editor.
  * @param monaco - The Monaco instance.
@@ -29,10 +27,6 @@ export const registerCompletion = (
 	editor: StandaloneCodeEditor,
 	options: RegisterCompletionOptions,
 ): CompletionRegistration => {
-	if (activeCompletionRegistration) {
-		activeCompletionRegistration.deregister()
-	}
-
 	const disposables: Disposable[] = []
 
 	setEditorState(editor, createInitialState())
@@ -71,12 +65,10 @@ export const registerCompletion = (
 				}
 				completionCache.clear()
 				deleteEditorState(editor)
-				activeCompletionRegistration = null
 			},
 			trigger: () => handleTriggerCompletion(editor),
 		}
 
-		activeCompletionRegistration = registration
 		return registration
 	} catch (error) {
 		if (options.onError) {
@@ -91,7 +83,6 @@ export const registerCompletion = (
 					disposable.dispose()
 				}
 				deleteEditorState(editor)
-				activeCompletionRegistration = null
 			},
 			trigger: () => {},
 		}
