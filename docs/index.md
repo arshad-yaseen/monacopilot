@@ -25,11 +25,11 @@ bun add monacopilot
 ```
 
 ```html [CDN]
-<script src="https://unpkg.com/monacopilot@1.1.23/dist/index.global.js"></script>
+<script src="https://unpkg.com/monacopilot@1.1.24/dist/index.global.js"></script>
 
 <!-- or -->
 
-<script src="https://cdn.jsdelivr.net/npm/monacopilot@1.1.23/dist/index.global.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/monacopilot@1.1.24/dist/index.global.js"></script>
 ```
 
 :::
