@@ -124,23 +124,6 @@ Obtain your Mistral API Key from the [Mistral AI Console](https://console.mistra
 
 Monacopilot supports multiple AI providers and models. For details on available options and configuration, see the [Changing the Provider and Model](/configuration/copilot-options#changing-the-provider-and-model) documentation.
 
-## Project Structure
-
-Here's the complete project structure:
-
-```txt
-your-gatsby-project/
-├── src/
-│   ├── api/
-│   │   └── code-completion.ts
-│   ├── components/
-│   │   └── Editor.tsx
-│   └── pages/
-│       └── index.tsx
-├── .env
-└── package.json
-```
-
 ## Running the Example
 
 1. Install dependencies:

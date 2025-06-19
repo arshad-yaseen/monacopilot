@@ -155,26 +155,6 @@ Obtain your Mistral API key from the [Mistral AI Console](https://console.mistra
 
 Monacopilot supports multiple AI providers and models. For details on available options and configuration, see the [Changing the Provider and Model](/configuration/copilot-options#changing-the-provider-and-model) documentation.
 
-## Project Structure
-
-Here's the complete project structure:
-
-```txt
-your-sveltekit-project/
-├── src/
-│   ├── lib/
-│   │   └── components/
-│   │       └── Editor.svelte
-│   ├── routes/
-│   │   ├── api/
-│   │   │   └── code-completion/
-│   │   │       └── +server.ts
-│   │   └── +page.svelte
-├── .env
-├── package.json
-└── svelte.config.js
-```
-
 ## Running the Example
 
 1. Install dependencies:

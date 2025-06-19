@@ -30,21 +30,22 @@ bun add monacopilot @monaco-editor/react
 
 ### API Route
 
-First, create an API route to handle completion requests. In TanStack Start, we'll create this in your `app/routes/api` directory:
+First, create an API route to handle completion requests. In TanStack Start, we'll create this in your `src/routes/api` directory:
 
 ```ts
-// app/routes/api/code-completion.ts
-import {json} from '@tanstack/react-start';
-import {createAPIFileRoute} from '@tanstack/react-start/api';
-import {CompletionCopilot, type CompletionRequestBody} from 'monacopilot';
+// src/routes/api/code-completion.ts
+import { createServerFileRoute } from '@tanstack/react-start/server'
+import { json } from '@tanstack/react-start'
+import { CompletionCopilot, type CompletionRequestBody } from 'monacopilot'
 
 const copilot = new CompletionCopilot(process.env.MISTRAL_API_KEY, {
     provider: 'mistral',
     model: 'codestral',
 });
 
-export const APIRoute = createAPIFileRoute('/api/code-completion')({
-    POST: async ({request}) => {
+export const ServerRoute = createServerFileRoute('/api/code-completion')
+  .methods({
+    POST: async ({ request }) => {
         const body: CompletionRequestBody = await request.json();
         const completion = await copilot.complete({
             body,
@@ -52,21 +53,7 @@ export const APIRoute = createAPIFileRoute('/api/code-completion')({
 
         return json(completion);
     },
-});
-```
-
-### API Entry Handler
-
-Make sure you have the API entry handler set up in your `app/api.ts` file:
-
-```ts
-// app/api.ts
-import {
-    createStartAPIHandler,
-    defaultAPIFileRouteHandler,
-} from '@tanstack/react-start/api';
-
-export default createStartAPIHandler(defaultAPIFileRouteHandler);
+  });
 ```
 
 ### Editor Component
@@ -113,35 +100,29 @@ export default function Editor() {
 
 ### Page Component
 
-Use the Editor component in your page by creating a route file:
+Use the Editor component anywhere in your app, in this case we'll use it in the home page.
 
 ```tsx
-// app/routes/index.tsx
-import {createFileRoute} from '@tanstack/react-router';
-
-import Editor from '../components/Editor';
-
+// src/routes/index.tsx
+import { createFileRoute } from '@tanstack/react-router'
+import Editor from '~/components/Editor'
 export const Route = createFileRoute('/')({
-    component: Home,
-});
+  component: Home,
+})
 
 function Home() {
-    return (
-        <main className="h-screen w-screen p-4">
-            <h1 className="text-2xl font-bold mb-4">
-                Monacopilot TanStack Start Example
-            </h1>
-            <div className="h-[600px] border border-gray-300 rounded">
-                <Editor />
-            </div>
-        </main>
-    );
+  return (
+    <main className="h-screen w-screen p-4">
+      <h1 className="text-2xl font-bold mb-4">Monacopilot TanStack Start Example</h1>
+      <Editor />
+    </main>
+  )
 }
 ```
 
 ### Environment Variables
 
-Create a `.env` file in your project root:
+Create a `.env.local` file in your project root:
 
 ```bash
 MISTRAL_API_KEY=your_mistral_api_key_here
@@ -150,29 +131,6 @@ MISTRAL_API_KEY=your_mistral_api_key_here
 Obtain your Mistral API Key from the [Mistral AI Console](https://console.mistral.ai/api-keys).
 
 Monacopilot supports multiple AI providers and models. For details on available options and configuration, see the [Changing the Provider and Model](/configuration/copilot-options#changing-the-provider-and-model) documentation.
-
-## Project Structure
-
-Here's the complete project structure for a TanStack Start application with Monacopilot integration:
-
-```txt
-your-tanstack-app/
-├── app/
-│   ├── api.ts
-│   ├── client.tsx
-│   ├── router.tsx
-│   ├── ssr.tsx
-│   └── routes/
-│       ├── __root.tsx
-│       ├── index.tsx
-│       └── api/
-│           └── code-completion.ts
-├── components/
-│   └── Editor.tsx
-├── .env
-├── app.config.ts
-└── package.json
-```
 
 ## Running the Example
 

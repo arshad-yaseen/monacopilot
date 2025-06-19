@@ -29,13 +29,13 @@ npm install monacopilot@1.0.0
 Replace your existing CompletionCopilot configuration:
 
 ```javascript
-// Before (v0.19.17)
+// Before
 const copilot = new CompletionCopilot(process.env.OPENAI_API_KEY, {
     provider: 'openai',
     model: 'gpt-4o',
 });
 
-// After (v1.0.0)
+// After
 const copilot = new CompletionCopilot(process.env.MISTRAL_API_KEY, {
     provider: 'mistral',
     model: 'codestral',
@@ -63,7 +63,7 @@ You can obtain a Mistral API key from the [Mistral AI Console](https://console.m
 If you use the custom prompt feature, the interface has changed:
 
 ```javascript
-// Before (v0.19.17)
+// Before
 copilot.complete({
     options: {
         customPrompt: metadata => ({
@@ -73,7 +73,7 @@ copilot.complete({
     },
 });
 
-// After (v1.0.0)
+// After
 copilot.complete({
     options: {
         customPrompt: metadata => ({
@@ -92,7 +92,7 @@ For detailed information about the new custom prompt format, see the [Custom Pro
 If you use a custom model configuration, update to the new interface:
 
 ```javascript
-// Before (v0.19.17)
+// Before
 const copilot = new CompletionCopilot(API_KEY, {
     model: {
         config: (apiKey, prompt) => ({
@@ -107,7 +107,7 @@ const copilot = new CompletionCopilot(API_KEY, {
     },
 });
 
-// After (v1.0.0)
+// After
 const copilot = new CompletionCopilot(API_KEY, {
     model: {
         config: (apiKey, prompt) => ({

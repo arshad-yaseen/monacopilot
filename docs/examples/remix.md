@@ -116,23 +116,6 @@ Monacopilot supports multiple AI providers and models. For details on available 
 
 Obtain your Mistral API Key from the [Mistral AI Console](https://console.mistral.ai/api-keys).
 
-## Project Structure
-
-Here's the complete project structure:
-
-```txt
-your-remix-project/
-├── app/
-│   ├── components/
-│   │   └── Editor.tsx
-│   ├── routes/
-│   │   ├── _index.tsx
-│   │   └── code-completion.tsx
-│   └── root.tsx
-├── .env
-└── package.json
-```
-
 ## Running the Example
 
 1. Install dependencies:

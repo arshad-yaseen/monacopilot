@@ -172,39 +172,6 @@ Obtain your Mistral API Key from the [Mistral AI Console](https://console.mistra
 
 Monacopilot supports multiple AI providers and models. For details on available options and configuration, see the [Changing the Provider and Model](/configuration/copilot-options#changing-the-provider-and-model) documentation.
 
-## Project Structure
-
-Here's the complete project structure for both routing approaches:
-
-::: code-group
-
-```txt [App Router]
-your-project/
-├── app/
-│   ├── api/
-│   │   └── code-completion/
-│   │       └── route.ts
-│   └── page.tsx
-├── components/
-│   └── Editor.tsx
-├── .env.local
-└── package.json
-```
-
-```txt [Pages Router]
-your-project/
-├── pages/
-│   ├── api/
-│   │   └── code-completion.ts
-│   └── index.tsx
-├── components/
-│   └── Editor.tsx
-├── .env.local
-└── package.json
-```
-
-:::
-
 ## Running the Example
 
 1. Install dependencies:
