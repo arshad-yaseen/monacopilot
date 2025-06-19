@@ -79,6 +79,10 @@ export default defineConfig({
 						text: 'Upgrade to v1.0.0',
 						link: '/guides/upgrade-to-v1',
 					},
+					{
+						text: 'Browser-Only Implementation',
+						link: '/guides/browser-only',
+					},
 				],
 			},
 			{
