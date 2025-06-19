@@ -17,9 +17,9 @@ const copilot = new CompletionCopilot(process.env.MISTRAL_API_KEY, {
 });
 ```
 
-Currently, Monacopilot supports the following provider and model:
+Currently, Monacopilot supports the following providers and models:
 
-| Provider | Models      | Notes                                                                                                | API Key                                                    |
+| Provider | Model      | Notes                                                                                                | API Key                                                    |
 | -------- | ----------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
 | mistral  | `codestral` | Provides accurate code completions using Fill-in-the-Middle (FIM) technology with fast response time | [Get Mistral API Key](https://console.mistral.ai/api-keys) |
 
