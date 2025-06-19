@@ -182,7 +182,3 @@ When working with different models, you'll need to format the prompt data approp
     // Single prompt format
     prompt: `Context: ${prompt.context}\nFile: ${prompt.fileContent}\nTask: ${prompt.instruction}`;
     ```
-
-::: tip
-Please ensure you are using a high-quality model, especially for coding tasks, to get the best and most accurate completions. For production use, choose specialized code-optimized models. Also, use a model with very low response latency (preferably under 1 second) to enjoy a great experience and utilize the full power of Monacopilot.
-:::

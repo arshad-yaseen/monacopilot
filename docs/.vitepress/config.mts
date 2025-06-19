@@ -63,10 +63,6 @@ export default defineConfig({
 						link: '/advanced/custom-prompt',
 					},
 					{
-						text: 'Custom Request Handler',
-						link: '/advanced/custom-request-handler',
-					},
-					{
 						text: 'Cross-Language Implementation',
 						link: '/advanced/cross-language',
 					},

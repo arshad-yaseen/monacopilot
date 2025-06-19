@@ -57,7 +57,7 @@ registerCompletion(monaco, editor, {
 
 Create an API handler for the endpoint (e.g. `/code-completion`) you provided in the `registerCompletion` function to handle completion requests from the editor.
 
-You can use any JavaScript runtime or Node.js framework that can handle HTTP requests and return JSON responses for completions. Below is an example implementation using Express.js and Bun.
+You can use any JavaScript runtime or Node.js framework that can handle HTTP requests and return JSON responses for completions. Below are example implementations using Express.js and Bun. The idea is straightforward.
 
 ::: code-group
 
@@ -117,7 +117,3 @@ Obtain your Mistral API Key from the [Mistral AI Console](https://console.mistra
 Monacopilot supports multiple AI providers and models. For details on available options and configuration, see the [Changing the Provider and Model](/configuration/copilot-options#changing-the-provider-and-model) documentation.
 
 **That's it! Your Monaco Editor now has AI-powered completions! 🎉**
-
-::: info
-The example above uses Express.js. For implementations in other languages like Python, Go, or Ruby, see our [Cross-Language API Handler Implementation](/advanced/cross-language) guide.
-:::
