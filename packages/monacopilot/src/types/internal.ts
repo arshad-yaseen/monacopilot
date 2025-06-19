@@ -23,10 +23,10 @@ export type FetchCompletionItemHandler = (
 
 export type FetchCompletionItemReturn = {
 	completion: string | null
+	error?: string
 }
 
 export interface FetchCompletionItemParams {
-	endpoint: string
 	body: CompletionRequestBody
 }
 

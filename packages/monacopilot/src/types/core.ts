@@ -28,9 +28,9 @@ export interface RegisterCompletionOptions {
 	 */
 	language: string
 	/**
-	 * The API endpoint where you started the completion service.
+	 * The API endpoint of the server that you set up to receive completion requests.
 	 */
-	endpoint: Endpoint
+	endpoint?: Endpoint
 	/**
 	 * Specifies when the completion service should provide code completions.
 	 *
@@ -92,17 +92,10 @@ export interface RegisterCompletionOptions {
 	 */
 	onError?: (error: Error) => void
 	/**
-	 * Custom fetch completion handler. This function overrides the default fetch completion handler.
-	 * It allows you to customize how completion requests are made and responses are processed.
 	 * You can implement your own logic for fetching and processing completions.
 	 * The function should return either a string (the completion to be inserted into the editor) or null.
-	 * @param params - The parameters for the completion request.
-	 * @param {string} params.endpoint - The endpoint to fetch the completion from.
-	 * @param {CompletionRequestBody} params.body - The body of the completion request.
-	 * @returns {Promise<{completion: string | null}>} An object containing the completion or null if no completion is available.
 	 */
 	requestHandler?: FetchCompletionItemHandler
-
 	/**
 	 * Callback function that is triggered when a completion is shown in the editor.
 	 * @param completion - The completion text that is being shown.
@@ -112,7 +105,6 @@ export interface RegisterCompletionOptions {
 		completion: string,
 		range: EditorRange | undefined,
 	) => void
-
 	/**
 	 * Callback function triggered when a completion is accepted by the user.
 	 */
@@ -131,7 +123,7 @@ export interface RegisterCompletionOptions {
 	 * Callback function triggered when a completion request has finished.
 	 * @param {FetchCompletionItemParams} params - The parameters that were used for the completion request,
 	 * including the endpoint and request body with completion metadata.
-	 * @param {FetchCompletionItemReturn} response - The response from the completion request, which includes the completion text.
+	 * @param {FetchCompletionItemReturn} response - The response from the completion request, which includes the completion text and error if any.
 	 * @example
 	 * ```ts
 	 * onCompletionRequestFinished: (params, response) => {

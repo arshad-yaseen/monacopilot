@@ -1,4 +1,4 @@
-import type { RelatedFile } from '@monacopilot/core'
+import type { Endpoint, RelatedFile } from '@monacopilot/core'
 
 import { DEFAULT_MAX_CONTEXT_LINES } from './defaults'
 import type { CompletionMetadata, CompletionResponse } from './types/core'
@@ -14,8 +14,12 @@ import {
 	truncateTextToMaxLines,
 } from './utils/text'
 
+type RequestCompletionItemParams = FetchCompletionItemParams & {
+	endpoint: Endpoint
+}
+
 export const requestCompletionItem = async (
-	params: FetchCompletionItemParams,
+	params: RequestCompletionItemParams,
 ): Promise<FetchCompletionItemReturn> => {
 	const { endpoint, body } = params
 
@@ -35,11 +39,7 @@ export const requestCompletionItem = async (
 
 	const { completion, error } = (await response.json()) as CompletionResponse
 
-	if (error) {
-		throw new Error(error)
-	}
-
-	return { completion }
+	return { completion, error }
 }
 
 export const buildCompletionMetadata = ({

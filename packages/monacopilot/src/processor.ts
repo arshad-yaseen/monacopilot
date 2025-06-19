@@ -20,7 +20,10 @@ import {
 	type InlineCompletionProcessorParams,
 	TriggerEnum,
 } from './types/core'
-import type { FetchCompletionItemParams } from './types/internal'
+import type {
+	FetchCompletionItemParams,
+	FetchCompletionItemReturn,
+} from './types/internal'
 import type { EditorInlineCompletionsResult } from './types/monaco'
 import { asyncDebounce } from './utils/async-debounce'
 import { getTextBeforeCursor } from './utils/editor'
@@ -39,7 +42,6 @@ export const processInlineCompletions = async ({
 }: InlineCompletionProcessorParams): Promise<EditorInlineCompletionsResult> => {
 	const {
 		trigger = DEFAULT_TRIGGER,
-		endpoint,
 		enableCaching = DEFAULT_ENABLE_CACHING,
 		allowFollowUpCompletions = DEFAULT_ALLOW_FOLLOW_UP_COMPLETIONS,
 		onError,
@@ -68,8 +70,25 @@ export const processInlineCompletions = async ({
 		const requestCompletion = asyncDebounce(
 			async (params: FetchCompletionItemParams) => {
 				options.onCompletionRequested?.(params)
-				const response = await (requestHandler?.(params) ??
-					requestCompletionItem(params))
+
+				let response: FetchCompletionItemReturn
+				if (requestHandler) {
+					response = await requestHandler(params)
+				} else if (options.endpoint) {
+					response = await requestCompletionItem({
+						endpoint: options.endpoint,
+						...params,
+					})
+				} else {
+					throw new Error(
+						'No endpoint specified for completion request. Please set the "endpoint" option in registerCompletion, or provide a custom requestHandler.',
+					)
+				}
+
+				if (response.error) {
+					throw new Error(response.error)
+				}
+
 				options.onCompletionRequestFinished?.(params, response)
 				return response
 			},
@@ -91,7 +110,6 @@ export const processInlineCompletions = async ({
 		})
 
 		const { completion } = await requestCompletion({
-			endpoint,
 			body: {
 				completionMetadata,
 			},
