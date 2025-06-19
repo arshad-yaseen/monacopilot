@@ -15,11 +15,11 @@ project/
 
 ## Implementation Steps
 
-#### Create HTML File (`index.html`)
+#### Create HTML File
 
 Create the main HTML structure that loads Monaco Editor and Monacopilot:
 
-```html
+```html [index.html]
 <!DOCTYPE html>
 <html>
     <head>
@@ -45,11 +45,11 @@ Create the main HTML structure that loads Monaco Editor and Monacopilot:
 </html>
 ```
 
-#### Create Frontend Code (`app.js`)
+#### Create Frontend Code
 
 Initialize Monaco Editor and register Monacopilot for code completions:
 
-```javascript
+```javascript [app.js]
 require.config({
     paths: {
         vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.0/min/vs',
@@ -75,11 +75,11 @@ require(['vs/editor/editor.main'], function () {
 });
 ```
 
-#### Create Backend Server (`server.js`)
+#### Create Backend Server
 
 Implement an API handler to process completion requests from the editor:
 
-```typescript
+```typescript [server.js]
 require('dotenv').config();
 
 const cors = require('cors');
@@ -110,11 +110,11 @@ app.listen(process.env.PORT || 3000, () => {
 You can use any backend framework or programming language for your API handler, as long as it can receive HTTP requests and return JSON responses. For non-JavaScript implementations, see the [Cross-Language API Handler](/advanced/cross-language) Implementation documentation.
 :::
 
-#### Set Environment Variables (`.env`)
+#### Set Environment Variables
 
 Configure your API keys:
 
-```
+```bash [.env]
 MISTRAL_API_KEY=your_api_key_here
 ```
 

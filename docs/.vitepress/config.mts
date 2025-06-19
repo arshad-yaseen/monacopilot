@@ -2,6 +2,13 @@ import { defineConfig } from 'vitepress'
 
 import { version } from '../../package.json'
 
+import llmstxt from 'vitepress-plugin-llms'
+
+import {
+	groupIconMdPlugin,
+	groupIconVitePlugin,
+} from 'vitepress-plugin-group-icons'
+
 export default defineConfig({
 	title: 'Monacopilot',
 	description: 'AI auto-completion plugin for Monaco Editor',
@@ -146,5 +153,13 @@ export default defineConfig({
 	],
 	sitemap: {
 		hostname: 'https://monacopilot.dev',
+	},
+	markdown: {
+		config(md) {
+			md.use(groupIconMdPlugin)
+		},
+	},
+	vite: {
+		plugins: [groupIconVitePlugin(), llmstxt()],
 	},
 })

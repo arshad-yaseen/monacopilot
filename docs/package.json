@@ -19,6 +19,10 @@
 	"license": "MIT",
 	"author": "Arshad Yaseen <m@arshadyaseen.com> (https://arshadyaseen.com)",
 	"devDependencies": {
-		"vitepress": "^1.6.3"
+		"vitepress": "^1.6.3",
+		"vitepress-plugin-llms": "^1.5.1"
+	},
+	"dependencies": {
+		"vitepress-plugin-group-icons": "^1.6.0"
 	}
 }

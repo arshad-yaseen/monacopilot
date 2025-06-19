@@ -32,8 +32,7 @@ bun add monacopilot @monaco-editor/react
 
 First, create an API route to handle completion requests. In TanStack Start, we'll create this in your `src/routes/api` directory:
 
-```ts
-// src/routes/api/code-completion.ts
+```ts [src/routes/api/code-completion.ts]
 import { createServerFileRoute } from '@tanstack/react-start/server'
 import { json } from '@tanstack/react-start'
 import { CompletionCopilot, type CompletionRequestBody } from 'monacopilot'
@@ -58,9 +57,9 @@ export const ServerRoute = createServerFileRoute('/api/code-completion')
 
 ### Editor Component
 
-Create an Editor component (`components/Editor.tsx`):
+Create an Editor component:
 
-```jsx
+```tsx [components/Editor.tsx]
 import { useEffect, useRef } from 'react'
 
 import MonacoEditor from '@monaco-editor/react'
@@ -102,8 +101,7 @@ export default function Editor() {
 
 Use the Editor component anywhere in your app, in this case we'll use it in the home page.
 
-```tsx
-// src/routes/index.tsx
+```tsx [src/routes/index.tsx]
 import { createFileRoute } from '@tanstack/react-router'
 import Editor from '~/components/Editor'
 export const Route = createFileRoute('/')({
@@ -124,7 +122,7 @@ function Home() {
 
 Create a `.env.local` file in your project root:
 
-```bash
+```bash [.env.local]
 MISTRAL_API_KEY=your_mistral_api_key_here
 ```
 

@@ -30,9 +30,9 @@ bun add monacopilot @monaco-editor/react
 
 ### API Route
 
-Create a route handler for completions in `app/routes/code-completion.tsx`:
+Create a route handler for completions:
 
-```tsx
+```tsx [app/routes/code-completion.tsx]
 import {json, type ActionFunctionArgs} from '@remix-run/node';
 import {CompletionCopilot, type CompletionRequestBody} from 'monacopilot';
 
@@ -51,9 +51,9 @@ export const action = async ({request}: ActionFunctionArgs) => {
 
 ### Editor Component
 
-Create a Editor component in `app/components/Editor.tsx`:
+Create a Editor component in:
 
-```tsx
+```tsx [app/components/Editor.tsx]
 import {useEffect, useRef} from 'react';
 
 import MonacoEditor from '@monaco-editor/react';
@@ -86,9 +86,9 @@ export default function Editor() {
 
 ### Page Component
 
-Create your page component in `app/routes/_index.tsx`:
+Create your page component:
 
-```tsx
+```tsx [app/routes/_index.tsx]
 import Editor from '~/components/Editor';
 
 export default function Index() {
@@ -106,7 +106,7 @@ export default function Index() {
 
 Create a `.env` file in your project root:
 
-```bash
+```bash [.env]
 MISTRAL_API_KEY=your_mistral_api_key_here
 ```
 

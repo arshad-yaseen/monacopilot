@@ -32,7 +32,7 @@ bun add monacopilot @monaco-editor/react
 
 Gatsby supports serverless functions placed under the `/src/api` directory. Create a function for completions in `src/api/code-completion.ts`:
 
-```typescript
+```typescript [src/api/code-completion.ts]
 import type {GatsbyFunctionRequest, GatsbyFunctionResponse} from 'gatsby';
 import {CompletionCopilot, type CompletionRequestBody} from 'monacopilot';
 
@@ -62,9 +62,9 @@ export async function handler(
 
 ### Editor Component
 
-Create an Editor component in `src/components/Editor.tsx`:
+Create an Editor component:
 
-```typescript
+```typescript [src/components/Editor.tsx]
 import { useEffect, useRef } from "react";
 import MonacoEditor from "@monaco-editor/react";
 import {
@@ -96,9 +96,9 @@ export default function Editor() {
 
 ### Page Component
 
-Create your page component in `src/pages/index.tsx`:
+Create your page component:
 
-```typescript
+```typescript [src/pages/index.tsx]
 import * as React from "react";
 import Editor from "../components/Editor";
 
@@ -116,7 +116,7 @@ export default function IndexPage() {
 
 Create a `.env` file in your project root:
 
-```bash
+```bash [.env]
 MISTRAL_API_KEY=your_mistral_api_key_here
 ```
 

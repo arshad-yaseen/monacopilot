@@ -40,7 +40,7 @@ Create an API route to handle code completion requests from Monacopilot. In Svel
 
 Create a file at `src/routes/api/code-completion/+server.ts`:
 
-```typescript
+```typescript [src/routes/api/code-completion/+server.ts]
 import {json} from '@sveltejs/kit';
 import type {RequestHandler} from '@sveltejs/kit';
 import {MISTRAL_API_KEY} from '$env/static/private';
@@ -62,9 +62,9 @@ Ensure that `MISTRAL_API_KEY` is set in your environment variables (see the Envi
 
 ### Editor Component
 
-Create a Svelte component to integrate the Monaco Editor with Monacopilot. Place this in `src/lib/components/Editor.svelte`:
+Create a Svelte component to integrate the Monaco Editor with Monacopilot:
 
-```html
+```html [src/lib/components/Editor.svelte]
 <script lang="ts">
     import loader from '@monaco-editor/loader';
     import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
@@ -124,7 +124,7 @@ This component:
 
 Use the Editor component in a SvelteKit page. Create or modify `src/routes/+page.svelte`:
 
-```html
+```html [src/routes/+page.svelte]
 <script>
     import Editor from '$lib/components/Editor.svelte';
 </script>
@@ -147,7 +147,7 @@ Use the Editor component in a SvelteKit page. Create or modify `src/routes/+page
 
 Create a `.env` file in your project root:
 
-```bash
+```bash [.env]
 MISTRAL_API_KEY=your_mistral_api_key_here
 ```
 

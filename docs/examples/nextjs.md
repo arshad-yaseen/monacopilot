@@ -82,9 +82,9 @@ export default async function handler(
 
 ### Editor Component
 
-Create a Editor component (`components/Editor.tsx`):
+Create a Editor component:
 
-```jsx
+```tsx [components/Editor.tsx]
 'use client';
 
 import {useEffect, useRef} from 'react';
@@ -164,7 +164,7 @@ export default function Home() {
 
 Create a `.env.local` file in your project root:
 
-```bash
+```bash [.env.local]
 MISTRAL_API_KEY=your_mistral_api_key_here
 ```
 

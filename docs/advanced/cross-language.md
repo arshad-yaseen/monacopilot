@@ -44,7 +44,7 @@ The request body's `completionMetadata` object contains essential information fo
 
 Here's a basic example using Python and FastAPI:
 
-```python
+```python [fastapi-example.py]
 from fastapi import FastAPI, Request
 
 app = FastAPI()
