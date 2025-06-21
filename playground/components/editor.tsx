@@ -17,7 +17,8 @@ const Editor = () => {
 	const handleMount = (editor: StandaloneCodeEditor, monaco: Monaco) => {
 		completionRef.current = registerCompletion(monaco, editor, {
 			endpoint: '/api/code-completion',
-			language: 'javascript',
+			language: 'python',
+			filename: 'math_utils.py',
 		})
 	}
 
@@ -31,7 +32,7 @@ const Editor = () => {
 		<MonacoEditor
 			height="400px"
 			width="800px"
-			language="javascript"
+			language="python"
 			className="rounded-lg border border-slate-200 dark:border-slate-800"
 			options={DEFAULT_MONACO_EDITOR_OPTIONS}
 			onMount={handleMount}
