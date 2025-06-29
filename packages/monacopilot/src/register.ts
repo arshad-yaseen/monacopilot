@@ -8,6 +8,7 @@ import {
 	deleteEditorState,
 	getEditorState,
 	setEditorState,
+	updateEditorOptions,
 } from './state'
 import type {
 	CompletionRegistration,
@@ -29,7 +30,7 @@ export const registerCompletion = (
 ): CompletionRegistration => {
 	const disposables: Disposable[] = []
 
-	setEditorState(editor, createInitialState())
+	setEditorState(editor, createInitialState(options))
 
 	editor.updateOptions({
 		inlineSuggest: {
@@ -67,6 +68,9 @@ export const registerCompletion = (
 				deleteEditorState(editor)
 			},
 			trigger: () => handleTriggerCompletion(editor),
+			updateOptions: (callback) => {
+				updateEditorOptions(editor, callback(state.options || options))
+			},
 		}
 
 		return registration
@@ -85,6 +89,7 @@ export const registerCompletion = (
 				deleteEditorState(editor)
 			},
 			trigger: () => {},
+			updateOptions: () => {},
 		}
 	}
 }
@@ -105,5 +110,6 @@ const createEmptyRegistration = (): CompletionRegistration => {
 	return {
 		deregister: () => {},
 		trigger: () => {},
+		updateOptions: () => {},
 	}
 }

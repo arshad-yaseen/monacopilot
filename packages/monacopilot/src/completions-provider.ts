@@ -8,48 +8,54 @@ import { getCurrentValue } from './utils/editor'
 export const createInlineCompletionsProvider = (
 	monaco: Monaco,
 	editor: StandaloneCodeEditor,
-	options: RegisterCompletionOptions,
+	initialOptions: RegisterCompletionOptions,
 ) => {
 	const state = getEditorState(editor)
 	if (!state) return null
 
-	return monaco.languages.registerInlineCompletionsProvider(options.language, {
-		provideInlineCompletions: (mdl, pos, _, token) => {
-			if (
-				// Skip completion if trigger is on-demand and not explicitly triggered by user
-				(options.trigger === TriggerEnum.OnDemand &&
-					!state.isExplicitlyTriggered) ||
-				// Skip completion if triggerIf returns false
-				(options.triggerIf &&
-					!options.triggerIf({
-						text: getCurrentValue(editor),
-						position: pos,
-						triggerType: options.trigger ?? DEFAULT_TRIGGER,
-					}))
-			) {
-				return
-			}
+	return monaco.languages.registerInlineCompletionsProvider(
+		initialOptions.language,
+		{
+			provideInlineCompletions: (mdl, pos, _, token) => {
+				const options = state.options || initialOptions
 
-			return processInlineCompletions({
-				monaco,
-				mdl,
-				pos,
-				token,
-				isCompletionAccepted: state.isCompletionAccepted,
-				options,
-			})
-		},
-		handleItemDidShow: (_, item, completion) => {
-			state.isExplicitlyTriggered = false
-			state.hasRejectedCurrentCompletion = false
+				if (
+					// Skip completion if trigger is on-demand and not explicitly triggered by user
+					(options.trigger === TriggerEnum.OnDemand &&
+						!state.isExplicitlyTriggered) ||
+					// Skip completion if triggerIf returns false
+					(options.triggerIf &&
+						!options.triggerIf({
+							text: getCurrentValue(editor),
+							position: pos,
+							triggerType: options.trigger ?? DEFAULT_TRIGGER,
+						}))
+				) {
+					return
+				}
 
-			if (state.isCompletionAccepted) return
+				return processInlineCompletions({
+					monaco,
+					mdl,
+					pos,
+					token,
+					isCompletionAccepted: state.isCompletionAccepted,
+					options,
+				})
+			},
+			handleItemDidShow: (_, item, completion) => {
+				state.isExplicitlyTriggered = false
+				state.hasRejectedCurrentCompletion = false
 
-			state.isCompletionVisible = true
-			options.onCompletionShown?.(completion, item.range)
+				if (state.isCompletionAccepted) return
+
+				state.isCompletionVisible = true
+				const options = state.options || initialOptions
+				options.onCompletionShown?.(completion, item.range)
+			},
+			freeInlineCompletions: () => {
+				/* No-op */
+			},
 		},
-		freeInlineCompletions: () => {
-			/* No-op */
-		},
-	})
+	)
 }

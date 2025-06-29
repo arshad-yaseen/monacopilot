@@ -125,6 +125,30 @@ registerCompletion(monaco, editor, {
 
 This configuration will provide completions relevant to React, Next.js, and Tailwind CSS.
 
+## Dynamically Updating Options
+
+You can dynamically update completion options after registration using the `updateOptions` method at runtime without needing deregister and register again.
+
+```javascript
+const completion = registerCompletion(monaco, editor, {
+    language: 'javascript',
+    endpoint: '/api/code-completion',
+});
+
+// Later, update options when needed:
+completion.updateOptions((currentOptions) => ({
+    relatedFiles: [
+        ...currentOptions.relatedFiles,
+        {
+            path: './newFile.js',
+            content: 'export function newFunction() { return "hello world"; }',
+        },
+    ],
+}));
+```
+
+The `updateOptions` method accepts a callback function that receives the current options and returns a partial options object containing only the properties you want to update.
+
 ## Max Context Lines
 
 To manage potentially lengthy code in your editor, you can limit the number of lines included in the completion request using the `maxContextLines` option. By default, this is set to `100` lines.

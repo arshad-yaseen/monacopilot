@@ -173,6 +173,28 @@ export interface CompletionRegistration {
 	 * are no longer needed to prevent memory leaks and ensure proper cleanup.
 	 */
 	deregister: () => void
+	/**
+	 * Updates the completion options dynamically.
+	 * This method allows you to modify the completion configuration at runtime
+	 * by providing a callback function that receives the current options and
+	 * returns the partial options to update.
+	 *
+	 * @param {function} callback - A function that receives the current options and returns partial options to update
+	 * @param {RegisterCompletionOptions} callback.currentOptions - The current completion options
+	 * @returns {Partial<RegisterCompletionOptions>} - Partial options to merge with the current configuration
+	 * @example
+	 * ```ts
+	 * registration.updateOptions((currentOptions) => ({
+	 *   trigger: 'onDemand',
+	 *   maxTokens: 100
+	 * }));
+	 * ```
+	 */
+	updateOptions: (
+		callback: (
+			currentOptions: RegisterCompletionOptions,
+		) => Partial<RegisterCompletionOptions>,
+	) => void
 }
 
 export interface InlineCompletionProcessorParams {

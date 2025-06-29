@@ -33,7 +33,7 @@ const Editor = () => {
 			height="400px"
 			width="800px"
 			language="python"
-			className="rounded-lg border border-slate-200 dark:border-slate-800"
+			className="rounded-lg bo;rder border-slate-200 dark:border-slate-800"
 			options={DEFAULT_MONACO_EDITOR_OPTIONS}
 			onMount={handleMount}
 		/>

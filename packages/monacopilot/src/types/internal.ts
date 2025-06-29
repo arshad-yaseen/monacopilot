@@ -15,6 +15,8 @@ export type EditorCompletionState = {
 	isExplicitlyTriggered: boolean
 	/** Whether the current completion suggestion was rejected by the user */
 	hasRejectedCurrentCompletion: boolean
+	/** Dynamic options that can be updated after registration */
+	options?: RegisterCompletionOptions
 }
 
 export type FetchCompletionItemHandler = (

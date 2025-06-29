@@ -83,7 +83,6 @@ export default function Editor() {
     return <MonacoEditor language="javascript" onMount={handleMount} />;
 }
 ```
-
 ### Page Component
 
 Create your page component:
@@ -165,3 +164,4 @@ bun dev
 3. Open `http://localhost:3000` in your browser.
 
 You should now see a Monaco Editor with AI-powered completions working!
+

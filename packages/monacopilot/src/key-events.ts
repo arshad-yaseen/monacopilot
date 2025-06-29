@@ -20,15 +20,17 @@ class CompletionKeyEventHandler {
 	constructor(
 		private readonly monaco: Monaco,
 		private readonly state: EditorCompletionState,
-		private readonly options: RegisterCompletionOptions,
+		private readonly initialOptions: RegisterCompletionOptions,
 	) {}
 
 	handleKeyEvent(event: EditorKeyboardEvent): void {
+		const options = this.state.options || this.initialOptions
+
 		const params = {
 			monaco: this.monaco,
 			event,
 			state: this.state,
-			options: this.options,
+			options,
 		}
 
 		this.handleCompletionAcceptance(params)
