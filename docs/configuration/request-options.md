@@ -6,7 +6,7 @@ title: Completion Request Options
 
 Configure how completion requests are made to the LLM provider.
 
-## Custom Request Handler
+## AI Request Handler
 
 You can override the default fetch behavior when making requests to the LLM provider by providing a custom `aiRequestHandler`. This allows you to use your own HTTP client or add custom logic such as authentication, retry mechanisms, or request/response transformation.
 
