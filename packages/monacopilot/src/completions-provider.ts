@@ -17,6 +17,13 @@ export const createInlineCompletionsProvider = (
 		initialOptions.language,
 		{
 			provideInlineCompletions: (mdl, pos, _, token) => {
+				// check if the completion is for the specific editor.
+				// This prevents completions from being shown in other editors
+				// when multiple editors are present on the same page.
+				if (mdl !== editor.getModel()) {
+					return { items: [] }
+				}
+
 				const options = state.options || initialOptions
 
 				if (
