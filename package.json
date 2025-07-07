@@ -1,7 +1,7 @@
 {
 	"version": "1.2.6",
 	"scripts": {
-		"build": "pnpm -r --filter '!playground' build",
+		"build": "pnpm -r --filter '!playground' --filter '!docs' build",
 		"dev:core": "pnpm -C packages/core dev",
 		"dev:monacopilot": "pnpm -C packages/monacopilot dev",
 		"dev:docs": "pnpm -C docs dev",
