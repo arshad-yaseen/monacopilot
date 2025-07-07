@@ -40,6 +40,15 @@ type CustomModelResponse = {
 	text: string | null
 }
 
+export type AIRequestHandler = (params: {
+	/** The API endpoint URL for the LLM completion request */
+	endpoint: string
+	/** The request body containing the completion parameters (model, prompt, etc.) */
+	body: Record<string, unknown>
+	/** HTTP headers required for authentication and content type */
+	headers: Record<string, string>
+}) => Promise<Record<string, unknown>>
+
 export type CopilotOptions = ProviderOptions<'mistral'> | CustomOptions
 
 export type ProviderOptions<T extends Provider> = {

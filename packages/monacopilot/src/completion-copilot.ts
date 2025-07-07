@@ -12,12 +12,12 @@ export class CompletionCopilot extends Copilot<CompletionMetadata> {
 		request: CompletionRequest,
 	): Promise<CompletionResponse> {
 		const { body, options } = request
-		const { customPrompt, headers } = options ?? {}
+		const { customPrompt, aiRequestHandler } = options ?? {}
 		const { completionMetadata } = body
 
 		const { text, raw, error } = await this.makeAIRequest(completionMetadata, {
 			customPrompt,
-			customHeaders: headers,
+			aiRequestHandler,
 		})
 
 		return { completion: text, raw, error }

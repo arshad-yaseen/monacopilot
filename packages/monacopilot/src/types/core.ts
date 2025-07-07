@@ -1,4 +1,5 @@
 import type {
+	AIRequestHandler,
 	BaseCopilotMetadata,
 	CustomPrompt,
 	Endpoint,
@@ -233,10 +234,6 @@ export interface CompletionRequestBody {
 
 export interface CompletionRequestOptions {
 	/**
-	 * Custom headers to include in the request to the LLM provider.
-	 */
-	headers?: Record<string, string>
-	/**
 	 * Custom prompt generator function for the completion request.
 	 * This function allows you to override the default prompt
 	 * used in the completion request, providing more control over the AI's context and behavior.
@@ -246,6 +243,45 @@ export interface CompletionRequestOptions {
 	 * @see {@link https://github.com/arshad-yaseen/monacopilot/blob/main/packages/monacopilot/src/prompt.ts | Monacopilot default prompt implementation}
 	 */
 	customPrompt?: CustomPrompt<CompletionMetadata>
+	/**
+	 * Custom request handler to override the default fetch behavior when making requests to the LLM provider.
+	 *
+	 * This allows you to use your own HTTP client (like axios, got, etc.) or add custom logic
+	 * such as authentication, retry mechanisms, or request/response transformation.
+	 *
+	 * @param params - The request parameters
+	 * @param params.endpoint - The API endpoint URL for the LLM completion request
+	 * @param params.body - The request body containing completion parameters (model, prompt, etc.)
+	 * @param params.headers - HTTP headers for authentication and content type
+	 * @returns A Promise that resolves to the response object returned by the LLM provider
+	 *
+	 * @example
+	 * ```ts
+	 * aiRequestHandler: async ({ endpoint, body, headers }) => {
+	 *     const response = await fetch(endpoint, {
+	 *         method: 'POST',
+	 *         headers: { ...headers, 'X-Custom-Header': 'value' },
+	 *         body: JSON.stringify(body),
+	 *     })
+	 *     if (!response.ok) {
+	 *         throw new Error("Failed to get completion")
+	 *     }
+	 *     return response.json()
+	 * }
+	 * ```
+	 *
+	 * @example
+	 * ```ts
+	 * aiRequestHandler: async ({ endpoint, body, headers }) => {
+	 *     const response = await axios.post(endpoint, body, {
+	 *         headers: { ...headers, 'X-Custom-Header': 'value' },
+	 *         timeout: 30000,
+	 *     })
+	 *     return response.data
+	 * }
+	 * ```
+	 */
+	aiRequestHandler?: AIRequestHandler
 }
 
 export interface CompletionResponse {

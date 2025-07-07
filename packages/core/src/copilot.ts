@@ -6,6 +6,7 @@ import {
 } from './llm/operations'
 import { logger } from './logger'
 import type {
+	AIRequestHandler,
 	CopilotOptions,
 	CustomCopilotModel,
 	CustomPrompt,
@@ -51,7 +52,7 @@ export abstract class Copilot<Metadata> {
 		metadata: Metadata,
 		options: {
 			customPrompt?: CustomPrompt<Metadata>
-			customHeaders?: Record<string, string>
+			aiRequestHandler?: AIRequestHandler
 		} = {},
 	): Promise<CopilotAIResponse> {
 		try {
@@ -60,7 +61,7 @@ export abstract class Copilot<Metadata> {
 			if (this.isCustomModel()) {
 				return this.model(prompt)
 			} else {
-				const { customHeaders = {} } = options
+				const { aiRequestHandler } = options
 				const requestDetails = await this.prepareRequest(
 					prompt,
 					metadata as BaseCopilotMetadata,
@@ -68,7 +69,8 @@ export abstract class Copilot<Metadata> {
 				const response = await this.sendRequest(
 					requestDetails.endpoint,
 					requestDetails.requestBody,
-					{ ...requestDetails.headers, ...customHeaders },
+					requestDetails.headers,
+					aiRequestHandler,
 				)
 
 				return this.processResponse(response)
@@ -123,13 +125,24 @@ export abstract class Copilot<Metadata> {
 		endpoint: string,
 		requestBody: CompletionCreateParams,
 		headers: Record<string, string>,
+		aiRequestHandler?: AIRequestHandler,
 	) {
+		const resolvedHeaders = {
+			'Content-Type': 'application/json',
+			...headers,
+		}
+
+		if (aiRequestHandler) {
+			return aiRequestHandler({
+				endpoint,
+				body: requestBody,
+				headers: resolvedHeaders,
+			})
+		}
+
 		const response = await fetchWithTimeout(endpoint, {
 			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				...headers,
-			},
+			headers: resolvedHeaders,
 			body: JSON.stringify(requestBody),
 		})
 
