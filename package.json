@@ -20,12 +20,12 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
-		"@commitlint/cli": "^19.8.0",
-		"@commitlint/config-conventional": "^19.5.0",
-		"bumpp": "^10.0.2",
-		"husky": "^9.1.6",
-		"typescript": "^5.4.3",
-		"vitest": "^2.0.5"
+		"@commitlint/cli": "^19.8.1",
+		"@commitlint/config-conventional": "^19.8.1",
+		"bumpp": "^10.2.0",
+		"husky": "^9.1.7",
+		"typescript": "^5.8.3",
+		"vitest": "^2.1.9"
 	},
 	"packageManager": "pnpm@10.8.1"
 }
