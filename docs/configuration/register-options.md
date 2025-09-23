@@ -163,7 +163,7 @@ registerCompletion(monaco, editor, {
 
 ## Caching Completions
 
-Monacopilot caches completions by default. It uses a FIFO (First In First Out) strategy, reusing cached completions when the context and cursor position match while editing (default: `true`). To disable caching:
+Monacopilot caches completions by default, reusing cached completions when the context and cursor position match while editing (default: `true`). To disable caching:
 
 ```javascript
 registerCompletion(monaco, editor, {

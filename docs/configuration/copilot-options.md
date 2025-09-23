@@ -26,5 +26,5 @@ Currently, Monacopilot supports the following providers and models:
 :::info
 Monacopilot includes only code completion models as built-in options, such as Codestral by Mistral. General-purpose chat models like GPTs or Claude are not included, as they are slower and less accurate for code completion tasks. Currently, Codestral is the only built-in model, but more will be added as they become available.
 
-However, you can still use any other model—including OpenAI GPTs, Claude, or others—by using the [Custom Model](/advanced/custom-model) feature.
+However, you can still use any other model, including OpenAI GPTs, Claude, or others—by using the [Custom Model](/advanced/custom-model) feature.
 :::

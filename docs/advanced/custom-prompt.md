@@ -11,7 +11,7 @@ You can customize the prompt used for code completions by providing a `customPro
 ```javascript
 copilot.complete({
     options: {
-        customPrompt: metadata => ({
+        customPrompt: completionMetadata => ({
             context: 'Your custom codebase context information here',
             instruction: 'Your custom instructions for code completion here',
             fileContent: 'Your representation of file with cursor position',
