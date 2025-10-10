@@ -1,1 +1,1 @@
-pnpm tsc && pnpm lint && pnpm format
+pnpm tsc && pnpm lint

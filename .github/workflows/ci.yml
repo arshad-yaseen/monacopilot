@@ -33,7 +33,7 @@ jobs:
               run: pnpm build
 
             - name: Run CI
-              run: pnpm tsc && pnpm lint && pnpm format
+              run: pnpm tsc && pnpm lint
 
             - name: Run tests
               run: pnpm test
