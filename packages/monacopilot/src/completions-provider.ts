@@ -60,8 +60,8 @@ export const createInlineCompletionsProvider = (
 				const options = state.options || initialOptions
 				options.onCompletionShown?.(completion, item.range)
 			},
-			// @ts-expect-error: for some reason, solves this issue https://github.com/arshad-yaseen/monacopilot/issues/145
 			disposeInlineCompletions: () => {},
+			// @ts-expect-error this method was the predecessor of disposeInlineCompletions (now it's renamed), so keep this for backward compatibility with older monaco versions
 			freeInlineCompletions: () => {
 				/* No-op */
 			},

@@ -11,7 +11,7 @@
 		"dev": "tsup --watch"
 	},
 	"devDependencies": {
-		"monaco-editor": "^0.52.2",
+		"monaco-editor": "^0.55.1",
 		"tsup": "^8.5.0",
 		"typescript": "^5.8.3"
 	},
