@@ -38,7 +38,7 @@ Create the main HTML structure that loads Monaco Editor and Monacopilot:
         <!-- load monaco-editor -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.55.1/min/vs/loader.js"></script>
         <!-- load monacopilot -->
-        <script src="https://unpkg.com/monacopilot@1.2.11/dist/index.global.js"></script>
+        <script src="https://unpkg.com/monacopilot@1.2.12/dist/index.global.js"></script>
 
         <script src="app.js"></script>
     </body>
