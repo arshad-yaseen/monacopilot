@@ -11,9 +11,9 @@
 		"dev": "tsup --watch"
 	},
 	"devDependencies": {
-		"@mistralai/mistralai": "^1.7.4",
-		"tsup": "^8.5.0",
-		"typescript": "^5.8.3"
+		"@mistralai/mistralai": "^1.11.0",
+		"tsup": "^8.5.1",
+		"typescript": "^5.9.3"
 	},
 	"keywords": ["monacopilot", "monaco", "copilot", "core"],
 	"repository": {

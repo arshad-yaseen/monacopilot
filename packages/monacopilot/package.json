@@ -12,8 +12,8 @@
 	},
 	"devDependencies": {
 		"monaco-editor": "^0.55.1",
-		"tsup": "^8.5.0",
-		"typescript": "^5.8.3"
+		"tsup": "^8.5.1",
+		"typescript": "^5.9.3"
 	},
 	"keywords": [
 		"monaco-editor",
